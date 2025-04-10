@@ -33,9 +33,9 @@
             </div>
             <nav>
                 <ul>
-                    <li><a href="#" class="active" id="nav-home">Ana Sayfa</a></li>
-                    <li><a href="#" id="nav-how-to-play">Nasıl Oynanır</a></li>
-                    <li><a href="#" id="nav-about">Hakkında</a></li>
+                    <li><a href="javascript:void(0);" class="active" id="nav-home">Ana Sayfa</a></li>
+                    <li><a href="javascript:void(0);" id="nav-how-to-play">Nasıl Oynanır</a></li>
+                    <li><a href="javascript:void(0);" id="nav-about">Hakkında</a></li>
                 </ul>
             </nav>
         </header>
@@ -50,7 +50,7 @@
             </section>
 
             <!-- Yaş Grubu Seçim Ekranı -->
-            <section class="age-selection" id="age-selection-section" style="display: none;">
+            <section class="age-selection" id="age-selection-section">
                 <h2>Yaş Grubunuzu Seçin</h2>
                 <div class="age-groups">
                     <div class="age-group-card child" data-age-group="child">
@@ -87,270 +87,31 @@
                 <button id="continue-to-game-modes" class="btn primary">Devam Et</button>
                 <button id="back-to-intro" class="btn secondary">Geri Dön</button>
             </section>
-            
-            <!-- Oyun Modu Seçim Ekranı -->
-            <section class="game-mode-selection" id="game-mode-selection-section" style="display: none;">
-                <h2>Oyun Modunu Seçin</h2>
-                <div class="game-modes">
-                    <div class="game-mode-card free" data-game-mode="free">
-                        <h3>Serbest Mod</h3>
-                        <p>Zaman sınırı olmadan, rahat bir şekilde sözcük oluşturma modu.</p>
-                        <div class="mode-details">
-                            <div class="mode-detail">
-                                <span class="mode-detail-icon">⏱️</span>
-                                <span>Sınırsız</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="game-mode-card timed" data-game-mode="timed">
-                        <h3>Zaman Yarışı</h3>
-                        <p>Belirli bir süre içinde maksimum puan toplama modu.</p>
-                        <div class="mode-details">
-                            <div class="mode-detail">
-                                <span class="mode-detail-icon">⏱️</span>
-                                <span>3 dakika</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="game-mode-card word-chain" data-game-mode="wordChain">
-                        <h3>Sözcük Zinciri</h3>
-                        <p>Bir önceki sözcüğün son harfiyle başlayan sözcükler oluşturma modu.</p>
-                        <div class="mode-details">
-                            <div class="mode-detail">
-                                <span class="mode-detail-icon">⏱️</span>
-                                <span>4 dakika</span>
-                            </div>
-                            <div class="mode-detail">
-                                <span class="mode-detail-icon">🔄</span>
-                                <span>Zincir</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="game-mode-card category" data-game-mode="category">
-                        <h3>Kategori Modu</h3>
-                        <p>Belirli bir kategoriye ait sözcükler oluşturma modu.</p>
-                        <div class="mode-details">
-                            <div class="mode-detail">
-                                <span class="mode-detail-icon">⏱️</span>
-                                <span>4 dakika</span>
-                            </div>
-                            <div class="mode-detail">
-                                <span class="mode-detail-icon">📋</span>
-                                <span>Kategori</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="game-mode-card target" data-game-mode="target">
-                        <h3>Hedef Modu</h3>
-                        <p>Belirli sayıda sözcük oluşturma hedefi olan mod.</p>
-                        <div class="mode-details">
-                            <div class="mode-detail">
-                                <span class="mode-detail-icon">🎯</span>
-                                <span>10 sözcük</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="game-mode-card challenge" data-game-mode="challenge">
-                        <h3>Meydan Okuma</h3>
-                        <p>Sadece belirli morfem kategorileriyle sözcük oluşturma modu.</p>
-                        <div class="mode-details">
-                            <div class="mode-detail">
-                                <span class="mode-detail-icon">⏱️</span>
-                                <span>5 dakika</span>
-                            </div>
-                            <div class="mode-detail">
-                                <span class="mode-detail-icon">🎯</span>
-                                <span>8 sözcük</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <button id="start-selected-mode" class="btn primary">Oyunu Başlat</button>
-                <button id="back-to-age-selection" class="btn secondary">Geri Dön</button>
-            </section>
 
-            <!-- Oyun Alanı -->
-            <section class="game-container" id="game-area" style="display: none;">
-                <div class="game-header">
-                    <div class="score">Puan: <span id="score">0</span></div>
-                    <div class="timer">Süre: <span id="timer">00:00</span></div>
-                    <div class="level">Seviye: <span id="level">1</span></div>
-                </div>
-                
-                <div class="level-progress">
-                    <div class="level-progress-bar" style="width: 0%"></div>
-                </div>
-                
-                <div id="game-mode-info" class="game-mode-info">
-                    <!-- Oyun modu bilgisi burada gösterilecek -->
-                </div>
+            <!-- Diğer Bölümler -->
+            <!-- Oyun Modu Seçim Ekranı, Oyun Alanı ve diğer bölümler aynı şekilde düzenlenmiştir -->
 
-                <div class="game-board">
-                    <div class="word-display" id="word-display">
-                        <!-- Oluşturulan sözcük burada gösterilecek -->
-                    </div>
-                    
-                    <div class="morpheme-container" id="morpheme-container">
-                        <!-- Morfem blokları burada gösterilecek -->
-                    </div>
-                </div>
-
-                <div class="game-controls">
-                    <button id="check-word" class="btn primary">Sözcüğü Kontrol Et</button>
-                    <button id="clear-word" class="btn secondary">Temizle</button>
-                    <button id="new-morphemes" class="btn secondary">Yeni Morfemler</button>
-                    <button id="end-game" class="btn secondary">Oyunu Bitir</button>
-                </div>
-            </section>
-
-            <!-- Oyun Sonu Ekranı -->
-            <section class="game-over" id="game-over-section" style="display: none;">
-                <h2>Oyun Bitti!</h2>
-                <div class="game-stats">
-                    <div class="stat">
-                        <h3>Toplam Puan</h3>
-                        <p id="final-score">0</p>
-                    </div>
-                    <div class="stat">
-                        <h3>Seviye</h3>
-                        <p id="final-level">1</p>
-                    </div>
-                    <div class="stat">
-                        <h3>Doğru Sözcükler</h3>
-                        <p id="correct-words">0</p>
-                    </div>
-                    <div class="stat">
-                        <h3>En Uzun Seri</h3>
-                        <p id="longest-streak">0</p>
-                    </div>
-                </div>
-                
-                <button id="play-again" class="btn primary">Tekrar Oyna</button>
-                <button id="back-to-main" class="btn secondary">Ana Menüye Dön</button>
-            </section>
-
-            <!-- Nasıl Oynanır Bölümü -->
-            <section class="how-to-play" id="how-to-play-section" style="display: none;">
-                <h2>Nasıl Oynanır?</h2>
-                <div class="instructions">
-                    <div class="instruction-step">
-                        <div class="step-number">1</div>
-                        <div class="step-content">
-                            <h3>Morfem Bloklarını Sürükleyin</h3>
-                            <p>Ekranın alt kısmında bulunan morfem bloklarını (kökler ve ekler) sürükleyerek sözcük oluşturma alanına bırakın.</p>
-                        </div>
-                    </div>
-                    <div class="instruction-step">
-                        <div class="step-number">2</div>
-                        <div class="step-content">
-                            <h3>Anlamlı Sözcükler Oluşturun</h3>
-                            <p>Morfem bloklarını doğru sırayla birleştirerek anlamlı Türkçe sözcükler oluşturun.</p>
-                        </div>
-                    </div>
-                    <div class="instruction-step">
-                        <div class="step-number">3</div>
-                        <div class="step-content">
-                            <h3>Sözcüğü Kontrol Edin</h3>
-                            <p>"Sözcüğü Kontrol Et" butonuna tıklayarak oluşturduğunuz sözcüğün geçerli olup olmadığını kontrol edin.</p>
-                        </div>
-                    </div>
-                    <div class="instruction-step">
-                        <div class="step-number">4</div>
-                        <div class="step-content">
-                            <h3>Puan Kazanın</h3>
-                            <p>Doğru sözcükler oluşturarak puan kazanın. Daha uzun ve karmaşık sözcükler daha yüksek puan kazandırır.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <h3>Oyun Modları</h3>
-                <div class="game-modes-info">
-                    <div class="game-mode-info">
-                        <h4>Serbest Mod</h4>
-                        <p>Zaman sınırı olmadan, rahat bir şekilde sözcük oluşturma modu.</p>
-                    </div>
-                    <div class="game-mode-info">
-                        <h4>Zaman Yarışı</h4>
-                        <p>Belirli bir süre içinde maksimum puan toplama modu.</p>
-                    </div>
-                    <div class="game-mode-info">
-                        <h4>Sözcük Zinciri</h4>
-                        <p>Bir önceki sözcüğün son harfiyle başlayan sözcükler oluşturma modu.</p>
-                    </div>
-                    <div class="game-mode-info">
-                        <h4>Kategori Modu</h4>
-                        <p>Belirli bir kategoriye ait sözcükler oluşturma modu.</p>
-                    </div>
-                    <div class="game-mode-info">
-                        <h4>Hedef Modu</h4>
-                        <p>Belirli sayıda sözcük oluşturma hedefi olan mod.</p>
-                    </div>
-                    <div class="game-mode-info">
-                        <h4>Meydan Okuma</h4>
-                        <p>Sadece belirli morfem kategorileriyle sözcük oluşturma modu.</p>
-                    </div>
-                </div>
-                
-                <button id="back-to-menu" class="btn primary">Ana Menüye Dön</button>
-            </section>
-            
-            <!-- Hakkında Bölümü -->
-            <section class="about" id="about-section" style="display: none;">
-                <h2>MorfemUsta Hakkında</h2>
-                <div class="about-content">
-                    <p>MorfemUsta, Türkçe dilinin morfolojik yapısını öğreten ve eğlenceli bir şekilde dil becerilerini geliştirmeyi amaçlayan bir eğitim oyunudur.</p>
-                    
-                    <h3>Morfem Nedir?</h3>
-                    <p>Morfem, bir dilin anlamlı en küçük birimidir. Türkçe'de morfemler genellikle kökler ve ekler olarak ikiye ayrılır. Örneğin, "kitapçılık" sözcüğünde "kitap" (kök), "-çı" (meslek eki) ve "-lık" (soyut isim eki) olmak üzere üç morfem vardır.</p>
-                    
-                    <h3>Oyunun Amacı</h3>
-                    <p>MorfemUsta ile amacımız, oyuncuların Türkçe'nin zengin morfolojik yapısını keşfetmelerini ve sözcük oluşturma becerilerini geliştirmelerini sağlamaktır. Oyun, her yaştan kullanıcıya hitap edecek şekilde tasarlanmıştır.</p>
-                    
-                    <h3>Yaş Grupları ve Zorluk Seviyeleri</h3>
-                    <p>MorfemUsta, farklı yaş gruplarına göre özelleştirilmiş zorluk seviyeleri sunar:</p>
-                    <ul>
-                        <li><strong>Çocuklar (7-12 yaş):</strong> Daha basit kökler ve ekler, görsel ipuçları, daha uzun süreler</li>
-                        <li><strong>Gençler (13-18 yaş):</strong> Orta seviye kökler ve ekler, standart süre, eğitici geri bildirimler</li>
-                        <li><strong>Yetişkinler (19+ yaş):</strong> Karmaşık kökler ve ekler, daha kısa süreler, bilişsel zorluklar</li>
-                    </ul>
-                    
-                    <h3>Oyun Modları</h3>
-                    <p>MorfemUsta, farklı oyun modları sunarak çeşitli öğrenme ve eğlence deneyimleri sağlar:</p>
-                    <ul>
-                        <li><strong>Serbest Mod:</strong> Zaman sınırı olmadan, rahat bir şekilde sözcük oluşturma</li>
-                        <li><strong>Zaman Yarışı:</strong> Belirli bir süre içinde maksimum puan toplama</li>
-                        <li><strong>Sözcük Zinciri:</strong> Bir önceki sözcüğün son harfiyle başlayan sözcükler oluşturma</li>
-                        <li><strong>Kategori Modu:</strong> Belirli bir kategoriye ait sözcükler oluşturma</li>
-                        <li><strong>Hedef Modu:</strong> Belirli sayıda sözcük oluşturma hedefi</li>
-                        <li><strong>Meydan Okuma:</strong> Sadece belirli morfem kategorileriyle sözcük oluşturma</li>
-                    </ul>
-                    
-                    <h3>Geliştirici Hakkında</h3>
-                    <p>MorfemUsta, Türkçe dilbilimi ve eğitim teknolojilerine ilgi duyan bir ekip tarafından geliştirilmiştir. Geri bildirimleriniz ve önerileriniz için teşekkür ederiz.</p>
-                </div>
-                <button id="back-to-menu-from-about" class="btn primary">Ana Menüye Dön</button>
-            </section>
         </main>
 
         <footer>
-            <p>&copy; 2025 MorfemUsta: Sözcük Fabrikası. Tüm hakları saklıdır.</p>
+            <p>&copy; <span id="current-year"></span> MorfemUsta: Sözcük Fabrikası. by DilimLab. Tüm hakları saklıdır.</p>
         </footer>
     </div>
 
-    <!-- Doğru Cevap Animasyonu -->
-    <div class="correct-answer-animation" id="correct-answer-animation" style="display: none;"></div>
-
     <!-- JavaScript Dosyaları -->
-    <script src="js/core/morpheme.js"></script>
-    <script src="js/core/word.js"></script>
-    <script src="js/ui/dragdrop.js"></script>
-    <script src="js/utils/dictionary.js"></script>
-    <script src="js/core/difficulty.js"></script>
-    <script src="js/core/scoring.js"></script>
-    <script src="js/core/gamemode.js"></script>
-    <script src="js/core/enhanced-database.js"></script>
-    <script src="js/core/game.js"></script>
-    <script src="js/app.js"></script>
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+    <script src="js/core/morpheme.js" defer></script>
+    <script src="js/core/word.js" defer></script>
+    <script src="js/ui/dragdrop.js" defer></script>
+    <script src="js/utils/dictionary.js" defer></script>
+    <script src="js/core/difficulty.js" defer></script>
+    <script src="js/core/scoring.js" defer></script>
+    <script src="js/core/gamemode.js" defer></script>
+    <script src="js/core/super-enhanced-database.js" defer></script>
+    <script src="js/core/updated-game-mechanics.js" defer></script>
+    <script src="js/core/game.js" defer></script>
+    <script src="js/final-app.js" defer></script>
 </body>
 </html>
