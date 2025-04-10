@@ -26,6 +26,55 @@ class MorfemUstaApp {
     
     // Show welcome screen
     this.showScreen('welcome');
+// Menü öğelerine event listener'lar ekleyin
+document.addEventListener('DOMContentLoaded', function() {
+    const navHomeEl = document.getElementById('nav-home');
+    const navHowToPlayEl = document.getElementById('nav-how-to-play');
+    const navAboutEl = document.getElementById('nav-about');
+    
+    if (navHomeEl) {
+        navHomeEl.addEventListener('click', function(e) {
+            e.preventDefault(); // Sayfanın yenilenmesini önler
+            // Ana sayfa işlevselliği
+            showSection('intro-section');
+        });
+    }
+    
+    if (navHowToPlayEl) {
+        navHowToPlayEl.addEventListener('click', function(e) {
+            e.preventDefault(); // Sayfanın yenilenmesini önler
+            // Nasıl oynanır işlevselliği
+            showHowToPlay();
+        });
+    }
+    
+    if (navAboutEl) {
+        navAboutEl.addEventListener('click', function(e) {
+            e.preventDefault(); // Sayfanın yenilenmesini önler
+            // Hakkında işlevselliği
+            showAbout();
+        });
+    }
+    
+    // Yardımcı fonksiyon - belirtilen bölümü gösterir, diğerlerini gizler
+    function showSection(sectionId) {
+        const sections = document.querySelectorAll('main > section');
+        sections.forEach(section => {
+            section.style.display = section.id === sectionId ? 'block' : 'none';
+        });
+    }
+    
+    function showHowToPlay() {
+        // Nasıl oynanır bölümünü göster
+        showSection('how-to-play-section'); // Eğer böyle bir section ID'niz varsa
+    }
+    
+    function showAbout() {
+        // Hakkında bölümünü göster
+        showSection('about-section'); // Eğer böyle bir section ID'niz varsa
+    }
+});
+
     
     // Listen for game over event
     document.addEventListener('gameOver', (event) => {
