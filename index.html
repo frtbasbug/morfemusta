@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="MorfemUsta: Türkçenin morfolojik zenginliğini keşfetmenizi sağlayan eğitici bir sözcük oyunu.">
+    <meta name="description" content="MorfemUsta: Türkçe'nin morfolojik zenginliğini keşfetmenizi sağlayan eğitici bir sözcük oyunu.">
     <title>MorfemUsta: Sözcük Fabrikası</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/visual-enhancements.css">
+    <link rel="stylesheet" href="css/feedback-enhancements.css">
+    <link rel="stylesheet" href="css/enhanced-ui.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -49,7 +52,7 @@
             </section>
 
             <!-- Yaş Grubu Seçim Ekranı -->
-            <section class="age-selection" id="age-selection-section">
+            <section class="age-selection" id="age-selection-section" style="display: none;">
                 <h2>Yaş Grubunuzu Seçin</h2>
                 <div class="age-groups" role="group" aria-label="Yaş Grupları">
                     <div class="age-group-card child" data-age-group="child">
@@ -86,6 +89,36 @@
                 <button id="continue-to-game-modes" class="btn primary">Devam Et</button>
                 <button id="back-to-intro" class="btn secondary">Geri Dön</button>
             </section>
+            
+            <!-- Nasıl Oynanır Ekranı -->
+            <section class="how-to-play" id="how-to-play-section" style="display: none;">
+                <h2>Nasıl Oynanır?</h2>
+                <div class="instructions">
+                    <div class="instruction-step">
+                        <h3>1. Morfem Seçimi</h3>
+                        <p>Ekranda görünen morfem bloklarından uygun olanları seçin.</p>
+                    </div>
+                    <div class="instruction-step">
+                        <h3>2. Sözcük Oluşturma</h3>
+                        <p>Seçtiğiniz morfemleri birleştirerek anlamlı sözcükler oluşturun.</p>
+                    </div>
+                    <div class="instruction-step">
+                        <h3>3. Puan Kazanma</h3>
+                        <p>Oluşturduğunuz sözcüklerin uzunluğuna ve karmaşıklığına göre puan kazanın.</p>
+                    </div>
+                </div>
+                <button id="back-from-how-to-play" class="btn primary">Geri Dön</button>
+            </section>
+            
+            <!-- Hakkında Ekranı -->
+            <section class="about" id="about-section" style="display: none;">
+                <h2>MorfemUsta Hakkında</h2>
+                <p>MorfemUsta: Sözcük Fabrikası, Türkçe'nin morfolojik zenginliğini keşfetmenizi sağlayan eğitici bir oyundur. Bu oyun, dil bilimciler ve eğitimciler tarafından tasarlanmış olup, Türkçe'nin yapısını eğlenceli bir şekilde öğrenmenizi amaçlar.</p>
+                <p>Oyun, 482 morfem içeren genişletilmiş bir veritabanı kullanır ve farklı yaş grupları için özelleştirilmiş zorluk seviyeleri sunar.</p>
+                <h3>Geliştirici Ekibi</h3>
+                <p>DilimLab tarafından geliştirilmiştir.</p>
+                <button id="back-from-about" class="btn primary">Geri Dön</button>
+            </section>
         </main>
 
         <footer>
@@ -94,7 +127,10 @@
     </div>
 
     <!-- JavaScript Dosyaları -->
-    <script src="js/current-year.js" defer></script>
+    <script>
+        // Yıl bilgisini otomatik güncelle
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
     <script src="js/core/morpheme.js" type="module"></script>
     <script src="js/core/word.js" type="module"></script>
     <script src="js/ui/dragdrop.js" type="module"></script>
@@ -106,5 +142,6 @@
     <script src="js/core/updated-game-mechanics.js" type="module"></script>
     <script src="js/core/game.js" type="module"></script>
     <script src="js/final-app.js" type="module"></script>
+    <script src="js/button-fix.js"></script>
 </body>
 </html>
