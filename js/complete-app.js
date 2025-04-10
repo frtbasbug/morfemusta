@@ -1,150 +1,74 @@
-// Main application file for MorfemUsta with complete game functionality
-// Integrates the super enhanced database, game mechanics, and game interface
+// complete-app.js
+// Ana uygulama kodunu içeren bu dosya, diğer modülleri bir araya getirir ve global değişkenleri yönetir
 
-import SuperEnhancedMorphemeDatabase from './core/super-enhanced-database.js';
-import EnhancedGameMechanics from './core/updated-game-mechanics.js';
-import GameInterface from './game-interface.js';
+// Gerekli modülleri import et
+import gameController from './game-controller.js';
+import { setupGameInterface } from './game-interface.js';
 
-// Main application class
-class MorfemUstaApp {
-  constructor() {
-    this.database = new SuperEnhancedMorphemeDatabase();
-    this.gameMechanics = new EnhancedGameMechanics();
-    this.gameInterface = null;
-    this.currentScreen = 'welcome'; // welcome, age-select, difficulty-select, mode-select, game, results
-    
-    // Initialize the application
-    this.init();
-  }
-  
-  // Initialize the application
-  init() {
-    console.log('Initializing MorfemUsta application');
-    
-    // Initialize game interface
-    this.gameInterface = new GameInterface();
-    
-    // Set up event listeners
-    this.setupEventListeners();
-    
-    // Show welcome screen
-    this.showScreen('welcome');
-    
-    console.log('MorfemUsta application initialized');
-  }
-  
-  // Set up event listeners
-  setupEventListeners() {
-    document.addEventListener('DOMContentLoaded', () => {
-      // Navigation menu
-      const navLinks = document.querySelectorAll('nav a');
-      
-      navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          
-          // Remove active class from all links
-          navLinks.forEach(l => l.classList.remove('active'));
-          
-          // Add active class to clicked link
-          link.classList.add('active');
-          
-          // Handle navigation based on link ID
-          if (link.id === 'nav-home') {
-            this.showSection('intro-section');
-          } else if (link.id === 'nav-how-to-play') {
-            this.showSection('how-to-play-section');
-          } else if (link.id === 'nav-about') {
-            this.showSection('about-section');
-          }
-        });
-      });
-      
-      // Start game button
-      const startGameBtn = document.getElementById('start-game');
-      if (startGameBtn) {
-        startGameBtn.addEventListener('click', () => {
-          console.log('Start game button clicked');
-          this.showSection('age-selection-section');
-        });
-      }
-      
-      // How to play button
-      const howToPlayBtn = document.getElementById('how-to-play-btn');
-      if (howToPlayBtn) {
-        howToPlayBtn.addEventListener('click', () => {
-          console.log('How to play button clicked');
-          this.showSection('how-to-play-section');
-        });
-      }
-      
-      // Back buttons
-      const backFromHowToPlayBtn = document.getElementById('back-from-how-to-play');
-      const backFromAboutBtn = document.getElementById('back-from-about');
-      
-      if (backFromHowToPlayBtn) {
-        backFromHowToPlayBtn.addEventListener('click', () => {
-          console.log('Back from how to play button clicked');
-          this.showSection('intro-section');
-        });
-      }
-      
-      if (backFromAboutBtn) {
-        backFromAboutBtn.addEventListener('click', () => {
-          console.log('Back from about button clicked');
-          this.showSection('intro-section');
-        });
-      }
-    });
-  }
-  
-  // Show screen
-  showScreen(screen) {
-    this.currentScreen = screen;
-    
-    // Update UI based on current screen
-    switch (screen) {
-      case 'welcome':
-        this.showSection('intro-section');
-        break;
-      case 'age-select':
-        this.showSection('age-selection-section');
-        break;
-      case 'game':
-        this.showSection('game-play-section');
-        break;
-      case 'results':
-        this.showSection('results-section');
-        break;
-      default:
-        this.showSection('intro-section');
-    }
-  }
-  
-  // Show section and hide others
-  showSection(sectionId) {
-    const sections = document.querySelectorAll('main > section');
-    sections.forEach(section => {
-      section.style.display = section.id === sectionId ? 'block' : 'none';
-    });
-  }
-}
+// Global erişim için bazı fonksiyonları window nesnesine bağla
+// Bu, HTML script bloğundan bu fonksiyonlara erişmenizi sağlar
+window.startGame = function(ageGroup, difficultyLevel, ageValue) {
+    return gameController.initGame(ageGroup, difficultyLevel, ageValue);
+};
 
-// Initialize the application when the DOM is fully loaded
+// Oyun arayüzünü başlat
+window.setupGameUI = function() {
+    setupGameInterface();
+};
+
+// Tüm oyun durumunu sıfırla
+window.resetGame = function() {
+    // Burada oyun durumunu sıfırlama işlemleri yapılır
+    return gameController.resetGame();
+};
+
+// Sayfa yüklendiğinde çalışacak kod
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOM fully loaded - Initializing MorfemUsta application');
-  
-  // Create global app instance
-  window.app = new MorfemUstaApp();
-  
-  // Set current year in footer
-  const currentYearElement = document.getElementById('current-year');
-  if (currentYearElement) {
-    currentYearElement.textContent = new Date().getFullYear();
-  }
-  
-  console.log('MorfemUsta application initialized successfully');
+    console.log('MorfemUsta: Sözcük Fabrikası başlatılıyor...');
+    
+    // Eğer daha önceki script'lerde tanımlanmamışsa, burada da tanımlanabilir
+    setupEventListeners();
 });
 
-// Export the MorfemUstaApp class
-export default MorfemUstaApp;
+// Olay dinleyicilerini ayarla
+function setupEventListeners() {
+    // Bu kod kısmı HTML içinde inline script içinde de tanımlanabilir
+    // Bu durumda, çakışmaları önlemek için bu fonksiyonu atla
+    if (window.eventListenersSetup) {
+        console.log('Olay dinleyicileri zaten kurulmuş, atlanıyor...');
+        return;
+    }
+    
+    console.log('Olay dinleyicileri kuruluyor...');
+    
+    // Ana sayfa butonları
+    const startGameBtn = document.getElementById('start-game');
+    if (startGameBtn) {
+        startGameBtn.addEventListener('click', function() {
+            showSection('age-selection-section');
+        });
+    }
+    
+    // Diğer butonlar ve olay dinleyicileri buraya eklenebilir
+    
+    // Olay dinleyicilerinin kurulduğunu işaretle
+    window.eventListenersSetup = true;
+}
+
+// Bölümleri göster/gizle fonksiyonu
+function showSection(sectionId) {
+    const sections = document.querySelectorAll('main > section');
+    sections.forEach(section => {
+        section.style.display = section.id === sectionId ? 'block' : 'none';
+    });
+}
+
+// Bu modülün başlatıldığını bildir
+console.log('complete-app.js modülü başarıyla yüklendi');
+
+// Modülü dışa aktar
+export default {
+    startGame: window.startGame,
+    setupGameUI: window.setupGameUI,
+    resetGame: window.resetGame
+};
