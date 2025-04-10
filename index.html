@@ -1,5 +1,20 @@
 <!DOCTYPE html>
 <html lang="tr">
+    <script>
+// ES6 modüllerini desteklemeyen tarayıcılar için polyfill
+if (typeof window.import !== 'function') {
+  const moduleMap = {};
+  
+  window.define = function(name, deps, callback) {
+    moduleMap[name] = callback();
+  };
+  
+  window.require = function(deps, callback) {
+    const modules = deps.map(dep => moduleMap[dep]);
+    callback.apply(null, modules);
+  };
+}
+</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
