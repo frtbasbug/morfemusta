@@ -49,6 +49,7 @@
                 <button id="start-game" class="btn primary" aria-label="Oyuna Başla">Oyuna Başla</button>
                 <button id="how-to-play-btn" class="btn secondary" aria-label="Nasıl Oynanır">Nasıl Oynanır</button>
             </section>
+            
             <!-- Yaş Grubu Seçim Ekranı -->
             <section class="age-selection" id="age-selection-section" style="display: none;">
                 <h2>Yaş Grubunuzu Seçin</h2>
@@ -88,6 +89,32 @@
                 <button id="back-to-intro" class="btn secondary">Geri Dön</button>
             </section>
             
+            <!-- Oyun Modu Seçim Ekranı -->
+            <section class="game-mode-selection" id="game-mode-selection-section" style="display: none;">
+                <h2>Oyun Modunu Seçin</h2>
+                <div class="game-modes" role="group" aria-label="Oyun Modları">
+                    <div class="game-mode-card selected" data-game-mode="free">
+                        <h3>Serbest Mod</h3>
+                        <p>Zaman sınırı olmadan, istediğiniz kadar morfem kullanarak sözcükler oluşturun.</p>
+                    </div>
+                    <div class="game-mode-card" data-game-mode="timed">
+                        <h3>Zaman Yarışı</h3>
+                        <p>Belirli bir süre içinde mümkün olduğunca çok sözcük oluşturun.</p>
+                    </div>
+                    <div class="game-mode-card" data-game-mode="chain">
+                        <h3>Sözcük Zinciri</h3>
+                        <p>Her yeni sözcüğü, önceki sözcüğün son morfemiyle başlatın.</p>
+                    </div>
+                    <div class="game-mode-card" data-game-mode="category">
+                        <h3>Kategori Modu</h3>
+                        <p>Belirli bir kategoriye ait sözcükler oluşturun (isimler, fiiller, sıfatlar).</p>
+                    </div>
+                </div>
+                
+                <button id="start-selected-mode" class="btn primary">Oyuna Başla</button>
+                <button id="back-to-age-selection" class="btn secondary">Geri Dön</button>
+            </section>
+            
             <!-- Nasıl Oynanır Ekranı -->
             <section class="how-to-play" id="how-to-play-section" style="display: none;">
                 <h2>Nasıl Oynanır?</h2>
@@ -121,6 +148,37 @@
             <!-- Oyun arayüzü için hazır bölüm (daha sonra dinamik olarak doldurulacak) -->
             <section id="game-interface" class="game-interface" style="display: none;">
                 <!-- Oyun arayüzü dinamik olarak oluşturulacak -->
+                <div class="game-header">
+                    <div class="score-container">
+                        <h3>Puan: <span id="score">0</span></h3>
+                    </div>
+                    <div class="timer-container">
+                        <h3>Süre: <span id="timer">0:00</span></h3>
+                    </div>
+                </div>
+                
+                <div class="game-content">
+                    <div class="morpheme-container" id="morpheme-container">
+                        <!-- Morfem blokları burada gösterilecek -->
+                    </div>
+                    
+                    <div class="word-building-area" id="word-building-area">
+                        <!-- Sözcük oluşturma alanı -->
+                    </div>
+                    
+                    <div class="word-list" id="word-list">
+                        <h3>Oluşturulan Sözcükler</h3>
+                        <ul id="created-words-list">
+                            <!-- Oluşturulan sözcükler burada listelenecek -->
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="game-controls">
+                    <button id="submit-word" class="btn primary">Sözcüğü Gönder</button>
+                    <button id="new-morphemes" class="btn secondary">Yeni Morfemler</button>
+                    <button id="end-game" class="btn secondary">Oyunu Bitir</button>
+                </div>
             </section>
         </main>
         <footer>
@@ -149,7 +207,7 @@
     <script type="module" src="js/game-interface.js"></script>
     <script type="module" src="js/complete-app.js"></script>
     
-    <!-- Ana JavaScript kodu - tüm buton işlevlerini içerir -->
+    <!-- Ana JavaScript kodu -->
     <script>
     document.addEventListener('DOMContentLoaded', function() {
       // Ana sayfa butonları
@@ -160,11 +218,20 @@
       const continueToGameBtn = document.getElementById('continue-to-game-modes');
       const backToIntroBtn = document.getElementById('back-to-intro');
       
+      // Oyun modu seçim ekranı butonları
+      const startSelectedModeBtn = document.getElementById('start-selected-mode');
+      const backToAgeSelectionBtn = document.getElementById('back-to-age-selection');
+      
       // Nasıl oynanır ekranı butonları
       const backFromHowToPlayBtn = document.getElementById('back-from-how-to-play');
       
       // Hakkında ekranı butonları
       const backFromAboutBtn = document.getElementById('back-from-about');
+      
+      // Oyun arayüzü butonları
+      const submitWordBtn = document.getElementById('submit-word');
+      const newMorphemesBtn = document.getElementById('new-morphemes');
+      const endGameBtn = document.getElementById('end-game');
       
       // Menü öğeleri
       const navLinks = document.querySelectorAll('nav a');
@@ -172,6 +239,9 @@
       // Yaş grubu ve zorluk seviyesi seçimi
       const ageGroupCards = document.querySelectorAll('.age-group-card');
       const difficultyLevels = document.querySelectorAll('.difficulty-level');
+      
+      // Oyun modu seçimi
+      const gameModeCards = document.querySelectorAll('.game-mode-card');
       
       // Bölümleri göster/gizle fonksiyonu
       function showSection(sectionId) {
@@ -197,20 +267,40 @@
       // Yaş seçim ekranı butonları
       if (continueToGameBtn) {
         continueToGameBtn.addEventListener('click', function() {
+          showSection('game-mode-selection-section');
+        });
+      }
+      
+      if (backToIntroBtn) {
+        backToIntroBtn.addEventListener('click', function() {
+          showSection('intro-section');
+        });
+      }
+      
+      // Oyun modu seçim ekranı butonları
+      if (gameModeCards.length > 0) {
+        gameModeCards.forEach(card => {
+          card.addEventListener('click', function() {
+            gameModeCards.forEach(c => c.classList.remove('selected'));
+            this.classList.add('selected');
+          });
+        });
+      }
+      
+      if (startSelectedModeBtn) {
+        startSelectedModeBtn.addEventListener('click', function() {
+          // Seçilen yaş grubu, zorluk seviyesi ve oyun modunu al
+          const selectedAgeGroup = document.querySelector('.age-group-card.selected').dataset.ageGroup;
+          const selectedDifficulty = document.querySelector('.difficulty-level.selected').dataset.difficulty;
+          const selectedGameMode = document.querySelector('.game-mode-card.selected').dataset.gameMode;
+          const ageValue = document.getElementById('age-input').value;
+          
           try {
-            // Game modülü kullanarak oyunu başlat
-            // Not: Bu bölüm "js/complete-app.js" içinde de bulunabilir
-            // Bu durumda, bir global fonksiyon çağrısı yapılabilir
-            
-            const selectedAgeGroup = document.querySelector('.age-group-card.selected').dataset.ageGroup;
-            const selectedDifficulty = document.querySelector('.difficulty-level.selected').dataset.difficulty;
-            const ageValue = document.getElementById('age-input').value;
-            
-            // ES6 modüllerini kullanan sürüm:
+            // Oyunu başlat
             import('./js/game-controller.js')
               .then(module => {
                 const gameController = module.default;
-                const success = gameController.initGame(selectedAgeGroup, parseInt(selectedDifficulty), parseInt(ageValue));
+                const success = gameController.initGame(selectedAgeGroup, parseInt(selectedDifficulty), parseInt(ageValue), selectedGameMode);
                 
                 if (success) {
                   showSection('game-interface');
@@ -220,12 +310,6 @@
                 console.error('Oyun modülü yüklenirken hata:', error);
                 alert('Oyun başlatılırken bir hata oluştu. Lütfen sayfayı yenileyin.');
               });
-            
-            // Veya global bir fonksiyon varsa:
-            // if (typeof window.startGame === 'function') {
-            //   window.startGame(selectedAgeGroup, parseInt(selectedDifficulty), parseInt(ageValue));
-            //   showSection('game-interface');
-            // }
           } catch (error) {
             console.error('Oyun başlatılırken bir hata oluştu:', error);
             alert('Oyun başlatılırken bir hata oluştu. Lütfen sayfayı yenileyin.');
@@ -233,9 +317,9 @@
         });
       }
       
-      if (backToIntroBtn) {
-        backToIntroBtn.addEventListener('click', function() {
-          showSection('intro-section');
+      if (backToAgeSelectionBtn) {
+        backToAgeSelectionBtn.addEventListener('click', function() {
+          showSection('age-selection-section');
         });
       }
       
@@ -249,6 +333,32 @@
       // Hakkında ekranı butonları
       if (backFromAboutBtn) {
         backFromAboutBtn.addEventListener('click', function() {
+          showSection('intro-section');
+        });
+      }
+      
+      // Oyun arayüzü butonları
+      if (submitWordBtn) {
+        submitWordBtn.addEventListener('click', function() {
+          // Sözcük gönderme fonksiyonu
+          console.log('Sözcük gönderildi');
+          // window.gameSubmitWord() gibi global bir fonksiyon varsa çağrılabilir
+        });
+      }
+      
+      if (newMorphemesBtn) {
+        newMorphemesBtn.addEventListener('click', function() {
+          // Yeni morfemler alma fonksiyonu
+          console.log('Yeni morfemler istendi');
+          // window.getNewMorphemes() gibi global bir fonksiyon varsa çağrılabilir
+        });
+      }
+      
+      if (endGameBtn) {
+        endGameBtn.addEventListener('click', function() {
+          // Oyunu sonlandırma fonksiyonu
+          console.log('Oyun sonlandırıldı');
+          // window.endGame() gibi global bir fonksiyon varsa çağrılabilir
           showSection('intro-section');
         });
       }
@@ -298,3 +408,6 @@
         });
       });
     });
+    </script>
+</body>
+</html>
