@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MorfemUsta: Türkçe'nin morfolojik zenginliğini keşfetmenizi sağlayan eğitici bir sözcük oyunu.">
     <title>MorfemUsta: Sözcük Fabrikası</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/visual-enhancements.css">
     <link rel="stylesheet" href="css/feedback-enhancements.css">
@@ -16,8 +18,8 @@
     <div class="container">
         <header>
             <div class="logo-container">
-                <div class="logo-cube-container">
-                    <div class="logo-cube">
+                <div class="logo-cube-container" aria-label="Logo Küpü">
+                    <div class="logo-cube" role="img" aria-labelledby="logo-description">
                         <div class="face front">M</div>
                         <div class="face back">U</div>
                         <div class="face right">S</div>
@@ -27,17 +29,17 @@
                     </div>
                 </div>
                 <div class="logo-text">
-                    <h1>MorfemUsta</h1>
+                    <h1 id="logo-description">MorfemUsta</h1>
                     <p class="tagline">Sözcük Fabrikası</p>
                 </div>
             </div>
-          <nav>
-    <ul>
-        <li><a href="#" class="active" id="nav-home">Ana Sayfa</a></li>
-        <li><a href="#" id="nav-how-to-play">Nasıl Oynanır</a></li>
-        <li><a href="#" id="nav-about">Hakkında</a></li>
-    </ul>
-</nav>
+            <nav role="navigation" aria-label="Ana Navigasyon">
+                <ul>
+                    <li><a href="#" class="active" id="nav-home" aria-current="page">Ana Sayfa</a></li>
+                    <li><a href="#" id="nav-how-to-play">Nasıl Oynanır</a></li>
+                    <li><a href="#" id="nav-about">Hakkında</a></li>
+                </ul>
+            </nav>
         </header>
 
         <main>
@@ -45,14 +47,14 @@
             <section class="intro" id="intro-section">
                 <h2>Türkçe Sözcük Oluşturma Oyunu</h2>
                 <p>MorfemUsta ile Türkçe'nin morfolojik zenginliğini keşfedin. Morfem bloklarını birleştirerek yeni sözcükler oluşturun, puanlar kazanın ve dil becerilerinizi geliştirin.</p>
-                <button id="start-game" class="btn primary">Oyuna Başla</button>
-                <button id="how-to-play-btn" class="btn secondary">Nasıl Oynanır</button>
+                <button id="start-game" class="btn primary" aria-label="Oyuna Başla">Oyuna Başla</button>
+                <button id="how-to-play-btn" class="btn secondary" aria-label="Nasıl Oynanır">Nasıl Oynanır</button>
             </section>
 
             <!-- Yaş Grubu Seçim Ekranı -->
             <section class="age-selection" id="age-selection-section">
                 <h2>Yaş Grubunuzu Seçin</h2>
-                <div class="age-groups">
+                <div class="age-groups" role="group" aria-label="Yaş Grupları">
                     <div class="age-group-card child" data-age-group="child">
                         <h3>Çocuk</h3>
                         <p>7-12 Yaş</p>
@@ -72,10 +74,10 @@
                 
                 <div class="age-input">
                     <label for="age-input">Yaşınızı Girin:</label>
-                    <input type="number" id="age-input" min="7" max="99" value="25">
+                    <input type="number" id="age-input" min="7" max="99" value="25" aria-labelledby="age-input">
                 </div>
                 
-                <div class="difficulty-selection">
+                <div class="difficulty-selection" role="group" aria-label="Zorluk Seviyesi">
                     <h3>Zorluk Seviyesi</h3>
                     <div class="difficulty-levels">
                         <div class="difficulty-level selected" data-difficulty="1">Kolay</div>
@@ -87,10 +89,6 @@
                 <button id="continue-to-game-modes" class="btn primary">Devam Et</button>
                 <button id="back-to-intro" class="btn secondary">Geri Dön</button>
             </section>
-
-            <!-- Diğer Bölümler -->
-            <!-- Oyun Modu Seçim Ekranı, Oyun Alanı ve diğer bölümler aynı şekilde düzenlenmiştir -->
-
         </main>
 
         <footer>
@@ -99,19 +97,17 @@
     </div>
 
     <!-- JavaScript Dosyaları -->
-    <script>
-        document.getElementById('current-year').textContent = new Date().getFullYear();
-    </script>
-  <script src="js/core/morpheme.js" type="module"></script>
-<script src="js/core/word.js" type="module"></script>
-<script src="js/ui/dragdrop.js" type="module"></script>
-<script src="js/utils/dictionary.js" type="module"></script>
-<script src="js/core/difficulty.js" type="module"></script>
-<script src="js/core/scoring.js" type="module"></script>
-<script src="js/core/gamemode.js" type="module"></script>
-<script src="js/core/super-enhanced-database.js" type="module"></script>
-<script src="js/core/updated-game-mechanics.js" type="module"></script>
-<script src="js/core/game.js" type="module"></script>
-<script src="js/final-app.js" type="module"></script>
+    <script src="js/current-year.js" defer></script>
+    <script src="js/core/morpheme.js" type="module"></script>
+    <script src="js/core/word.js" type="module" defer></script>
+    <script src="js/ui/dragdrop.js" type="module" defer></script>
+    <script src="js/utils/dictionary.js" type="module" defer></script>
+    <script src="js/core/difficulty.js" type="module" defer></script>
+    <script src="js/core/scoring.js" type="module" defer></script>
+    <script src="js/core/gamemode.js" type="module" defer></script>
+    <script src="js/core/super-enhanced-database.js" type="module" defer></script>
+    <script src="js/core/updated-game-mechanics.js" type="module" defer></script>
+    <script src="js/core/game.js" type="module" defer></script>
+    <script src="js/final-app.js" type="module" defer></script>
 </body>
 </html>
