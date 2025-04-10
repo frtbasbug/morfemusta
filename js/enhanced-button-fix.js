@@ -48,12 +48,19 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Yaş seçim ekranı butonları
   if (continueToGameModesBtn) {
-    continueToGameModesBtn.addEventListener('click', function() {
-      console.log('Continue to game modes button clicked');
-      // Burada oyun modları ekranına geçiş yapılabilir
-      alert('Seçilen yaş grubu ve zorluk seviyesi ile oyun başlatılıyor!');
-    });
-  }
+  continueToGameModesBtn.addEventListener('click', function() {
+    // Seçilen yaş grubu ve zorluk seviyesini al
+    const selectedAgeGroup = document.querySelector('.age-group-card.selected')?.dataset.ageGroup || 'adult';
+    const selectedDifficulty = document.querySelector('.difficulty-level.selected')?.dataset.difficulty || '1';
+    
+    // Kullanıcıya bilgi ver
+    alert('Seçilen yaş grubu: ' + selectedAgeGroup + '\nZorluk seviyesi: ' + selectedDifficulty + '\n\nOyun geliştirme aşamasında, yakında kullanıma sunulacak!');
+    
+    // Ana sayfaya geri dön
+    showSection('intro-section');
+  });
+}
+
   
   if (backToIntroBtn) {
     backToIntroBtn.addEventListener('click', function() {
