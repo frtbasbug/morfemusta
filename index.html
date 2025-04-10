@@ -1,20 +1,5 @@
 <!DOCTYPE html>
 <html lang="tr">
-    <script>
-// ES6 modüllerini desteklemeyen tarayıcılar için polyfill
-if (typeof window.import !== 'function') {
-  const moduleMap = {};
-  
-  window.define = function(name, deps, callback) {
-    moduleMap[name] = callback();
-  };
-  
-  window.require = function(deps, callback) {
-    const modules = deps.map(dep => moduleMap[dep]);
-    callback.apply(null, modules);
-  };
-}
-</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -56,7 +41,6 @@ if (typeof window.import !== 'function') {
                 </ul>
             </nav>
         </header>
-
         <main>
             <!-- Ana Giriş Ekranı -->
             <section class="intro" id="intro-section">
@@ -65,7 +49,6 @@ if (typeof window.import !== 'function') {
                 <button id="start-game" class="btn primary" aria-label="Oyuna Başla">Oyuna Başla</button>
                 <button id="how-to-play-btn" class="btn secondary" aria-label="Nasıl Oynanır">Nasıl Oynanır</button>
             </section>
-
             <!-- Yaş Grubu Seçim Ekranı -->
             <section class="age-selection" id="age-selection-section" style="display: none;">
                 <h2>Yaş Grubunuzu Seçin</h2>
@@ -134,79 +117,184 @@ if (typeof window.import !== 'function') {
                 <p>DilimLab tarafından geliştirilmiştir.</p>
                 <button id="back-from-about" class="btn primary">Geri Dön</button>
             </section>
+            
+            <!-- Oyun arayüzü için hazır bölüm (daha sonra dinamik olarak doldurulacak) -->
+            <section id="game-interface" class="game-interface" style="display: none;">
+                <!-- Oyun arayüzü dinamik olarak oluşturulacak -->
+            </section>
         </main>
-
         <footer>
             <p>&copy; <span id="current-year"></span> MorfemUsta: Sözcük Fabrikası. by DilimLab. Tüm hakları saklıdır.</p>
         </footer>
     </div>
-
+    
     <!-- JavaScript Dosyaları -->
     <script>
         // Yıl bilgisini otomatik güncelle
         document.getElementById('current-year').textContent = new Date().getFullYear();
     </script>
-    <script src="js/core/morpheme.js" type="module"></script>
-<script src="js/core/word.js" type="module"></script>
-<script src="js/ui/dragdrop.js" type="module"></script>
-<script src="js/utils/dictionary.js" type="module"></script>
-<script src="js/core/difficulty.js" type="module"></script>
-<script src="js/core/scoring.js" type="module"></script>
-<script src="js/core/gamemode.js" type="module"></script>
-<script src="js/core/super-enhanced-database.js" type="module"></script>
-<script src="js/core/updated-game-mechanics.js" type="module"></script>
-<script src="js/core/game.js" type="module"></script>
-<script src="js/game-controller.js" type="module"></script>
-<script src="js/game-interface.js" type="module"></script>
-<script src="js/complete-app.js" type="module"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Ana sayfa butonları
-  const startGameBtn = document.getElementById('start-game');
-  const howToPlayBtn = document.getElementById('how-to-play-btn');
-  
-  // Menü öğeleri
-  const navLinks = document.querySelectorAll('nav a');
-  
-  // Bölümleri göster/gizle fonksiyonu
-  function showSection(sectionId) {
-    const sections = document.querySelectorAll('main > section');
-    sections.forEach(section => {
-      section.style.display = section.id === sectionId ? 'block' : 'none';
-    });
-  }
-  
-  // Ana sayfa butonları
-  if (startGameBtn) {
-    startGameBtn.addEventListener('click', function() {
-      showSection('age-selection-section');
-    });
-  }
-  
-  if (howToPlayBtn) {
-    howToPlayBtn.addEventListener('click', function() {
-      showSection('how-to-play-section');
-    });
-  }
-  
-  // Menü öğeleri
-  navLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      navLinks.forEach(l => l.classList.remove('active'));
-      this.classList.add('active');
+    
+    <!-- Modüller -->
+    <script type="module" src="js/core/morpheme.js"></script>
+    <script type="module" src="js/core/word.js"></script>
+    <script type="module" src="js/ui/dragdrop.js"></script>
+    <script type="module" src="js/utils/dictionary.js"></script>
+    <script type="module" src="js/core/difficulty.js"></script>
+    <script type="module" src="js/core/scoring.js"></script>
+    <script type="module" src="js/core/gamemode.js"></script>
+    <script type="module" src="js/core/super-enhanced-database.js"></script>
+    <script type="module" src="js/core/updated-game-mechanics.js"></script>
+    <script type="module" src="js/core/game.js"></script>
+    <script type="module" src="js/game-controller.js"></script>
+    <script type="module" src="js/game-interface.js"></script>
+    <script type="module" src="js/complete-app.js"></script>
+    
+    <!-- Ana JavaScript kodu - tüm buton işlevlerini içerir -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Ana sayfa butonları
+      const startGameBtn = document.getElementById('start-game');
+      const howToPlayBtn = document.getElementById('how-to-play-btn');
       
-      if (this.id === 'nav-home') {
-        showSection('intro-section');
-      } else if (this.id === 'nav-how-to-play') {
-        showSection('how-to-play-section');
-      } else if (this.id === 'nav-about') {
-        showSection('about-section');
+      // Yaş seçim ekranı butonları
+      const continueToGameBtn = document.getElementById('continue-to-game-modes');
+      const backToIntroBtn = document.getElementById('back-to-intro');
+      
+      // Nasıl oynanır ekranı butonları
+      const backFromHowToPlayBtn = document.getElementById('back-from-how-to-play');
+      
+      // Hakkında ekranı butonları
+      const backFromAboutBtn = document.getElementById('back-from-about');
+      
+      // Menü öğeleri
+      const navLinks = document.querySelectorAll('nav a');
+      
+      // Yaş grubu ve zorluk seviyesi seçimi
+      const ageGroupCards = document.querySelectorAll('.age-group-card');
+      const difficultyLevels = document.querySelectorAll('.difficulty-level');
+      
+      // Bölümleri göster/gizle fonksiyonu
+      function showSection(sectionId) {
+        const sections = document.querySelectorAll('main > section');
+        sections.forEach(section => {
+          section.style.display = section.id === sectionId ? 'block' : 'none';
+        });
       }
+      
+      // Ana sayfa butonları
+      if (startGameBtn) {
+        startGameBtn.addEventListener('click', function() {
+          showSection('age-selection-section');
+        });
+      }
+      
+      if (howToPlayBtn) {
+        howToPlayBtn.addEventListener('click', function() {
+          showSection('how-to-play-section');
+        });
+      }
+      
+      // Yaş seçim ekranı butonları
+      if (continueToGameBtn) {
+        continueToGameBtn.addEventListener('click', function() {
+          try {
+            // Game modülü kullanarak oyunu başlat
+            // Not: Bu bölüm "js/complete-app.js" içinde de bulunabilir
+            // Bu durumda, bir global fonksiyon çağrısı yapılabilir
+            
+            const selectedAgeGroup = document.querySelector('.age-group-card.selected').dataset.ageGroup;
+            const selectedDifficulty = document.querySelector('.difficulty-level.selected').dataset.difficulty;
+            const ageValue = document.getElementById('age-input').value;
+            
+            // ES6 modüllerini kullanan sürüm:
+            import('./js/game-controller.js')
+              .then(module => {
+                const gameController = module.default;
+                const success = gameController.initGame(selectedAgeGroup, parseInt(selectedDifficulty), parseInt(ageValue));
+                
+                if (success) {
+                  showSection('game-interface');
+                }
+              })
+              .catch(error => {
+                console.error('Oyun modülü yüklenirken hata:', error);
+                alert('Oyun başlatılırken bir hata oluştu. Lütfen sayfayı yenileyin.');
+              });
+            
+            // Veya global bir fonksiyon varsa:
+            // if (typeof window.startGame === 'function') {
+            //   window.startGame(selectedAgeGroup, parseInt(selectedDifficulty), parseInt(ageValue));
+            //   showSection('game-interface');
+            // }
+          } catch (error) {
+            console.error('Oyun başlatılırken bir hata oluştu:', error);
+            alert('Oyun başlatılırken bir hata oluştu. Lütfen sayfayı yenileyin.');
+          }
+        });
+      }
+      
+      if (backToIntroBtn) {
+        backToIntroBtn.addEventListener('click', function() {
+          showSection('intro-section');
+        });
+      }
+      
+      // Nasıl oynanır ekranı butonları
+      if (backFromHowToPlayBtn) {
+        backFromHowToPlayBtn.addEventListener('click', function() {
+          showSection('intro-section');
+        });
+      }
+      
+      // Hakkında ekranı butonları
+      if (backFromAboutBtn) {
+        backFromAboutBtn.addEventListener('click', function() {
+          showSection('intro-section');
+        });
+      }
+      
+      // Menü öğeleri
+      navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          navLinks.forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
+          
+          if (this.id === 'nav-home') {
+            showSection('intro-section');
+          } else if (this.id === 'nav-how-to-play') {
+            showSection('how-to-play-section');
+          } else if (this.id === 'nav-about') {
+            showSection('about-section');
+          }
+        });
+      });
+      
+      // Yaş grubu seçimi
+      ageGroupCards.forEach(card => {
+        card.addEventListener('click', function() {
+          ageGroupCards.forEach(c => c.classList.remove('selected'));
+          this.classList.add('selected');
+          
+          // Yaş input alanını seçilen gruba göre güncelle
+          const ageInput = document.getElementById('age-input');
+          const ageGroup = this.dataset.ageGroup;
+          
+          if (ageGroup === 'child') {
+            ageInput.value = 10;
+          } else if (ageGroup === 'teen') {
+            ageInput.value = 16;
+          } else if (ageGroup === 'adult') {
+            ageInput.value = 25;
+          }
+        });
+      });
+      
+      // Zorluk seviyesi seçimi
+      difficultyLevels.forEach(level => {
+        level.addEventListener('click', function() {
+          difficultyLevels.forEach(l => l.classList.remove('selected'));
+          this.classList.add('selected');
+        });
+      });
     });
-  });
-});
-</script>
-
-</body>
-</html>
