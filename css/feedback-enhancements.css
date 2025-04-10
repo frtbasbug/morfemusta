@@ -1,0 +1,187 @@
+/* Geri Bildirim Stili */
+.feedback {
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: var(--border-radius-md);
+    font-weight: 500;
+    animation: feedback-appear 0.3s ease-in-out;
+}
+
+@keyframes feedback-appear {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.feedback.success {
+    background-color: rgba(129, 199, 132, 0.2);
+    color: var(--success-color);
+    border-left: 4px solid var(--success-color);
+}
+
+.feedback.error {
+    background-color: rgba(229, 115, 115, 0.2);
+    color: var(--error-color);
+    border-left: 4px solid var(--error-color);
+}
+
+.feedback.warning {
+    background-color: rgba(255, 183, 77, 0.2);
+    color: var(--warning-color);
+    border-left: 4px solid var(--warning-color);
+}
+
+.feedback.info {
+    background-color: rgba(121, 134, 203, 0.2);
+    color: var(--primary-color);
+    border-left: 4px solid var(--primary-color);
+}
+
+/* Morfem Tipi Göstergeleri */
+.morpheme-block.root .cube::after {
+    content: 'Kök';
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    color: var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 2px 6px;
+    border-radius: 10px;
+    white-space: nowrap;
+}
+
+.morpheme-block.affix .cube::after {
+    content: 'Ek';
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    color: var(--secondary-color);
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 2px 6px;
+    border-radius: 10px;
+    white-space: nowrap;
+}
+
+/* Kelime Gösterimi İyileştirmeleri */
+.word-display {
+    position: relative;
+}
+
+.word-display::before {
+    content: 'Kelime Oluşturma Alanı';
+    position: absolute;
+    top: -25px;
+    left: 10px;
+    font-size: 0.8rem;
+    color: var(--dark-gray);
+}
+
+.morpheme-container {
+    position: relative;
+}
+
+.morpheme-container::before {
+    content: 'Morfem Blokları';
+    position: absolute;
+    top: -25px;
+    left: 10px;
+    font-size: 0.8rem;
+    color: var(--dark-gray);
+}
+
+/* Seviye ve Puan Göstergeleri İyileştirmeleri */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.game-header div {
+    display: flex;
+    align-items: center;
+    font-size: var(--font-size-medium);
+    font-weight: 500;
+}
+
+.game-header div::before {
+    margin-right: 8px;
+    font-size: 1.2em;
+}
+
+.score::before {
+    content: '🏆';
+}
+
+.level::before {
+    content: '📈';
+}
+
+.timer::before {
+    content: '⏱️';
+}
+
+/* Yardım İpuçları */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+}
+
+.tooltip .tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: var(--dark-color);
+    color: var(--white);
+    text-align: center;
+    border-radius: var(--border-radius-md);
+    padding: 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--dark-color) transparent transparent transparent;
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Yeni Morfem Butonu İyileştirmesi */
+#new-morphemes {
+    position: relative;
+}
+
+#new-morphemes::after {
+    content: '🔄';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}

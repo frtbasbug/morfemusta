@@ -1,4 +1,4 @@
-// MorfemUsta: Kelime Fabrikası - Oyun Mantığı
+// MorfemUsta: Sözcük Fabrikası - Geliştirilmiş Oyun Mantığı
 
 class Game {
     constructor() {
@@ -12,6 +12,7 @@ class Game {
         this.timer = null;
         this.timeLeft = 0;
         this.isGameActive = false;
+        this.lastFeedback = "";
     }
 
     // Oyunu başlat
@@ -37,7 +38,7 @@ class Game {
     // Buton işlevlerini ayarla
     setupButtons() {
         console.log("Setting up button event listeners");
-        // Kelime kontrol butonu
+        // Sözcük kontrol butonu
         document.getElementById('check-word').addEventListener('click', () => {
             console.log("Check word button clicked");
             this.checkCurrentWord();
@@ -59,7 +60,7 @@ class Game {
     // Yeni morfemler yükle
     loadNewMorphemes() {
         console.log("loadNewMorphemes called");
-        // Mevcut kelimeyi temizle
+        // Mevcut sözcüğü temizle
         this.clearCurrentWord();
         
         // Seviyeye göre morfem sayısını ayarla
@@ -80,43 +81,49 @@ class Game {
         }
     }
 
-    // Morfemi kelimeye ekle
+    // Morfemi sözcüğe ekle
     addMorphemeToWord(morpheme) {
         console.log(`Adding morpheme to word: ${morpheme.text}`);
         this.currentWord.addMorpheme(morpheme);
         this.updateWordDisplay();
     }
 
-    // Morfemi kelimeden çıkar
+    // Morfemi sözcükten çıkar
     removeMorphemeFromWord(morphemeId) {
         console.log(`Removing morpheme from word: ${morphemeId}`);
         this.currentWord.removeMorpheme(morphemeId);
         this.updateWordDisplay();
     }
 
-    // Kelime gösterimini güncelle
+    // Sözcük gösterimini güncelle
     updateWordDisplay() {
         console.log(`Current word: ${this.currentWord.text}`);
-        // Kelime gösterimi UI güncellemesi burada yapılacak
+        // Sözcük gösterimi UI güncellemesi burada yapılacak
         // (Şu anda sürükle-bırak ile otomatik güncelleniyor)
+        
+        // Geri bildirim alanını temizle
+        this.clearFeedback();
     }
 
-    // Mevcut kelimeyi kontrol et
+    // Mevcut sözcüğü kontrol et
     checkCurrentWord() {
         console.log("Checking current word");
         if (this.currentWord.morphemes.length === 0) {
-            this.showMessage('Lütfen bir kelime oluşturun.', 'warning');
+            this.showFeedback('Lütfen bir sözcük oluşturun.', 'warning');
             return;
         }
         
         const word = this.currentWord.text;
         console.log(`Checking word: "${word}"`);
         
-        if (this.dictionary.isValidWord(word)) {
-            // Geçerli kelime
+        // Geliştirilmiş sözcük doğrulama
+        const validationResult = this.dictionary.isValidWord(word);
+        
+        if (validationResult.valid) {
+            // Geçerli sözcük
             const points = this.currentWord.calculateScore();
             this.score += points;
-            this.showMessage(`"${word}" kelimesi doğru! +${points} puan kazandınız.`, 'success');
+            this.showFeedback(`${validationResult.message} +${points} puan kazandınız.`, 'success');
             
             // Seviye kontrolü
             if (this.score >= this.level * 100) {
@@ -129,15 +136,15 @@ class Game {
             // Yeni morfemler yükle
             this.loadNewMorphemes();
         } else {
-            // Geçersiz kelime
-            this.showMessage(`"${word}" geçerli bir kelime değil.`, 'error');
+            // Geçersiz sözcük
+            this.showFeedback(validationResult.message, 'error');
         }
     }
 
-    // Mevcut kelimeyi temizle
+    // Mevcut sözcüğü temizle
     clearCurrentWord() {
         console.log("Clearing current word");
-        // Kelime gösterimindeki tüm morfem bloklarını morfem konteynerine taşı
+        // Sözcük gösterimindeki tüm morfem bloklarını morfem konteynerine taşı
         const wordDisplay = document.getElementById('word-display');
         const morphemeContainer = document.getElementById('morpheme-container');
         
@@ -160,14 +167,17 @@ class Game {
             morphemeContainer.appendChild(block);
         });
         
-        // Kelimeyi temizle
+        // Sözcüğü temizle
         this.currentWord.clear();
+        
+        // Geri bildirim alanını temizle
+        this.clearFeedback();
     }
 
     // Seviye atla
     levelUp() {
         this.level++;
-        this.showMessage(`Tebrikler! Seviye ${this.level}'e yükseldiniz.`, 'success');
+        this.showFeedback(`Tebrikler! Seviye ${this.level}'e yükseldiniz.`, 'success');
     }
 
     // UI'ı güncelle
@@ -176,16 +186,50 @@ class Game {
         const scoreElement = document.getElementById('score');
         const levelElement = document.getElementById('level');
         
-        if (scoreElement) scoreElement.textContent = this.score;
+        if (scoreElement) {
+            scoreElement.textContent = this.score;
+            // Skor artışı animasyonu
+            scoreElement.classList.add('score-increase');
+            setTimeout(() => {
+                scoreElement.classList.remove('score-increase');
+            }, 500);
+        }
+        
         if (levelElement) levelElement.textContent = this.level;
     }
 
-    // Mesaj göster
-    showMessage(message, type = 'info') {
+    // Geri bildirim göster
+    showFeedback(message, type = 'info') {
         // Konsola yazdır
         console.log(`[${type.toUpperCase()}] ${message}`);
         
-        // Basit alert göster
-        alert(message);
+        // Geri bildirim alanını oluştur veya güncelle
+        let feedbackElement = document.getElementById('feedback-message');
+        
+        if (!feedbackElement) {
+            feedbackElement = document.createElement('div');
+            feedbackElement.id = 'feedback-message';
+            
+            const gameBoard = document.querySelector('.game-board');
+            if (gameBoard) {
+                gameBoard.insertBefore(feedbackElement, gameBoard.firstChild);
+            }
+        }
+        
+        // Geri bildirim tipine göre stil uygula
+        feedbackElement.className = `feedback ${type}`;
+        feedbackElement.textContent = message;
+        feedbackElement.style.display = 'block';
+        
+        // Geri bildirimi sakla
+        this.lastFeedback = message;
+    }
+    
+    // Geri bildirim alanını temizle
+    clearFeedback() {
+        const feedbackElement = document.getElementById('feedback-message');
+        if (feedbackElement) {
+            feedbackElement.style.display = 'none';
+        }
     }
 }

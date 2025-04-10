@@ -2,7 +2,7 @@
 // Integrates the super enhanced database and game mechanics
 
 import SuperEnhancedMorphemeDatabase from './core/super-enhanced-database.js';
-import EnhancedGameMechanics from './core/updated-game-mechanics.js';
+import EnhancedGameMechanics from './core/enhanced-game-mechanics.js';
 
 // Main application class
 class MorfemUstaApp {
