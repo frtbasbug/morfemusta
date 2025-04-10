@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MorfemUsta: Kelime Fabrikası</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/visual-enhancements.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="logo-cube-container">
+                    <div class="logo-cube">
+                        <div class="face front">M</div>
+                        <div class="face back">U</div>
+                        <div class="face right">S</div>
+                        <div class="face left">T</div>
+                        <div class="face top">A</div>
+                        <div class="face bottom">+</div>
+                    </div>
+                </div>
+                <div class="logo-text">
+                    <h1>MorfemUsta</h1>
+                    <p class="tagline">Kelime Fabrikası</p>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Ana Sayfa</a></li>
+                    <li><a href="#">Nasıl Oynanır</a></li>
+                    <li><a href="#">Hakkında</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <section class="intro">
+                <h2>Türkçe Kelime Oluşturma Oyunu</h2>
+                <p>MorfemUsta ile Türkçe'nin morfolojik zenginliğini keşfedin. Morfem bloklarını birleştirerek yeni kelimeler oluşturun, puanlar kazanın ve dil becerilerinizi geliştirin.</p>
+                <button id="start-game" class="btn primary">Oyuna Başla</button>
+                <button id="how-to-play" class="btn secondary">Nasıl Oynanır</button>
+            </section>
+
+            <section class="game-container" id="game-area" style="display: none;">
+                <div class="game-header">
+                    <div class="score">Puan: <span id="score">0</span></div>
+                    <div class="timer">Süre: <span id="timer">00:00</span></div>
+                    <div class="level">Seviye: <span id="level">1</span></div>
+                </div>
+
+                <div class="game-board">
+                    <div class="word-display" id="word-display">
+                        <!-- Oluşturulan kelime burada gösterilecek -->
+                    </div>
+                    
+                    <div class="morpheme-container" id="morpheme-container">
+                        <!-- Morfem blokları burada gösterilecek -->
+                    </div>
+                </div>
+
+                <div class="game-controls">
+                    <button id="check-word" class="btn primary">Kelimeyi Kontrol Et</button>
+                    <button id="clear-word" class="btn secondary">Temizle</button>
+                    <button id="new-morphemes" class="btn secondary">Yeni Morfemler</button>
+                </div>
+            </section>
+
+            <section class="how-to-play" id="how-to-play-section" style="display: none;">
+                <h2>Nasıl Oynanır?</h2>
+                <div class="instructions">
+                    <div class="instruction-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Morfem Bloklarını Sürükleyin</h3>
+                            <p>Ekranın alt kısmında bulunan morfem bloklarını (kökler ve ekler) sürükleyerek kelime oluşturma alanına bırakın.</p>
+                        </div>
+                    </div>
+                    <div class="instruction-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Anlamlı Kelimeler Oluşturun</h3>
+                            <p>Morfem bloklarını doğru sırayla birleştirerek anlamlı Türkçe kelimeler oluşturun.</p>
+                        </div>
+                    </div>
+                    <div class="instruction-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Kelimeyi Kontrol Edin</h3>
+                            <p>"Kelimeyi Kontrol Et" butonuna tıklayarak oluşturduğunuz kelimenin geçerli olup olmadığını kontrol edin.</p>
+                        </div>
+                    </div>
+                    <div class="instruction-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>Puan Kazanın</h3>
+                            <p>Doğru kelimeler oluşturarak puan kazanın. Daha uzun ve karmaşık kelimeler daha yüksek puan kazandırır.</p>
+                        </div>
+                    </div>
+                </div>
+                <button id="back-to-menu" class="btn primary">Ana Menüye Dön</button>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 MorfemUsta: Kelime Fabrikası. Tüm hakları saklıdır.</p>
+        </footer>
+    </div>
+
+    <script src="js/core/morpheme.js"></script>
+    <script src="js/core/word.js"></script>
+    <script src="js/ui/dragdrop.js"></script>
+    <script src="js/utils/dictionary.js"></script>
+    <script src="js/core/game.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
