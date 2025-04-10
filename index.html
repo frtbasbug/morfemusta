@@ -144,5 +144,54 @@
     <script src="js/game-controller.js" type="module"></script>
     <script src="js/game-interface.js" type="module"></script>
     <script src="js/complete-app.js" type="module"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Ana sayfa butonları
+  const startGameBtn = document.getElementById('start-game');
+  const howToPlayBtn = document.getElementById('how-to-play-btn');
+  
+  // Menü öğeleri
+  const navLinks = document.querySelectorAll('nav a');
+  
+  // Bölümleri göster/gizle fonksiyonu
+  function showSection(sectionId) {
+    const sections = document.querySelectorAll('main > section');
+    sections.forEach(section => {
+      section.style.display = section.id === sectionId ? 'block' : 'none';
+    });
+  }
+  
+  // Ana sayfa butonları
+  if (startGameBtn) {
+    startGameBtn.addEventListener('click', function() {
+      showSection('age-selection-section');
+    });
+  }
+  
+  if (howToPlayBtn) {
+    howToPlayBtn.addEventListener('click', function() {
+      showSection('how-to-play-section');
+    });
+  }
+  
+  // Menü öğeleri
+  navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      navLinks.forEach(l => l.classList.remove('active'));
+      this.classList.add('active');
+      
+      if (this.id === 'nav-home') {
+        showSection('intro-section');
+      } else if (this.id === 'nav-how-to-play') {
+        showSection('how-to-play-section');
+      } else if (this.id === 'nav-about') {
+        showSection('about-section');
+      }
+    });
+  });
+});
+</script>
+
 </body>
 </html>
