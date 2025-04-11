@@ -7,8 +7,8 @@ import { setupGameInterface } from './game-interface.js';
 
 // Global erişim için bazı fonksiyonları window nesnesine bağla
 // Bu, HTML script bloğundan bu fonksiyonlara erişmenizi sağlar
-window.startGame = function(ageGroup, difficultyLevel, ageValue) {
-    return gameController.initGame(ageGroup, difficultyLevel, ageValue);
+window.startGame = function(ageGroup, difficultyLevel, ageValue, gameMode) {
+    return gameController.initGame(ageGroup, difficultyLevel, ageValue, gameMode);
 };
 
 // Oyun arayüzünü başlat
