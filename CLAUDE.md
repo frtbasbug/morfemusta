@@ -26,6 +26,11 @@ Tasarım için `DESIGN.md`, güncel durum ve sıradaki hedef için `NEXT.md` oku
 | `npm test` | Vitest birim testleri |
 | `npm run test:e2e` | Playwright: siteyi derler, önizler, telefon boyutunda sınar |
 | `npm run ikonlar` | `scripts/ikon.svg`'den `public/` ikonlarını yeniden üretir |
+| `node scripts/denetim-bicimleri.mjs` | Biçim Denetim Sayfası'ndaki bütün biçimleri sekmeli metin olarak yazar |
+| `python3 scripts/zeyrek-denetimi.py` | O biçimleri zeyrek ile sınar (elle; CI'da yok, aşağıdaki nota bakın) |
+
+Biçim Denetim Sayfası: <http://localhost:5173/morfemusta/denetim.html> (yayında
+`/morfemusta/denetim.html`). Oyundan bağlantı verilmez.
 
 Oturumu kapatmadan önce: `npm run typecheck && npm test && npm run test:e2e`.
 
@@ -35,15 +40,18 @@ Oturumu kapatmadan önce: `npm run typecheck && npm test && npm run test:e2e`.
 .github/workflows/test-ve-yayin.yml   her push ve PR'da test; main'de Pages'e yayın
 e2e/                 Playwright testleri (*.spec.ts)
 public/              ikonlar ve favicon (scripts/ikonlar.mjs üretir)
-scripts/             geliştirme araçları (ikon üretimi)
+scripts/             geliştirme araçları: ikon üretimi, denetim biçimleri, zeyrek denetimi
 src/
-  main.tsx           giriş noktası: yazı tipi ve genel stil burada yüklenir
+  main.tsx           oyunun giriş noktası: yazı tipi ve genel stil burada yüklenir
   App.tsx            kök bileşen
   genel.css          renk belirteçleri (CSS değişkenleri) ve genel stil
   ekranlar/          ekran bileşenleri ve yanlarında birim testleri (*.test.tsx)
   motor/             biçimbilim motoru: saf TypeScript, genel kapısı index.ts; testleri yanında
-icerik/              içerik CSV dosyaları (ekler.csv: ek envanteri)
+  denetim/           Biçim Denetim Sayfası (denetim.html'in girişi, verisi, testleri)
+icerik/              içerik CSV dosyaları (ekler.csv: ek envanteri; kokler.csv: kök sözlüğü)
 tests/               altin-bicimler.csv: motorun altın tablosu
+index.html           oyun
+denetim.html         Biçim Denetim Sayfası (ayrı giriş sayfası)
 DESIGN.md  NEXT.md  CLAUDE.md
 ```
 
@@ -55,7 +63,8 @@ DESIGN.md  NEXT.md  CLAUDE.md
    `vitest`, `playwright`. **Yeni bir kitaplık için önce onay istenir.**
    Oturum 1'de iskeletin parçası olarak şu araçlar da kuruldu: `react-dom`, `vite`,
    `@vitejs/plugin-react`, `typescript`, `@types/react`, `@types/react-dom`,
-   `@types/node`, `@playwright/test`.
+   `@types/node`, `@playwright/test`. Oturum 3'te kullanıcının isteğiyle: `zeyrek`
+   (Python; projenin bağımlılığı değil, yalnız `scripts/zeyrek-denetimi.py` için elle kurulur).
 3. **Biçimbilim motoru `src/motor` altındadır ve arayüzden bağımsızdır.** Motor saf
    TypeScript'tir: React'i, DOM'u, CSS'i ya da `src/motor` dışındaki uygulama kodunu içe
    aktarmaz. Arayüz motoru kullanır, motor arayüzü bilmez. Motor Vitest ile `node`
@@ -73,6 +82,9 @@ DESIGN.md  NEXT.md  CLAUDE.md
    yanlış görünürse iş durur ve kullanıcıya sorulur.
 9. **Motor testleri kırmızıyken push yok.** `src/motor` altındaki testlerden (altın tablo
    dahil) biri bile kırmızıysa hiçbir dala push edilmez; ara push da yapılmaz.
+10. **`icerik/kokler.csv` yalnız kullanıcının onayıyla değişir.** Kök sözlüğü de motorun
+    sözleşmesidir: testi geçirmek için kök ya da işaret değiştirilmez, silinmez, eklenmez.
+    Bir satır yanlış görünürse iş durur ve kullanıcıya sorulur.
 
 ## Adlandırma
 
@@ -91,6 +103,18 @@ DESIGN.md  NEXT.md  CLAUDE.md
 - **Önbellek kalıbı:** Çalışma anında ayrı dosya olarak istenen yeni bir dosya türü (ör. ses
   için `.mp3`/`.ogg`) eklenirse `vite.config.ts` içindeki `workbox.globPatterns`'a da
   eklenmeli; yoksa o dosya çevrim dışı açılmaz.
+- **İki giriş sayfası:** `index.html` (oyun) ve `denetim.html` (Biçim Denetim Sayfası).
+  Derleme girişleri `vite.config.ts`'deki `build.rolldownOptions.input`'tadır; yeni bir
+  sayfa oraya eklenir. Her sayfa önbelleğe girmelidir: service worker önbellekte olmayan bir
+  gezinmeyi `navigateFallback` ile oyunun `index.html`'ine düşürür (`e2e/denetim.spec.ts`
+  bunu denetler).
+- **Kök sözlüğü (`icerik/kokler.csv`):** sözlükte olmayan kök uydurmadır. Sonu p, ç, t ya
+  da k olan her kökte `yumusama` (evet/hayır) yazılı olmalıdır; `src/motor/sozluk.ts`
+  işaretleri yüklerken doğrular ve yanlış satırı numarasıyla bildirir.
+- **Zeyrek denetimi:** `pip install zeyrek`; betik biçimleri `node scripts/denetim-bicimleri.mjs`
+  ile alır (npm bağımlılıkları kurulu olmalı). NLTK'nin `punkt_tab` verisi vekil sunucu
+  arkasında inmezse `NLTK_ALLOW_PROXIED_URLOPEN=1` ile çalıştırılır. Zeyrek'in sözlüğünde
+  eksik ve eş sesli girdiler var: listedeki biçim için motor değiştirilmez, yalnız incelenir.
 - **İçerik CSV'leri `?raw` ile okunur** (`import metin from '../../icerik/ekler.csv?raw'`).
   Vite dosyanın metnini JS paketine gömer; ayrı `.csv` dosyası sunulmadığı için
   `globPatterns`'a eklemek gerekmez, çevrim dışı da çalışır. Motor kendi tür denetiminde

@@ -150,3 +150,6 @@ vite.config.ts.timestamp-*
 
 # vite-plugin-pwa geliştirme çıktısı
 dev-dist
+
+# Python (scripts/zeyrek-denetimi.py)
+__pycache__/

@@ -1,4 +1,5 @@
 /// <reference types="vitest/config" />
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
@@ -8,6 +9,17 @@ const TABAN = '/morfemusta/'
 
 export default defineConfig({
   base: TABAN,
+  build: {
+    rolldownOptions: {
+      // İki giriş sayfası: oyun ve Biçim Denetim Sayfası. Oyun denetim sayfasına bağlantı
+      // vermez. Denetim sayfası da önbelleğe girer; girmeseydi service worker oraya giden
+      // gezinmeyi oyunun index.html'ine yönlendirirdi (navigateFallback).
+      input: {
+        oyun: fileURLToPath(new URL('index.html', import.meta.url)),
+        denetim: fileURLToPath(new URL('denetim.html', import.meta.url)),
+      },
+    },
+  },
   plugins: [
     react(),
     VitePWA({

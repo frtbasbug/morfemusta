@@ -20,7 +20,7 @@ const izinli = (yol: string) =>
 describe('motorun bağımsızlığı', () => {
   it('kaynak dosyalar bulunur', () => {
     expect(Object.keys(kaynaklar)).toEqual(
-      expect.arrayContaining(['./ekle.ts', './envanter.ts', './index.ts']),
+      expect.arrayContaining(['./ekle.ts', './envanter.ts', './index.ts', './sozluk.ts']),
     )
   })
 
