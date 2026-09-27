@@ -1,0 +1,23 @@
+{
+  // Motor DOM'suz ve Node'suz derlenir: document, window, fetch ya da process kullanırsa
+  // tür denetimi kırılır. Testler tsconfig.app.json ile denetlenir.
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": [],
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true
+  },
+  "include": ["src/motor"],
+  "exclude": ["src/motor/**/*.test.ts"]
+}
