@@ -1,0 +1,45 @@
+:root {
+  --gok-ust: #9fd8ec;
+  --gok-alt: #e3f4fa;
+  --gunes: #ffd166;
+  --gunes-hale: rgb(255 240 190 / 0.7);
+  --deniz: #2a7fa8;
+  --deniz-koyu: #1c5f80;
+  --kopuk: #d9f1f8;
+  --kum: #f2d18b;
+  --kum-koyu: #dcb36a;
+  --yaprak: #4f9d57;
+  --yaprak-koyu: #3b7d43;
+  --kutuk: #8a5a36;
+  --yazi: #16364a;
+
+  --telefon-genisligi: 30rem;
+
+  font-family: 'Andika', system-ui, sans-serif;
+  color: var(--yazi);
+  background: var(--deniz-koyu);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--deniz-koyu);
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+#kok {
+  min-height: 100dvh;
+}

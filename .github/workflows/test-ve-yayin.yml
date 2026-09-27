@@ -1,0 +1,77 @@
+name: Test ve yayın
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  test:
+    name: Testler
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Bağımlılıkları kur
+        run: npm ci
+
+      - name: Tür denetimi
+        run: npm run typecheck
+
+      - name: Birim testleri (Vitest)
+        run: npm test
+
+      - name: Playwright Chromium'unu kur
+        run: npx playwright install --with-deps --only-shell chromium
+
+      # webServer adımı siteyi dist/ altına derleyip önizler; aşağıda yayınlanan
+      # dist/, uçtan uca testlerden geçen derlemenin kendisidir.
+      - name: Uçtan uca testler (telefon, Playwright)
+        run: npm run test:e2e
+
+      - name: Playwright raporunu sakla
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-raporu
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+      - name: Pages yapıtını yükle
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+  yayin:
+    name: GitHub Pages'e yayınla
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.yayin.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - id: yayin
+        uses: actions/deploy-pages@v4

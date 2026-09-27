@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Tam taşan (full-bleed) ada ikonu. Önemli öğeler maskable güvenli bölgesinde
+       (merkezden 0,4 × 512 yarıçaplı daire) kalır. -->
+  <defs>
+    <linearGradient id="gok" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9fd8ec" />
+      <stop offset="1" stop-color="#e3f4fa" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#gok)" />
+  <circle cx="350" cy="170" r="42" fill="#ffd166" />
+  <ellipse cx="256" cy="346" rx="176" ry="46" fill="#dcb36a" />
+  <ellipse cx="256" cy="338" rx="168" ry="42" fill="#f2d18b" />
+  <path d="M120 336 Q178 236 262 256 Q336 274 380 336 Z" fill="#4f9d57" />
+  <path d="M120 336 Q178 236 262 256 Q210 280 190 336 Z" fill="#3b7d43" opacity="0.35" />
+  <path d="M300 330 Q306 262 322 212" fill="none" stroke="#8a5a36" stroke-width="16" stroke-linecap="round" />
+  <g fill="#4f9d57">
+    <ellipse cx="362" cy="212" rx="40" ry="13" transform="rotate(165 322 212)" />
+    <ellipse cx="362" cy="212" rx="40" ry="13" transform="rotate(-150 322 212)" />
+    <ellipse cx="362" cy="212" rx="40" ry="13" transform="rotate(-110 322 212)" />
+    <ellipse cx="362" cy="212" rx="40" ry="13" transform="rotate(-70 322 212)" />
+    <ellipse cx="362" cy="212" rx="40" ry="13" transform="rotate(-30 322 212)" />
+    <ellipse cx="362" cy="212" rx="40" ry="13" transform="rotate(15 322 212)" />
+  </g>
+  <path d="M0 372 Q32 356 64 372 T128 372 T192 372 T256 372 T320 372 T384 372 T448 372 T512 372 V512 H0 Z" fill="#2a7fa8" />
+  <path d="M0 372 Q32 356 64 372 T128 372 T192 372 T256 372 T320 372 T384 372 T448 372 T512 372" fill="none" stroke="#d9f1f8" stroke-width="6" />
+</svg>
