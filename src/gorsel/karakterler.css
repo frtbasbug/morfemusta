@@ -1,0 +1,159 @@
+/* Ünlü karakterleri, bukalemun ek, kök yazısı ve ünlü kartı (DESIGN.md, "Görsel dil").
+   Renkler yalnız tema.css'teki belirteçlerden gelir. */
+
+/* Kalın karakter kalın rengi, ince karakter ince rengi taşır; renk tek başına bir şey
+   anlatmaz, beden de aynı özelliği gösterir. */
+.unlu,
+.bukalemun {
+  --renk: var(--kalin);
+
+  display: block;
+}
+
+/* Ünlü dar kapta küçülür. Bukalemun küçülmez: ince bukalemunun üstündeki 20px'lik yazı
+   18px'in altına inmemeli. */
+.unlu {
+  max-width: 100%;
+  height: auto;
+}
+
+.unlu[data-kalinlik='ince'],
+.bukalemun[data-kalinlik='ince'] {
+  --renk: var(--ince);
+}
+
+.karakter__govde {
+  fill: var(--renk);
+  stroke: var(--murekkep);
+  stroke-width: var(--cizgi-govde);
+  stroke-linejoin: round;
+}
+
+.karakter__yanak {
+  fill: var(--yanak);
+}
+
+.karakter__goz-aki {
+  fill: var(--zemin);
+  stroke: var(--murekkep);
+  stroke-width: var(--cizgi-goz-aki);
+}
+
+.karakter__bebek,
+.karakter__agiz {
+  fill: var(--murekkep);
+}
+
+/* Bukalemun: kuyruk ve bacaklar 11'lik mürekkep, üstüne 5'lik renk. */
+.bukalemun__alt-cizgi,
+.bukalemun__ust-cizgi {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.bukalemun__alt-cizgi {
+  stroke: var(--murekkep);
+  stroke-width: var(--cizgi-kuyruk-alti);
+}
+
+.bukalemun__ust-cizgi {
+  stroke: var(--renk);
+  stroke-width: var(--cizgi-kuyruk);
+}
+
+.bukalemun__ibik {
+  fill: var(--renk);
+  stroke: var(--murekkep);
+  stroke-width: var(--cizgi-ibik);
+  stroke-linejoin: round;
+}
+
+.bukalemun__goz-tumsegi {
+  fill: var(--renk);
+  stroke: var(--murekkep);
+  stroke-width: var(--cizgi-govde);
+}
+
+.bukalemun__yazi {
+  fill: var(--murekkep);
+  font-family: var(--yazi-tipi);
+  font-size: var(--boy-ek);
+  font-weight: 700;
+}
+
+/* Saklanan bukalemun zemine karışır: gövde, ibik, kuyruk ve bacaklar zemin renginde, dış
+   hatları 4 3 kesik mürekkep çizgisi; göz görünür kalır. Kesikler görünsün diye kalın
+   alt çizginin uçları düzdür. Seçici, kalınlık kuralını yenecek kadar belirgindir. */
+.bukalemun.bukalemun--saklanan {
+  --renk: var(--zemin);
+}
+
+.bukalemun--saklanan :is(.karakter__govde, .bukalemun__ibik, .bukalemun__goz-tumsegi),
+.bukalemun--saklanan .bukalemun__alt-cizgi {
+  stroke-dasharray: 4 3;
+}
+
+.bukalemun--saklanan :is(.bukalemun__alt-cizgi, .bukalemun__ust-cizgi) {
+  stroke-linecap: butt;
+}
+
+/* Uymayan ek eğik durur. */
+.bukalemun--uyumsuz {
+  transform: rotate(-12deg);
+  transform-origin: 45% 85%;
+}
+
+/* Kök yazısı: son ünlü bir etiketin içindedir; etiketin zemini kalın ya da ince rengi,
+   köşesi düz ünlüde 4px, yuvarlakta tam yuvarlak. */
+.kok-yazisi {
+  color: var(--murekkep);
+  font-family: var(--yazi-tipi);
+  font-size: var(--boy-kok);
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.kok-yazisi__etiket {
+  display: inline-block;
+  min-width: 1.1em;
+  padding: 0 0.1em;
+  border: var(--cizgi-kok-etiketi) solid var(--murekkep);
+  border-radius: 4px;
+  background: var(--kalin);
+  line-height: 1.05;
+  text-align: center;
+}
+
+.kok-yazisi__etiket[data-kalinlik='ince'] {
+  background: var(--ince);
+}
+
+.kok-yazisi__etiket[data-yuvarlaklik='yuvarlak'] {
+  border-radius: 999px;
+}
+
+/* Ünlü kartı: tek gölgeli öğe. Zemini satırın kalın ya da ince zeminidir. */
+.unlu-karti {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  padding: 0.4rem 0.25rem 0.2rem;
+  border: var(--cizgi-kart) solid var(--murekkep);
+  border-radius: var(--kose-kart);
+  background: var(--kalin-zemin);
+  box-shadow: var(--golge-kart);
+}
+
+.unlu-karti[data-kalinlik='ince'] {
+  background: var(--ince-zemin);
+}
+
+.unlu-karti__harf {
+  color: var(--murekkep);
+  font-family: var(--yazi-tipi);
+  font-size: var(--boy-unlu-harfi);
+  line-height: 1.1;
+}

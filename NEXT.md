@@ -1,57 +1,52 @@
 # Sıradaki
 
-## Son oturum: Oturum 3 — biçimbilim motoru II (2026-09-27)
+## Son oturum: Oturum 4 — görsel dil (2026-09-27)
 
 ### Bitenler
 
-- **Altın tablo:** `tests/altin-bicimler.csv`'nin sonuna kullanıcının verdiği 100 satır
-  olduğu gibi eklendi. Tabloda 202 satır var: Oturum 2'nin 100 satırı, onun sonunda
-  onaylanan 2 satır (*evleri*, *kitaplarında*) ve Oturum 3'ün 100 satırı. `beklenen`
-  sütununda `|` ile ayrılmış biçimler (`pıtağı|pıtakı`) için `olasiBicimler` tam bu kümeyi
-  döner; tek biçimli satırda `ekle` o biçimi, `olasiBicimler` de yalnız onu döner. 202/202
-  geçiyor.
-- **Kök sözlüğü:** `icerik/kokler.csv`, kullanıcının verdiği hâliyle (150 kök; kategori,
-  yumusama, unlu_dusmesi, istisna). `src/motor/sozluk.ts` `?raw` ile okur ve işaretleri
-  doğrular (p/ç/t/k ile biten kökte yumusama zorunlu, ünlü düşmesi için ünsüz + ünlü + ünsüz
-  sonu, ince-ek yalnız son ünlüsü kalın kökte, ikiz ve su'nun koşulları); yanlış satırı
-  numarasıyla bildirir.
-- **Ek envanteri:** `icerik/ekler.csv`'ye dört yapım eki: PROP -lI, PRIV -sIz, LIK -lIk,
-  DIM -CIk.
-- **Motor (`src/motor/ekle.ts`):** Oturum 2'nin motoru yerinde genişletildi (ayrı motor
-  yok); Oturum 2'nin davranışı ve `ekle(kok, etiketler, envanter?)` imzası korunur.
-  - Ünsüz yumuşaması (p→b, ç→c, t→d, k→ğ; nk→ng), ünlü düşmesi, ince ek, ikizleşme ve su
-    kuralı; sözlük işaretleri yalnız köke gelen ilk eke uygulanır. -lIk ya da -CIk ile biten
-    türemiş gövdenin k'si ünlüyle başlayan ekten önce hep ğ olur (gözlüğüm, kediciğim).
-  - Uydurma kelime: sözlükte olmayan kök uydurmadır. `ekle` kökü bozmayan biçimi verir
-    (pıtakı); `olasiBicimler(kok, etiketler)` kabul edilen bütün biçimleri, ilki `ekle`'ninki
-    olmak üzere döner (pıtakı, pıtağı). Ünlü düşmesi, ikizleşme, ince ek ve su yalnız
-    sözlükte işaretli kökte olur.
-  - Parçalar artık `govde` de taşır: ekin geldiği gövde, ekin yol açtığı değişikliklerle
-    ("kitab" → kitabı). Yeni olaylar: `yumuşama` ("yumuşama: k→ğ", "yumuşama: nk→ng"),
-    `ünlü düşmesi`, `ikizleşme`, `ince ek`, `su` ("su: y"). Gövde olaylarının konumu
-    parçanın gövdesinde, ek olaylarınınki yüzeyindedir (`govdeOlayiMi`).
-  - Sözlük dördüncü, isteğe bağlı parametredir: `ekle(kok, etiketler, envanter?, sozluk?)`,
-    `olasiBicimler` de aynı; verilmezse `icerik/*.csv`'dekiler kullanılır.
-- **Biçim Denetim Sayfası:** `denetim.html` (ayrı giriş sayfası, oyundan bağlantı yok,
-  `noindex`). Sözlükteki her kök için işaretler ve PL, ACC, DAT, LOC, POSS.1SG, POSS.3SG,
-  GEN, PROP biçimleri; kategoriye göre gruplu. Telefonda her kök bir kart (iki sütun, 36rem'den
-  sonra dört), 75rem'den geniş ekranda tablo. Veri `src/denetim/veri.ts`'tedir; sayfa da
-  `scripts/denetim-bicimleri.mjs` de onu kullanır.
-- **Zeyrek denetimi:** `scripts/zeyrek-denetimi.py` (CI'da yok). Oturumda çalıştırıldı
-  (zeyrek 0.1.3, nltk 3.10.3): 1200 biçimin 1200'ü çözümlendi; çözümlenemeyen yok; beklenen
-  kök ve ekle eşleşmeyen yok. Denetim ayırt edici: bilerek yanlış kurulan 18 biçimden
-  (kitapı, tobu, saatlar, golu, hakı, çocukum ...) 16'sını yakaladı; kaçan ikisi zeyrek'in
-  eş sesli girdileri (ağızım, sırım).
-- **Testler:** 319 birim testi (motor 306: altın tablo 203, ekle 60, sözlük 22, envanter
-  13, bağımsızlık 8; denetim sayfası 11; açılış ekranı 2) ve 9 uçtan uca test (açılış 4,
-  denetim 5: telefonda ve 320 px'te taşmadan açılış, en uzun biçimler bölünmüyor, kategori
-  bağlantısı, dış istek yok, oyunda bağlantı yok, service worker varken ve çevrim dışı
-  açılış).
-- **CLAUDE.md:** 10. kural (`icerik/kokler.csv` yalnız kullanıcının onayıyla değişir), iki
-  giriş sayfası, kök sözlüğü ve zeyrek notları, komutlar ve klasör yapısı.
+- **Görsel yön B · Canlı** koda geçti; `DESIGN.md`'ye "Görsel dil" bölümü yazıldı (görsel kod,
+  belirteçler, üç kural). CLAUDE.md'de 11. kural bu üç kuralı anar.
+- **Geometri (`src/gorsel/cizim.ts`):** tuvaldeki başvuru kodunun TypeScript hâli. Sayılar ve
+  yollar birebir: sekiz ünlünün iki çizimi de başvuru koduyla karşılaştırıldı, aynı çıktı.
+  Saftır: React'e ve DOM'a bağımlı değil; `tsconfig.motor.json` onu da DOM'suz derler.
+  Kutular ve yuvarlak parçaların yarıçapları (`UNLU`, `BUKALEMUN`) yorumlardan sabite geçti.
+- **Belirteçler (`src/gorsel/tema.css`):** on renk, Renksiz kipin iki grisi, çizgi
+  kalınlıkları, yazı tipleri, yazı boyları; `.renksiz` sınıfı.
+- **Yazı tipleri:** Baloo 2 (800) `@fontsource/baloo-2` ile pakete gömüldü (kullanıcının
+  isteğiyle, OFL-1.1). woff2 dosyaları service worker önbelleğinde; Google Fonts'a istek yok.
+- **Bileşenler (`src/gorsel/`):** `Unlu` (72×76), `Bukalemun` (132×82), `KokYazisi`; hepsi
+  `role="img"` ve `aria-label` taşır ("a: kalın, düz, geniş"; "lar bukalemunu, a kılığında:
+  kalın, düz, geniş"). Renkler CSS değişkenlerinden (`karakterler.css`); `boyut` yalnız ölçekler.
+  Ünlü kartı (`.unlu-karti`, çizgi 2.5, köşe 18, tek gölge) da görsel dilin parçası.
+- **Bukalemunun kılığı (`src/gorsel/kilik.ts`):** `bukalemunKiligi(parca)`, ekle()
+  sonucundaki ekin ilk yüzey ünlüsünü alır. Ek ünlüsüz kalırsa (kedim) bukalemun saklanır ve
+  biçimi, saklanan ünlüye uyumun seçeceği ünlününki olur (i). Bunun için motorun iç `uyum`
+  işlevi dışa açıldı; motorun davranışı, altın tablo ve sözlük değişmedi.
+- **Karakter Galerisi (`galeri.html`):** ayrı giriş sayfası, oyundan bağlantı yok, `noindex`.
+  Sekiz ünlü okul çizelgesi düzeninde; -lAr (kuşlar, gözler), -(I)m (kızım, evim, yolum,
+  gözüm), saklanan (kedim), uymayan (ev + lar, elle kurulan tek örnek). Üstte yapışkan başlık
+  ve Renksiz düğmesi (`aria-pressed`).
+- **Testler:** 402 birim testi (yeni 83: çizim 26, bileşenler 27, kılık 23, galeri 7; motor
+  306 değişmedi) ve 14 uçtan uca test (yeni 5, galeri: telefonda ve 320 px'te açılış, 8 ünlü
+  ve 8 bukalemun görünür, konsol hatası yok, Baloo 2 yüklü; Renksiz'de `--kalin` = `--ince`;
+  Google Fonts'a ve başka sunucuya istek yok; oyunda bağlantı yok; çevrim dışı açılış).
+  Piksel karşılaştırmalı ekran görüntüsü testi yok.
 
 ### Açık kalanlar
 
+- **Kullanıcı onayı bekliyor:** Renksiz kipte sekiz ünlü bedenlerinden ayırt ediliyor mu?
+  Telefonda gözle bakılacak: <https://frtbasbug.github.io/morfemusta/galeri.html> (PR
+  birleşince) ya da `npm run dev` ile <http://localhost:5173/morfemusta/galeri.html>.
+- **Saklanan bukalemunun kuyruk ucu:** kuyruğun 11'lik kesik alt çizgisi sarmalın dar
+  yerinde üst üste biniyor; uçta kesikler küçük bir yumak gibi görünüyor. Geometri tuvalden,
+  değiştirilmedi; gözle bakılmalı.
+- **Bukalemunun göz bebeği göz akının ortasında:** başvuru kodunda bebek için kayma yok
+  (ünlü karakterinde bebek 0.8 aşağıda). Bakış köke dönsün istenirse tuvalde karar verilir.
+- **Oyunun açılış ekranı eski paletle:** `genel.css`'teki ada renkleri ve Andika başlık
+  duruyor; görsel dil henüz yalnız galeride. Ada haritası (Oturum 6) yeni dile geçer.
+- **İkonlar yer tutucu:** `scripts/ikon.svg`'deki ada çizimi. Görsel dil belirlendi; ikonlar
+  ona göre yeniden çizilebilir (`npm run ikonlar`).
+- **`motion` henüz kurulmadı:** izinli; Oturum 5'teki büyü ve düşüş için gerekecek.
 - **`iş` sözlükte yok:** Oturum 2'nin 85. altın satırı (`iş,AGT,işçi`) artık uydurma kökle
   çalışıyor. Biçim değişmiyor (AGT ünsüzle başlar, ş yumuşamaz); istenirse `iş` sözlüğe
   eklenir (kullanıcı onayıyla).
@@ -63,37 +58,32 @@
 - **Ek sırası denetlenmiyor (Oturum 8):** Motor etiketleri verilen sırayla ekler;
   `PL+AGT`, `LOC+PL` ya da `PL+LIK` gibi dizileri reddetmez. `ekler.csv`'deki tür sütunu
   bunun için hazır ("meyvenin üstüne gövde çıkmaz", DESIGN.md).
-- **Yanlış biçimin nedeni yok (Oturum 5):** *evlar* için "kalınlık uyuşmuyor" gibi, ekin
-  düşme nedenini veren bir denetleyici. Arayüzün komik sonuçları için gerekecek.
 - **Ek adları CSV'de yok:** yönelme, bulunma, ayrılma gibi Türkçe adlar canlandırılacak
   (DESIGN.md, "Terimler resimdir"). Arayüz gerektirince `ekler.csv`'ye sütun eklenebilir.
 - **Kökte yalnız 29 küçük harf kabul ediliyor:** *kâr*, *hâlâ* gibi düzeltme işaretli
   kökler ve büyük harf şimdilik hata veriyor (motorda da sözlükte de).
-- **Gerçek telefonda doğrulama (PR'lar birleşince):** <https://frtbasbug.github.io/morfemusta/>
-  Android Chrome'da "Uygulamayı yükle / Ana ekrana ekle"; iOS Safari'de Paylaş →
-  "Ana Ekrana Ekle"; ardından uçak modunda açılış. Denetim sayfası:
-  <https://frtbasbug.github.io/morfemusta/denetim.html>.
-- **İkonlar yer tutucu:** `scripts/ikon.svg`'deki ada çizimi. Görsel kimlik belirlenince
-  değiştirilir (`npm run ikonlar`).
-- **`motion` henüz kurulmadı:** izinli; ilk animasyon gerektiğinde eklenecek.
+- **Gerçek telefonda doğrulama:** <https://frtbasbug.github.io/morfemusta/> Android
+  Chrome'da "Uygulamayı yükle / Ana ekrana ekle"; iOS Safari'de Paylaş → "Ana Ekrana Ekle";
+  ardından uçak modunda açılış. Denetim sayfası ve galeri de çevrim dışı açılmalı.
 - **Yön kilidi yok:** manifest'te `orientation` yazılı değil. Telefonda dikey kilit mi,
   sınıf modu (etkileşimli tahta) için yatay mı, karar bekliyor.
 - **DESIGN.md künyeleri:** Aksu-Koç & Slobin (1985) ile Becker, Ketrez & Nevins (2011)
   yalnız kısa atıfla geçiyor. Tam künye, doğrulanmış kaynaktan eklenebilir.
-- **Önbellek boyutu:** Andika'nın Kiril ve Vietnamca alt kümeleri de önbelleğe giriyor
-  (yaklaşık 80 KB). Türkçe için `latin` ve `latin-ext` yeterli; gerekirse
-  `workbox.globIgnores` ile ayıklanır. Denetim sayfası da önbelleğe giriyor (JS ve CSS
-  yaklaşık 17 KB); girmezse service worker onu oyuna düşürür, çıkarılmamalı.
+- **Önbellek boyutu:** Andika'nın Kiril ve Vietnamca alt kümeleri (yaklaşık 80 KB) ve Baloo
+  2'nin Devanagari ve Vietnamca alt kümeleri (yaklaşık 62 KB) de önbelleğe giriyor. Türkçe
+  için `latin` ve `latin-ext` yeterli; gerekirse `workbox.globIgnores` ile ayıklanır.
+  Denetim sayfası ve galeri de önbelleğe giriyor; girmezlerse service worker onları oyuna
+  düşürür, çıkarılmamalı.
 
-## Sıradaki hedef: Oturum 4
+## Sıradaki hedef: Oturum 5 — Bukalemun Koyu
 
-Kapsam oturum başında kullanıcıyla belirlenir. Bilinen plan: yanlış biçimin nedeni
-Oturum 5'te, ek sırası denetimi Oturum 8'de. Motor ilk bölgeler için yeterli (uyum,
-benzeşme, kaynaştırma, yumuşama, ünlü düşmesi, yapım ekleri, uydurma kelime).
+Oturum 4'ün PR'ı birleşmeden açılmaz; kapsam ve iki tablo (`icerik/gorevler/bukalemun-koyu.csv`,
+`tests/neden.csv`) kullanıcının oturum metnindedir. Kısaca:
 
-Öneri: **ilk oyun ekranı, Bukalemun Koyu (ünlü uyumu).** Çocuk kök yaratığına -lAr ya da
--(I)m bukalemununu takar; motor doğru biçimi verir, kelime dünyayı değiştirir (DESIGN.md,
-"Çekirdek mekanik"). Yanlış seçimin komik sonucu Oturum 5'teki nedenle gelir.
-
-- Kökler `icerik/kokler.csv`'den, görevler `icerik/*.csv`'den okunur (koda gömülmez).
-- Uyum ipucu hem renkle hem biçimle verilir (renk körlüğü); telefonda tek sütun.
+- İlk oyun ekranı: ortada kök (`KokYazisi`), altındaki kıyıda bukalemunlar (`Bukalemun`);
+  çocuk doğru bukalemunu köke taşır (sürükle-bırak, dokun-dokun, klavye). Doğru biçim hep
+  motordan gelir (`olasiBicimler`, `ekle`).
+- Motora `neden(kok, etiketler, parcalar)` ve `nedenCumlesi(neden)`: yanlış biçimin nedeni
+  yerel uyumla bulunur (*toplerim*'de suç yalnız *ler*'in).
+- Doğruda büyü, yanlışta eğilip düşme; ağız hiçbir durumda değişmez (DESIGN.md, "Görsel
+  dil", 2. kural). Renksiz görevde `.renksiz` sınıfı kullanılır.

@@ -1,0 +1,51 @@
+/* Morfemusta görsel dili, B · Canlı: belirteçler (DESIGN.md, "Görsel dil").
+   Yalnız bu renkler kullanılır. Degrade ve bulanık gölge yok; tek gölge ünlü kartlarınınki. */
+:root {
+  /* Renkler */
+  --zemin: #FFF6E9;
+  --murekkep: #1E1B3A;
+  --soluk: #4A4568;
+  --ayrac: #8C87A8;
+  --kalin: #FF8A3D;
+  /* Mürekkebin ince renk üstündeki karşıtlığı 4.3:1: ince renk üstüne 18px'ten küçük yazı
+     konmaz. */
+  --ince: #2F80ED;
+  --kalin-zemin: #FFD6BB;
+  --ince-zemin: #B6D3F9;
+  --yanak: #FF9DB4;
+  --cizik: #6B6781;
+
+  /* Renksiz kipte kalın ve ince aynı gri olur; ayrım yalnız bedende kalır. */
+  --renksiz: #8E8C99;
+  --renksiz-zemin: #E2E1E8;
+
+  /* Çizgi kalınlıkları. SVG'de px kullanıcı birimidir; karakterle birlikte ölçeklenir. */
+  --cizgi-govde: 3px;
+  --cizgi-goz-aki: 1.5px;
+  --cizgi-ibik: 2.5px;
+  --cizgi-kuyruk: 5px;
+  --cizgi-kuyruk-alti: 11px;
+  --cizgi-kok-etiketi: 2px;
+  --cizgi-kart: 2.5px;
+  --kose-kart: 18px;
+  --golge-kart: 0 4px 0 var(--murekkep);
+
+  /* Yazı tipleri: Andika harfler ve metin için, Baloo 2 başlık ve logo için. İkisi de
+     pakete gömülüdür (@fontsource); dış yazı tipi sunucusu kullanılmaz. */
+  --yazi-tipi: 'Andika', system-ui, sans-serif;
+  --baslik-yazi-tipi: 'Baloo 2', 'Andika', system-ui, sans-serif;
+
+  /* Yazı boyları */
+  --boy-unlu-harfi: 30px;
+  --boy-ek: 20px;
+  --boy-kok: 30px;
+  --boy-sonuc: 22px;
+}
+
+/* Renksiz kip: bu sınıfın altındaki her şeyde kalın ve ince aynı gridir. */
+.renksiz {
+  --kalin: var(--renksiz);
+  --ince: var(--renksiz);
+  --kalin-zemin: var(--renksiz-zemin);
+  --ince-zemin: var(--renksiz-zemin);
+}

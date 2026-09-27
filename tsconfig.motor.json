@@ -1,6 +1,7 @@
 {
   // Motor DOM'suz ve Node'suz derlenir: document, window, fetch ya da process kullanırsa
-  // tür denetimi kırılır. Testler tsconfig.app.json ile denetlenir.
+  // tür denetimi kırılır. Görsel dilin geometrisi (src/gorsel/cizim.ts) da motor gibi saftır
+  // ve burada denetlenir. Testler tsconfig.app.json ile denetlenir.
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2023"],
@@ -18,6 +19,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["src/motor"],
+  "include": ["src/motor", "src/gorsel/cizim.ts"],
   "exclude": ["src/motor/**/*.test.ts"]
 }

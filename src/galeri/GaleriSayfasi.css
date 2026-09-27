@@ -1,0 +1,145 @@
+/* Karakter Galerisi. Telefonda tek sütun; yalnız görsel dilin belirteçleri kullanılır. */
+.galeri {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 0 max(0.75rem, env(safe-area-inset-right)) 3rem max(0.75rem, env(safe-area-inset-left));
+}
+
+/* Başlık ve Renksiz düğmesi kaydırırken üstte kalır. */
+.galeri__ust {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: max(0.6rem, env(safe-area-inset-top)) 0 0.5rem;
+  border-bottom: 2px solid var(--ayrac);
+  background: var(--zemin);
+}
+
+.galeri__baslik,
+.galeri h2 {
+  margin: 0;
+  font-family: var(--baslik-yazi-tipi);
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.galeri__baslik {
+  font-size: clamp(1.5rem, 7vw, 2.25rem);
+}
+
+.galeri h2 {
+  margin-top: 1.75rem;
+  font-size: 1.6rem;
+}
+
+.galeri__aciklama {
+  margin: 0.5rem 0 1rem;
+  color: var(--soluk);
+  line-height: 1.45;
+}
+
+.galeri__renksiz {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.4rem 1.1rem;
+  border: var(--cizgi-kart) solid var(--murekkep);
+  border-radius: 999px;
+  background: var(--zemin);
+  color: var(--murekkep);
+  font: 700 1rem / 1 var(--yazi-tipi);
+  cursor: pointer;
+}
+
+.galeri__renksiz[aria-pressed='true'] {
+  background: var(--murekkep);
+  color: var(--zemin);
+}
+
+.galeri__renksiz:focus-visible {
+  outline: 3px solid var(--murekkep);
+  outline-offset: 3px;
+}
+
+/* Okul çizelgesi */
+.cizelge {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0.3rem 0.5rem;
+  table-layout: fixed;
+}
+
+.cizelge__satir-basi {
+  width: 3.1rem;
+}
+
+.cizelge th {
+  color: var(--murekkep);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.cizelge thead th {
+  padding-bottom: 0.1rem;
+  border-bottom: 2px solid var(--ayrac);
+}
+
+.cizelge tbody th {
+  text-align: left;
+}
+
+.cizelge td {
+  padding: 0 0 4px;
+  vertical-align: top;
+}
+
+/* Örnekler: kök, bukalemun, ok, sonuç. Dar ekranda ok ve sonuç alt satıra geçer; bukalemun
+   küçülmez, üstündeki yazı 20px kalır. */
+.ornekler {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ornek {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.5rem;
+}
+
+.ornek .bukalemun {
+  flex: none;
+}
+
+.ornek__sonuc {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.ornek__ok path {
+  fill: none;
+  stroke: var(--murekkep);
+  stroke-width: var(--cizgi-govde);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ornek__bicim {
+  font-size: var(--boy-sonuc);
+  font-weight: 700;
+}
+
+.ornek__bicim--uyumsuz {
+  color: var(--cizik);
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}

@@ -1,0 +1,8 @@
+/* Karakter Galerisi'nin genel stili. Oyunun genel.css'inden (kutu modeli, kenar boşlukları)
+   sonra yüklenir; zemini, yazıyı ve yazı tipini görsel dilin belirteçlerine çevirir. */
+:root,
+body {
+  background: var(--zemin);
+  color: var(--murekkep);
+  font-family: var(--yazi-tipi);
+}

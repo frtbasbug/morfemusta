@@ -76,6 +76,70 @@ Buna göre sekiz karakter:
 - Ayraç içindeki ses her ortamda görünmez: -(y)A'da *y* ünlüden sonra gelir (kaynaştırma);
   -(I)m'de *I* ünsüzden sonra gelir.
 
+## Görsel dil
+
+Seçilen yön **B · Canlı**. Geometri `src/gorsel/cizim.ts`'tedir: tuvaldeki başvuru kodunun
+TypeScript hâli, sayıları ve yolları tuvaldekinin aynısı. Belirteçler `src/gorsel/tema.css`'te,
+bütün karakterler Karakter Galerisi'nde (`galeri.html`) görülür.
+
+### Görsel kod
+
+Terimler resimdir: her özellik tek bir çizim boyutuna bağlıdır.
+
+| Özellik | Çizim boyutu | Ünlü karakteri (72×76) | Bukalemun ek (132×82) |
+|---------|--------------|------------------------|-----------------------|
+| kalın / ince | gövde eni; bukalemunda boyu | eni 58 / 34, boyu hep 56 | boyu 54 / 38, eni hep 92 |
+| düz / yuvarlak | gövde biçimi | köşesi 7 yuvarlatılmış dikdörtgen / elips | köşesi 10 yuvarlatılmış dikdörtgen / elips |
+| geniş / dar | ağız | açık yarım ay / ince yarık | açık ağız / ince yarık |
+
+- **Renk** de kalın/ince'yi gösterir (kalın turuncu, ince mavi) ama hiçbir zaman tek başına
+  değil. Renksiz kipte ikisi aynı gri olur; sekiz ünlü yine bedenlerinden ayırt edilir.
+- **Bukalemun ek**, ekin yüzeydeki ilk ünlüsünün kılığına girer. -lAr'da (a/e hep düz ve
+  geniş) yalnız gövdesinin boyu ve rengi değişir; -(I)m'de (ı/i/u/ü hep dar) biçimi de
+  değişir. Başı solda, köke dönüktür: uyum geriye bakar. Ek yazısı gövdenin ortasındadır.
+- **Kök yazısında** son ünlü bir etiketin içindedir: zemini kalın ya da ince rengi, köşesi
+  düz ünlüde 4px, yuvarlakta tam yuvarlak, 2px mürekkep çerçeve.
+- **Uymayan ek** (*ev* + *lar*): bukalemun -12 derece eğik durur (dönme noktası %45 %85);
+  sonucun üstü çizilir, sonuç `--cizik` renginde.
+- **Saklanan ünlü** (*kedi* + -(I)m → *kedim*): ekin ünlüsü yüzeye çıkmaz, bukalemun zemine
+  karışır. Gövde, ibik, kuyruk ve bacaklar zemin renginde, dış hatları 4 3 kesik mürekkep
+  çizgisi; gözü görünür kalır; üstünde yalnız *m* yazar. Biçimi, uyumun seçeceği ünlününkidir
+  (*i*).
+
+### Belirteçler
+
+| Belirteç | Değer | Nerede |
+|----------|-------|--------|
+| `--zemin` | #FFF6E9 | sayfa zemini, göz akı, saklanan bukalemun |
+| `--murekkep` | #1E1B3A | çizgiler ve yazı |
+| `--soluk` | #4A4568 | açıklama yazısı |
+| `--ayrac` | #8C87A8 | ayraç çizgileri |
+| `--kalin` | #FF8A3D | kalın karakter ve etiket |
+| `--ince` | #2F80ED | ince karakter ve etiket |
+| `--kalin-zemin` | #FFD6BB | kalın ünlü kartı |
+| `--ince-zemin` | #B6D3F9 | ince ünlü kartı |
+| `--yanak` | #FF9DB4 | yanaklar |
+| `--cizik` | #6B6781 | uymayan sonuç |
+
+- **Renksiz kip** (`.renksiz`): `--kalin` ve `--ince` #8E8C99'a, iki zemin #E2E1E8'e döner.
+- **Çizgi kalınlıkları:** gövde 3 · göz akı 1.5 · ibik 2.5 · kuyruk ve bacak 5 (altında 11'lik
+  mürekkep) · kök etiketi 2 · ünlü kartı 2.5, köşe 18.
+- **Yazı tipleri:** Andika 400 ve 700 (harfler, metin); Baloo 2 800 (başlık, logo). İkisi de
+  pakete gömülüdür (@fontsource, OFL-1.1); dış yazı tipi sunucusu kullanılmaz.
+- **Boyutlar:** ünlü harfi 30px · ek yazısı 20px kalın · kök 30px kalın · sonuç 22px kalın.
+  Mürekkebin ince renk üstündeki karşıtlığı 4.3:1'dir; ince renk üstüne 18px'ten küçük yazı
+  konmaz.
+
+### Kurallar
+
+1. **Karakterler yalnız koddan, üç özellikten üretilir.** Elle çizilmiş karakter dosyası ve
+   karaktere özel süs (şapka, el, eşya) yoktur. Yeni bir görsel öğe sekiz ünlünün hepsine
+   aynı işlevle gelir.
+2. **Ağız ünlü yüksekliğini gösterir, duygu göstermez.** Oyun durumu ağzı değiştirmez;
+   sevinç ve üzüntü hareketle ya da eğimle anlatılır.
+3. **Yalnız belirteçlerdeki renkler kullanılır.** Degrade ve bulanık gölge yoktur; tek gölge,
+   ünlü kartlarının 0 4px 0 mürekkep gölgesidir.
+
 ## MVP bölgeleri
 
 1. **Bukalemun Koyu** — ünlü uyumu.

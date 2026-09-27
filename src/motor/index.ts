@@ -1,7 +1,7 @@
 // Biçimbilim motoru. Saf TypeScript'tir: React'i, DOM'u, CSS'i ya da src/motor dışındaki
 // uygulama kodunu içe aktarmaz (bagimsizlik.test.ts ve tsconfig.motor.json denetler).
 
-export { ekle, govdeOlayiMi, olasiBicimler } from './ekle.ts'
+export { ekle, govdeOlayiMi, olasiBicimler, uyum } from './ekle.ts'
 export type {
   EklemeSonucu,
   EkOlayi,
