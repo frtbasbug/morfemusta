@@ -18,7 +18,7 @@
     etiket, bozuk şablon).
   - `ekle.ts`: `ekle(kok, etiketler)` → `{ bicim, parcalar }`. Her parça etiketi, şablonu,
     türü, yüzey biçimini ve olayları taşır. Olay türleri: `uyum` (bakılan ünlü, sonuç,
-    kopyalanan özellikler), `kaynaştırma`, `düşme` (yüzeye çıkmayan ayraçlı birim),
+    kopyalanan özellikler), `kaynaştırma`, `saklanma` (yüzeye çıkmayan ayraçlı birim),
     `benzeşme` (D→t, C→ç), `zamir n`. Her olayda ekin yüzeyindeki `konum` ve kısa bir
     `aciklama` var ("uyum: kalınlık ve yuvarlaklık kopyalandı", "benzeşme: D→t").
   - `index.ts`: genel kapı.
@@ -26,25 +26,22 @@
   `tsconfig.motor.json` motoru DOM'suz ve Node'suz derler (`npm run typecheck`'e eklendi).
 - **Birim testleri:** 148 motor testi (altın tablo 101, olaylar ve parçalar 27, envanter,
   şablon ve CSV 13, bağımsızlık 7) ve 2 ekran testi. Uçtan uca 4 test yeşil.
+- **Kullanıcı kararları (oturum sonunda):** Yüzeye çıkmayan ayraçlı birimin olayı
+  `düşme` yerine `saklanma` oldu; "düşme" adı Oturum 3'teki ünlü düşmesine kaldı. Altın
+  tabloda, kullanıcının onayıyla, 4 satırın kural sütunu "(I) düşer" → "(I) saklanır" ve
+  98. satırınki (*kedisinin*) "kaynaştırma s ve zamir n" → "kaynaştırma s ve n" oldu.
+  GEN'in -(n)In'i ünlüden sonra zaten n alır; -sI'den sonra ayrıca zamir n yoktur. Motor
+  değişmedi.
 - **CLAUDE.md:** 8. kural (altın tablo yalnız kullanıcı onayıyla değişir), 9. kural (motor
   testleri kırmızıyken push yok); klasör yapısı ve `?raw` notu güncellendi.
 
 ### Açık kalanlar
 
-- **98. satırın kural sütunu (karar bekliyor):** `kedi,POSS.3SG+GEN,kedisinin` satırının
-  kural sütununda "kaynaştırma s ve zamir n" yazıyor. Motor, 4. kuraldaki listeye (ACC, DAT,
-  LOC, ABL) uyarak buradaki n'yi GEN'in kendi (n)'si sayıyor ve "kaynaştırma: n" olarak
-  işaretliyor. Biçim aynı, test geçiyor; oyunun hangi olayı canlandıracağı kullanıcının
-  kararı. Değişirse `ekle.ts`'deki `ZAMIR_N_ALAN` ve `ekle.test.ts`'deki ilgili test
-  güncellenir.
-- **Ek sırası denetlenmiyor:** Motor etiketleri verilen sırayla ekler; `PL+AGT` ya da
+- **Ek sırası denetlenmiyor (Oturum 8):** Motor etiketleri verilen sırayla ekler; `PL+AGT` ya da
   `LOC+PL` gibi dizileri reddetmez. `ekler.csv`'deki tür sütunu bunun için hazır ("meyvenin
   üstüne gövde çıkmaz", DESIGN.md).
-- **Yanlış biçimin nedeni yok:** Eski öneriydi: *evlar* için "kalınlık uyuşmuyor" gibi,
+- **Yanlış biçimin nedeni yok (Oturum 5):** Eski öneriydi: *evlar* için "kalınlık uyuşmuyor" gibi,
   ekin düşme nedenini veren bir denetleyici. Arayüzün komik sonuçları için gerekecek.
-- **"Düşme" adı üç yerde:** motorda ayraçlı birimin düşmesi (`düşme: (I)`), DESIGN.md'de
-  uymayan ekin "sallanıp düşmesi", Oturum 3'te ünlü düşmesi (*burnum*). Oturum 3'teki
-  olaya ayrı bir ad verilmeli (ör. `ünlü düşmesi`).
 - **Ek adları CSV'de yok:** yönelme, bulunma, ayrılma gibi Türkçe adlar canlandırılacak
   (DESIGN.md, "Terimler resimdir"). Arayüz gerektirince `ekler.csv`'ye sütun eklenebilir.
 - **Kökte yalnız 29 küçük harf kabul ediliyor:** *kâr*, *hâlâ* gibi düzeltme işaretli

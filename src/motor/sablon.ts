@@ -4,7 +4,7 @@
 //   A, I           ünlü arkafonemi: uyumla çözülür
 //   D, C           ünsüz arkafonemi: sert ünsüzden sonra t, ç olur
 //   (y) (s) (n)    ayraç içindeki ünsüz: yalnız ünlüden sonra çıkar (kaynaştırma)
-//   (I)            ayraç içindeki ünlü: ünlüden sonra düşer
+//   (I)            ayraç içindeki ünlü: ünlüden sonra saklanır
 //   küçük harf     olduğu gibi yazılır
 
 import { ALFABE, unluMu } from './ses.ts'

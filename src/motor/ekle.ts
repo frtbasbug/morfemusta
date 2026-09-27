@@ -13,8 +13,8 @@ export type KopyalananOzellik = 'kalınlık' | 'yuvarlaklık'
 
 interface OlayTemeli {
   /**
-   * Olayın, ekin yüzey biçimindeki yeri (0'dan başlar). Düşen bir birim için, düşmeseydi
-   * duracağı yer.
+   * Olayın, ekin yüzey biçimindeki yeri (0'dan başlar). Saklanan bir birim için,
+   * saklanmasaydı duracağı yer.
    */
   readonly konum: number
   /** Kısa açıklama: "uyum: kalınlık kopyalandı", "benzeşme: D→t", "zamir n". */
@@ -39,7 +39,7 @@ export type Olay =
       readonly sonuc: string
     })
   | (OlayTemeli & {
-      readonly tur: 'düşme'
+      readonly tur: 'saklanma'
       /** Yüzeye çıkmayan ayraçlı birim: ünlüden sonra "(I)", ünsüzden sonra "(y)" gibi. */
       readonly birim: string
     })
@@ -143,9 +143,9 @@ function ekiCoz(govde: string, ek: EkTanimi, zamirN: boolean): EkParcasi {
       }
 
       case 'ayracli-unlu':
-        // (I) ünlüden sonra düşer.
+        // (I) ünlüden sonra saklanır.
         if (unluMu(sonSes(oncesi))) {
-          olaylar.push(dusme(birim, konum))
+          olaylar.push(saklanma(birim, konum))
         } else {
           const olay = uyum(oncesi, birim, konum)
           olaylar.push(olay)
@@ -165,7 +165,7 @@ function ekiCoz(govde: string, ek: EkTanimi, zamirN: boolean): EkParcasi {
           })
           yuzey += birim.ses
         } else {
-          olaylar.push(dusme(birim, konum))
+          olaylar.push(saklanma(birim, konum))
         }
         break
 
@@ -195,8 +195,8 @@ function ekiCoz(govde: string, ek: EkTanimi, zamirN: boolean): EkParcasi {
 }
 
 /** Ayraçlı birim yüzeye çıkmaz: ünlüden sonra (I), ünsüzden sonra (y), (s), (n). */
-function dusme(birim: Birim, konum: number): Olay {
-  return { tur: 'düşme', birim: birim.yazim, konum, aciklama: `düşme: ${birim.yazim}` }
+function saklanma(birim: Birim, konum: number): Olay {
+  return { tur: 'saklanma', birim: birim.yazim, konum, aciklama: `saklanma: ${birim.yazim}` }
 }
 
 /**

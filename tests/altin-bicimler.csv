@@ -16,9 +16,9 @@ göz,POSS.1SG,gözüm,4'lü uyum
 kız,POSS.1SG,kızım,4'lü uyum
 yol,POSS.1SG,yolum,4'lü uyum
 gül,POSS.1SG,gülüm,4'lü uyum
-kedi,POSS.1SG,kedim,ünlüden sonra (I) düşer
-masa,POSS.1SG,masam,ünlüden sonra (I) düşer
-kuzu,POSS.1SG,kuzum,ünlüden sonra (I) düşer
+kedi,POSS.1SG,kedim,ünlüden sonra (I) saklanır
+masa,POSS.1SG,masam,ünlüden sonra (I) saklanır
+kuzu,POSS.1SG,kuzum,ünlüden sonra (I) saklanır
 ev,POSS.3SG,evi,4'lü uyum
 göz,POSS.3SG,gözü,4'lü uyum
 kuş,POSS.3SG,kuşu,4'lü uyum
@@ -28,7 +28,7 @@ köprü,POSS.3SG,köprüsü,kaynaştırma s
 ev,POSS.1PL,evimiz,4'lü uyum
 okul,POSS.1PL,okulumuz,4'lü uyum
 kol,POSS.2SG,kolun,4'lü uyum
-elma,POSS.2SG,elman,ünlüden sonra (I) düşer
+elma,POSS.2SG,elman,ünlüden sonra (I) saklanır
 göz,POSS.2PL,gözünüz,4'lü uyum
 yol,POSS.3PL,yolları,2'li ve 4'lü uyum
 ev,ACC,evi,4'lü uyum
@@ -96,6 +96,6 @@ ev,POSS.3SG+DAT,evine,zamir n
 ev,POSS.3SG+ACC,evini,zamir n
 ev,POSS.3SG+INS,eviyle,araçta zamir n yok
 kedi,POSS.3SG+DAT,kedisine,kaynaştırma s ve zamir n
-kedi,POSS.3SG+GEN,kedisinin,kaynaştırma s ve zamir n
+kedi,POSS.3SG+GEN,kedisinin,kaynaştırma s ve n
 elma,PL+POSS.3SG+ACC,elmalarını,ek sırası ve zamir n
 okul,POSS.1SG+GEN,okulumun,ek sırası

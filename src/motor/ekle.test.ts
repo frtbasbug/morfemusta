@@ -70,11 +70,11 @@ describe('ekle: olaylar', () => {
     ])
   })
 
-  it('(I) ünlüden sonra düşer', () => {
+  it('(I) ünlüden sonra saklanır', () => {
     const [parca] = ekle('kedi', ['POSS.1SG']).parcalar
     expect(parca?.yuzey).toBe('m')
     expect(parca?.olaylar).toEqual([
-      { tur: 'düşme', birim: '(I)', konum: 0, aciklama: 'düşme: (I)' },
+      { tur: 'saklanma', birim: '(I)', konum: 0, aciklama: 'saklanma: (I)' },
     ])
   })
 
@@ -93,9 +93,9 @@ describe('ekle: olaylar', () => {
     ])
   })
 
-  it('ayraçlı ünsüz ünsüzden sonra düşer', () => {
+  it('ayraçlı ünsüz ünsüzden sonra saklanır', () => {
     expect(ekle('ev', ['ACC']).parcalar[0]?.olaylar).toEqual([
-      { tur: 'düşme', birim: '(y)', konum: 0, aciklama: 'düşme: (y)' },
+      { tur: 'saklanma', birim: '(y)', konum: 0, aciklama: 'saklanma: (y)' },
       expect.objectContaining({ tur: 'uyum', sonuc: 'i', konum: 0 }),
     ])
   })
@@ -136,12 +136,12 @@ describe('ekle: olaylar', () => {
       aciklama: 'zamir n',
     })
 
-    // Zamir n'den sonra ek ünsüzden sonra gelmiş olur: (y) düşer.
+    // Zamir n'den sonra ek ünsüzden sonra gelmiş olur: (y) saklanır.
     const [, belirtme] = ekle('ev', ['POSS.3SG', 'ACC']).parcalar
     expect(belirtme?.yuzey).toBe('ni')
     expect(aciklamalar(belirtme?.olaylar ?? [])).toEqual([
       'zamir n',
-      'düşme: (y)',
+      'saklanma: (y)',
       'uyum: kalınlık ve yuvarlaklık kopyalandı',
     ])
 
@@ -197,7 +197,7 @@ describe('ekle: tutarlılık', () => {
     for (const { alanlar } of satirlar) {
       for (const parca of ekle(alanlar.kok ?? '', (alanlar.ekler ?? '').split('+')).parcalar) {
         for (const olay of parca.olaylar) {
-          if (olay.tur === 'düşme') {
+          if (olay.tur === 'saklanma') {
             expect(olay.konum).toBeLessThanOrEqual(parca.yuzey.length)
           } else {
             expect(parca.yuzey[olay.konum]).toBe(olay.sonuc)
