@@ -69,18 +69,21 @@ export function unluBul(ozellikler: UnluOzellikleri): Unlu {
   throw new Error('Özellik tablosu eksik: bu özelliklerde ünlü yok')
 }
 
-/** Metnin son ünlüsünün yeri; ünlü yoksa -1. */
+/** Metnin son ünlüsü; ünlü yoksa undefined. */
+export function sonUnlu(metin: string): Unlu | undefined {
+  for (let i = metin.length - 1; i >= 0; i--) {
+    const ses = metin[i]
+    if (unluMu(ses)) return ses
+  }
+  return undefined
+}
+
+/** Metnin son ünlüsünün yeri (ünlü düşmesi için); ünlü yoksa -1. */
 export function sonUnluKonumu(metin: string): number {
   for (let i = metin.length - 1; i >= 0; i--) {
     if (unluMu(metin[i])) return i
   }
   return -1
-}
-
-/** Metnin son ünlüsü; ünlü yoksa undefined. */
-export function sonUnlu(metin: string): Unlu | undefined {
-  const ses = metin[sonUnluKonumu(metin)]
-  return unluMu(ses) ? ses : undefined
 }
 
 /** Metnin son sesi (son harfi). */

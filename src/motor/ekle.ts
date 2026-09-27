@@ -156,12 +156,6 @@ export interface EklemeSonucu {
   readonly parcalar: readonly EkParcasi[]
 }
 
-/** Motorun okuduğu içerik; verilmeyen, icerik/*.csv'deki envanter ve sözlüktür. */
-export interface Kaynaklar {
-  readonly envanter?: EkEnvanteri
-  readonly sozluk?: KokSozlugu
-}
-
 // 3. kişi iyelikten sonra bu durum ekleri zamir n'si alır: evini, evine, evinde, evinden.
 // Araç eki almaz (eviyle). İlgi ekinin n'si kendi kaynaştırmasıdır: -(n)In → kedisinin.
 const ZAMIR_N_ONCESI: ReadonlySet<string> = new Set(['POSS.3SG', 'POSS.3PL'])
@@ -193,7 +187,7 @@ const SERT_KARSILIK: Readonly<Record<UnsuzArkafonemi, { sert: 't' | 'ç'; yumusa
 
 /**
  * Köke ekleri sırayla ekler ve varsayılan biçimi verir. Uydurma kökte bu, kökü bozmayan
- * biçimdir.
+ * biçimdir. Envanter ve sözlük verilmezse icerik/*.csv'dekiler kullanılır.
  *
  *     ekle('kitap', ['ACC']).bicim  // "kitabı"
  *     ekle('pıtak', ['ACC']).bicim  // "pıtakı"
@@ -201,9 +195,10 @@ const SERT_KARSILIK: Readonly<Record<UnsuzArkafonemi, { sert: 't' | 'ç'; yumusa
 export function ekle(
   kok: string,
   etiketler: readonly string[],
-  kaynaklar: Kaynaklar = {},
+  envanter: EkEnvanteri = EK_ENVANTERI,
+  sozluk: KokSozlugu = KOK_SOZLUGU,
 ): EklemeSonucu {
-  return turet(kok, etiketler, kaynaklar, false)
+  return turet(kok, etiketler, envanter, sozluk, false)
 }
 
 /**
@@ -216,10 +211,11 @@ export function ekle(
 export function olasiBicimler(
   kok: string,
   etiketler: readonly string[],
-  kaynaklar: Kaynaklar = {},
+  envanter: EkEnvanteri = EK_ENVANTERI,
+  sozluk: KokSozlugu = KOK_SOZLUGU,
 ): string[] {
-  const varsayilan = turet(kok, etiketler, kaynaklar, false).bicim
-  const yumusamis = turet(kok, etiketler, kaynaklar, true).bicim
+  const varsayilan = turet(kok, etiketler, envanter, sozluk, false).bicim
+  const yumusamis = turet(kok, etiketler, envanter, sozluk, true).bicim
   return varsayilan === yumusamis ? [varsayilan] : [varsayilan, yumusamis]
 }
 
@@ -234,7 +230,8 @@ interface CiplakKok {
 function turet(
   kok: string,
   etiketler: readonly string[],
-  { envanter = EK_ENVANTERI, sozluk = KOK_SOZLUGU }: Kaynaklar,
+  envanter: EkEnvanteri,
+  sozluk: KokSozlugu,
   uydurmaYumusasin: boolean,
 ): EklemeSonucu {
   const temizKok = kok.normalize('NFC')
@@ -404,7 +401,7 @@ function ekiCoz(
         break
 
       case 'unlu': {
-        const olay = unluSec(oncesi, birim, konum, ince)
+        const olay = uyum(oncesi, birim, konum, ince)
         olaylar.push(olay)
         yuzey += olay.sonuc
         break
@@ -415,7 +412,7 @@ function ekiCoz(
         if (unluMu(sonSes(oncesi))) {
           olaylar.push(saklanma(birim, konum))
         } else {
-          const olay = unluSec(oncesi, birim, konum, ince)
+          const olay = uyum(oncesi, birim, konum, ince)
           olaylar.push(olay)
           yuzey += olay.sonuc
         }
@@ -473,7 +470,7 @@ function saklanma(birim: Birim, konum: number): EkOlayi {
  * kopyalar ve dar kalır (ı/i/u/ü). İnce ekte kalınlık kopyalanmaz, ünlü incedir; I yine
  * yuvarlaklığı kopyalar (golü).
  */
-function unluSec(
+function uyum(
   oncesi: string,
   birim: Extract<Birim, { arkafonem: UnluArkafonemi }>,
   konum: number,

@@ -7,7 +7,6 @@ export type {
   EkOlayi,
   EkParcasi,
   GovdeOlayi,
-  Kaynaklar,
   KopyalananOzellik,
   Olay,
 } from './ekle.ts'

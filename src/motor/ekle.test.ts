@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import altinTablo from '../../tests/altin-bicimler.csv?raw'
 import { csvOku } from './csv.ts'
 import {
+  EK_ENVANTERI,
   ekEnvanteriniOku,
   ekle,
   govdeOlayiMi,
@@ -277,7 +278,7 @@ describe('ekle: gövde olayları', () => {
     const sozluk = kokSozlugunuOku(
       'kok,kategori,yumusama,unlu_dusmesi,istisna\nvakit,zaman,hayır,evet,\n',
     )
-    const sonuc = ekle('vakit', ['POSS.1SG'], { sozluk })
+    const sonuc = ekle('vakit', ['POSS.1SG'], EK_ENVANTERI, sozluk)
     expect(sonuc.bicim).toBe('vaktim')
     expect(sonuc.parcalar[0]?.olaylar[1]).toMatchObject({ tur: 'uyum', bakilan: 'i', sonuc: 'i' })
   })
@@ -415,12 +416,12 @@ describe('ekle: uydurma kelimeler', () => {
   it('ünlü düşmesi, ikizleşme, ince ek ve su yalnız sözlükte işaretli kökte olur', () => {
     const bosSozluk = kokSozlugunuOku('kok,kategori,yumusama,unlu_dusmesi,istisna\n')
     const uydurmaSay = (kok: string, etiketler: string[]) =>
-      ekle(kok, etiketler, { sozluk: bosSozluk }).bicim
+      ekle(kok, etiketler, EK_ENVANTERI, bosSozluk).bicim
     expect(uydurmaSay('burun', ['POSS.1SG'])).toBe('burunum')
     expect(uydurmaSay('sır', ['POSS.1SG'])).toBe('sırım')
     expect(uydurmaSay('saat', ['PL'])).toBe('saatlar')
     expect(uydurmaSay('su', ['POSS.3SG'])).toBe('susu')
-    expect(olasiBicimler('kitap', ['ACC'], { sozluk: bosSozluk })).toEqual(['kitapı', 'kitabı'])
+    expect(olasiBicimler('kitap', ['ACC'], EK_ENVANTERI, bosSozluk)).toEqual(['kitapı', 'kitabı'])
   })
 })
 
@@ -493,16 +494,16 @@ describe('ekle: hatalar', () => {
 
   it('verilen envanterle çalışır', () => {
     const envanter = ekEnvanteriniOku('etiket,sablon,tur\nDIM,-CIk,yapım\n')
-    expect(ekle('kuş', ['DIM'], { envanter }).bicim).toBe('kuşçuk')
-    expect(() => ekle('kuş', ['PL'], { envanter })).toThrow('Bilinmeyen ek etiketi')
+    expect(ekle('kuş', ['DIM'], envanter).bicim).toBe('kuşçuk')
+    expect(() => ekle('kuş', ['PL'], envanter)).toThrow('Bilinmeyen ek etiketi')
   })
 
   it('verilen sözlükle çalışır', () => {
     const sozluk = kokSozlugunuOku(
       'kok,kategori,yumusama,unlu_dusmesi,istisna\npıtak,uydurma,evet,,\n',
     )
-    expect(olasiBicimler('pıtak', ['ACC'], { sozluk })).toEqual(['pıtağı'])
-    expect(olasiBicimler('kitap', ['ACC'], { sozluk })).toEqual(['kitapı', 'kitabı'])
+    expect(olasiBicimler('pıtak', ['ACC'], EK_ENVANTERI, sozluk)).toEqual(['pıtağı'])
+    expect(olasiBicimler('kitap', ['ACC'], EK_ENVANTERI, sozluk)).toEqual(['kitapı', 'kitabı'])
   })
 
   it('Unicode ayrışık yazılmış kökü de tanır', () => {

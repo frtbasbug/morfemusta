@@ -17,7 +17,8 @@
   numarasıyla bildirir.
 - **Ek envanteri:** `icerik/ekler.csv`'ye dört yapım eki: PROP -lI, PRIV -sIz, LIK -lIk,
   DIM -CIk.
-- **Motor (`src/motor/ekle.ts`):**
+- **Motor (`src/motor/ekle.ts`):** Oturum 2'nin motoru yerinde genişletildi (ayrı motor
+  yok); Oturum 2'nin davranışı ve `ekle(kok, etiketler, envanter?)` imzası korunur.
   - Ünsüz yumuşaması (p→b, ç→c, t→d, k→ğ; nk→ng), ünlü düşmesi, ince ek, ikizleşme ve su
     kuralı; sözlük işaretleri yalnız köke gelen ilk eke uygulanır. -lIk ya da -CIk ile biten
     türemiş gövdenin k'si ünlüyle başlayan ekten önce hep ğ olur (gözlüğüm, kediciğim).
@@ -29,8 +30,8 @@
     ("kitab" → kitabı). Yeni olaylar: `yumuşama` ("yumuşama: k→ğ", "yumuşama: nk→ng"),
     `ünlü düşmesi`, `ikizleşme`, `ince ek`, `su` ("su: y"). Gövde olaylarının konumu
     parçanın gövdesinde, ek olaylarınınki yüzeyindedir (`govdeOlayiMi`).
-  - `ekle`'nin üçüncü parametresi artık bir nesne: `{ envanter, sozluk }` (ikisi de
-    isteğe bağlı).
+  - Sözlük dördüncü, isteğe bağlı parametredir: `ekle(kok, etiketler, envanter?, sozluk?)`,
+    `olasiBicimler` de aynı; verilmezse `icerik/*.csv`'dekiler kullanılır.
 - **Biçim Denetim Sayfası:** `denetim.html` (ayrı giriş sayfası, oyundan bağlantı yok,
   `noindex`). Sözlükteki her kök için işaretler ve PL, ACC, DAT, LOC, POSS.1SG, POSS.3SG,
   GEN, PROP biçimleri; kategoriye göre gruplu. Telefonda her kök bir kart (iki sütun, 36rem'den

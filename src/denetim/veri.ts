@@ -2,7 +2,13 @@
 // Sayfa ve scripts/zeyrek-denetimi.py (scripts/denetim-bicimleri.mjs üzerinden) aynı veriyi
 // kullanır. Saf TypeScript'tir; DOM'a dokunmaz.
 
-import { KOK_SOZLUGU, ekle, type KokGirdisi, type KokSozlugu } from '../motor/index.ts'
+import {
+  EK_ENVANTERI,
+  KOK_SOZLUGU,
+  ekle,
+  type KokGirdisi,
+  type KokSozlugu,
+} from '../motor/index.ts'
 
 export const DENETIM_ETIKETLERI = [
   'PL',
@@ -44,7 +50,7 @@ export function denetimSatirlari(sozluk: KokSozlugu = KOK_SOZLUGU): DenetimSatir
     isaretler: isaretAdlari(girdi),
     bicimler: DENETIM_ETIKETLERI.map((etiket) => ({
       etiket,
-      bicim: ekle(girdi.kok, [etiket], { sozluk }).bicim,
+      bicim: ekle(girdi.kok, [etiket], EK_ENVANTERI, sozluk).bicim,
     })),
   }))
 }
