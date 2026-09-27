@@ -17,8 +17,8 @@ const satirlar = csvOku(altinTablo, ['kok', 'ekler', 'beklenen', 'kural']).map(
 )
 
 describe('altın biçimler', () => {
-  it('tabloda 100 satır var', () => {
-    expect(satirlar).toHaveLength(100)
+  it('tabloda 102 satır var', () => {
+    expect(satirlar).toHaveLength(102)
   })
 
   it.each(satirlar)(

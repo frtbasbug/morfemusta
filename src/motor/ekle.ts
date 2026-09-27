@@ -54,6 +54,11 @@ export type Olay =
       readonly tur: 'zamir n'
       readonly sonuc: 'n'
     })
+  | (OlayTemeli & {
+      readonly tur: 'çoğul tekrarlanmaz'
+      /** Şablondan yüzeye çıkmayan çoğul kısmı: "-lAr". */
+      readonly birim: string
+    })
 
 export interface EkParcasi {
   readonly etiket: string
@@ -73,6 +78,11 @@ export interface EklemeSonucu {
 // 3. kişi iyelikten sonra bu durum ekleri zamir n'si alır: evini, evine, evinde, evinden.
 // Araç eki almaz (eviyle). İlgi ekinin n'si kendi kaynaştırmasıdır: -(n)In → kedisinin.
 const ZAMIR_N_ONCESI: ReadonlySet<string> = new Set(['POSS.3SG', 'POSS.3PL'])
+
+// Çoğuldan sonra 3. çoğul iyelik yalnız -I olarak gelir: evleri (*evlerleri).
+// POSS.3PL şablonunun başındaki çoğul kısmı (PL'nin şablonu) yüzeye çıkmaz.
+const COGUL = 'PL'
+const COGUL_IYELIK = 'POSS.3PL'
 const ZAMIR_N_ALAN: ReadonlySet<string> = new Set(['ACC', 'DAT', 'LOC', 'ABL'])
 
 const UYUM_KOPYALAR: Readonly<Record<UnluArkafonemi, readonly KopyalananOzellik[]>> = {
@@ -110,7 +120,8 @@ export function ekle(
     const ek = envanter.get(etiket)
     if (!ek) throw new Error(`Bilinmeyen ek etiketi: "${etiket}"`)
     const zamirN = onceki !== undefined && ZAMIR_N_ONCESI.has(onceki) && ZAMIR_N_ALAN.has(etiket)
-    const parca = ekiCoz(govde, ek, zamirN)
+    const cogulTekrari = onceki === COGUL && etiket === COGUL_IYELIK
+    const parca = ekiCoz(govde, ek, zamirN, cogulTekrari ? cogulKismi(envanter, ek) : 0)
     parcalar.push(parca)
     govde += parca.yuzey
     onceki = etiket
@@ -118,16 +129,45 @@ export function ekle(
   return { bicim: govde, parcalar }
 }
 
-function ekiCoz(govde: string, ek: EkTanimi, zamirN: boolean): EkParcasi {
+/** POSS.3PL şablonunun başında PL şablonunun kaç birim tuttuğu (-lArI'da -lAr: 3). */
+function cogulKismi(envanter: EkEnvanteri, iyelik: EkTanimi): number {
+  const cogul = envanter.get(COGUL)
+  const birimler = cogul?.birimler ?? []
+  const onEk = birimler.every((b, i) => iyelik.birimler[i]?.yazim === b.yazim)
+  if (!cogul || birimler.length === 0 || !onEk || birimler.length >= iyelik.birimler.length) {
+    throw new Error(`${iyelik.etiket} şablonu (${iyelik.sablon}) ${COGUL} şablonuyla başlamıyor`)
+  }
+  return birimler.length
+}
+
+function ekiCoz(
+  govde: string,
+  ek: EkTanimi,
+  zamirN: boolean,
+  atlanan: number,
+): EkParcasi {
   let yuzey = ''
   const olaylar: Olay[] = []
+  let birimler = ek.birimler
+
+  if (atlanan > 0) {
+    const cogulYazimi = `-${birimler.slice(0, atlanan).map((b) => b.yazim).join('')}`
+    birimler = birimler.slice(atlanan)
+    const kalan = `-${birimler.map((b) => b.yazim).join('')}`
+    olaylar.push({
+      tur: 'çoğul tekrarlanmaz',
+      birim: cogulYazimi,
+      konum: 0,
+      aciklama: `çoğul tekrarlanmaz: ${ek.sablon} → ${kalan}`,
+    })
+  }
 
   if (zamirN) {
     olaylar.push({ tur: 'zamir n', sonuc: 'n', konum: 0, aciklama: 'zamir n' })
     yuzey = 'n'
   }
 
-  for (const birim of ek.birimler) {
+  for (const birim of birimler) {
     const oncesi = govde + yuzey
     const konum = yuzey.length
     switch (birim.tur) {

@@ -4,9 +4,9 @@
 
 ### Bitenler
 
-- **Altın tablo:** `tests/altin-bicimler.csv`, kullanıcının verdiği hâliyle (100 satır).
-  `src/motor/altin-bicimler.test.ts` her satırı ayrı bir test olarak koşar; ayrıca tablonun
-  100 satır olduğunu denetler. 100/100 geçiyor.
+- **Altın tablo:** `tests/altin-bicimler.csv`, kullanıcının verdiği 100 satır ve onayıyla
+  eklenen 2 satır (102 satır). `src/motor/altin-bicimler.test.ts` her satırı ayrı bir test
+  olarak koşar; ayrıca satır sayısını denetler. 102/102 geçiyor.
 - **Ek envanteri:** `icerik/ekler.csv` (etiket, şablon, tür): PL, POSS.1SG/2SG/3SG/1PL/2PL/3PL,
   ACC, DAT, LOC, ABL, GEN, INS (çekim) ve AGT (yapım). Motor şablonları buradan okur.
 - **Motor (`src/motor`, saf TypeScript):**
@@ -19,12 +19,13 @@
   - `ekle.ts`: `ekle(kok, etiketler)` → `{ bicim, parcalar }`. Her parça etiketi, şablonu,
     türü, yüzey biçimini ve olayları taşır. Olay türleri: `uyum` (bakılan ünlü, sonuç,
     kopyalanan özellikler), `kaynaştırma`, `saklanma` (yüzeye çıkmayan ayraçlı birim),
-    `benzeşme` (D→t, C→ç), `zamir n`. Her olayda ekin yüzeyindeki `konum` ve kısa bir
+    `benzeşme` (D→t, C→ç), `zamir n`, `çoğul tekrarlanmaz` (PL'den sonra POSS.3PL yalnız
+    -I: *evleri*, "çoğul tekrarlanmaz: -lArI → -I"). Her olayda ekin yüzeyindeki `konum` ve kısa bir
     `aciklama` var ("uyum: kalınlık ve yuvarlaklık kopyalandı", "benzeşme: D→t").
   - `index.ts`: genel kapı.
 - **Bağımsızlık denetimi:** `bagimsizlik.test.ts` motorun içe aktarmalarını tarar;
   `tsconfig.motor.json` motoru DOM'suz ve Node'suz derler (`npm run typecheck`'e eklendi).
-- **Birim testleri:** 148 motor testi (altın tablo 101, olaylar ve parçalar 27, envanter,
+- **Birim testleri:** 151 motor testi (altın tablo 103, olaylar ve parçalar 28, envanter,
   şablon ve CSV 13, bağımsızlık 7) ve 2 ekran testi. Uçtan uca 4 test yeşil.
 - **Kullanıcı kararları (oturum sonunda):** Yüzeye çıkmayan ayraçlı birimin olayı
   `düşme` yerine `saklanma` oldu; "düşme" adı Oturum 3'teki ünlü düşmesine kaldı. Altın
@@ -32,6 +33,9 @@
   98. satırınki (*kedisinin*) "kaynaştırma s ve zamir n" → "kaynaştırma s ve n" oldu.
   GEN'in -(n)In'i ünlüden sonra zaten n alır; -sI'den sonra ayrıca zamir n yoktur. Motor
   değişmedi.
+- **Çoğuldan sonra 3. çoğul iyelik (inceleme yorumu, kullanıcı onayıyla):** PL+POSS.3PL
+  artık *evleri* verir (*evlerleri* değil); motora `çoğul tekrarlanmaz` kuralı eklendi.
+  Altın tabloya iki satır eklendi: *evleri*, *kitaplarında*.
 - **CLAUDE.md:** 8. kural (altın tablo yalnız kullanıcı onayıyla değişir), 9. kural (motor
   testleri kırmızıyken push yok); klasör yapısı ve `?raw` notu güncellendi.
 

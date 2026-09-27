@@ -162,6 +162,24 @@ describe('ekle: olaylar', () => {
     ])
   })
 
+  it('çoğuldan sonra 3. çoğul iyelik yalnız -I olarak gelir', () => {
+    const [, iyelik] = ekle('ev', ['PL', 'POSS.3PL']).parcalar
+    expect(iyelik?.yuzey).toBe('i')
+    expect(iyelik?.olaylar).toEqual([
+      {
+        tur: 'çoğul tekrarlanmaz',
+        birim: '-lAr',
+        konum: 0,
+        aciklama: 'çoğul tekrarlanmaz: -lArI → -I',
+      },
+      expect.objectContaining({ tur: 'uyum', bakilan: 'e', sonuc: 'i', konum: 0 }),
+    ])
+
+    // Çoğulsuz POSS.3PL tam şablonla gelir; kısalan -I'dan sonra zamir n yine gelir.
+    expect(ekle('ev', ['POSS.3PL']).bicim).toBe('evleri')
+    expect(ekle('masa', ['PL', 'POSS.3PL', 'DAT']).bicim).toBe('masalarına')
+  })
+
   it('zamir n yalnız hemen ardından gelen durum ekine gelir', () => {
     expect(ekle('ev', ['POSS.1SG', 'LOC']).bicim).toBe('evimde')
     expect(ekle('ev', ['PL', 'LOC']).bicim).toBe('evlerde')
@@ -197,7 +215,7 @@ describe('ekle: tutarlılık', () => {
     for (const { alanlar } of satirlar) {
       for (const parca of ekle(alanlar.kok ?? '', (alanlar.ekler ?? '').split('+')).parcalar) {
         for (const olay of parca.olaylar) {
-          if (olay.tur === 'saklanma') {
+          if (olay.tur === 'saklanma' || olay.tur === 'çoğul tekrarlanmaz') {
             expect(olay.konum).toBeLessThanOrEqual(parca.yuzey.length)
           } else {
             expect(parca.yuzey[olay.konum]).toBe(olay.sonuc)
