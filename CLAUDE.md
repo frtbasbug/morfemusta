@@ -22,7 +22,7 @@ Tasarım için `DESIGN.md`, güncel durum ve sıradaki hedef için `NEXT.md` oku
 | `npm run dev` | Geliştirme sunucusu: <http://localhost:5173/morfemusta/> (service worker yok) |
 | `npm run build` | `dist/` altına derler; service worker ve manifest burada üretilir |
 | `npm run preview` | Derlenmiş siteyi sunar: <http://localhost:4173/morfemusta/> |
-| `npm run typecheck` | Uygulama ve araç kodunun tür denetimi |
+| `npm run typecheck` | Uygulama, araç kodu ve motorun tür denetimi (motor DOM'suz derlenir) |
 | `npm test` | Vitest birim testleri |
 | `npm run test:e2e` | Playwright: siteyi derler, önizler, telefon boyutunda sınar |
 | `npm run ikonlar` | `scripts/ikon.svg`'den `public/` ikonlarını yeniden üretir |
@@ -41,8 +41,9 @@ src/
   App.tsx            kök bileşen
   genel.css          renk belirteçleri (CSS değişkenleri) ve genel stil
   ekranlar/          ekran bileşenleri ve yanlarında birim testleri (*.test.tsx)
-  motor/             biçimbilim motoru — Oturum 2'de açılacak
-icerik/              içerik CSV dosyaları — Oturum 2'de açılacak
+  motor/             biçimbilim motoru: saf TypeScript, genel kapısı index.ts; testleri yanında
+icerik/              içerik CSV dosyaları (ekler.csv: ek envanteri)
+tests/               altin-bicimler.csv: motorun altın tablosu
 DESIGN.md  NEXT.md  CLAUDE.md
 ```
 
@@ -67,6 +68,11 @@ DESIGN.md  NEXT.md  CLAUDE.md
    İlerleme saklanması gerekirse yalnız cihazda saklanır, hiçbir yere gönderilmez.
 7. **Oturum, testler yeşilken push ile kapanır.** Tür denetimi, birim ve uçtan uca testler
    yeşil olur, `NEXT.md` güncellenir, sonra push edilir.
+8. **Altın tablo yalnız kullanıcının onayıyla değişir.** `tests/altin-bicimler.csv` motorun
+   sözleşmesidir. Testi geçirmek için satır değiştirilmez, silinmez, eklenmez. Bir satır
+   yanlış görünürse iş durur ve kullanıcıya sorulur.
+9. **Motor testleri kırmızıyken push yok.** `src/motor` altındaki testlerden (altın tablo
+   dahil) biri bile kırmızıysa hiçbir dala push edilmez; ara push da yapılmaz.
 
 ## Adlandırma
 
@@ -82,9 +88,17 @@ DESIGN.md  NEXT.md  CLAUDE.md
   (`index.html`'dekileri Vite kendisi dönüştürür).
 - **Service worker yalnız derlemede vardır.** PWA davranışını `npm run test:e2e` ya da
   `npm run build && npm run preview` ile sına.
-- **Önbellek kalıbı:** Yeni bir dosya türü (ör. ses için `.mp3`/`.ogg`, içerik için
-  `.csv`) eklenirse `vite.config.ts` içindeki `workbox.globPatterns`'a da eklenmeli;
-  yoksa o dosya çevrim dışı açılmaz.
+- **Önbellek kalıbı:** Çalışma anında ayrı dosya olarak istenen yeni bir dosya türü (ör. ses
+  için `.mp3`/`.ogg`) eklenirse `vite.config.ts` içindeki `workbox.globPatterns`'a da
+  eklenmeli; yoksa o dosya çevrim dışı açılmaz.
+- **İçerik CSV'leri `?raw` ile okunur** (`import metin from '../../icerik/ekler.csv?raw'`).
+  Vite dosyanın metnini JS paketine gömer; ayrı `.csv` dosyası sunulmadığı için
+  `globPatterns`'a eklemek gerekmez, çevrim dışı da çalışır. Motor kendi tür denetiminde
+  (`tsconfig.motor.json`) Vite türlerini yüklemez; bu içe aktarmanın türü
+  `src/motor/ham-metin.d.ts`'dedir.
+- **Motorun bağımsızlığı iki yoldan denetlenir:** `src/motor/bagimsizlik.test.ts` içe
+  aktarmaları tarar (yalnız `./*.ts` ve `../../icerik/*.csv?raw` izinli);
+  `tsconfig.motor.json` motoru `lib: ["ES2023"]` ile, DOM ve Node türleri olmadan derler.
 - **Güncelleme:** vite-plugin-pwa 1.x, `autoUpdate` modunda `clientsClaim` ve
   `skipWaiting` ayarlarını kendiliğinden eklemiyor; bu yüzden `vite.config.ts`'de açıkça
   yazılı. Yeni sürüm sessizce devreye girer.

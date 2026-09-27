@@ -1,0 +1,101 @@
+kok,ekler,beklenen,kural
+ev,PL,evler,2'li uyum
+göz,PL,gözler,2'li uyum
+gül,PL,güller,2'li uyum
+kedi,PL,kediler,2'li uyum
+köprü,PL,köprüler,2'li uyum
+kalem,PL,kalemler,2'li uyum; son ünlü belirler
+masa,PL,masalar,2'li uyum
+kapı,PL,kapılar,2'li uyum
+yol,PL,yollar,2'li uyum
+kuzu,PL,kuzular,2'li uyum
+elma,PL,elmalar,2'li uyum; son ünlü belirler
+otobüs,PL,otobüsler,2'li uyum; son ünlü belirler
+ev,POSS.1SG,evim,4'lü uyum
+göz,POSS.1SG,gözüm,4'lü uyum
+kız,POSS.1SG,kızım,4'lü uyum
+yol,POSS.1SG,yolum,4'lü uyum
+gül,POSS.1SG,gülüm,4'lü uyum
+kedi,POSS.1SG,kedim,ünlüden sonra (I) düşer
+masa,POSS.1SG,masam,ünlüden sonra (I) düşer
+kuzu,POSS.1SG,kuzum,ünlüden sonra (I) düşer
+ev,POSS.3SG,evi,4'lü uyum
+göz,POSS.3SG,gözü,4'lü uyum
+kuş,POSS.3SG,kuşu,4'lü uyum
+kedi,POSS.3SG,kedisi,kaynaştırma s
+elma,POSS.3SG,elması,kaynaştırma s
+köprü,POSS.3SG,köprüsü,kaynaştırma s
+ev,POSS.1PL,evimiz,4'lü uyum
+okul,POSS.1PL,okulumuz,4'lü uyum
+kol,POSS.2SG,kolun,4'lü uyum
+elma,POSS.2SG,elman,ünlüden sonra (I) düşer
+göz,POSS.2PL,gözünüz,4'lü uyum
+yol,POSS.3PL,yolları,2'li ve 4'lü uyum
+ev,ACC,evi,4'lü uyum
+göz,ACC,gözü,4'lü uyum
+kız,ACC,kızı,4'lü uyum
+yol,ACC,yolu,4'lü uyum
+kedi,ACC,kediyi,kaynaştırma y
+elma,ACC,elmayı,kaynaştırma y
+köprü,ACC,köprüyü,kaynaştırma y
+ev,DAT,eve,2'li uyum
+okul,DAT,okula,2'li uyum
+göz,DAT,göze,2'li uyum
+kedi,DAT,kediye,kaynaştırma y
+masa,DAT,masaya,kaynaştırma y
+köprü,DAT,köprüye,kaynaştırma y
+kuzu,DAT,kuzuya,kaynaştırma y
+ev,LOC,evde,2'li uyum
+yol,LOC,yolda,2'li uyum
+masa,LOC,masada,2'li uyum
+kedi,LOC,kedide,2'li uyum
+kitap,LOC,kitapta,benzeşme p
+sepet,LOC,sepette,benzeşme t
+ağaç,LOC,ağaçta,benzeşme ç
+kuş,LOC,kuşta,benzeşme ş
+raf,LOC,rafta,benzeşme f
+otobüs,LOC,otobüste,benzeşme s
+ev,ABL,evden,2'li uyum
+okul,ABL,okuldan,2'li uyum
+kedi,ABL,kediden,2'li uyum
+kitap,ABL,kitaptan,benzeşme p
+çiçek,ABL,çiçekten,benzeşme k
+taş,ABL,taştan,benzeşme ş
+güneş,ABL,güneşten,benzeşme ş
+sabah,ABL,sabahtan,benzeşme h
+ev,GEN,evin,4'lü uyum
+göz,GEN,gözün,4'lü uyum
+yol,GEN,yolun,4'lü uyum
+kedi,GEN,kedinin,kaynaştırma n
+elma,GEN,elmanın,kaynaştırma n
+kuzu,GEN,kuzunun,kaynaştırma n
+kalem,INS,kalemle,2'li uyum
+tren,INS,trenle,2'li uyum
+otobüs,INS,otobüsle,2'li uyum
+kedi,INS,kediyle,kaynaştırma y
+araba,INS,arabayla,kaynaştırma y
+köprü,INS,köprüyle,kaynaştırma y
+yol,AGT,yolcu,4'lü uyum
+göz,AGT,gözcü,4'lü uyum
+kapı,AGT,kapıcı,4'lü uyum
+gemi,AGT,gemici,4'lü uyum
+oyun,AGT,oyuncu,4'lü uyum
+balık,AGT,balıkçı,benzeşme k
+süt,AGT,sütçü,benzeşme t
+iş,AGT,işçi,benzeşme ş
+simit,AGT,simitçi,benzeşme t
+dondurma,AGT,dondurmacı,4'lü uyum
+ev,PL+POSS.1SG+LOC,evlerimde,ek sırası
+kedi,PL+POSS.1PL,kedilerimiz,ek sırası
+kitap,PL+POSS.1SG,kitaplarım,ek sırası
+masa,PL+POSS.1PL+ABL,masalarımızdan,ek sırası
+köprü,PL+LOC,köprülerde,ek sırası
+yol,AGT+PL,yolcular,türetme çekimden önce
+ev,POSS.3SG+LOC,evinde,zamir n
+ev,POSS.3SG+DAT,evine,zamir n
+ev,POSS.3SG+ACC,evini,zamir n
+ev,POSS.3SG+INS,eviyle,araçta zamir n yok
+kedi,POSS.3SG+DAT,kedisine,kaynaştırma s ve zamir n
+kedi,POSS.3SG+GEN,kedisinin,kaynaştırma s ve zamir n
+elma,PL+POSS.3SG+ACC,elmalarını,ek sırası ve zamir n
+okul,POSS.1SG+GEN,okulumun,ek sırası
