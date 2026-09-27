@@ -4,7 +4,7 @@ import { EK_ENVANTERI, ekEnvanteriniOku } from './envanter.ts'
 import { sablonuCoz } from './sablon.ts'
 
 describe('ek envanteri (icerik/ekler.csv)', () => {
-  it('Oturum 2 envanterini taşır', () => {
+  it('icerik/ekler.csv envanterini taşır', () => {
     expect([...EK_ENVANTERI.values()].map((ek) => [ek.etiket, ek.sablon, ek.tur])).toEqual([
       ['PL', '-lAr', 'çekim'],
       ['POSS.1SG', '-(I)m', 'çekim'],
@@ -20,6 +20,10 @@ describe('ek envanteri (icerik/ekler.csv)', () => {
       ['GEN', '-(n)In', 'çekim'],
       ['INS', '-(y)lA', 'çekim'],
       ['AGT', '-CI', 'yapım'],
+      ['PROP', '-lI', 'yapım'],
+      ['PRIV', '-sIz', 'yapım'],
+      ['LIK', '-lIk', 'yapım'],
+      ['DIM', '-CIk', 'yapım'],
     ])
   })
 

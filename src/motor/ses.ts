@@ -27,6 +27,19 @@ export const UNLULER: Readonly<Record<Unlu, UnluOzellikleri>> = {
 /** Sert ünsüzler: "fıstıkçı şahap". */
 export const SERT_UNSUZLER: ReadonlySet<string> = new Set('fstkçşhp')
 
+export type YumusayanUnsuz = 'p' | 'ç' | 't' | 'k'
+
+/**
+ * Ünsüz yumuşaması: ünlüyle başlayan ekten önce p→b, ç→c, t→d, k→ğ (kitabı, ağacı, armudu,
+ * çocuğu). n'den sonra k, g olur (rengi); bunu ekle.ts uygular.
+ */
+export const YUMUSAMA: Readonly<Record<YumusayanUnsuz, 'b' | 'c' | 'd' | 'ğ'>> = {
+  p: 'b',
+  ç: 'c',
+  t: 'd',
+  k: 'ğ',
+}
+
 /** Türk alfabesinin 29 küçük harfi. */
 export const ALFABE: ReadonlySet<string> = new Set('abcçdefgğhıijklmnoöprsştuüvyz')
 
@@ -36,6 +49,10 @@ export function unluMu(ses: string | undefined): ses is Unlu {
 
 export function sertMi(ses: string | undefined): boolean {
   return ses !== undefined && SERT_UNSUZLER.has(ses)
+}
+
+export function yumusayanMi(ses: string | undefined): ses is YumusayanUnsuz {
+  return ses !== undefined && Object.hasOwn(YUMUSAMA, ses)
 }
 
 /** Özellikleri verilen ünlüyü bulur; üç özellik birlikte tek bir ünlüyü belirler. */
@@ -59,6 +76,14 @@ export function sonUnlu(metin: string): Unlu | undefined {
     if (unluMu(ses)) return ses
   }
   return undefined
+}
+
+/** Metnin son ünlüsünün yeri (ünlü düşmesi için); ünlü yoksa -1. */
+export function sonUnluKonumu(metin: string): number {
+  for (let i = metin.length - 1; i >= 0; i--) {
+    if (unluMu(metin[i])) return i
+  }
+  return -1
 }
 
 /** Metnin son sesi (son harfi). */

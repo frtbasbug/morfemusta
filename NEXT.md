@@ -1,59 +1,78 @@
 # Sıradaki
 
-## Son oturum: Oturum 2 — biçimbilim motoru I (2026-09-27)
+## Son oturum: Oturum 3 — biçimbilim motoru II (2026-09-27)
 
 ### Bitenler
 
-- **Altın tablo:** `tests/altin-bicimler.csv`, kullanıcının verdiği 100 satır ve onayıyla
-  eklenen 2 satır (102 satır). `src/motor/altin-bicimler.test.ts` her satırı ayrı bir test
-  olarak koşar; ayrıca satır sayısını denetler. 102/102 geçiyor.
-- **Ek envanteri:** `icerik/ekler.csv` (etiket, şablon, tür): PL, POSS.1SG/2SG/3SG/1PL/2PL/3PL,
-  ACC, DAT, LOC, ABL, GEN, INS (çekim) ve AGT (yapım). Motor şablonları buradan okur.
-- **Motor (`src/motor`, saf TypeScript):**
-  - `ses.ts`: sekiz ünlünün üç özelliği (kalın/ince, düz/yuvarlak, geniş/dar), sert ünsüzler,
-    alfabe.
-  - `sablon.ts`: şablonu birimlere ayırır: A, I, D, C, ayraçlı ünsüz (y)/(s)/(n), ayraçlı
-    ünlü (I), düz harf.
-  - `envanter.ts` ve `csv.ts`: `ekler.csv`'yi `?raw` ile okur, doğrular (başlık, tür, yinelenen
-    etiket, bozuk şablon).
-  - `ekle.ts`: `ekle(kok, etiketler)` → `{ bicim, parcalar }`. Her parça etiketi, şablonu,
-    türü, yüzey biçimini ve olayları taşır. Olay türleri: `uyum` (bakılan ünlü, sonuç,
-    kopyalanan özellikler), `kaynaştırma`, `saklanma` (yüzeye çıkmayan ayraçlı birim),
-    `benzeşme` (D→t, C→ç), `zamir n`, `çoğul tekrarlanmaz` (PL'den sonra POSS.3PL yalnız
-    -I: *evleri*, "çoğul tekrarlanmaz: -lArI → -I"). Her olayda ekin yüzeyindeki `konum` ve kısa bir
-    `aciklama` var ("uyum: kalınlık ve yuvarlaklık kopyalandı", "benzeşme: D→t").
-  - `index.ts`: genel kapı.
-- **Bağımsızlık denetimi:** `bagimsizlik.test.ts` motorun içe aktarmalarını tarar;
-  `tsconfig.motor.json` motoru DOM'suz ve Node'suz derler (`npm run typecheck`'e eklendi).
-- **Birim testleri:** 151 motor testi (altın tablo 103, olaylar ve parçalar 28, envanter,
-  şablon ve CSV 13, bağımsızlık 7) ve 2 ekran testi. Uçtan uca 4 test yeşil.
-- **Kullanıcı kararları (oturum sonunda):** Yüzeye çıkmayan ayraçlı birimin olayı
-  `düşme` yerine `saklanma` oldu; "düşme" adı Oturum 3'teki ünlü düşmesine kaldı. Altın
-  tabloda, kullanıcının onayıyla, 4 satırın kural sütunu "(I) düşer" → "(I) saklanır" ve
-  98. satırınki (*kedisinin*) "kaynaştırma s ve zamir n" → "kaynaştırma s ve n" oldu.
-  GEN'in -(n)In'i ünlüden sonra zaten n alır; -sI'den sonra ayrıca zamir n yoktur. Motor
-  değişmedi.
-- **Çoğuldan sonra 3. çoğul iyelik (inceleme yorumu, kullanıcı onayıyla):** PL+POSS.3PL
-  artık *evleri* verir (*evlerleri* değil); motora `çoğul tekrarlanmaz` kuralı eklendi.
-  Altın tabloya iki satır eklendi: *evleri*, *kitaplarında*.
-- **CLAUDE.md:** 8. kural (altın tablo yalnız kullanıcı onayıyla değişir), 9. kural (motor
-  testleri kırmızıyken push yok); klasör yapısı ve `?raw` notu güncellendi.
+- **Altın tablo:** `tests/altin-bicimler.csv`'nin sonuna kullanıcının verdiği 100 satır
+  olduğu gibi eklendi. Tabloda 202 satır var: Oturum 2'nin 100 satırı, onun sonunda
+  onaylanan 2 satır (*evleri*, *kitaplarında*) ve Oturum 3'ün 100 satırı. `beklenen`
+  sütununda `|` ile ayrılmış biçimler (`pıtağı|pıtakı`) için `olasiBicimler` tam bu kümeyi
+  döner; tek biçimli satırda `ekle` o biçimi, `olasiBicimler` de yalnız onu döner. 202/202
+  geçiyor.
+- **Kök sözlüğü:** `icerik/kokler.csv`, kullanıcının verdiği hâliyle (150 kök; kategori,
+  yumusama, unlu_dusmesi, istisna). `src/motor/sozluk.ts` `?raw` ile okur ve işaretleri
+  doğrular (p/ç/t/k ile biten kökte yumusama zorunlu, ünlü düşmesi için ünsüz + ünlü + ünsüz
+  sonu, ince-ek yalnız son ünlüsü kalın kökte, ikiz ve su'nun koşulları); yanlış satırı
+  numarasıyla bildirir.
+- **Ek envanteri:** `icerik/ekler.csv`'ye dört yapım eki: PROP -lI, PRIV -sIz, LIK -lIk,
+  DIM -CIk.
+- **Motor (`src/motor/ekle.ts`):** Oturum 2'nin motoru yerinde genişletildi (ayrı motor
+  yok); Oturum 2'nin davranışı ve `ekle(kok, etiketler, envanter?)` imzası korunur.
+  - Ünsüz yumuşaması (p→b, ç→c, t→d, k→ğ; nk→ng), ünlü düşmesi, ince ek, ikizleşme ve su
+    kuralı; sözlük işaretleri yalnız köke gelen ilk eke uygulanır. -lIk ya da -CIk ile biten
+    türemiş gövdenin k'si ünlüyle başlayan ekten önce hep ğ olur (gözlüğüm, kediciğim).
+  - Uydurma kelime: sözlükte olmayan kök uydurmadır. `ekle` kökü bozmayan biçimi verir
+    (pıtakı); `olasiBicimler(kok, etiketler)` kabul edilen bütün biçimleri, ilki `ekle`'ninki
+    olmak üzere döner (pıtakı, pıtağı). Ünlü düşmesi, ikizleşme, ince ek ve su yalnız
+    sözlükte işaretli kökte olur.
+  - Parçalar artık `govde` de taşır: ekin geldiği gövde, ekin yol açtığı değişikliklerle
+    ("kitab" → kitabı). Yeni olaylar: `yumuşama` ("yumuşama: k→ğ", "yumuşama: nk→ng"),
+    `ünlü düşmesi`, `ikizleşme`, `ince ek`, `su` ("su: y"). Gövde olaylarının konumu
+    parçanın gövdesinde, ek olaylarınınki yüzeyindedir (`govdeOlayiMi`).
+  - Sözlük dördüncü, isteğe bağlı parametredir: `ekle(kok, etiketler, envanter?, sozluk?)`,
+    `olasiBicimler` de aynı; verilmezse `icerik/*.csv`'dekiler kullanılır.
+- **Biçim Denetim Sayfası:** `denetim.html` (ayrı giriş sayfası, oyundan bağlantı yok,
+  `noindex`). Sözlükteki her kök için işaretler ve PL, ACC, DAT, LOC, POSS.1SG, POSS.3SG,
+  GEN, PROP biçimleri; kategoriye göre gruplu. Telefonda her kök bir kart (iki sütun, 36rem'den
+  sonra dört), 75rem'den geniş ekranda tablo. Veri `src/denetim/veri.ts`'tedir; sayfa da
+  `scripts/denetim-bicimleri.mjs` de onu kullanır.
+- **Zeyrek denetimi:** `scripts/zeyrek-denetimi.py` (CI'da yok). Oturumda çalıştırıldı
+  (zeyrek 0.1.3, nltk 3.10.3): 1200 biçimin 1200'ü çözümlendi; çözümlenemeyen yok; beklenen
+  kök ve ekle eşleşmeyen yok. Denetim ayırt edici: bilerek yanlış kurulan 18 biçimden
+  (kitapı, tobu, saatlar, golu, hakı, çocukum ...) 16'sını yakaladı; kaçan ikisi zeyrek'in
+  eş sesli girdileri (ağızım, sırım).
+- **Testler:** 319 birim testi (motor 306: altın tablo 203, ekle 60, sözlük 22, envanter
+  13, bağımsızlık 8; denetim sayfası 11; açılış ekranı 2) ve 9 uçtan uca test (açılış 4,
+  denetim 5: telefonda ve 320 px'te taşmadan açılış, en uzun biçimler bölünmüyor, kategori
+  bağlantısı, dış istek yok, oyunda bağlantı yok, service worker varken ve çevrim dışı
+  açılış).
+- **CLAUDE.md:** 10. kural (`icerik/kokler.csv` yalnız kullanıcının onayıyla değişir), iki
+  giriş sayfası, kök sözlüğü ve zeyrek notları, komutlar ve klasör yapısı.
 
 ### Açık kalanlar
 
-- **Ek sırası denetlenmiyor (Oturum 8):** Motor etiketleri verilen sırayla ekler; `PL+AGT` ya da
-  `LOC+PL` gibi dizileri reddetmez. `ekler.csv`'deki tür sütunu bunun için hazır ("meyvenin
-  üstüne gövde çıkmaz", DESIGN.md).
-- **Yanlış biçimin nedeni yok (Oturum 5):** Eski öneriydi: *evlar* için "kalınlık uyuşmuyor" gibi,
-  ekin düşme nedenini veren bir denetleyici. Arayüzün komik sonuçları için gerekecek.
+- **`iş` sözlükte yok:** Oturum 2'nin 85. altın satırı (`iş,AGT,işçi`) artık uydurma kökle
+  çalışıyor. Biçim değişmiyor (AGT ünsüzle başlar, ş yumuşamaz); istenirse `iş` sözlüğe
+  eklenir (kullanıcı onayıyla).
+- **Uydurma kökte ikinci biçimin parçaları dışarıda yok:** `olasiBicimler` yalnız dizgi
+  döner. Arayüz çocuğun seçtiği yumuşamış biçimi (pıtağım) canlandırmak isterse
+  `ekle.ts`'deki `turet` işlevi dışa açılabilir.
+- **Denetim sayfasında yalnız sözlük kökleri ve sekiz ek var:** uydurma kökler, yapım
+  zincirleri (gözlüğüm) ve öteki ekler (ABL, INS, POSS.2SG ...) yok; gerekirse eklenir.
+- **Ek sırası denetlenmiyor (Oturum 8):** Motor etiketleri verilen sırayla ekler;
+  `PL+AGT`, `LOC+PL` ya da `PL+LIK` gibi dizileri reddetmez. `ekler.csv`'deki tür sütunu
+  bunun için hazır ("meyvenin üstüne gövde çıkmaz", DESIGN.md).
+- **Yanlış biçimin nedeni yok (Oturum 5):** *evlar* için "kalınlık uyuşmuyor" gibi, ekin
+  düşme nedenini veren bir denetleyici. Arayüzün komik sonuçları için gerekecek.
 - **Ek adları CSV'de yok:** yönelme, bulunma, ayrılma gibi Türkçe adlar canlandırılacak
   (DESIGN.md, "Terimler resimdir"). Arayüz gerektirince `ekler.csv`'ye sütun eklenebilir.
 - **Kökte yalnız 29 küçük harf kabul ediliyor:** *kâr*, *hâlâ* gibi düzeltme işaretli
-  kökler ve büyük harf şimdilik hata veriyor.
-- **Gerçek telefonda doğrulama (PR birleşince):** <https://frtbasbug.github.io/morfemusta/>
+  kökler ve büyük harf şimdilik hata veriyor (motorda da sözlükte de).
+- **Gerçek telefonda doğrulama (PR'lar birleşince):** <https://frtbasbug.github.io/morfemusta/>
   Android Chrome'da "Uygulamayı yükle / Ana ekrana ekle"; iOS Safari'de Paylaş →
-  "Ana Ekrana Ekle"; ardından uçak modunda açılış. Otomatik testler kurulabilirliği ancak
-  dolaylı ölçebiliyor.
+  "Ana Ekrana Ekle"; ardından uçak modunda açılış. Denetim sayfası:
+  <https://frtbasbug.github.io/morfemusta/denetim.html>.
 - **İkonlar yer tutucu:** `scripts/ikon.svg`'deki ada çizimi. Görsel kimlik belirlenince
   değiştirilir (`npm run ikonlar`).
 - **`motion` henüz kurulmadı:** izinli; ilk animasyon gerektiğinde eklenecek.
@@ -63,19 +82,18 @@
   yalnız kısa atıfla geçiyor. Tam künye, doğrulanmış kaynaktan eklenebilir.
 - **Önbellek boyutu:** Andika'nın Kiril ve Vietnamca alt kümeleri de önbelleğe giriyor
   (yaklaşık 80 KB). Türkçe için `latin` ve `latin-ext` yeterli; gerekirse
-  `workbox.globIgnores` ile ayıklanır.
+  `workbox.globIgnores` ile ayıklanır. Denetim sayfası da önbelleğe giriyor (JS ve CSS
+  yaklaşık 17 KB); girmezse service worker onu oyuna düşürür, çıkarılmamalı.
 
-## Sıradaki hedef: Oturum 3 — biçimbilim motoru II
+## Sıradaki hedef: Oturum 4
 
-Oturum 2'de bilerek dışarıda bırakılanlar. Önerilen kapsam (oturum başında onaylanır):
+Kapsam oturum başında kullanıcıyla belirlenir. Bilinen plan: yanlış biçimin nedeni
+Oturum 5'te, ek sırası denetimi Oturum 8'de. Motor ilk bölgeler için yeterli (uyum,
+benzeşme, kaynaştırma, yumuşama, ünlü düşmesi, yapım ekleri, uydurma kelime).
 
-- **Ünsüz yumuşaması:** ünlüyle başlayan ek gelince p→b, ç→c, t→d, k→ğ (nk→ng):
-  *kitabı, ağacı, çocuğu*. Tek heceli inatçılar (*topu, saçı*) sözlükte işaretlenir.
-  Uydurma kelimede iki biçim de kabul edilir (*pıtağım / pıtakım*); motorun iki biçimi
-  birden nasıl döndüreceğine karar verilmeli.
-- **Ünlü düşmesi:** *ağzım, burnum, alnım, oğlu*; yalnız sözlükte işaretli köklerde.
-- **Sözlük istisnaları:** uyuma uymayan misafir kelimeler (*saatler, goller*); düzeltme
-  işaretli kökler (*kâr*).
-- Sözlük `icerik/*.csv`'de tutulur (kök ve işaretleri); koda gömülmez.
-- Yeni olay türleri (ör. `yumuşama`, `ünlü düşmesi`, `istisna`) aynı parça yapısına girer.
-- Yeni altın satırlar yalnız kullanıcının onayıyla `tests/altin-bicimler.csv`'ye eklenir.
+Öneri: **ilk oyun ekranı, Bukalemun Koyu (ünlü uyumu).** Çocuk kök yaratığına -lAr ya da
+-(I)m bukalemununu takar; motor doğru biçimi verir, kelime dünyayı değiştirir (DESIGN.md,
+"Çekirdek mekanik"). Yanlış seçimin komik sonucu Oturum 5'teki nedenle gelir.
+
+- Kökler `icerik/kokler.csv`'den, görevler `icerik/*.csv`'den okunur (koda gömülmez).
+- Uyum ipucu hem renkle hem biçimle verilir (renk körlüğü); telefonda tek sütun.

@@ -1,0 +1,194 @@
+/* Telefonda her kök bir kart: üstte kök ve işaretler, altta iki sütun biçim. 36rem'den
+   sonra dört sütun. Tablo ancak 75rem'den sonra biçimleri bölmeden sığar (en uzun biçimler
+   kaplumbağalar, kaplumbağanın); daha dar ekranda kart kalır. */
+.denetim {
+  width: 100%;
+  max-width: 76rem;
+  margin-inline: auto;
+  padding:
+    calc(env(safe-area-inset-top) + 1rem) calc(env(safe-area-inset-right) + 0.75rem)
+    calc(env(safe-area-inset-bottom) + 2rem) calc(env(safe-area-inset-left) + 0.75rem);
+  line-height: 1.4;
+}
+
+.denetim__baslik {
+  margin: 0 0 0.5rem;
+  font-size: 1.75rem;
+  line-height: 1.2;
+}
+
+.denetim__ust p {
+  margin: 0 0 0.5rem;
+}
+
+.denetim__not {
+  font-size: 0.9rem;
+  color: var(--denetim-soluk);
+}
+
+.denetim__not code {
+  font-size: 0.85em;
+  overflow-wrap: anywhere;
+}
+
+.denetim__kategoriler {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.75rem 0 0.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.denetim__kategoriler a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0 0.9rem;
+  border: 1px solid var(--denetim-cizgi);
+  border-radius: 999px;
+  background: var(--denetim-kart);
+  color: var(--deniz-koyu);
+  text-decoration: none;
+}
+
+.denetim__tablo {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.denetim__sablon {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--denetim-soluk);
+}
+
+.denetim__kategori h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.denetim__kok {
+  font-weight: 700;
+  text-align: start;
+}
+
+.denetim__isaret {
+  display: inline-block;
+  margin: 0.1rem 0 0.1rem 0.3rem;
+  padding: 0 0.5rem;
+  border-radius: 999px;
+  background: var(--denetim-isaret);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.denetim__bicim {
+  overflow-wrap: anywhere;
+}
+
+.denetim__hucre-etiketi {
+  display: none;
+  font-size: 0.75rem;
+  color: var(--denetim-soluk);
+}
+
+/* Telefon ve tablet: kartlar. */
+@media (max-width: 74.99rem) {
+  .denetim__tablo,
+  .denetim__tablo > tbody,
+  .denetim__kategori,
+  .denetim__kategori > th {
+    display: block;
+  }
+
+  /* Başlık satırı görünmez ama ekran okuyucu için yerinde kalır. */
+  .denetim__tablo-basi {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .denetim__kategori > th {
+    padding: 1.25rem 0 0.5rem;
+    text-align: start;
+    scroll-margin-top: 0.5rem;
+  }
+
+  .denetim__satir {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.4rem 0.75rem;
+    line-height: 1.3;
+    margin-bottom: 0.6rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--denetim-cizgi);
+    border-radius: 0.75rem;
+    background: var(--denetim-kart);
+  }
+
+  .denetim__kok {
+    align-self: center;
+    font-size: 1.15rem;
+  }
+
+  .denetim__isaretler {
+    align-self: center;
+    text-align: end;
+  }
+
+  .denetim__hucre-etiketi {
+    display: block;
+  }
+}
+
+@media (min-width: 36rem) and (max-width: 74.99rem) {
+  .denetim__satir {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .denetim__kok,
+  .denetim__isaretler {
+    grid-column: span 2;
+  }
+}
+
+/* Geniş ekran: tablo; başlık satırı kaydırırken üstte kalır. */
+@media (min-width: 75rem) {
+  .denetim__tablo th,
+  .denetim__tablo td {
+    padding: 0.35rem 0.5rem;
+    border-bottom: 1px solid var(--denetim-cizgi);
+    text-align: start;
+    vertical-align: top;
+  }
+
+  .denetim__tablo-basi th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    border-bottom-width: 2px;
+    background: var(--denetim-zemin);
+    font-size: 0.9rem;
+  }
+
+  .denetim__kategori > th {
+    padding-top: 1.25rem;
+  }
+
+  .denetim__bicim {
+    white-space: nowrap;
+  }
+
+  .denetim__isaret {
+    margin: 0.1rem 0.3rem 0.1rem 0;
+  }
+
+  .denetim__satir:hover {
+    background: var(--denetim-kart);
+  }
+}

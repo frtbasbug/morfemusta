@@ -1,0 +1,15 @@
+/* Biçim Denetim Sayfası'nın genel stili. Oyunun genel.css'inden (yazı tipi, renkler) sonra
+   yüklenir ve zemini açık renge çevirir. */
+:root {
+  --denetim-zemin: #f4f9fb;
+  --denetim-kart: #ffffff;
+  --denetim-cizgi: #cfe3ea;
+  --denetim-soluk: #4b6475;
+  --denetim-isaret: var(--gok-alt);
+
+  background: var(--denetim-zemin);
+}
+
+body {
+  background: var(--denetim-zemin);
+}

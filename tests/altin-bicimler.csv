@@ -101,3 +101,103 @@ elma,PL+POSS.3SG+ACC,elmalarını,ek sırası ve zamir n
 okul,POSS.1SG+GEN,okulumun,ek sırası
 ev,PL+POSS.3PL,evleri,çoğuldan sonra 3. çoğul iyelik yalnız -I
 kitap,PL+POSS.3PL+LOC,kitaplarında,çoğuldan sonra -I ve zamir n
+kitap,ACC,kitabı,yumuşama p→b
+kitap,POSS.1SG,kitabım,yumuşama p→b
+ağaç,ACC,ağacı,yumuşama ç→c
+ağaç,DAT,ağaca,yumuşama ç→c
+çocuk,ACC,çocuğu,yumuşama k→ğ
+çocuk,POSS.1SG,çocuğum,yumuşama k→ğ
+köpek,GEN,köpeğin,yumuşama k→ğ
+armut,ACC,armudu,yumuşama t→d
+renk,ACC,rengi,yumuşama nk→ng
+kurt,ACC,kurdu,tek heceli ama yumuşar
+kap,ACC,kabı,tek heceli ama yumuşar
+çorap,POSS.1SG,çorabım,yumuşama p→b
+havuç,ACC,havucu,yumuşama ç→c
+uçak,DAT,uçağa,yumuşama k→ğ
+parmak,POSS.1SG,parmağım,yumuşama k→ğ
+simit,ACC,simidi,yumuşama t→d
+çocuk,PL,çocuklar,ünsüzden önce yumuşama yok
+ağaç,PL+POSS.1SG,ağaçlarım,ünsüzden önce yumuşama yok
+top,ACC,topu,yumuşamaz
+saç,POSS.1SG,saçım,yumuşamaz
+at,ACC,atı,yumuşamaz
+süt,ACC,sütü,yumuşamaz
+et,ACC,eti,yumuşamaz
+sepet,ACC,sepeti,yumuşamaz
+bulut,POSS.3SG,bulutu,yumuşamaz
+robot,ACC,robotu,yumuşamaz
+kök,POSS.3SG,kökü,yumuşamaz
+ek,ACC,eki,yumuşamaz
+ağız,POSS.1SG,ağzım,ünlü düşmesi
+burun,POSS.1SG,burnum,ünlü düşmesi
+alın,POSS.1SG,alnım,ünlü düşmesi
+boyun,POSS.1SG,boynum,ünlü düşmesi
+göğüs,POSS.1SG,göğsüm,ünlü düşmesi
+omuz,POSS.1SG,omzum,ünlü düşmesi
+karın,POSS.1SG,karnım,ünlü düşmesi
+beyin,POSS.3SG,beyni,ünlü düşmesi
+oğul,POSS.3SG,oğlu,ünlü düşmesi
+resim,ACC,resmi,ünlü düşmesi
+nehir,DAT,nehre,ünlü düşmesi
+şehir,POSS.1PL,şehrimiz,ünlü düşmesi
+şehir,LOC,şehirde,ünsüzden önce düşme yok
+burun,PL,burunlar,ünsüzden önce düşme yok
+saat,PL,saatler,ince ek
+saat,ACC,saati,ince ek
+harf,PL,harfler,ince ek
+harf,POSS.3SG,harfi,ince ek
+gol,PL,goller,ince ek
+gol,ACC,golü,ince ek
+kalp,ACC,kalbi,ince ek ve yumuşama
+kalp,PL,kalpler,ince ek
+hayal,PL,hayaller,ince ek
+sır,POSS.1SG,sırrım,ikizleşme
+sır,PL,sırlar,ünsüzden önce ikizleşme yok
+hak,POSS.3SG,hakkı,ikizleşme
+su,POSS.3SG,suyu,su: y
+su,POSS.1SG,suyum,su: y
+su,GEN,suyun,su: y
+su,PL,sular,ünsüzden önce y yok
+tuz,PROP,tuzlu,yapım -lI
+tuz,PRIV,tuzsuz,yapım -sIz
+tuz,LIK,tuzluk,yapım -lIk
+şeker,PROP,şekerli,yapım -lI
+şeker,LIK,şekerlik,yapım -lIk
+şeker,AGT,şekerci,yapım -CI
+su,PROP,sulu,yapım -lI
+su,PRIV,susuz,yapım -sIz
+çiçek,PROP,çiçekli,yapım -lI
+bulut,PROP,bulutlu,yapım -lI
+güneş,PROP,güneşli,yapım -lI
+renk,PROP,renkli,yapım -lI
+renk,PRIV,renksiz,yapım -sIz
+tat,PROP,tatlı,yapım -lI
+tat,PRIV,tatsız,yapım -sIz
+göz,LIK,gözlük,yapım -lIk
+kitap,LIK,kitaplık,yapım -lIk
+kulak,LIK,kulaklık,yapım -lIk
+kedi,DIM,kedicik,küçültme -CIk
+ev,DIM,evcik,küçültme -CIk
+kuş,DIM,kuşçuk,küçültme ve benzeşme
+kuzu,DIM,kuzucuk,küçültme -CIk
+kitap,AGT,kitapçı,benzeşme
+çiçek,AGT,çiçekçi,benzeşme
+göz,LIK+POSS.1SG,gözlüğüm,türemiş gövdede yumuşama
+kitap,LIK+DAT,kitaplığa,türemiş gövdede yumuşama
+tuz,LIK+ACC,tuzluğu,türemiş gövdede yumuşama
+kedi,DIM+POSS.1SG,kediciğim,türemiş gövdede yumuşama
+göz,LIK+AGT+DAT,gözlükçüye,türetme zinciri
+su,PRIV+LIK,susuzluk,türetme zinciri
+şeker,LIK+LOC,şekerlikte,benzeşme
+çiçek,AGT+PL,çiçekçiler,türetme çekimden önce
+pıtak,ACC,pıtağı|pıtakı,uydurma: yumuşama serbest
+pıtak,POSS.1SG,pıtağım|pıtakım,uydurma: yumuşama serbest
+dobut,ACC,dobudu|dobutu,uydurma: yumuşama serbest
+pıtak,LOC,pıtakta,uydurma: benzeşme kategorik
+fıngıl,PL,fıngıllar,uydurma: uyum kategorik
+fıngıl,AGT,fıngılcı,uydurma: benzeşme kategorik
+mömüş,LOC,mömüşte,uydurma: benzeşme kategorik
+mömüş,POSS.1SG,mömüşüm,uydurma: uyum kategorik
+zelü,ACC,zelüyü,uydurma: kaynaştırma kategorik
+zelü,POSS.3SG,zelüsü,uydurma: kaynaştırma kategorik
