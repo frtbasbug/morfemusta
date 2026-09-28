@@ -469,8 +469,11 @@ function saklanma(birim: Birim, konum: number): EkOlayi {
  * A yalnız kalınlığı kopyalar ve geniş, düz kalır (a/e); I kalınlığı ve yuvarlaklığı
  * kopyalar ve dar kalır (ı/i/u/ü). İnce ekte kalınlık kopyalanmaz, ünlü incedir; I yine
  * yuvarlaklığı kopyalar (golü).
+ *
+ * Dışa açıktır: yüzeye çıkmayan bir ünlünün uyumla ne olacağını da verir
+ * (kedi + (I)m → kedim; saklanan (I), i olurdu).
  */
-function uyum(
+export function uyum(
   oncesi: string,
   birim: Extract<Birim, { arkafonem: UnluArkafonemi }>,
   konum: number,

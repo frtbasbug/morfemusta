@@ -62,6 +62,8 @@ Buna göre sekiz karakter:
 | ö | ince | yuvarlak | geniş | ince, yuvarlak, ağzı açık |
 | ü | ince | yuvarlak | dar | ince, yuvarlak, ağzı kısık |
 
+Çizimin ölçüleri, renkleri ve kuralları: "Görsel dil".
+
 **Bukalemun bir arkafonemdir.** Her bukalemun yalnız belli özellikleri kopyalar:
 
 - **-lAr** bukalemunu yalnız kalınlığı kopyalar: *lar / ler*.
@@ -75,6 +77,76 @@ Buna göre sekiz karakter:
   **C** = {c, ç}.
 - Ayraç içindeki ses her ortamda görünmez: -(y)A'da *y* ünlüden sonra gelir (kaynaştırma);
   -(I)m'de *I* ünsüzden sonra gelir.
+
+## Görsel dil: B · Canlı
+
+Karakterler ve ekranlar tek bir görsel dille çizilir. Geometri `src/gorsel/cizim.ts`'te,
+belirteçler `src/gorsel/tema.css`'tedir. Hepsinin örneği Karakter Galerisi'dir
+(`galeri.html`; oyundan bağlantı almaz).
+
+### Görsel kod
+
+Terimler resimdir: her özellik tek bir çizim boyutuna bağlıdır.
+
+| Özellik | Çizim boyutu | Ünlü karakteri (72×76) | Bukalemun ek (132×82) |
+|---------|--------------|------------------------|-----------------------|
+| kalın / ince | gövdenin eni; bukalemunda kalınlığı | en 58 / 34, yükseklik hep 56 | yükseklik 54 / 38, en hep 92 |
+| düz / yuvarlak | gövdenin biçimi | köşesi 7 yuvarlatılmış dikdörtgen / elips | köşesi 10 yuvarlatılmış dikdörtgen / elips |
+| geniş / dar | ağız | açık yarım ay / ince yarık | sola açılan ağız / ince yarık |
+
+- **Renk** de kalınlığı gösterir (kalın turuncu, ince mavi), ama hiçbir zaman tek başına
+  değil.
+- **Bukalemun ek**, ekin yüzeydeki ilk ünlüsünün kılığına girer. -lAr'da (a/e hep düz ve
+  geniş) yalnız kalınlığı ve rengi değişir; -(I)m'de (ı/i/u/ü hep dar) biçimi de değişir.
+  Başı solda, köke dönük: uyum geriye bakar. Ek yazısı gövdenin ortasındadır.
+- **Kök yazısı:** son ünlü bir etiketin içindedir. Etiketin zemini kalın ya da ince rengi;
+  köşesi düz ünlüde 4px, yuvarlakta tam yuvarlak; çerçevesi 2px mürekkep.
+- **Uymayan ek** (*ev* + *lar*): bukalemun -12 derece eğik durur (dönme noktası %45 %85);
+  sonucun üstü çizili ve `--cizik` renginde.
+- **Saklanan ünlü** (*kedi* + POSS.1SG → *kedim*): bukalemun zemine karışır. Gövde, ibik,
+  göz tümseği, kuyruk ve bacaklar zemin renginde, dış hatları 4 3 kesik mürekkep çizgisi;
+  gözü görünür kalır, üstünde yalnız *m* yazar. Biçimi uyumun seçeceği ünlününkidir (*i*).
+  Ağzı çizilmez: saklanan ünlü söylenmez.
+- **Ünlü kartı:** karakter ve altında harfi; zemini kalın ya da ince zemin rengi.
+
+### Belirteçler
+
+| Renk | Değer | Nerede |
+|------|-------|--------|
+| `--zemin` | #FFF6E9 | sayfa zemini, göz akı, saklanan bukalemun |
+| `--murekkep` | #1E1B3A | çizgi, yazı, ünlü kartının gölgesi |
+| `--soluk` | #4A4568 | ikincil yazı, ok |
+| `--ayrac` | #8C87A8 | ayraç çizgileri |
+| `--kalin` | #FF8A3D | kalın gövde, kalın kök etiketi |
+| `--ince` | #2F80ED | ince gövde, ince kök etiketi |
+| `--kalin-zemin` | #FFD6BB | kalın ünlü kartı |
+| `--ince-zemin` | #B6D3F9 | ince ünlü kartı |
+| `--yanak` | #FF9DB4 | yanak |
+| `--cizik` | #6B6781 | uymayan sonuç |
+
+**Renksiz mod** (renk körlüğü denetimi): `--kalin` ve `--ince` #8E8C99'a, iki zemin
+#E2E1E8'e döner. Sekiz ünlü o zaman da bedenlerinden ayırt edilmelidir.
+
+- **Çizgi kalınlıkları:** gövde 3 · göz akı 1.5 · ibik 2.5 · kuyruk ve bacak 5 (altında
+  11'lik mürekkep) · kök etiketi 2 · ünlü kartı 2.5, köşe 18.
+- **Yazı tipleri:** Andika 400 ve 700 (harfler, metin); Baloo 2 800 (başlık, logo). İkisi
+  de OFL-1.1 ve pakete gömülü; dış yazı tipi sunucusu yok.
+- **Boyutlar:** ünlü harfi 30px · ek yazısı 20px kalın · kök 30px kalın · sonuç 22px kalın.
+- **Karşıtlık:** mürekkebin ince renk üstündeki karşıtlığı 4.3:1'dir; ince renk üstüne
+  18px'ten küçük yazı konmaz.
+
+### Üç kural
+
+1. **Karakterler yalnız koddan, üç özellikten üretilir.** Elle çizilmiş karakter dosyası ve
+   karaktere özel süs (şapka, el, eşya) yok. Yeni bir görsel öğe sekiz ünlünün hepsine aynı
+   işlevle gelir.
+2. **Ağız ünlü yüksekliğini gösterir, duygu göstermez.** Oyun durumu ağzı değiştirmez;
+   sevinç ve üzüntü hareketle ya da eğimle anlatılır.
+3. **Yalnız belirteçlerdeki renkler.** Degrade ve bulanık gölge yok; tek gölge ünlü
+   kartlarının 0 4px 0 mürekkep gölgesi.
+
+Birinci ve üçüncü kuralı `src/gorsel/kurallar.test.ts` denetler; ikincisini `cizim.ts`'in
+imzası taşır: ağız yalnız üç özellikten çizilir.
 
 ## MVP bölgeleri
 

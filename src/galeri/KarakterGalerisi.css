@@ -1,0 +1,157 @@
+/* Karakter Galerisi: telefonda tek sütun. Renkler, çizgiler ve yazı tipleri tema.css'ten. */
+.galeri {
+  width: 100%;
+  max-width: 34rem;
+  margin-inline: auto;
+  padding:
+    calc(env(safe-area-inset-top) + 1rem) calc(env(safe-area-inset-right) + 1rem)
+    calc(env(safe-area-inset-bottom) + 2.5rem) calc(env(safe-area-inset-left) + 1rem);
+  line-height: 1.45;
+}
+
+.galeri__logo {
+  margin: 0;
+  font-family: var(--yazi-tipi-baslik);
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.galeri__baslik,
+.galeri__bolum h2 {
+  margin: 0;
+  font-family: var(--yazi-tipi-baslik);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.galeri__baslik {
+  font-size: 2.25rem;
+}
+
+.galeri__aciklama {
+  margin: 0.35rem 0 0.9rem;
+  font-size: 0.95rem;
+  color: var(--soluk);
+}
+
+.galeri__renksiz {
+  min-height: 2.75rem;
+  padding: 0 1.25rem;
+  border: 2.5px solid var(--murekkep);
+  border-radius: 999px;
+  background: var(--zemin);
+  color: var(--murekkep);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.galeri__renksiz[aria-pressed='true'] {
+  background: var(--murekkep);
+  color: var(--zemin);
+}
+
+.galeri__renksiz:focus-visible {
+  outline: 3px solid var(--murekkep);
+  outline-offset: 3px;
+}
+
+.galeri__bolum {
+  margin-top: 1.75rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--ayrac);
+}
+
+.galeri__bolum h2 {
+  font-size: 1.6rem;
+}
+
+/* Okul çizelgesi. Kartlar sütuna sığacak kadar küçülür (karakter oranını korur). */
+.cizelge {
+  width: calc(100% + 0.8rem);
+  margin-inline: -0.4rem;
+  border-collapse: separate;
+  border-spacing: 0.4rem;
+  table-layout: fixed;
+}
+
+.cizelge caption {
+  margin: 0.35rem 0.4rem 0.25rem;
+  text-align: start;
+}
+
+.cizelge__satir-sutunu {
+  width: 3.4rem;
+}
+
+.cizelge th {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--soluk);
+}
+
+.cizelge thead th {
+  text-align: center;
+}
+
+.cizelge__grup {
+  border-bottom: 2px solid var(--ayrac);
+}
+
+.cizelge tbody th {
+  text-align: start;
+}
+
+.cizelge td {
+  padding: 0;
+}
+
+/* Örnek satırı: kök, bukalemun, ok, sonuç. Kök sağa yaslanır: bukalemunun başı ona döner.
+   Kök ve sonuç sütunlarının eni sabittir (en uzunları kedi ve kuşlar sığar): dar ekranda
+   bütün bukalemunlar aynı oranda küçülür, kalın ve ince karşılaştırılabilir kalır. */
+.ornekler {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ornek {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 8.25rem) 1.75rem 4.5rem;
+  align-items: center;
+  justify-content: start;
+  column-gap: 0.5rem;
+}
+
+.ornek__kok {
+  justify-self: end;
+}
+
+.ornek__bukalemun {
+  display: block;
+  min-width: 0;
+}
+
+.ornek__ok {
+  display: block;
+  fill: none;
+  stroke: var(--soluk);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ornek__sonuc {
+  font-size: var(--boyut-sonuc);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ornek__sonuc--uymayan {
+  color: var(--cizik);
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
