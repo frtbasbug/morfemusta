@@ -69,7 +69,7 @@
 - Oturumun tarifi (oyun, seçenekler, nedenin algoritması, üç cümle, ekranın davranışı) ve iki
   tablo oturum başında kullanıcıdan geldi; tablolar hiç değiştirilmedi.
 
-### Kullanıcının bakması gerekenler (tarifte açık kalan yerler; ben seçtim)
+### Kullanıcının onayladıkları (tarifte açık kalan yerler)
 
 - **Nedenin gösterimi:** cümle kelime kartının altında. Üstünde denenen biçim durur (*atler*):
   ilgili iki ünlü `UnluEtiketi` içinde, öteki harfler `--cizik` renginde, üstü çizili değil.
@@ -81,24 +81,37 @@
 - **Metinler:** "Sıradaki", "Ana sayfa", "Koyda akşam oldu", "Bugün kurduğun kelimeler:" ve
   ekran okuyucu yönergesi ("Bir bukalemunu kelimeye taşı: sürükle, ya da önce bukalemuna
   sonra kelimeye dokun."). Görev sırası "3 / 10" diye yazılıyor; puan değil, yer.
+- **"Diğer" nedenin cümlesi şimdilik yok:** `nedenCumlesi` boş döner; Bukalemun Koyu'nda
+  çıkmıyor. Cümlesi, gerektiği bölgede kullanıcıyla yazılır.
+
+### Oturumda seçilen küçük ayrıntılar (kullanıcıya ayrıca sorulmadı)
+
 - **Büyünün süresi:** doğru taşımadan Sıradaki'ye kadar yaklaşık 3,5 saniye; yanlışta
   uçuş, eğilme, düşüş ve dönüş yaklaşık 1,6 saniye.
 - **Seçeneklerin tohumu:** `sira × 100 + adım`. Doğru bukalemun dört yerin dördüne de düşüyor.
 - **Klavyede odak:** bukalemun seçilince odak kelime kartına geçer (Enter taşır); görev bitince
   Sıradaki'ye, yeni görevde ilk bukalemuna geçer.
 
+### Plan: nedenin iki sınırı (kullanıcının kararı; kod bugün değişmedi)
+
+1. **İstisna (istisna görevleri gelince):**
+   - Bugün yerel uyum istisnasızdır. Bu yüzden `saatlar` → `diğer` alır. `saat + ler + ım`
+     ise `PL:kalınlık; POSS.1SG:kalınlık` alır, oysa `ler` doğrudur.
+   - Plan: yerel uyum, sözlükte `ince-ek` işaretli kökten sonraki ilk eki ince bekleyecek.
+     Bu, motorun `ince ek` kuralıyla aynıdır: kalınlık kopyalanmaz, I yuvarlaklığı yine
+     kopyalar (golüm).
+   - Sonuç: `saat + ler + ım` yalnız `POSS.1SG:kalınlık` alır. `saatlar` da `PL:kalınlık`
+     alır; cümlesi istisnayı söyler, metni o gün kullanıcıyla yazılır.
+   - `tests/neden.csv`'deki `saatlar` satırı o gün kullanıcının onayıyla değişir (12. kural).
+2. **Gövde (tasarımı Oturum 7'de):**
+   - Bugün aday = kök + yüzeylerdir. Gövdeyi değiştiren kökte doğru ek de `diğer` alır
+     (`kitap + ım` → `kitapım`; `olasiBicimler` yalnız `kitabım`'ı verir). Bukalemun Koyu'nun
+     görevlerinde böyle kök yok.
+   - Fıstıkçı Şahap'ın Dükkânı'nda çocuk gövdeyi de seçecek (*kitap* / *kitab*). `neden`'e bir
+     gövde parçası eklenecek.
+
 ### Açık kalanlar
 
-- **"Diğer" nedenin cümlesi yok:** `nedenCumlesi` boş döner. Bukalemun Koyu'nun görevlerinde
-  çıkmıyor (`gorevler.test.ts` denetler). İstisna ve yumuşama bölgeleri için cümle
-  kullanıcıyla yazılmalı.
-- **Yerel uyum istisnayı bilmez:** tablo gereği `saatlar` → diğer. Ama karışık adayda
-  yanıltıcı olabilir: `saat + ler + ım`, `PL:kalınlık; POSS.1SG:kalınlık` alır, oysa
-  `ler` doğrudur. Misafir kelime görevleri gelince bakılmalı.
-- **Aday kök + yüzeylerdir:** gövdeyi değiştiren kökte (yumuşama, ünlü düşmesi:
-  `kitap + ım`) doğru ek de "diğer" alır, çünkü `kitapım` `olasiBicimler`'de yok. Bukalemun
-  Koyu'nun görevlerinde böyle kök yok. Fıstıkçı Şahap'ın Dükkânı için gövdenin seçimi ayrı
-  düşünülmeli.
 - **Kılık dışı yüzey hata verir:** `neden`, ekin kılıklarından olmayan yüzeyi reddeder
   (`lır`, `lr`). Saklanan ünlüde (kedi + `im`) seçenek sunacak bir bölge gelirse ayrı bir
   neden gerekir.
@@ -161,4 +174,5 @@ Kapsam oturum başında kullanıcıyla belirlenir. Bilinenler:
 
 - Açılış ekranındaki geçici "Bukalemun Koyu" düğmesi kalkar; koya haritadan girilir.
 - Açılış ekranı ve `genel.css`, `tema.css` belirteçlerine taşınır; manifest renkleri de.
-- Ek sırası denetimi Oturum 8'de.
+- Sonrası: Oturum 7'de nedenin gövde parçasının tasarımı (Fıstıkçı Şahap'ın Dükkânı; yukarıda
+  "Plan"), Oturum 8'de ek sırası denetimi.
