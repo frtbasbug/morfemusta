@@ -9,7 +9,10 @@ Tasarım için `DESIGN.md`, güncel durum ve sıradaki hedef için `NEXT.md` oku
 - **Vite 8 + React 19 + TypeScript 7** (strict). Node 22 (`.nvmrc`).
 - **PWA:** vite-plugin-pwa (`generateSW`, `autoUpdate`). Derlemedeki her şey (yazı tipleri
   dahil) önceden önbelleğe alınır; site bir kez açıldıktan sonra çevrim dışı çalışır.
-- **Yazı tipi:** @fontsource/andika (400 ve 700), pakete gömülü.
+- **Yazı tipleri:** @fontsource/andika (400 ve 700; harfler ve metin) ve @fontsource/baloo-2
+  (800; başlık ve logo, yalnız latin ve latin-ext alt kümeleri), pakete gömülü.
+- **Görsel dil:** B · Canlı (`DESIGN.md`, "Görsel dil"); geometri `src/gorsel/cizim.ts`'te,
+  belirteçler `src/gorsel/tema.css`'te.
 - **Test:** Vitest 5 (birim, `node` ortamı) ve Playwright 1.56.1 (uçtan uca, Pixel 7
   telefon profili, Chromium).
 - **Yayın:** GitHub Actions → GitHub Pages, <https://frtbasbug.github.io/morfemusta/>.
@@ -30,7 +33,8 @@ Tasarım için `DESIGN.md`, güncel durum ve sıradaki hedef için `NEXT.md` oku
 | `python3 scripts/zeyrek-denetimi.py` | O biçimleri zeyrek ile sınar (elle; CI'da yok, aşağıdaki nota bakın) |
 
 Biçim Denetim Sayfası: <http://localhost:5173/morfemusta/denetim.html> (yayında
-`/morfemusta/denetim.html`). Oyundan bağlantı verilmez.
+`/morfemusta/denetim.html`). Karakter Galerisi: <http://localhost:5173/morfemusta/galeri.html>
+(yayında `/morfemusta/galeri.html`). Oyun ikisine de bağlantı vermez.
 
 Oturumu kapatmadan önce: `npm run typecheck && npm test && npm run test:e2e`.
 
@@ -48,10 +52,14 @@ src/
   ekranlar/          ekran bileşenleri ve yanlarında birim testleri (*.test.tsx)
   motor/             biçimbilim motoru: saf TypeScript, genel kapısı index.ts; testleri yanında
   denetim/           Biçim Denetim Sayfası (denetim.html'in girişi, verisi, testleri)
+  gorsel/            görsel dil: çizim geometrisi (cizim.ts), bukalemunun kılığı (kilik.ts),
+                     belirteçler (tema.css), karakter bileşenleri; testleri yanında
+  galeri/            Karakter Galerisi (galeri.html'in girişi, örnekleri, testleri)
 icerik/              içerik CSV dosyaları (ekler.csv: ek envanteri; kokler.csv: kök sözlüğü)
 tests/               altin-bicimler.csv: motorun altın tablosu
 index.html           oyun
 denetim.html         Biçim Denetim Sayfası (ayrı giriş sayfası)
+galeri.html          Karakter Galerisi (ayrı giriş sayfası)
 DESIGN.md  NEXT.md  CLAUDE.md
 ```
 
@@ -65,6 +73,7 @@ DESIGN.md  NEXT.md  CLAUDE.md
    `@vitejs/plugin-react`, `typescript`, `@types/react`, `@types/react-dom`,
    `@types/node`, `@playwright/test`. Oturum 3'te kullanıcının isteğiyle: `zeyrek`
    (Python; projenin bağımlılığı değil, yalnız `scripts/zeyrek-denetimi.py` için elle kurulur).
+   Oturum 4'te kullanıcının isteğiyle: `@fontsource/baloo-2` (OFL-1.1).
 3. **Biçimbilim motoru `src/motor` altındadır ve arayüzden bağımsızdır.** Motor saf
    TypeScript'tir: React'i, DOM'u, CSS'i ya da `src/motor` dışındaki uygulama kodunu içe
    aktarmaz. Arayüz motoru kullanır, motor arayüzü bilmez. Motor Vitest ile `node`
@@ -72,7 +81,7 @@ DESIGN.md  NEXT.md  CLAUDE.md
 4. **İçerik `icerik/*.csv` dosyalarından okunur.** Kelime listeleri ve görevler koda
    gömülmez.
 5. **Dış CDN yok.** Yazı tipi ve sesler pakete gömülüdür; çalışma anında başka bir sunucuya
-   istek gitmez. `e2e/acilis.spec.ts` bunu denetler.
+   istek gitmez. Her sayfanın uçtan uca testi (`e2e/*.spec.ts`) bunu denetler.
 6. **Hiçbir kişisel veri toplanmaz.** Analitik, çerez, hesap, reklam, uzak günlük yok.
    İlerleme saklanması gerekirse yalnız cihazda saklanır, hiçbir yere gönderilmez.
 7. **Oturum, testler yeşilken push ile kapanır.** Tür denetimi, birim ve uçtan uca testler
@@ -85,6 +94,10 @@ DESIGN.md  NEXT.md  CLAUDE.md
 10. **`icerik/kokler.csv` yalnız kullanıcının onayıyla değişir.** Kök sözlüğü de motorun
     sözleşmesidir: testi geçirmek için kök ya da işaret değiştirilmez, silinmez, eklenmez.
     Bir satır yanlış görünürse iş durur ve kullanıcıya sorulur.
+11. **Görsel dil `DESIGN.md`'deki üç kurala uyar.** Karakterler yalnız `src/gorsel/cizim.ts`'ten,
+    üç özellikten üretilir; ağız duygu göstermez; renkler yalnız `src/gorsel/tema.css`'teki
+    belirteçlerdendir. `cizim.ts`'teki sayılar ve yollar tuvaldekilerdir, kullanıcının onayı
+    olmadan değişmez (`cizim.test.ts` başvuru koduyla karşılaştırır).
 
 ## Adlandırma
 
@@ -103,11 +116,26 @@ DESIGN.md  NEXT.md  CLAUDE.md
 - **Önbellek kalıbı:** Çalışma anında ayrı dosya olarak istenen yeni bir dosya türü (ör. ses
   için `.mp3`/`.ogg`) eklenirse `vite.config.ts` içindeki `workbox.globPatterns`'a da
   eklenmeli; yoksa o dosya çevrim dışı açılmaz.
-- **İki giriş sayfası:** `index.html` (oyun) ve `denetim.html` (Biçim Denetim Sayfası).
-  Derleme girişleri `vite.config.ts`'deki `build.rolldownOptions.input`'tadır; yeni bir
-  sayfa oraya eklenir. Her sayfa önbelleğe girmelidir: service worker önbellekte olmayan bir
-  gezinmeyi `navigateFallback` ile oyunun `index.html`'ine düşürür (`e2e/denetim.spec.ts`
-  bunu denetler).
+- **Üç giriş sayfası:** `index.html` (oyun), `denetim.html` (Biçim Denetim Sayfası) ve
+  `galeri.html` (Karakter Galerisi). Derleme girişleri `vite.config.ts`'deki
+  `build.rolldownOptions.input`'tadır; yeni bir sayfa oraya eklenir. Her sayfa önbelleğe
+  girmelidir: service worker önbellekte olmayan bir gezinmeyi `navigateFallback` ile oyunun
+  `index.html`'ine düşürür (`e2e/denetim.spec.ts` ve `e2e/galeri.spec.ts` bunu denetler).
+- **Görsel dilin bileşenleri:** SVG'de yalnız geometri yazılır; dolgu, çizgi ve kalınlıklar
+  `src/gorsel/karakterler.css`'teki sınıflardan ve `tema.css` değişkenlerinden gelir.
+  Karakterlerdeki çizgi kalınlıkları birimsizdir (SVG kullanıcı birimi), karakterle
+  ölçeklenir. Bileşenler `tema.css`'i kendileri yükler; yazı tipleri sayfa girişinde yüklenir
+  (galeri: `src/galeri/main.tsx`). `.renksiz` sınıfının içinde kalın ve ince aynı gridir.
+  Kök etiketinin (`UnluEtiketi`) en/boy oranı `cizim.ts`'teki `unluGovdesi`'nden gelir, CSS'te
+  yazılmaz. Bukalemun 0.9 ölçeğin altına küçültülmez: ek yazısı ince rengin üstünde 18px'in
+  altına inerdi (galeride dar ekranda satır kırılır; `e2e/galeri.spec.ts` denetler).
+- **Saf görsel hesaplar:** `src/gorsel/cizim.ts` ve `kilik.ts` motor gibi DOM'suz derlenir
+  (`tsconfig.motor.json`) ve yalnız motorun genel kapısını içe aktarır
+  (`src/gorsel/bagimsizlik.test.ts`). Ünlü tablosu motorunkidir. Saklanan ünlünün kılığı
+  motorun `uyum` işlevinden gelir (Oturum 4'te dışa açıldı); uyum kuralı arayüzde yazılmaz.
+- **Vitest ve CSS:** Vitest CSS dosyalarını boş modüle çevirir, `?raw` ile okunanları da.
+  `vite.config.ts`'deki `test.css.include` yalnız `?raw` isteklerini Vite'a bırakır; stil
+  kaynağını tarayan `src/gorsel/kurallar.test.ts` buna dayanır.
 - **Kök sözlüğü (`icerik/kokler.csv`):** sözlükte olmayan kök uydurmadır. Sonu p, ç, t ya
   da k olan her kökte `yumusama` (evet/hayır) yazılı olmalıdır; `src/motor/sozluk.ts`
   işaretleri yüklerken doğrular ve yanlış satırı numarasıyla bildirir.

@@ -1,0 +1,192 @@
+/* Ünlü karakterleri, bukalemun ek, ünlü kartı ve kök yazısı. Renkler, çizgiler ve boyutlar
+   tema.css'teki belirteçlerden gelir; SVG'lerde yalnız geometri yazılıdır. */
+
+/* Gövde rengi kalınlığı gösterir, ama hiçbir zaman tek başına değil: eni (bukalemunda
+   kalınlığı) da gösterir. Saklanan bukalemun zemine karışır. */
+.unlu--kalin,
+.bukalemun--kalin {
+  --govde-rengi: var(--kalin);
+}
+
+.unlu--ince,
+.bukalemun--ince {
+  --govde-rengi: var(--ince);
+}
+
+.bukalemun--saklanan {
+  --govde-rengi: var(--zemin);
+}
+
+/* Boyut özniteliklerle verilir (boyut prop'u); dar yerde oran korunarak küçülür. */
+.unlu,
+.bukalemun {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.unlu__govde,
+.bukalemun__govde,
+.bukalemun__goz-tumsegi {
+  fill: var(--govde-rengi);
+  stroke: var(--murekkep);
+  stroke-width: var(--cizgi-govde);
+  stroke-linejoin: round;
+}
+
+.unlu__goz-aki,
+.bukalemun__goz-aki {
+  fill: var(--zemin);
+  stroke: var(--murekkep);
+  stroke-width: var(--cizgi-goz-aki);
+}
+
+.unlu__bebek,
+.unlu__agiz,
+.bukalemun__bebek,
+.bukalemun__agiz {
+  fill: var(--murekkep);
+}
+
+.unlu__yanak {
+  fill: var(--yanak);
+}
+
+.bukalemun__ibik {
+  fill: var(--govde-rengi);
+  stroke: var(--murekkep);
+  stroke-width: var(--cizgi-ibik);
+  stroke-linejoin: round;
+}
+
+/* Kuyruk ve bacaklar: 11'lik mürekkebin üstüne 5'lik renk. */
+.bukalemun__uzuv-alti,
+.bukalemun__uzuv {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.bukalemun__uzuv-alti {
+  stroke: var(--murekkep);
+  stroke-width: var(--cizgi-uzuv-alti);
+}
+
+.bukalemun__uzuv {
+  stroke: var(--govde-rengi);
+  stroke-width: var(--cizgi-uzuv);
+}
+
+.bukalemun__yazi {
+  fill: var(--murekkep);
+  font-family: var(--yazi-tipi);
+  font-size: var(--boyut-ek-yazisi);
+  font-weight: 700;
+}
+
+/* Saklanan: gövde, ibik, göz tümseği, kuyruk ve bacakların dış hatları kesik mürekkep
+   çizgisi. Mürekkep altlık kesik çizilince kuyruk ve bacakların iki yanında kesik hat kalır;
+   uçları düz kesilir, yoksa yuvarlak uçlar boşlukları kapatırdı. */
+.bukalemun--saklanan
+  :is(.bukalemun__govde, .bukalemun__ibik, .bukalemun__goz-tumsegi, .bukalemun__uzuv-alti) {
+  stroke-dasharray: var(--kesik-cizgi);
+}
+
+.bukalemun--saklanan .bukalemun__uzuv-alti {
+  stroke-linecap: butt;
+}
+
+/* Uymayan: bukalemun eğik durur. */
+.bukalemun--uyumsuz {
+  transform: rotate(-12deg);
+  transform-origin: 45% 85%;
+}
+
+/* Ünlü kartı: karakter ve altında harfi. Zemini kalın ya da ince zemin rengi. */
+.unlu-karti {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.45rem 0.35rem 0.4rem;
+  border: var(--cizgi-unlu-karti) solid var(--murekkep);
+  border-radius: var(--kose-unlu-karti);
+  box-shadow: var(--golge-unlu-karti);
+  color: var(--murekkep);
+}
+
+.unlu-karti--kalin {
+  background: var(--kalin-zemin);
+}
+
+.unlu-karti--ince {
+  background: var(--ince-zemin);
+}
+
+.unlu-karti__harf {
+  font-family: var(--yazi-tipi);
+  font-size: var(--boyut-unlu-harfi);
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+/* Kök yazısı: son ünlüsü bir etiketin içinde (ünlü etiketi). */
+.kok-yazisi {
+  position: relative;
+  font-family: var(--yazi-tipi);
+  font-size: var(--boyut-kok);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--murekkep);
+  white-space: nowrap;
+}
+
+/* Ünlü etiketi: ünlü gövdesinin küçük kopyası. En/boy oranı bileşenden, çizimden gelir
+   (kalında 58:56, incede 34:56); düzde köşesi 4px dikdörtgen, yuvarlakta elips. Zemini kalın
+   ya da ince rengi, çerçevesi 2px mürekkep. Boyu 1.5em: 30px'lik kökte noktalı ü de incenin
+   elipsine sığar. Alttaki boşluk harfi ortaya getirir. */
+.unlu-etiketi {
+  display: inline-grid;
+  place-items: center;
+  box-sizing: border-box;
+  height: 1.5em;
+  min-width: 0;
+  margin-inline: 0.04em;
+  padding-bottom: 0.2em;
+  border: var(--cizgi-kok-etiketi) solid var(--murekkep);
+  color: var(--murekkep);
+  font-family: var(--yazi-tipi);
+  font-size: var(--boyut-kok);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.unlu-etiketi--kalin {
+  background: var(--kalin);
+}
+
+.unlu-etiketi--ince {
+  background: var(--ince);
+}
+
+.unlu-etiketi--duz {
+  border-radius: 4px;
+}
+
+.unlu-etiketi--yuvarlak {
+  border-radius: 50%;
+}
+
+/* Ekran okuyucu kökü tek kelime olarak okur; etiketli görünüm ondan gizlenir. */
+.kok-yazisi__okunan {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

@@ -11,12 +11,13 @@ export default defineConfig({
   base: TABAN,
   build: {
     rolldownOptions: {
-      // İki giriş sayfası: oyun ve Biçim Denetim Sayfası. Oyun denetim sayfasına bağlantı
-      // vermez. Denetim sayfası da önbelleğe girer; girmeseydi service worker oraya giden
-      // gezinmeyi oyunun index.html'ine yönlendirirdi (navigateFallback).
+      // Üç giriş sayfası: oyun, Biçim Denetim Sayfası ve Karakter Galerisi. Oyun öteki
+      // ikisine bağlantı vermez. Onlar da önbelleğe girer; girmeselerdi service worker oraya
+      // giden gezinmeyi oyunun index.html'ine yönlendirirdi (navigateFallback).
       input: {
         oyun: fileURLToPath(new URL('index.html', import.meta.url)),
         denetim: fileURLToPath(new URL('denetim.html', import.meta.url)),
+        galeri: fileURLToPath(new URL('galeri.html', import.meta.url)),
       },
     },
   },
@@ -63,5 +64,9 @@ export default defineConfig({
   test: {
     include: ['src/**/*.test.{ts,tsx}'],
     environment: 'node',
+    // Vitest CSS dosyalarını boş modüle çevirir, ?raw ile okunanları da. Stil kaynağını
+    // metin olarak okuyan testler (src/gorsel/kurallar.test.ts) için ?raw istekleri
+    // Vite'a bırakılır; yan etki olarak yüklenen CSS yine boştur.
+    css: { include: [/[?&]raw\b/] },
   },
 })
