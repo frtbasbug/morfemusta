@@ -157,6 +157,9 @@ test.describe('Bukalemun Koyu', () => {
     await expect(etiketler.nth(1)).toHaveClass(/unlu-etiketi--ince/)
     const [a, e] = await etiketler.evaluateAll((ogeler) => ogeler.map((o) => o.getBoundingClientRect().width))
     expect(a).toBeGreaterThan(e!)
+    // Aday uymayan sonuçtur: renginden başka üstü de çizili (DESIGN.md, "Uymayan ek").
+    const aday = neden(page).locator('.neden__aday')
+    expect(await aday.evaluate((el) => getComputedStyle(el).textDecorationLine)).toBe('line-through')
 
     // -12 derece eğildi ve düştü; kıyıya döndü, yeniden seçilebilir.
     expect((await hareketler(page)).join('\n')).toContain('rotate(-12deg)')

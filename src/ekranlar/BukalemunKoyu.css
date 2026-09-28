@@ -198,7 +198,9 @@ button.kelime-karti {
   border-radius: 999px;
 }
 
-/* Neden: aday (ilgili iki ünlü etikette) ve altında cümle. */
+/* Neden: aday (ilgili iki ünlü etikette) ve altında cümle. Aday uymayan sonuçtur: üstü çizili
+   ve --cizik renginde (DESIGN.md, "Uymayan ek"). Çizgi etiketlere geçmez (satır içi blok);
+   ilgili iki ünlü okunur kalır. */
 .neden {
   display: grid;
   justify-items: center;
@@ -213,6 +215,8 @@ button.kelime-karti {
   font-weight: 700;
   line-height: 1.25;
   white-space: nowrap;
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
 }
 
 .neden__cumle {

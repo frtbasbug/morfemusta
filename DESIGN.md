@@ -174,8 +174,9 @@ renksiz); doğru biçim görev dosyasına yazılmaz, motordan gelir (`olasiBicim
   çoğulda kelime kartı üçe çoğalır, iyelikte ekranın altındaki cebe girer.
 - **Zincir** (*top* + PL + POSS.1SG): ilk ek tutunca gövde *toplar* olur, etiket son ünlüye
   (*a*) geçer; sonra iyeliğin bukalemunları gelir.
-- **Yanlışsa:** bukalemun eğilir, düşer, kıyıya döner. Kelimenin altında denenen biçim (ilgili
-  iki ünlü etiketinde) ve nedenin cümlesi görünür. Ceza, puan ve süre yok.
+- **Yanlışsa:** bukalemun eğilir, düşer, kıyıya döner. Kelimenin altında denenen biçim ve
+  nedenin cümlesi görünür. Denenen biçim uymayan sonuçtur: üstü çizili ve `--cizik` renginde;
+  ilgili iki ünlü etiketindedir, çizgi etiketlere geçmez. Ceza, puan ve süre yok.
 - **Renksiz görev:** kalın ve ince aynı gri; bedenler ve kulak yeter. Büyü olunca renkler
   geri gelir.
 - **Hareket azaltma** açıksa hiçbir şey hareket etmez; yalnız renk ve yazı değişir.

@@ -38,7 +38,7 @@
   - Anlam etkisi: çoğulda kart üçe çoğalır; iyelikte kart cebe girer (FLIP), cebin önünde
     kelime yazılı. Zincirde gövde `toplar` olur, etiket a'ya geçer.
   - Yanlış taşımada bukalemun kelimeye uçar, -12 derece eğilir, düşer, kıyıya döner. Altta
-    denenen biçim (ilgili iki ünlü `UnluEtiketi` içinde) ve cümle görünür. Ceza, puan ve
+    denenen biçim (üstü çizili; ilgili iki ünlü `UnluEtiketi` içinde) ve cümle görünür. Ceza, puan ve
     süre yok; ağız hiç değişmez.
   - Renksiz görevde (9.) `.renksiz` büyüye kadar sürer. Hareket azaltmada hiçbir hareket
     oynamaz.
@@ -72,8 +72,10 @@
 ### Kullanıcının onayladıkları (tarifte açık kalan yerler)
 
 - **Nedenin gösterimi:** cümle kelime kartının altında. Üstünde denenen biçim durur (*atler*):
-  ilgili iki ünlü `UnluEtiketi` içinde, öteki harfler `--cizik` renginde, üstü çizili değil.
-  "İlgili iki ünlü vurgulanır" böyle yorumlandı.
+  ilgili iki ünlü `UnluEtiketi` içinde. "İlgili iki ünlü vurgulanır" böyle yorumlandı. Öteki
+  harfler `--cizik` renginde ve üstü çizili: ilk sürümde çizgi yoktu. Codex bunu PR'da buldu
+  (DESIGN.md, "Uymayan ek": sonucun üstü çizili ve `--cizik` renginde); doğrulanıp düzeltildi.
+  Çizgi etiketlere geçmez.
 - **Cep:** ekranın en altında, dikişli bir cep önü. Kart cebe girince yalnız üst kenarı
   görünür; kelime cebin önünde yazılı. Kelime kartı gölgesiz, çünkü tek gölge ünlü kartınınki.
 - **Birleşen ek:** bukalemunun renginde, 2px mürekkep çerçeveli; düzde köşeli, yuvarlakta hap.
