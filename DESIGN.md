@@ -19,6 +19,7 @@ ve biçimbilgisel farkındalığı **okumaya, yazıma ve söz varlığına** ba�
 | Ek | Büyü |
 |----|------|
 | -lAr | çoğaltır |
+| -(I)m | cebe koyar |
 | -CIk | küçültür |
 | -lI | katar |
 | -sIz | eksiltir |
@@ -106,7 +107,10 @@ Terimler resimdir: her özellik tek bir çizim boyutuna bağlıdır.
   kalınlık ve yuvarlaklık girer; etiket ikisini renksiz de gösterir. Genişlik (ağız)
   etikette yoktur, uyuma girmez.
 - **Uymayan ek** (*ev* + *lar*): bukalemun -12 derece eğik durur (dönme noktası %45 %85);
-  sonucun üstü çizili ve `--cizik` renginde.
+  sonucun üstü çizili ve `--cizik` renginde. Oyunda eğilme bir harekettir: bukalemun eğilir,
+  düşer, kıyıya döner ("Bukalemun Koyu").
+- **Birleşen ek** (*at* + *lar*): ek, bukalemunun renginde kalır; çerçevesi 2px mürekkep,
+  düzde köşeli, yuvarlakta hap biçiminde. Yazısı mürekkep, kökle aynı boyda.
 - **Saklanan ünlü** (*kedi* + POSS.1SG → *kedim*): bukalemun zemine karışır. Gövde, ibik,
   göz tümseği, kuyruk ve bacaklar zemin renginde, dış hatları 4 3 kesik mürekkep çizgisi;
   gözü görünür kalır, üstünde yalnız *m* yazar. Biçimi uyumun seçeceği ünlününkidir (*i*).
@@ -154,9 +158,55 @@ edilmelidir.
 Birinci ve üçüncü kuralı `src/gorsel/kurallar.test.ts` denetler; ikincisini `cizim.ts`'in
 imzası taşır: ağız yalnız üç özellikten çizilir.
 
+## Bukalemun Koyu
+
+İlk oyun ekranı: ünlü uyumu. Ekranın ortasında kelime kartı, altındaki kıyıda bukalemunlar,
+ekranın en altında bir cep. Görevler `icerik/gorevler/bukalemun-koyu.csv`'dedir (kök, ekler,
+renksiz); doğru biçim görev dosyasına yazılmaz, motordan gelir (`olasiBicimler`, `ekle`).
+
+- **Seçenekler:** ekin bukalemunları, yani arkafonemin yüzeydeki bütün kılıkları: -lAr için
+  *lar, ler*; -(I)m için *ım, im, um, üm*. Kılıkları motor verir (`yuzeySecenekleri`).
+  Sıraları her görevde karışık ama sabit tohumlu.
+- **Taşıma:** sürükle-bırak, dokun-dokun (önce bukalemun, sonra kelime) ya da klavye (Tab ve
+  Enter). Dokunma alanları en az 44 px.
+- **Doğruysa büyü:** kökteki ünlünün etiketi ile bukalemun arasında bir yay parlar, bukalemun
+  sevinçle zıplar, kelime birleşir ve ek bukalemunun renginde kalır. Anlam resimsiz görünür:
+  çoğulda kelime kartı üçe çoğalır, iyelikte ekranın altındaki cebe girer.
+- **Zincir** (*top* + PL + POSS.1SG): ilk ek tutunca gövde *toplar* olur, etiket son ünlüye
+  (*a*) geçer; sonra iyeliğin bukalemunları gelir.
+- **Yanlışsa:** bukalemun eğilir, düşer, kıyıya döner. Kelimenin altında denenen biçim (ilgili
+  iki ünlü etiketinde) ve nedenin cümlesi görünür. Ceza, puan ve süre yok.
+- **Renksiz görev:** kalın ve ince aynı gri; bedenler ve kulak yeter. Büyü olunca renkler
+  geri gelir.
+- **Hareket azaltma** açıksa hiçbir şey hareket etmez; yalnız renk ve yazı değişir.
+- **Kapanış:** görevler bitince koyda akşam olur; kurulan kelimeler bir kartta, ekleri
+  bukalemunlarının renginde listelenir.
+
+### Yanlış biçimin nedeni
+
+Motorun `neden(kok, etiketler, parcalar)` işlevi, her ek için seçilen yüzeyleri (*lar*, *um*)
+alır. Aday, kök ile seçilen yüzeylerin art arda yazılmasıdır. Aday `olasiBicimler` içindeyse
+neden yoktur. Değilse ekler soldan sağa yerel uyumla sınanır: ekin ünlüsü, adayda kendinden
+önceki son ünlüye göre beklenir ve seçilenle karşılaştırılır; uyuşmayan özellikler (kalınlık,
+yuvarlaklık) yazılır. Yerel sınama yüzünden *toplerim* yalnız çoğulun kalınlığını alır: *im*,
+önündeki *e*'ye uyduğu için suçlanmaz. Uyum farkı yoksa (istisna: *saatlar*; yumuşama:
+*kitapım*) tek neden "diğer"dir. Sözleşmesi `tests/neden.csv`'dir.
+
+Çocuğa yalnız ilk nedenin cümlesi gösterilir (`nedenCumlesi`); önce bakılan ünlü, sonra
+seçilen:
+
+| Uyuşmayan | Cümle |
+|-----------|-------|
+| kalınlık | *e ince, a kalın. Kalınlıkları uyuşmuyor.* |
+| yuvarlaklık | *o yuvarlak, ı düz. Yuvarlaklıkları uyuşmuyor.* |
+| ikisi | *ö ince ve yuvarlak, ı kalın ve düz. İkisi de uyuşmuyor.* |
+
+Bakılan ünlü kökte değil de önceki bir ekteyse sona *Bukalemun en yakın ünlüye bakar.*
+eklenir (*toplarim*). "Diğer" için cümle henüz yoktur.
+
 ## MVP bölgeleri
 
-1. **Bukalemun Koyu** — ünlü uyumu.
+1. **Bukalemun Koyu** — ünlü uyumu (yukarıda).
 2. **Fıstıkçı Şahap'ın Dükkânı** — sert ünsüzler taş, yumuşaklar jöle.
    - -DA ve -CI sertleşir: *kitapta*, *balıkçı*.
    - Ünlüyle başlayan ek gelince yumuşama olur: *kitabı*, *ağacı*, *çocuğu*.

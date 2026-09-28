@@ -1,74 +1,120 @@
 # Sıradaki
 
-## Son oturum: Oturum 4 — görsel dil (2026-09-28)
+## Son oturum: Oturum 5 — Bukalemun Koyu (2026-09-28)
 
 ### Bitenler
 
-- **Görsel kod (`src/gorsel/cizim.ts`):** tuvaldeki başvuru kodu TypeScript'e taşındı; hiçbir
-  sayı ve yol değişmedi. `cizim.test.ts` sekiz bileşimde başvuru koduyla karşılaştırır
-  (başvuru kodunun yalnız tür eklenmiş kopyası testte durur); oturumda başvuru kodu olduğu
-  gibi de çalıştırıldı, çıktısı birebir aynı. Ünlü tablosu motorunkidir, ikinci tablo yok.
-  Saf TypeScript: `tsconfig.motor.json` DOM'suz derler, `bagimsizlik.test.ts` içe aktarmaları
-  tarar.
-- **Belirteçler (`src/gorsel/tema.css`):** on renk, Renksiz mod (`.renksiz`: kalın ve ince
-  #8E8C99, iki zemin #E2E1E8), çizgi kalınlıkları, yazı tipleri, boyutlar.
-- **Bileşenler (`src/gorsel/`):** `Unlu` (72×76), `Bukalemun` (132×82), `KokYazisi`,
-  `UnluEtiketi`, `UnluKarti`. Her karakterde `role="img"` ve `aria-label` ("a: kalın, düz,
-  geniş"; "lar bukalemunu, a: kalın, düz, geniş"; "m bukalemunu, saklanan i: ince, düz,
-  dar"). `boyut` yalnız ölçekler. SVG'de yalnız geometri var; renkler CSS değişkenlerinden.
-- **Kök etiketi (`UnluEtiketi`), kullanıcının isteğiyle:** son ünlünün etiketi, ünlü
-  gövdesinin küçük bir kopyası. En/boy oranı çizimden (`unluGovdesi`: kalında 58:56, incede
-  34:56); düzde köşesi 4px dikdörtgen, yuvarlakta elips; boyu 1.5em (30px'lik kökte
-  45px). Harf incede de sığar (en sıkı durum incenin elipsinde ü). Etiket kalınlığı ve
-  yuvarlaklığı renksiz de gösterir. DESIGN.md'nin görsel koduna yazıldı.
-- **Bukalemunun kılığı (`src/gorsel/kilik.ts`):** `ekle()` sonucundaki ek parçasının yüzeydeki
-  ilk ünlüsü. Ek ünlüsüz kalırsa saklanan (I)'nın uyumla olacağı ünlü; bunu motorun `uyum`
-  işlevi verir. Uyumsuz durum `uyumsuz` prop'uyla seçilir.
-- **Motor:** yalnız iç `uyum` işlevi dışa açıldı (`src/motor/index.ts`). Davranış, altın
-  tablo (202/202) ve sözlük değişmedi.
-- **Yazı tipleri:** `@fontsource/baloo-2` eklendi (800; yalnız latin ve latin-ext, yaklaşık
-  34 KB). woff2 dosyaları PWA önbelleğinde; Google Fonts'a istek yok.
-- **Karakter Galerisi (`galeri.html`, `src/galeri/`):** sekiz ünlü okul çizelgesi düzeninde;
-  aynı düzende sekiz kök etiketi; -lAr (kuşlar, gözler); -(I)m (kızım, evim, yolum, gözüm);
-  saklanan (kedim); uymayan (*evlar*, tek elle kurulan örnek). Her satır kök, bukalemun, ok,
-  sonuç. Üstte Renksiz düğmesi (`aria-pressed`). Oyundan bağlantı yok, `noindex`,
-  önbellekte.
-- **Dar ekranda bukalemun küçülmez (Codex incelemesinin bulgusu, doğrulandı):** 320 px'te
-  bukalemun 68 px'e iniyor, 20px'lik ek yazısı ince rengin üstünde 10px'e düşüyordu
-  (18px kuralına aykırı). Artık bukalemun en az 0.9 ölçekte çizilir; satıra sığmayan dar
-  ekranda (23.25rem'e kadar) ok ve sonuç alt satıra geçer.
-- **Kurallar testi (`src/gorsel/kurallar.test.ts`):** renk değeri yalnız `tema.css`'te;
-  degrade ve bulanıklık yok; tek gölge ünlü kartınınki; görsel kodda resim dosyası yok.
-  Vitest CSS'i boşalttığı için `vite.config.ts`'e `test.css.include` (yalnız `?raw`) eklendi.
-- **Testler:** 476 birim testi (görsel 146: çizim 51, bileşenler 44, kurallar 29, kılık 19,
-  bağımsızlık 3; galeri 11; motor 306; denetim sayfası 11; açılış ekranı 2) ve 15 uçtan uca
-  test (açılış 4, denetim 5, galeri 6: telefonda, 360 ve 320 px'te taşmadan açılış, ek yazısı
-  hiçbir genişlikte 18px'in altında değil, sekiz ünlü ve sekiz bukalemun, konsol hatası yok;
-  harf her kök etiketine sığar; yazı tipleri gömülü, Google Fonts'a ve başka sunucuya istek
-  yok; Renksiz'de `--kalin` = `--ince`, kalın ve ince etiketlerin enleri farklı; oyunda
-  bağlantı yok; çevrim dışı açılış, yazı tipleriyle).
-- **DESIGN.md:** "Görsel dil" bölümü (görsel kod, belirteçler, üç kural). **CLAUDE.md:**
-  11. kural, yeni kitaplık, üç giriş sayfası, görsel dil notları.
+- **İki tablo, verildiği gibi:** `icerik/gorevler/bukalemun-koyu.csv` (10 görev) ve
+  `tests/neden.csv` (37 satır). İkisi de kullanıcının onayı olmadan değişmez (CLAUDE.md,
+  12. kural).
+- **Motor, `src/motor/neden.ts`:**
+  - `neden(kok, etiketler, parcalar)`: aday `olasiBicimler` içindeyse boş liste. Değilse
+    ekler soldan sağa yerel uyumla sınanır: beklenen ünlüyü motorun kendi `uyum` işlevi
+    verir, adaydaki önceki son ünlüye bakarak. Uyum farkı yoksa tek neden `diğer`. Her
+    neden bakılan ve seçilen ünlüyü, adaydaki yerleriyle taşır; bakılanın kökte olup
+    olmadığını da bilir. `neden.csv`'nin 37 satırının hepsi geçiyor.
+  - `nedenCumlesi(nedenler)`: yalnız ilk neden için üç cümle; bakılan ünlü önceki ekteyse
+    sona "Bukalemun en yakın ünlüye bakar." eklenir.
+  - `yuzeySecenekleri(parca)`: bukalemunun kılıkları (lar/ler; ım/im/um/üm). Her ünlü
+    yuvasının alabileceği ünlüler motorun `uyum` işlevinden toplanır; arkafonem tablosu
+    ikinci kez yazılmadı. `neden` seçilen yüzeyi bununla doğrular.
+  - `csvOku` genel kapıdan dışa açıldı (görev tablosu için). Altın tablo (202 satır) ve
+    sözlük değişmedi.
+- **Oyunun mantığı, `src/oyun/` (saf TypeScript):**
+  - `gorevler.ts`: görev tablosunu satır numaralı hatalarla okur.
+  - `karistir.ts`: mulberry32 ile sabit tohumlu karıştırma.
+  - `koy.ts`: adımlar, seçenekler ve oyunun durumu. Durum bir indirgeyicide tutulur, evreleri
+    `secim`, `deneme`, `buyu`, `bitti` ve `kapanis`; anlam etkileri de burada.
+  - `tsconfig.motor.json` bu klasörü DOM'suz derler, `bagimsizlik.test.ts` içe aktarmaları
+    tarar.
+- **Ekran, `src/ekranlar/BukalemunKoyu.tsx` (hareketler `hareket.ts`'te, Web Animations
+  API):**
+  - Ortada kelime kartı (`KokYazisi`), altında kıyıda bukalemunlar, en altta cep.
+  - Taşımanın üç yolu: sürükle-bırak (Pointer Events; fare ve parmak), dokun-dokun ve
+    klavye (Tab, Enter; Esc seçimi bırakır).
+  - Doğru taşımada büyü: bukalemun kelimenin sonuna uçar, kökteki etiketten bukalemunun
+    gözüne bir yay çizilip parlar, bukalemun iki kez zıplar. Kelime birleşir ve ek
+    bukalemunun renginde kalır. Sonuç `ekle()`'nin parçasından gelir.
+  - Anlam etkisi: çoğulda kart üçe çoğalır; iyelikte kart cebe girer (FLIP), cebin önünde
+    kelime yazılı. Zincirde gövde `toplar` olur, etiket a'ya geçer.
+  - Yanlış taşımada bukalemun kelimeye uçar, -12 derece eğilir, düşer, kıyıya döner. Altta
+    denenen biçim (ilgili iki ünlü `UnluEtiketi` içinde) ve cümle görünür. Ceza, puan ve
+    süre yok; ağız hiç değişmez.
+  - Renksiz görevde (9.) `.renksiz` büyüye kadar sürer. Hareket azaltmada hiçbir hareket
+    oynamaz.
+  - Kapanış kartı: "Koyda akşam oldu", kurulan on kelime ekleri renkli.
+  - Ana sayfada geçici "Bukalemun Koyu" düğmesi; koyda ana sayfa düğmesi (ev simgesi).
+  - Oyun ekranı yalnız `tema.css` belirteçlerini kullanıyor; `kurallar.test.ts` onu da
+    tarıyor. Başlıklar için Baloo 2 oyunun girişine de yüklendi (yalnız latin ve latin-ext).
+- **Düzen:** 412×839, 360×640 ve 320×568'de yatay taşma yok. 360×640 ve 320×568'de kart,
+  dört bukalemun ve cep kaydırmadan ekrana sığıyor, neden cümlesi açıkken de. Bukalemunlar
+  0.9 ölçeğin altına inmiyor.
+- **Testler:** 594 birim testi ve 23 uçtan uca test.
+  - Birim testlerinin dağılımı: motor 366 (neden 59), oyun mantığı 43, görsel dil 152
+    (kurallar 35), ekranlar 11, galeri 11, denetim sayfası 11.
+  - Görev tablosunun testi: her görevin doğru biçimi seçeneklerden kurulur, her adımda tam
+    bir seçenek doğrudur. Her yanlış seçeneğin bir uyum nedeni ve cümlesi var.
+  - Uçtan uca, Bukalemun Koyu 8 test:
+    - on görev dokun-dokun oynanıp kapanış kartına varılır; üç kart, cep, renksiz görev ve
+      zincir de denetlenir;
+    - yanlış denemede "Kalınlıkları uyuşmuyor." cümlesi görünür, a ile e etiketlenir,
+      bukalemun -12 derece eğilir, ağızlar değişmez;
+    - 1. görev klavyeyle, fareyle sürükleyerek ve parmakla sürükleyerek oynanır;
+    - hareket azaltmada hiç hareket oynamaz;
+    - üç ekran boyunda taşma yok, dokunma alanları en az 44 px, ek yazısı en az 18 px;
+    - ana sayfaya dönülür, dış sunucuya istek gitmez.
 
-### Kullanıcının onayladıkları
+### Kullanıcının verdikleri
 
-- Renksiz modda sekiz ünlü bedenlerinden ayırt ediliyor (bitti ölçütü).
-- Tarifte açık kalan dört yer: saklanan bukalemunda ağız yok ve göz tümseği de zemine
-  karışıyor; ünlü kartının zemini kalın ya da ince zemin rengi; kök etiketinin köşesi düzde
-  4px, yuvarlakta elips; bukalemunda kalınlık yüksekliktir (54 / 38, en hep 92).
-- Kök etiketi ünlü gövdesinin küçük kopyası olur (yukarıda); böylece kalınlık etikette de
-  renkten bağımsız görünür.
+- Oturumun tarifi (oyun, seçenekler, nedenin algoritması, üç cümle, ekranın davranışı) ve iki
+  tablo oturum başında kullanıcıdan geldi; tablolar hiç değiştirilmedi.
+
+### Kullanıcının bakması gerekenler (tarifte açık kalan yerler; ben seçtim)
+
+- **Nedenin gösterimi:** cümle kelime kartının altında. Üstünde denenen biçim durur (*atler*):
+  ilgili iki ünlü `UnluEtiketi` içinde, öteki harfler `--cizik` renginde, üstü çizili değil.
+  "İlgili iki ünlü vurgulanır" böyle yorumlandı.
+- **Cep:** ekranın en altında, dikişli bir cep önü. Kart cebe girince yalnız üst kenarı
+  görünür; kelime cebin önünde yazılı. Kelime kartı gölgesiz, çünkü tek gölge ünlü kartınınki.
+- **Birleşen ek:** bukalemunun renginde, 2px mürekkep çerçeveli; düzde köşeli, yuvarlakta hap.
+  DESIGN.md'nin görsel koduna yazıldı.
+- **Metinler:** "Sıradaki", "Ana sayfa", "Koyda akşam oldu", "Bugün kurduğun kelimeler:" ve
+  ekran okuyucu yönergesi ("Bir bukalemunu kelimeye taşı: sürükle, ya da önce bukalemuna
+  sonra kelimeye dokun."). Görev sırası "3 / 10" diye yazılıyor; puan değil, yer.
+- **Büyünün süresi:** doğru taşımadan Sıradaki'ye kadar yaklaşık 3,5 saniye; yanlışta
+  uçuş, eğilme, düşüş ve dönüş yaklaşık 1,6 saniye.
+- **Seçeneklerin tohumu:** `sira × 100 + adım`. Doğru bukalemun dört yerin dördüne de düşüyor.
+- **Klavyede odak:** bukalemun seçilince odak kelime kartına geçer (Enter taşır); görev bitince
+  Sıradaki'ye, yeni görevde ilk bukalemuna geçer.
 
 ### Açık kalanlar
 
-- **Oyunun ekranı henüz eski renklerle:** `AcilisEkrani` ve `src/genel.css` gök ve deniz
-  renklerini kullanıyor; manifest'teki `theme_color` ve `background_color` da. "Yalnız
-  belirteçlerdeki renkler" kuralı oyuna ilk oyun ekranıyla gelir (`genel.css` `tema.css`'e
-  geçer).
-- **İkonlar yer tutucu:** `scripts/ikon.svg`'deki ada çizimi. Görsel dil belli oldu; ikon
-  koddan üretilen bir karakterle yeniden çizilebilir (`npm run ikonlar`).
-- **`motion` henüz kurulmadı:** uymayan ekin "sallanıp düşmesi", sevinç ve üzüntü hareketleri
-  için gerekecek (ağız değişmez, 2. kural).
+- **"Diğer" nedenin cümlesi yok:** `nedenCumlesi` boş döner. Bukalemun Koyu'nun görevlerinde
+  çıkmıyor (`gorevler.test.ts` denetler). İstisna ve yumuşama bölgeleri için cümle
+  kullanıcıyla yazılmalı.
+- **Yerel uyum istisnayı bilmez:** tablo gereği `saatlar` → diğer. Ama karışık adayda
+  yanıltıcı olabilir: `saat + ler + ım`, `PL:kalınlık; POSS.1SG:kalınlık` alır, oysa
+  `ler` doğrudur. Misafir kelime görevleri gelince bakılmalı.
+- **Aday kök + yüzeylerdir:** gövdeyi değiştiren kökte (yumuşama, ünlü düşmesi:
+  `kitap + ım`) doğru ek de "diğer" alır, çünkü `kitapım` `olasiBicimler`'de yok. Bukalemun
+  Koyu'nun görevlerinde böyle kök yok. Fıstıkçı Şahap'ın Dükkânı için gövdenin seçimi ayrı
+  düşünülmeli.
+- **Kılık dışı yüzey hata verir:** `neden`, ekin kılıklarından olmayan yüzeyi reddeder
+  (`lır`, `lr`). Saklanan ünlüde (kedi + `im`) seçenek sunacak bir bölge gelirse ayrı bir
+  neden gerekir.
+- **Anlam etkisi yalnız PL ve POSS.1SG için** (`ANLAM_ETKILERI`, `src/oyun/koy.ts`). DESIGN.md
+  tablosundaki öteki büyüler (-CIk, -lI, -sIz, -(y)A) sonraki bölgelerde.
+- **Açılış ekranı eski renklerle ve geçici düğmeyle:** `AcilisEkrani` ve `genel.css` gök ve
+  deniz renklerini kullanıyor; manifest'teki `theme_color` ve `background_color` da.
+  Ada haritası (Oturum 6) açılışı `tema.css`'e taşır ve geçici düğmeyi kaldırır.
+- **Sesli mod yok:** 1–2. sınıf için neden cümlesi okunarak verilmeli (DESIGN.md, "Koleksiyon
+  ve modlar").
+- **İlerleme saklanmıyor:** koydan çıkınca oyun baştan başlar. Saklanacaksa yalnız cihazda
+  (6. kural).
+- **Galerinin uymayan örneği hâlâ elle:** `neden` artık var; istenirse galeri *evlar*'ı
+  motordan kurar, nedenini de gösterir.
+- **İkonlar yer tutucu:** `scripts/ikon.svg`'deki ada çizimi. Koddan üretilen bir karakterle
+  yeniden çizilebilir (`npm run ikonlar`).
 - **Bukalemun yazısı yalnız kısa eklerle sınandı** (lar, ım, m). Uzun yüzeyler (ör. -lArI,
   -(n)In) gövdeye sığmayabilir.
 - **Saklanan ünlüde ince ek hesaba katılmıyor:** ek parçası kökün sözlük işaretini taşımıyor.
@@ -85,38 +131,34 @@
 - **Ek sırası denetlenmiyor (Oturum 8):** Motor etiketleri verilen sırayla ekler;
   `PL+AGT`, `LOC+PL` ya da `PL+LIK` gibi dizileri reddetmez. `ekler.csv`'deki tür sütunu
   bunun için hazır ("meyvenin üstüne gövde çıkmaz", DESIGN.md).
-- **Yanlış biçimin nedeni yok (Oturum 5):** *evlar* için "kalınlık uyuşmuyor" gibi, ekin
-  düşme nedenini veren bir denetleyici. Arayüzün komik sonuçları için gerekecek.
 - **Ek adları CSV'de yok:** yönelme, bulunma, ayrılma gibi Türkçe adlar canlandırılacak
   (DESIGN.md, "Terimler resimdir"). Arayüz gerektirince `ekler.csv`'ye sütun eklenebilir.
 - **Kökte yalnız 29 küçük harf kabul ediliyor:** *kâr*, *hâlâ* gibi düzeltme işaretli
   kökler ve büyük harf şimdilik hata veriyor (motorda da sözlükte de).
-- **Gerçek telefonda doğrulama (PR birleşince):** <https://frtbasbug.github.io/morfemusta/>
-  Android Chrome'da "Uygulamayı yükle / Ana ekrana ekle"; iOS Safari'de Paylaş →
-  "Ana Ekrana Ekle"; ardından uçak modunda açılış. Denetim sayfası:
-  <https://frtbasbug.github.io/morfemusta/denetim.html>. Karakter Galerisi:
-  <https://frtbasbug.github.io/morfemusta/galeri.html>.
+- **Gerçek telefonda doğrulama (PR birleşince):**
+  - Adres: <https://frtbasbug.github.io/morfemusta/>.
+  - Kurulum: Android Chrome'da "Uygulamayı yükle / Ana ekrana ekle"; iOS Safari'de Paylaş →
+    "Ana Ekrana Ekle". Ardından uçak modunda açılış.
+  - Bukalemun Koyu'nda parmakla sürükleme: uçtan uca testler Chromium'da fareyle ve CDP
+    dokunmasıyla sınıyor; iOS Safari'de Pointer Events ile `touch-action` denenmeli.
+  - Denetim sayfası: <https://frtbasbug.github.io/morfemusta/denetim.html>. Karakter
+    Galerisi: <https://frtbasbug.github.io/morfemusta/galeri.html>.
 - **Yön kilidi yok:** manifest'te `orientation` yazılı değil. Telefonda dikey kilit mi,
   sınıf modu (etkileşimli tahta) için yatay mı, karar bekliyor.
 - **DESIGN.md künyeleri:** Aksu-Koç & Slobin (1985) ile Becker, Ketrez & Nevins (2011)
   yalnız kısa atıfla geçiyor. Tam künye, doğrulanmış kaynaktan eklenebilir.
-- **Önbellek boyutu:** Andika'nın Kiril ve Vietnamca alt kümeleri de önbelleğe giriyor
-  (yaklaşık 80 KB). Türkçe için `latin` ve `latin-ext` yeterli; Baloo 2 bu yüzden yalnız
-  onlarla yükleniyor. Andika için de alt küme dosyaları içe aktarılabilir ya da
-  `workbox.globIgnores` ile ayıklanır. Denetim sayfası ve galeri de önbelleğe giriyor;
-  girmezlerse service worker onları oyuna düşürür, çıkarılmamalı.
+- **Önbellek boyutu:**
+  - Andika'nın Kiril ve Vietnamca alt kümeleri de önbelleğe giriyor (yaklaşık 80 KB). Türkçe
+    için `latin` ve `latin-ext` yeter; Baloo 2 bu yüzden yalnız onlarla yükleniyor.
+  - Andika için de alt küme dosyaları içe aktarılabilir ya da `workbox.globIgnores` ile
+    ayıklanabilir.
+  - Denetim sayfası ve galeri de önbelleğe giriyor; girmezlerse service worker onları oyuna
+    düşürür, çıkarılmamalı.
 
-## Sıradaki hedef: Oturum 5
+## Sıradaki hedef: Oturum 6 — ada haritası
 
-Kapsam oturum başında kullanıcıyla belirlenir. Bilinen plan: yanlış biçimin nedeni Oturum
-5'te, ek sırası denetimi Oturum 8'de.
+Kapsam oturum başında kullanıcıyla belirlenir. Bilinenler:
 
-Öneri: **yanlış biçimin nedeni.** Motorda, `ekle`'nin yanında saf bir denetleyici: verilen
-bir biçimin (çocuğun taktığı bukalemun, ör. *ev* + *lar*) neden uymadığını söyler
-("kalınlık uyuşmuyor: kök ince, ek kalın"). Galerideki uymayan örnek o zaman elle değil,
-motordan kurulur. Ardından ilk oyun ekranı, Bukalemun Koyu, hazır görsel dille (karakterler,
-kılık, eğim) kurulabilir.
-
-- Neden, arayüzün canlandırabileceği biçimde verilir: hangi özellik (kalınlık, yuvarlaklık)
-  hangi ünlüde uyuşmuyor.
-- Uydurma kelimede yalnız kategorik kurallar puanlanır (DESIGN.md).
+- Açılış ekranındaki geçici "Bukalemun Koyu" düğmesi kalkar; koya haritadan girilir.
+- Açılış ekranı ve `genel.css`, `tema.css` belirteçlerine taşınır; manifest renkleri de.
+- Ek sırası denetimi Oturum 8'de.

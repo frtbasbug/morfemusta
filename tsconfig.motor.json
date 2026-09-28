@@ -1,7 +1,8 @@
 {
   // Motor DOM'suz ve Node'suz derlenir: document, window, fetch ya da process kullanırsa
-  // tür denetimi kırılır. Görsel dilin saf hesapları (src/gorsel/cizim.ts, kilik.ts) da
-  // burada, motorla birlikte denetlenir. Testler tsconfig.app.json ile denetlenir.
+  // tür denetimi kırılır. Görsel dilin saf hesapları (src/gorsel/cizim.ts, kilik.ts) ve
+  // oyunun mantığı (src/oyun) da burada, motorla birlikte denetlenir. Testler
+  // tsconfig.app.json ile denetlenir.
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2023"],
@@ -19,6 +20,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["src/motor", "src/gorsel/cizim.ts", "src/gorsel/kilik.ts"],
-  "exclude": ["src/motor/**/*.test.ts"]
+  "include": ["src/motor", "src/gorsel/cizim.ts", "src/gorsel/kilik.ts", "src/oyun"],
+  "exclude": ["src/motor/**/*.test.ts", "src/oyun/**/*.test.ts"]
 }

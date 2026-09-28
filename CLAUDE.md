@@ -49,14 +49,19 @@ src/
   main.tsx           oyunun giriş noktası: yazı tipi ve genel stil burada yüklenir
   App.tsx            kök bileşen
   genel.css          renk belirteçleri (CSS değişkenleri) ve genel stil
-  ekranlar/          ekran bileşenleri ve yanlarında birim testleri (*.test.tsx)
+  ekranlar/          ekran bileşenleri ve yanlarında birim testleri (*.test.tsx); hareket.ts:
+                     ekranların hareketleri (Web Animations API, hareket azaltmaya uyar)
+  oyun/              oyunun saf mantığı: görev tabloları, seçenekler, Bukalemun Koyu'nun durumu
+                     (indirgeyici); testleri yanında
   motor/             biçimbilim motoru: saf TypeScript, genel kapısı index.ts; testleri yanında
   denetim/           Biçim Denetim Sayfası (denetim.html'in girişi, verisi, testleri)
   gorsel/            görsel dil: çizim geometrisi (cizim.ts), bukalemunun kılığı (kilik.ts),
                      belirteçler (tema.css), karakter bileşenleri; testleri yanında
   galeri/            Karakter Galerisi (galeri.html'in girişi, örnekleri, testleri)
-icerik/              içerik CSV dosyaları (ekler.csv: ek envanteri; kokler.csv: kök sözlüğü)
-tests/               altin-bicimler.csv: motorun altın tablosu
+icerik/              içerik CSV dosyaları (ekler.csv: ek envanteri; kokler.csv: kök sözlüğü;
+                     gorevler/: bölgelerin görev tabloları, ör. bukalemun-koyu.csv)
+tests/               altin-bicimler.csv: motorun altın tablosu; neden.csv: yanlış biçimin
+                     nedenleri (motorun neden işlevinin sözleşmesi)
 index.html           oyun
 denetim.html         Biçim Denetim Sayfası (ayrı giriş sayfası)
 galeri.html          Karakter Galerisi (ayrı giriş sayfası)
@@ -98,6 +103,10 @@ DESIGN.md  NEXT.md  CLAUDE.md
     üç özellikten üretilir; ağız duygu göstermez; renkler yalnız `src/gorsel/tema.css`'teki
     belirteçlerdendir. `cizim.ts`'teki sayılar ve yollar tuvaldekilerdir, kullanıcının onayı
     olmadan değişmez (`cizim.test.ts` başvuru koduyla karşılaştırır).
+12. **`tests/neden.csv` ve `icerik/gorevler/*.csv` yalnız kullanıcının onayıyla değişir.**
+    Neden tablosu `neden` işlevinin, görev tabloları oyunun sözleşmesidir: testi geçirmek için
+    satır değiştirilmez, silinmez, eklenmez. Bir satır yanlış görünürse iş durur ve
+    kullanıcıya sorulur. Görev tablosunda doğru biçim yazılmaz; her zaman motordan gelir.
 
 ## Adlandırma
 
@@ -129,6 +138,31 @@ DESIGN.md  NEXT.md  CLAUDE.md
   Kök etiketinin (`UnluEtiketi`) en/boy oranı `cizim.ts`'teki `unluGovdesi`'nden gelir, CSS'te
   yazılmaz. Bukalemun 0.9 ölçeğin altına küçültülmez: ek yazısı ince rengin üstünde 18px'in
   altına inerdi (galeride dar ekranda satır kırılır; `e2e/galeri.spec.ts` denetler).
+- **Oyunun mantığı (`src/oyun`):** saf TypeScript; `tsconfig.motor.json` onu da DOM'suz
+  derler, `src/oyun/bagimsizlik.test.ts` içe aktarmaları tarar (yalnız motorun genel kapısı,
+  kendi dosyaları ve `icerik/gorevler/*.csv?raw`). Doğruluk motordan gelir: aday `neden` ile
+  sınanır, seçenekler (bukalemunun kılıkları) `yuzeySecenekleri`'nden. Seçeneklerin sırası
+  `secenekTohumu` ile sabittir; görev tablosu değişirse sıralar da değişir (`koy.test.ts`
+  yalnız özelliklerini denetler: doğru bukalemun her yere düşer).
+- **Hareketler (`src/ekranlar/hareket.ts`):** Web Animations API; `motion` kurulmadı.
+  Hareket azaltma açıksa `oynat` ve `bekle` hemen döner; CSS geçişleri
+  `@media (prefers-reduced-motion: no-preference)` içindedir. Hareket kalıcı stil bırakmaz
+  (fill yok): kalıcı durum hareketten önce satır içi stile yazılır. Seçilen bukalemunun
+  kalkışı `translate` özelliğiyledir, `transform`'la değil: CSS geçişi basamaklamada
+  animasyonların üstündedir; `transform`'a geçiş konsaydı taşıma hareketlerini bozardı.
+- **Sürükle-bırak:** Pointer Events ve `setPointerCapture`; bukalemun düğmelerinde
+  `touch-action: none`. Sürüklemenin sonundaki tıklama seçim sayılmaz; klavyenin tıklaması
+  (`detail` 0) hiç yutulmaz. Uçtan uca testte fareyle `page.mouse`, parmakla CDP
+  `Input.dispatchTouchEvent` kullanılır.
+- **Playwright'ta hareket azaltma:** `test.use({ contextOptions: { reducedMotion: 'reduce' } })`.
+  `reducedMotion` doğrudan `use` seçeneği değildir; tür denetimi yakalar, çalışma anında sessizce
+  yok sayılır.
+- **Koyun zemini:** `:root:has(.koy)` sayfanın zeminini kreme çevirir. `genel.css`'in koyu
+  zemini, 2.625 piksel oranlı telefonda (412 px = 1081.5 cihaz pikseli) sağ kenarda ince bir
+  çizgi olarak görünüyordu.
+- **Kurallar testi oyun ekranını da tarar:** `src/gorsel/kurallar.test.ts`, Bukalemun Koyu'nun
+  stilini ve kodunu da denetler (renk yalnız belirteçlerden, gölge ve degrade yok). Açılış
+  ekranı eski renkleriyle kalır; ada haritası (Oturum 6) onu da taşır.
 - **Saf görsel hesaplar:** `src/gorsel/cizim.ts` ve `kilik.ts` motor gibi DOM'suz derlenir
   (`tsconfig.motor.json`) ve yalnız motorun genel kapısını içe aktarır
   (`src/gorsel/bagimsizlik.test.ts`). Ünlü tablosu motorunkidir. Saklanan ünlünün kılığı
