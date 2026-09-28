@@ -1,10 +1,20 @@
 import './AcilisEkrani.css'
 
-export default function AcilisEkrani() {
+export default function AcilisEkrani({
+  onBukalemunKoyu,
+}: {
+  /** Geçici: ada haritası (Oturum 6) gelene kadar Bukalemun Koyu'na buradan girilir. */
+  readonly onBukalemunKoyu?: () => void
+}) {
   return (
     <main className="acilis">
       <div className="acilis__gunes" aria-hidden="true" />
       <h1 className="acilis__baslik">Morfemusta Adası</h1>
+      {onBukalemunKoyu && (
+        <button type="button" className="acilis__dugme" onClick={onBukalemunKoyu}>
+          Bukalemun Koyu
+        </button>
+      )}
       <Ada />
     </main>
   )

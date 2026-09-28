@@ -1,19 +1,28 @@
 // DESIGN.md'deki görsel dil kurallarından denetlenebilen ikisi. (1) Karakterler yalnız
-// koddan üretilir: görsel ve galeri kodu resim dosyası kullanmaz. (3) Yalnız belirteçlerdeki
-// renkler: renk değeri yalnız tema.css'te yazılır; degrade ve bulanık gölge yoktur, tek gölge
-// ünlü kartınınkidir. Ağız kuralını (2) cizim.ts'in imzası taşır: ağız yalnız üç özellikten
-// çizilir, oyun durumunu almaz.
+// koddan üretilir: görsel, galeri ve oyun ekranı kodu resim dosyası kullanmaz. (3) Yalnız
+// belirteçlerdeki renkler: renk değeri yalnız tema.css'te yazılır; degrade ve bulanık gölge
+// yoktur, tek gölge ünlü kartınınkidir. Ağız kuralını (2) cizim.ts'in imzası taşır: ağız yalnız
+// üç özellikten çizilir, oyun durumunu almaz.
+//
+// Oyun ekranlarından yalnız görsel dile geçmiş olanlar taranır (Bukalemun Koyu). Açılış ekranı
+// eski renkleriyle kalır; ada haritası (Oturum 6) onu da belirteçlere taşır.
 
 import { describe, expect, it } from 'vitest'
 
-const stiller = import.meta.glob<string>(['./*.css', '../galeri/*.css'], {
-  query: '?raw',
-  import: 'default',
-  eager: true,
-})
+const stiller = import.meta.glob<string>(
+  ['./*.css', '../galeri/*.css', '../ekranlar/BukalemunKoyu.css'],
+  { query: '?raw', import: 'default', eager: true },
+)
 
 const kodlar = import.meta.glob<string>(
-  ['./*.{ts,tsx}', '../galeri/*.{ts,tsx}', '!./*.test.{ts,tsx}', '!../galeri/*.test.{ts,tsx}'],
+  [
+    './*.{ts,tsx}',
+    '../galeri/*.{ts,tsx}',
+    '../ekranlar/BukalemunKoyu.tsx',
+    '../ekranlar/hareket.ts',
+    '!./*.test.{ts,tsx}',
+    '!../galeri/*.test.{ts,tsx}',
+  ],
   { query: '?raw', import: 'default', eager: true },
 )
 
@@ -23,12 +32,23 @@ const TEMA = './tema.css'
 describe('yalnız belirteçlerdeki renkler', () => {
   it('stil ve kod dosyaları bulunur, metinleri okunur', () => {
     expect(Object.keys(stiller)).toEqual(
-      expect.arrayContaining([TEMA, './karakterler.css', '../galeri/KarakterGalerisi.css']),
+      expect.arrayContaining([
+        TEMA,
+        './karakterler.css',
+        '../galeri/KarakterGalerisi.css',
+        '../ekranlar/BukalemunKoyu.css',
+      ]),
     )
     // Vitest CSS'i boşaltırsa (vite.config.ts, test.css) bu denetimler boşa geçerdi.
     for (const metin of Object.values(stiller)) expect(metin).toMatch(/\{[^}]+\}/)
     expect(Object.keys(kodlar)).toEqual(
-      expect.arrayContaining(['./cizim.ts', './Bukalemun.tsx', '../galeri/KarakterGalerisi.tsx']),
+      expect.arrayContaining([
+        './cizim.ts',
+        './Bukalemun.tsx',
+        '../galeri/KarakterGalerisi.tsx',
+        '../ekranlar/BukalemunKoyu.tsx',
+        '../ekranlar/hareket.ts',
+      ]),
     )
   })
 

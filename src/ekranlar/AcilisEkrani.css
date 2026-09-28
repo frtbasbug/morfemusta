@@ -38,6 +38,26 @@
   overflow-wrap: break-word;
 }
 
+/* Geçici: ada haritası (Oturum 6) gelene kadar Bukalemun Koyu'nun kapısı. */
+.acilis__dugme {
+  position: relative;
+  min-height: 3rem;
+  padding: 0 1.75rem;
+  border: 3px solid var(--yazi);
+  border-radius: 999px;
+  background: var(--gunes);
+  color: var(--yazi);
+  font: inherit;
+  font-size: 1.35rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.acilis__dugme:focus-visible {
+  outline: 3px solid var(--yazi);
+  outline-offset: 3px;
+}
+
 .acilis__ada {
   display: block;
   width: calc(100% + 2rem);

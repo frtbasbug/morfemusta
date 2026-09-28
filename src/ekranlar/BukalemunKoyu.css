@@ -1,0 +1,524 @@
+/* Bukalemun Koyu. Renkler, çizgiler ve yazı tipleri yalnız tema.css'teki belirteçlerden
+   (DESIGN.md, "Üç kural"; kurallar.test.ts denetler). Degrade, bulanıklık ve gölge yok.
+   Hareketler hareket.ts'tedir; buradaki geçişler yalnız hareket azaltma kapalıyken oynar. */
+
+/* Koy açıkken sayfanın zemini de krem: genel.css'in koyu zemini telefonun kesirli piksel
+   kenarında ince bir çizgi olarak görünmesin. */
+:root:has(.koy),
+:root:has(.koy) body {
+  background: var(--zemin);
+}
+
+.koy {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  padding-block:
+    calc(env(safe-area-inset-top) + 0.75rem) calc(env(safe-area-inset-bottom) + 0.75rem);
+  padding-inline: max(calc(env(safe-area-inset-left) + 1rem), calc((100% - 30rem) / 2))
+    max(calc(env(safe-area-inset-right) + 1rem), calc((100% - 30rem) / 2));
+  background: var(--zemin);
+  color: var(--murekkep);
+  font-family: var(--yazi-tipi);
+  line-height: 1.4;
+}
+
+/* Ekran okuyucuya kalır, görünmez. */
+.gizli {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Üst çubuk: ana sayfa, ekranın adı, görev sırası. */
+.koy__ust {
+  display: grid;
+  grid-template-columns: 2.75rem 1fr 2.75rem;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.koy__ana-sayfa {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 2.5px solid var(--murekkep);
+  border-radius: 999px;
+  background: var(--zemin);
+  color: var(--murekkep);
+  cursor: pointer;
+}
+
+.koy__ana-sayfa svg {
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.koy__baslik {
+  margin: 0;
+  font-family: var(--yazi-tipi-baslik);
+  font-size: clamp(1.25rem, 6vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.koy__baslik:focus {
+  outline: none;
+}
+
+.koy__sira {
+  margin: 0;
+  justify-self: end;
+  color: var(--soluk);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Deniz: kelime kartı ve altında neden ya da Sıradaki. Boyları sabittir; neden görününce
+   kıyıdaki bukalemunlar yerinden oynamaz. */
+.koy__deniz {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding-block: 1rem 0.5rem;
+}
+
+.koy__sahne {
+  display: grid;
+  place-items: center;
+  min-height: 7rem;
+}
+
+.koy__alt {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 0.75rem;
+  min-height: 7.5rem;
+}
+
+/* Kelime kartı. Çoğulda iki kopyası arkasından iki yana açılır; üçü aynı ızgara hücresinde. */
+.kartlar {
+  display: grid;
+  isolation: isolate;
+}
+
+.kartlar > * {
+  grid-area: 1 / 1;
+}
+
+.kelime-karti {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  min-width: 10rem;
+  min-height: 5.25rem;
+  padding: 0.6rem 1.1rem;
+  border: 2.5px solid var(--murekkep);
+  border-radius: var(--kose-unlu-karti);
+  background: var(--zemin);
+  color: var(--murekkep);
+  font: inherit;
+}
+
+button.kelime-karti {
+  cursor: pointer;
+}
+
+/* Bir bukalemun seçiliyken kart onu bekler. */
+.kelime-karti--hedef {
+  border-style: dashed;
+}
+
+/* Sürüklenen bukalemun kartın üstünde. */
+.kelime-karti--ustunde {
+  outline: 4px solid var(--murekkep);
+  outline-offset: 4px;
+}
+
+.kelime-karti--kopya {
+  z-index: -1;
+}
+
+.kelime-karti--kopya-1 {
+  transform: translate(-0.8rem, 0.45rem) rotate(-7deg);
+}
+
+.kelime-karti--kopya-2 {
+  transform: translate(0.8rem, 0.45rem) rotate(7deg);
+}
+
+.kelime {
+  font-family: var(--yazi-tipi);
+  font-size: var(--boyut-kok);
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+/* Birleşen ek bukalemunun renginde kalır; düzde köşeli, yuvarlakta yuvarlak. */
+.ek-yazisi {
+  display: inline-block;
+  margin-inline-start: 0.06em;
+  padding: 0 0.12em 0.04em;
+  border: var(--cizgi-kok-etiketi) solid var(--murekkep);
+  border-radius: 0.22em;
+  background: var(--govde-rengi);
+  color: var(--murekkep);
+  line-height: 1.2;
+}
+
+.ek-yazisi--kalin {
+  --govde-rengi: var(--kalin);
+}
+
+.ek-yazisi--ince {
+  --govde-rengi: var(--ince);
+}
+
+.ek-yazisi--yuvarlak {
+  padding-inline: 0.3em;
+  border-radius: 999px;
+}
+
+/* Neden: aday (ilgili iki ünlü etikette) ve altında cümle. Aday uymayan sonuçtur: üstü çizili
+   ve --cizik renginde (DESIGN.md, "Uymayan ek"). Çizgi etiketlere geçmez (satır içi blok);
+   ilgili iki ünlü okunur kalır. */
+.neden {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  text-align: center;
+}
+
+.neden__aday {
+  margin: 0;
+  color: var(--cizik);
+  font-size: var(--boyut-kok);
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.neden__cumle {
+  max-width: 21rem;
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.35;
+}
+
+.koy__dugme {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0 1.5rem;
+  border: 2.5px solid var(--murekkep);
+  border-radius: 999px;
+  background: var(--murekkep);
+  color: var(--zemin);
+  font: inherit;
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.koy__ana-sayfa:focus-visible,
+.koy__dugme:focus-visible,
+.kelime-karti:focus-visible {
+  outline: 3px solid var(--murekkep);
+  outline-offset: 4px;
+}
+
+/* Koyun kıyı çizgisi. */
+.koy__dalga {
+  display: block;
+  width: 100%;
+  height: 0.75rem;
+  margin-top: 0.25rem;
+  fill: none;
+  stroke: var(--ayrac);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.koy__dalga path {
+  vector-effect: non-scaling-stroke;
+}
+
+/* Kıyı: iki sütun. Bukalemun ek yazısıyla birlikte ölçeklenir; 0.9'dan (7.425rem) küçük
+   çizilmez, ince rengin üstünde yazı 18px'in altına inmesin (tema.css). Düğmenin 3px'lik
+   seçim çerçevesi de sütuna eklenir. */
+.kiyi {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(calc(7.425rem + 6px), calc(8.25rem + 6px)));
+  justify-content: center;
+  gap: 0.75rem 1rem;
+  margin: 0;
+  padding: 0.75rem 0 0.5rem;
+  list-style: none;
+}
+
+.kiyi__yer {
+  position: relative;
+  display: grid;
+  place-items: end center;
+}
+
+.kiyi__bukalemun {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 3px dashed transparent;
+  border-radius: 16px;
+  background: none;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.kiyi__bukalemun .bukalemun {
+  width: 100%;
+  pointer-events: none;
+}
+
+.kiyi__bukalemun[aria-pressed='true'] {
+  border-color: var(--murekkep);
+}
+
+.kiyi__bukalemun[aria-disabled='true'] {
+  cursor: default;
+}
+
+.kiyi__bukalemun:focus-visible {
+  outline: 3px solid var(--murekkep);
+  outline-offset: 2px;
+}
+
+.kiyi__bukalemun--tasiniyor,
+.kiyi__bukalemun--etkin {
+  z-index: 5;
+  cursor: grabbing;
+}
+
+.kiyi__bukalemun--birlesti {
+  visibility: hidden;
+}
+
+/* Cep: ekranın altında. İyelikte kart cebe girer; cebin önü kartın altını örter. */
+.cep {
+  position: relative;
+  z-index: 3;
+  width: 12.5rem;
+  height: 5.5rem;
+  margin: 0.5rem auto 0;
+}
+
+.cep__on {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 4rem;
+  overflow: visible;
+}
+
+.cep__govde {
+  fill: var(--zemin);
+  stroke: var(--murekkep);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.cep__dikis {
+  fill: none;
+  stroke: var(--ayrac);
+  stroke-width: 2;
+  stroke-dasharray: var(--kesik-cizgi);
+  vector-effect: non-scaling-stroke;
+}
+
+/* Cepteki kartın yalnız üst kenarı görünür; kelime cebin önünde yazılıdır. */
+.cep__yuva {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 1.5rem;
+  transform: translateX(-50%) scale(0.55);
+  transform-origin: top center;
+}
+
+.cep__yazi {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  bottom: 1rem;
+  text-align: center;
+}
+
+.sonuc-kelime {
+  font-size: var(--boyut-sonuc);
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+/* Kökteki ünlü ile bukalemun arasındaki yay. Rengi bukalemununki; parlaması yalnız kalınlık
+   ve saydamlıkla (bulanıklık yok). */
+.koy__yay {
+  --yay-rengi: var(--kalin);
+  position: fixed;
+  z-index: 4;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.koy__yay--ince {
+  --yay-rengi: var(--ince);
+}
+
+.koy__yay--gorunur {
+  opacity: 1;
+}
+
+.koy__yay path {
+  fill: none;
+  stroke: var(--yay-rengi);
+  stroke-linecap: round;
+}
+
+.koy__yay-hale {
+  stroke-width: 14;
+  opacity: 0.35;
+}
+
+.koy__yay-yolu {
+  stroke-width: 5;
+}
+
+/* Kapanış kartı. */
+.kapanis {
+  display: grid;
+  justify-items: center;
+  gap: 0.9rem;
+  margin-block: auto;
+  padding: 1.5rem 1.25rem;
+  border: 2.5px solid var(--murekkep);
+  border-radius: var(--kose-unlu-karti);
+  text-align: center;
+}
+
+.kapanis__baslik {
+  margin: 0;
+  font-family: var(--yazi-tipi-baslik);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.kapanis__baslik:focus {
+  outline: none;
+}
+
+.kapanis__metin {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.kapanis__kelimeler {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Alçak ekranda (360×640 ve 320×568 gibi) boşluklar daralır: kart, kıyı ve cep kaydırmadan
+   birlikte görünsün. Bukalemunlar küçülmez (en az 0.9). */
+@media (max-height: 44rem) {
+  .koy {
+    padding-block:
+      calc(env(safe-area-inset-top) + 0.5rem) calc(env(safe-area-inset-bottom) + 0.5rem);
+  }
+
+  .koy__deniz {
+    gap: 0.5rem;
+    padding-block: 0.5rem 0.25rem;
+  }
+
+  .koy__sahne {
+    min-height: 6rem;
+  }
+
+  .koy__alt {
+    gap: 0.5rem;
+    min-height: 6rem;
+  }
+
+  .neden__cumle {
+    font-size: 1.1rem;
+  }
+
+  .kiyi {
+    row-gap: 0.4rem;
+    padding-block: 0.4rem 0.25rem;
+  }
+
+  .cep {
+    height: 4.5rem;
+    margin-top: 0.25rem;
+  }
+
+  .cep__on {
+    height: 3.25rem;
+  }
+
+  .cep__yuva {
+    top: 1.1rem;
+  }
+
+  .cep__yazi {
+    bottom: 0.7rem;
+  }
+}
+
+/* Seçilen bukalemun hafifçe kalkar; yalnız hareket azaltma kapalıyken. Kalkış translate
+   özelliğiyledir: taşıma hareketleri transform'u oynatır, geçiş onlara karışmaz. */
+@media (prefers-reduced-motion: no-preference) {
+  .kiyi__bukalemun {
+    transition: translate 150ms ease-out;
+  }
+
+  .kiyi__bukalemun[aria-pressed='true'] {
+    translate: 0 -6px;
+  }
+}

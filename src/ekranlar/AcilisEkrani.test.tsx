@@ -12,4 +12,11 @@ describe('AcilisEkrani', () => {
     const html = renderToStaticMarkup(<AcilisEkrani />)
     expect(html).toMatch(/<svg[^>]*aria-hidden="true"/)
   })
+
+  it('geçici Bukalemun Koyu düğmesi yalnız geçiş verilince çıkar', () => {
+    expect(renderToStaticMarkup(<AcilisEkrani onBukalemunKoyu={() => {}} />)).toContain(
+      '<button type="button" class="acilis__dugme">Bukalemun Koyu</button>',
+    )
+    expect(renderToStaticMarkup(<AcilisEkrani />)).not.toContain('<button')
+  })
 })
