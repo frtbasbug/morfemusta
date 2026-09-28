@@ -131,10 +131,16 @@ Terimler resimdir: her özellik tek bir çizim boyutuna bağlıdır.
 | `--ince-zemin` | #B6D3F9 | ince ünlü kartı |
 | `--yanak` | #FF9DB4 | yanak |
 | `--cizik` | #6B6781 | uymayan sonuç |
+| `--deniz` | #CFE8E0 | ada haritasında deniz |
+| `--kara` | #F4E6C8 | ada haritasında kara; kilitli ve hazırlanan bölgenin tabelası |
+
+Kalın ve ince renkleri (ve zeminleri) yalnız dilbilgisel anlam taşır: süste, haritada ya da
+arayüzde kullanılmaz. Haritada bukalemun gibi dilbilgisel bir figür kendi renginde durabilir.
 
 **Renksiz mod** (renk körlüğü denetimi): `--kalin` ve `--ince` #8E8C99'a, iki zemin
 #E2E1E8'e döner. Sekiz ünlü o zaman da bedenlerinden, kök etiketleri de biçimlerinden ayırt
-edilmelidir.
+edilmelidir. Ayarlar'daki Renksiz bunu bütün oyuna uygular (`html[data-renkler="renksiz"]`);
+büyüden sonra da gri kalır.
 
 - **Çizgi kalınlıkları:** gövde 3 · göz akı 1.5 · ibik 2.5 · kuyruk ve bacak 5 (altında
   11'lik mürekkep) · kök etiketi 2 · ünlü kartı 2.5, köşe 18.
@@ -144,6 +150,9 @@ edilmelidir.
 - **Karşıtlık:** mürekkebin ince renk üstündeki karşıtlığı 4.3:1'dir; ince renk üstüne
   18px'ten küçük yazı konmaz. Bukalemun ek yazısıyla birlikte ölçeklendiği için 0.9'dan
   küçük çizilmez (132 px'lik kutu en az 118.8 px); sığmayan dar ekranda satır kırılır.
+  Tek ayrık durum haritadaki koy işaretidir: süstür, adı düğmenin yazısıdır, ek yazısı
+  okunmak için değildir. Kalın bir bukalemundur (mürekkebin kalın renk üstündeki karşıtlığı
+  7:1, renksiz gri üstünde 5:1) ve 0.42 ölçekle çizilir.
 
 ### Üç kural
 
@@ -178,10 +187,13 @@ renksiz); doğru biçim görev dosyasına yazılmaz, motordan gelir (`olasiBicim
   nedenin cümlesi görünür. Denenen biçim uymayan sonuçtur: üstü çizili ve `--cizik` renginde;
   ilgili iki ünlü etiketindedir, çizgi etiketlere geçmez. Ceza, puan ve süre yok.
 - **Renksiz görev:** kalın ve ince aynı gri; bedenler ve kulak yeter. Büyü olunca renkler
-  geri gelir.
-- **Hareket azaltma** açıksa hiçbir şey hareket etmez; yalnız renk ve yazı değişir.
-- **Kapanış:** görevler bitince koyda akşam olur; kurulan kelimeler bir kartta, ekleri
-  bukalemunlarının renginde listelenir.
+  geri gelir (Ayarlar'da Renksiz açıksa gelmez).
+- **Hareket azaltma** açıksa (cihazda ya da Ayarlar'da) hiçbir şey hareket etmez; yalnız renk
+  ve yazı değişir.
+- **Üst çubuk:** Harita düğmesi (harita simgesi), bölgenin adı, görev sırası ("3 / 10").
+- **Sürdürme:** her görev bitince ilerleme kaydedilir; koya dönen çocuk kaldığı görevden
+  sürdürür. Tur bitince sonraki giriş baştan başlar.
+- **Kapanış:** görevler bitince koyda akşam olur: ortak akşam ekranı ("Akşam ekranı").
 
 ### Yanlış biçimin nedeni
 
@@ -204,6 +216,96 @@ seçilen:
 
 Bakılan ünlü kökte değil de önceki bir ekteyse sona *Bukalemun en yakın ünlüye bakar.*
 eklenir (*toplarim*). "Diğer" için cümle henüz yoktur.
+
+## Ada haritası
+
+Açılış ekranıdır; başlığı *Morfemusta Adası*. Bölgeler `icerik/bolgeler.csv`'dedir (sıra,
+kimlik, ad, akşam, görev tablosu); görev tablosu boş olan bölgenin içeriği henüz yoktur.
+
+- **Çizim süstür:** kodla çizilmiş bir SVG, ekran okuyucudan gizli. Deniz, kara, kıyıda krem
+  bir köpük şeridi, dalgalar, ikişer ağaç ve bölgeleri sırayla bağlayan noktalı yol. Sol altta
+  koy, denizin girdiği yer.
+- **Bölgeler gerçek düğmelerdir:** tablodaki sırayla, sıralı bir listede, yol boyunca dizili.
+  Her düğme bir tabeladır: bölgenin adı, altında durumu. Düğmenin adı görünen yazının
+  aynısıdır (*Bukalemun Koyu, Açık*).
+- **Kilit:** bir bölge, öncekinin bütün görevleri en az bir kez bitince açılır. İlk bölge hep
+  açıktır; içeriği olmayan bölge bitmez, ardındaki bölge kilitli kalır.
+- **Durum yalnız renkle verilmez;** simge ve yazıyla da görünür:
+
+| Durum | Simge | Tabela | Dokununca |
+|-------|-------|--------|-----------|
+| açık | üçgen | düz çerçeve, krem | bölgeye girilir |
+| tamam | tamam işareti | düz çerçeve, krem | bölgeye girilir (yeni tur) |
+| kilitli | kilit | kesik çerçeve, kara, soluk yazı | *Önce Fıstıkçı Şahap'ın Dükkânı bitmeli.* |
+| hazırlanıyor | kum saati | kesik çerçeve, kara, soluk yazı | *Burası hazırlanıyor. Yakında açılacak.* |
+
+- **İleti** başlığın altında, bir balonda yazılır. Yeri boşken de ayrılmıştır: ileti gelince
+  harita kaymaz, çocuğun sonraki dokunuşu yerini şaşırmaz.
+- **İşaretler:** Bukalemun Koyu'nun işareti küçük bir bukalemundur: koyun ilk görevinin
+  bukalemunu (*at* + *lar*). Öteki bölgelerin işaretlerini kendi oturumları çizecek.
+- **Renkler:** deniz, kara, krem, mürekkep, soluk ve ayraç. Kalın ve ince renkleri kullanılmaz;
+  yalnız bukalemun, dilbilgisel bir figür olarak kendi rengindedir. Gölge ve degrade yok.
+- **Sığma:** harita 360×640'ta kaydırmadan sığar (320×568'de de). Çizim ve düğmeler, kalan
+  alana en/boy oranı korunarak sığan bir kutudadır; düğmeler üst üste binmez.
+
+### Gezinme
+
+- **Alt gezinme:** Harita, Sözlük, Ayarlar; simge ve yazıyla, dokunma alanı en az 44 px.
+  Açık ekranın öğesi dolu ve `aria-current`. Bu üç ekranın altında durur; bölge ekranında
+  yoktur: oyun ekranı bütün yüksekliği kullanır, haritaya üst çubuktaki Harita düğmesiyle
+  dönülür.
+- **Adresler** (hash): `#/` harita, `#/bolge/<kimlik>`, `#/sozluk`, `#/ayarlar`. Açılmamış ya
+  da içeriği olmayan bölgenin adresi haritaya döner.
+- **Geri tuşu:** harita köktür. Bölgeden, Sözlük'ten ve Ayarlar'dan geri tuşu haritaya,
+  haritadan oyunun dışına götürür. Alt gezinmedeki geçişler geçmişi büyütmez (Android'in alt
+  gezinme düzeni); Harita düğmesi de geri gider.
+
+## Sözlük
+
+Doğru kurulan her kelime Sözlük'e kart olarak düşer: görevin kelimesi, görev bitince
+(zincirde *toplarım*; ara gövde *toplar* kart olmaz).
+
+- **Kart:** kelime; kök ve ekler, ekler birleşen ek görünümünde, aralarında artı
+  (*top* + **lar** + **ım**); bölge; tarih (kelimenin o bölgede ilk kurulduğu gün).
+- **Tekrar:** aynı kelime aynı bölgeden ikinci kez kart olmaz; başka bölgede kurulursa ayrı
+  karttır.
+- **Ekran:** kartlar bölgelere göre gruplu, bölge tablosunun sırasıyla; her grupta en yeni
+  kart önde.
+- **Boşsa:** *Sözlüğün henüz boş. Bir kelime kurunca kartı buraya gelir.*
+- Kartta yalnız kök ve ek etiketleri saklıdır; biçim ve ekler her açılışta motordan gelir.
+
+## Akşam ekranı
+
+Bölge turunun sonundaki kapanış kartıdır; bütün bölgelerin ortak bileşeni. Adada akşam
+olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
+
+- **Başlık** bölge tablosunun akşam sütunundan: *Koyda akşam oldu*.
+- Altında *Bugün kurduğun kelimeler:* ve o bölgede bugün kurulan kelimeler, kurulma sırasıyla,
+  ekleri birleşen ek görünümünde. Bugün kurulan, dün kart olup bugün yeniden kurulanı da
+  kapsar.
+- **Tek düğme:** *Haritaya dön*. Puan, seri ve süre yok.
+
+## Ayarlar
+
+- **Hareket:** *Sistem gibi* (cihazın hareket azaltma ayarına uyar) / *Azalt*
+  (`prefers-reduced-motion` ile aynı davranır: hiçbir şey hareket etmez).
+- **Renkler:** *Renkli* / *Renksiz* (galerideki Renksiz mod; açıkken renkler büyüden sonra
+  da gri kalır). Yanında kalın *a* ile ince *e* etiketi örnek olarak durur.
+- **İlerlemeyi sıfırla:** uygulamanın içinde iki adım: *Bütün ilerleme ve kartlar silinecek.*
+  *Vazgeç* / *Sil*. Tarayıcının onay penceresi kullanılmaz; odak önce Vazgeç'tedir. Ayarlar
+  silinmez.
+- Seçimler büyük, dokunması kolay radyo düğmeleridir; seçili olan dolu ve halkası kalındır.
+
+## Cihazda ilerleme
+
+- İlerleme, kartlar ve ayarlar yalnız cihazda, `localStorage`'da, sürüm numaralı tek anahtarda
+  durur: `morfemusta.v1`. Hiçbir veri cihazdan çıkmaz; hesap, sunucu, eşitleme yok.
+- Her görev bitince kaydedilir; ayar değişince de. Bölgeye dönen çocuk kaldığı görevden
+  sürdürür.
+- Bozuk kayıttan yalnız geçerli parçalar alınır; gerisi baştan başlar. Depo yoksa ya da
+  erişilemiyorsa oyun bellekte sürer; hata ve konsol iletisi çıkmaz.
+- Tarayıcı destekliyorsa ilk kayıttan sonra kalıcı depo istenir
+  (`navigator.storage.persist()`): yer darlığında kayıt silinmesin.
 
 ## MVP bölgeleri
 
@@ -231,7 +333,7 @@ eklenir (*toplarim*). "Diğer" için cümle henüz yoktur.
 
 ## Koleksiyon ve modlar
 
-- Her yeni kelime **Sözlük**'e kart olarak düşer.
+- Her yeni kelime **Sözlük**'e kart olarak düşer ("Sözlük").
 - **1–2. sınıf:** okuma gerektirmeyen sesli mod.
 - **3–4. sınıf:** parçalama ve yazım.
 - **Sınıf modu:** etkileşimli tahta için.

@@ -178,8 +178,44 @@
   border-radius: 50%;
 }
 
-/* Ekran okuyucu kökü tek kelime olarak okur; etiketli görünüm ondan gizlenir. */
-.kok-yazisi__okunan {
+/* Birleşen ek (at + lar): ek, bukalemunun renginde kalır; düzde köşeli, yuvarlakta hap. */
+.ek-yazisi {
+  display: inline-block;
+  margin-inline-start: 0.06em;
+  padding: 0 0.12em 0.04em;
+  border: var(--cizgi-kok-etiketi) solid var(--murekkep);
+  border-radius: 0.22em;
+  background: var(--govde-rengi);
+  color: var(--murekkep);
+  line-height: 1.2;
+}
+
+.ek-yazisi--kalin {
+  --govde-rengi: var(--kalin);
+}
+
+.ek-yazisi--ince {
+  --govde-rengi: var(--ince);
+}
+
+.ek-yazisi--yuvarlak {
+  padding-inline: 0.3em;
+  border-radius: 999px;
+}
+
+/* Kurulan kelime: gövde düz, ekler birleşen ek görünümünde. */
+.sonuc-kelime {
+  font-family: var(--yazi-tipi);
+  font-size: var(--boyut-sonuc);
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+/* Ekran okuyucu kökü ve kurulan kelimeyi tek kelime olarak okur; etiketli ve renkli görünüm
+   ondan gizlenir. */
+.kok-yazisi__okunan,
+.sonuc-kelime__okunan {
   position: absolute;
   width: 1px;
   height: 1px;

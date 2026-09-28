@@ -1,45 +1,21 @@
 import { expect, test, type Locator, type Page } from '@playwright/test'
+import {
+  DOGRU_YUZEYLER,
+  KELIMELER,
+  bukalemun,
+  disIstekleriTopla,
+  haritaBasligi,
+  haritaDugmesi,
+  kart,
+  koyuAc,
+  sira,
+  sonraki,
+} from './yardimcilar.ts'
 
-// Bukalemun Koyu: oyunun ilk ekranı. Ada haritası (Oturum 6) gelene kadar açılış ekranındaki
-// geçici düğmeyle açılır. Oyun doğru biçimi motordan alır; burada yalnız testin beklediği
-// sonuçlar yazılıdır.
-const DOGRU_YUZEYLER = [
-  ['lar'],
-  ['ler'],
-  ['lar'],
-  ['ler'],
-  ['ım'],
-  ['im'],
-  ['um'],
-  ['üm'],
-  ['üm'],
-  ['lar', 'ım'],
-]
-const KELIMELER = [
-  'atlar',
-  'evler',
-  'kuşlar',
-  'gözler',
-  'kızım',
-  'elim',
-  'topum',
-  'gözüm',
-  'gülüm',
-  'toplarım',
-]
+// Bukalemun Koyu: oyunun ilk bölgesi. Açılış ekranı ada haritasıdır; koya haritadan girilir
+// (koyuAc). Oyun doğru biçimi motordan alır; beklenen sonuçlar yardimcilar.ts'te yazılıdır.
 
-const koyuAc = async (sayfa: Page) => {
-  await sayfa.goto('./')
-  await sayfa.getByRole('button', { name: 'Bukalemun Koyu' }).click()
-  await expect(sayfa.getByRole('heading', { level: 1, name: 'Bukalemun Koyu' })).toBeVisible()
-}
-
-const bukalemun = (sayfa: Page, yuzey: string) =>
-  sayfa.getByRole('button', { name: new RegExp(`^${yuzey} bukalemunu,`) })
-const kart = (sayfa: Page) => sayfa.locator('button.kelime-karti')
-const sonraki = (sayfa: Page) => sayfa.getByRole('button', { name: 'Sıradaki' })
 const neden = (sayfa: Page) => sayfa.locator('.neden')
-const sira = (sayfa: Page) => sayfa.locator('.koy__sira')
 
 const yatayTasma = (sayfa: Page) =>
   sayfa.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
@@ -117,7 +93,7 @@ test.describe('Bukalemun Koyu', () => {
         // İyelik: kart ekranın altındaki cebe girer.
         await expect(page.locator('.koy__sahne .kelime-karti')).toHaveCount(0)
         await expect(page.locator('.cep .kelime-karti:not(.kelime-karti--kopya)')).toHaveCount(1)
-        await expect(page.locator('.cep__yazi .gizli')).toHaveText(kelime)
+        await expect(page.locator('.cep__yazi .sonuc-kelime__okunan')).toHaveText(kelime)
       }
       if (i === 8) {
         // Büyü olunca renkler geri gelir.
@@ -127,10 +103,12 @@ test.describe('Bukalemun Koyu', () => {
       await sonraki(page).tap()
     }
 
-    const kapanis = page.getByRole('heading', { level: 2, name: 'Koyda akşam oldu' })
-    await expect(kapanis).toBeVisible()
-    await expect(page.locator('.kapanis__kelimeler li .gizli')).toHaveText(KELIMELER)
-    await expect(page.getByRole('button', { name: 'Ana sayfa' }).first()).toBeVisible()
+    // Akşam: başlık bölge tablosundan, altında bugün kurulan kelimeler; tek düğme.
+    const aksam = page.getByRole('heading', { level: 1, name: 'Koyda akşam oldu' })
+    await expect(aksam).toBeVisible()
+    await expect(aksam).toBeFocused()
+    await expect(page.locator('.aksam__kelimeler li .sonuc-kelime__okunan')).toHaveText([...KELIMELER])
+    await expect(page.getByRole('button')).toHaveText(['Haritaya dön'])
 
     // Büyü hareketle anlatıldı: yay çizildi, bukalemun zıpladı.
     const kareler = (await hareketler(page)).join('\n')
@@ -316,16 +294,12 @@ test.describe('Bukalemun Koyu', () => {
     }
   })
 
-  test('ana sayfa düğmesi açılışa döner; dış sunucuya istek gitmez', async ({ page, baseURL }) => {
-    const kaynak = new URL(baseURL!).origin
-    const disIstekler: string[] = []
-    page.on('request', (istek) => {
-      const adres = new URL(istek.url())
-      if (adres.protocol.startsWith('http') && adres.origin !== kaynak) disIstekler.push(istek.url())
-    })
+  test('Harita düğmesi haritaya döner; dış sunucuya istek gitmez', async ({ page, baseURL }) => {
+    const disIstekler = disIstekleriTopla(page, baseURL)
     await koyuAc(page)
-    await page.getByRole('button', { name: 'Ana sayfa' }).click()
-    await expect(page.getByRole('heading', { level: 1, name: 'Morfemusta Adası' })).toBeVisible()
+    await expect(haritaDugmesi(page)).toHaveAccessibleName('Harita')
+    await haritaDugmesi(page).click()
+    await expect(haritaBasligi(page)).toBeVisible()
     await page.waitForLoadState('networkidle')
     expect(disIstekler).toEqual([])
   })

@@ -3,7 +3,9 @@ import { describe, expect, it } from 'vitest'
 import { ekle, type EkParcasi, type Unlu as UnluHarfi } from '../motor/index.ts'
 import Bukalemun from './Bukalemun.tsx'
 import { UNLULER, bukalemunCizimi, unluCizimi, unluGovdesi } from './cizim.ts'
+import EkYazisi from './EkYazisi.tsx'
 import KokYazisi from './KokYazisi.tsx'
+import KurulanKelime from './KurulanKelime.tsx'
 import Unlu from './Unlu.tsx'
 import UnluEtiketi from './UnluEtiketi.tsx'
 import UnluKarti from './UnluKarti.tsx'
@@ -212,6 +214,48 @@ describe('UnluEtiketi', () => {
         /fill=|stroke=|#[0-9a-f]{3,8}\b|rgb\(|background/i,
       )
     }
+  })
+})
+
+describe('EkYazisi (birleşen ek)', () => {
+  it.each([
+    ['at', 'PL', 'lar', 'kalin', 'duz'],
+    ['ev', 'PL', 'ler', 'ince', 'duz'],
+    ['kız', 'POSS.1SG', 'ım', 'kalin', 'duz'],
+    ['top', 'POSS.1SG', 'um', 'kalin', 'yuvarlak'],
+    ['göz', 'POSS.1SG', 'üm', 'ince', 'yuvarlak'],
+  ] as const)('%s + %s: %s, %s ve %s', (kok, etiket, yuzey, kalinlik, bicim) => {
+    expect(renderToStaticMarkup(<EkYazisi parca={parca(kok, etiket)} />)).toBe(
+      `<span class="ek-yazisi ek-yazisi--${kalinlik} ek-yazisi--${bicim}">${yuzey}</span>`,
+    )
+  })
+})
+
+describe('KurulanKelime', () => {
+  it('gövde düz yazıyla, her ek birleşen ek görünümünde; ekran okuyucu tek kelime okur', () => {
+    const html = renderToStaticMarkup(<KurulanKelime kok="top" etiketler={['PL', 'POSS.1SG']} />)
+    expect(html).toBe(
+      '<span class="sonuc-kelime"><span class="sonuc-kelime__okunan">toplarım</span>' +
+        '<span aria-hidden="true">top' +
+        '<span class="ek-yazisi ek-yazisi--kalin ek-yazisi--duz">lar</span>' +
+        '<span class="ek-yazisi ek-yazisi--kalin ek-yazisi--duz">ım</span></span></span>',
+    )
+  })
+
+  it('sonraki ek önceki eki değiştirdiyse (kedi + cik + im: kediciğim) kelime düz yazılır', () => {
+    expect(
+      renderToStaticMarkup(<KurulanKelime kok="kedi" etiketler={['DIM', 'POSS.1SG']} />),
+    ).toBe('<span class="sonuc-kelime">kediciğim</span>')
+  })
+
+  it('tek ek gövdeyi değiştirse de (çocuk + um) ek ayrı renklenir: gövde motorunki', () => {
+    expect(renderToStaticMarkup(<KurulanKelime kok="çocuk" etiketler={['POSS.1SG']} />)).toContain(
+      '<span aria-hidden="true">çocuğ<span class="ek-yazisi ek-yazisi--kalin ek-yazisi--yuvarlak">um</span>',
+    )
+  })
+
+  it('renk yazmaz', () => {
+    expect(renderToStaticMarkup(<KurulanKelime kok="göz" etiketler={['PL']} />)).not.toMatch(RENK_YAZISI)
   })
 })
 

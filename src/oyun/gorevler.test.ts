@@ -4,10 +4,12 @@
 
 import { describe, expect, it } from 'vitest'
 import { KOK_SOZLUGU, ekle, olasiBicimler } from '../motor/index.ts'
-import { BUKALEMUN_KOYU_GOREVLERI, gorevleriOku } from './gorevler.ts'
+import { bolgeBul } from './bolgeler.ts'
+import { gorevleriOku } from './gorevler.ts'
 import { adimiKur, denemeyiDegerlendir, dogruMu } from './koy.ts'
 
-const gorevler = BUKALEMUN_KOYU_GOREVLERI
+// Bukalemun Koyu'nun görevleri, oyundaki gibi bölge tablosundaki yolundan okunur.
+const gorevler = bolgeBul('koy')?.gorevler ?? []
 const BASLIK = 'sira,kok,ekler,renksiz\n'
 
 describe('Bukalemun Koyu görevleri', () => {

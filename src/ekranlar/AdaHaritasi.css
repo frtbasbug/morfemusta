@@ -1,0 +1,211 @@
+/* Ada haritası. Renkler yalnız tema.css'teki belirteçlerden; kalın ve ince renkleri (ve
+   zeminleri) kullanılmaz, onlar yalnız dilbilgisel anlam taşır (kurallar.test.ts denetler).
+   Deniz ve kara haritanın belirteçleridir. Çizgiler mürekkep ya da ayraç; gölge ve degrade yok.
+
+   Harita kaydırmadan sığar: çerçeve ekranın boyundadır (en az 32rem), çizim ile düğmeler
+   kalan alana en/boy oranı korunarak sığan bir kutudadır (kap sorgusu birimleri). */
+
+/* Harita açıkken sayfanın zemini de deniz: kesirli piksel kenarında krem çizgi görünmesin. */
+:root:has(.kabuk--harita),
+:root:has(.kabuk--harita) body {
+  background: var(--deniz);
+}
+
+.kabuk.kabuk--harita {
+  height: max(100dvh, 32rem);
+  background: var(--deniz);
+}
+
+.harita {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding:
+    calc(env(safe-area-inset-top) + 0.6rem) calc(env(safe-area-inset-right) + 0.75rem) 0.5rem
+    calc(env(safe-area-inset-left) + 0.75rem);
+}
+
+.harita__baslik {
+  margin: 0;
+  font-family: var(--yazi-tipi-baslik);
+  font-size: clamp(1.6rem, 8vw, 2.1rem);
+  font-weight: 800;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.harita__baslik:focus {
+  outline: none;
+}
+
+/* Kilitli ya da hazırlanan bölgenin iletisi. Yeri (iki satır) boşken de ayrılmıştır: ileti
+   gelince harita kaymasın, çocuğun sonraki dokunuşu yerini şaşırmasın. */
+.harita__ileti {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.2rem;
+  margin: 0.2rem 0 0;
+}
+
+.harita__balon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.2rem 0.85rem;
+  border: var(--cizgi-unlu-karti) solid var(--murekkep);
+  border-radius: 1.2rem;
+  background: var(--zemin);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: start;
+}
+
+.harita__balon .simge {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.harita__alan {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  container-type: size;
+}
+
+.harita__cerceve {
+  position: relative;
+  width: min(100cqw, 100cqh * 320 / 440);
+  aspect-ratio: 320 / 440;
+}
+
+.harita__cizim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.harita__cizim :is(path, circle) {
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Kıyıdaki köpük: kıyının dışında krem bir şerit. */
+.ada__kopuk {
+  fill: none;
+  stroke: var(--zemin);
+  stroke-width: 12;
+}
+
+.ada__kara {
+  fill: var(--kara);
+  stroke: var(--murekkep);
+  stroke-width: 2.5;
+}
+
+.ada__dalga {
+  fill: none;
+  stroke: var(--ayrac);
+  stroke-width: 2.5;
+}
+
+/* Karada küçük ağaçlar: yuvarlak tepe, kısa gövde. */
+.ada__agac {
+  fill: var(--zemin);
+  stroke: var(--murekkep);
+  stroke-width: 2.5;
+}
+
+/* Bölgeleri sırayla bağlayan yol: noktalı. */
+.ada__yol {
+  fill: none;
+  stroke: var(--soluk);
+  stroke-width: 3.5;
+  stroke-dasharray: 0.1 9;
+}
+
+.harita__bolgeler {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.harita__yer {
+  position: absolute;
+  width: max-content;
+  max-width: 10.25rem;
+  transform: translate(-50%, -50%);
+}
+
+/* Bölge düğmesi: bir tabela. Adı, altında durumu (simge ve yazı). */
+.bolge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0.3rem 0.65rem 0.35rem 0.55rem;
+  border: var(--cizgi-unlu-karti) solid var(--murekkep);
+  border-radius: 14px;
+  background: var(--zemin);
+  color: var(--murekkep);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.bolge:focus-visible {
+  outline: 3px solid var(--murekkep);
+  outline-offset: 3px;
+}
+
+.bolge__isaret {
+  flex: none;
+  display: block;
+}
+
+.bolge__yazi {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.bolge__ad {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.bolge__durum {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--soluk);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.bolge__durum .simge {
+  width: 1rem;
+  height: 1rem;
+}
+
+.bolge--tamam .bolge__durum {
+  color: var(--murekkep);
+}
+
+/* Girilemeyen bölgeler: kesik çerçeve, kara zemin, soluk yazı. Kilitli ile hazırlanan
+   simgesinden ve yazısından da ayrılır. */
+.bolge--kilitli,
+.bolge--hazirlaniyor {
+  border-style: dashed;
+  background: var(--kara);
+  color: var(--soluk);
+}

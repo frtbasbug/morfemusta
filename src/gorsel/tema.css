@@ -15,6 +15,11 @@
   --yanak: #FF9DB4;
   --cizik: #6B6781;
 
+  /* Ada haritası. Kalın ve ince renkleri haritada kullanılmaz: onlar yalnız dilbilgisel
+     anlam taşır. */
+  --deniz: #CFE8E0;
+  --kara: #F4E6C8;
+
   /* Renksiz mod (renk körlüğü denetimi): kalın ve ince aynı gri olur. */
   --renksiz: #8E8C99;
   --renksiz-zemin: #E2E1E8;
@@ -44,8 +49,10 @@
 }
 
 /* Renksiz mod: kalın ve ince yalnız bedenden okunur. Bu sınıfı alan öğenin içinde
-   geçerlidir. */
-.renksiz {
+   geçerlidir. Ayarlardaki Renksiz bütün belgeye uygulanır (html[data-renkler]); büyüden
+   sonra da gri kalır. */
+.renksiz,
+:root[data-renkler='renksiz'] {
   --kalin: var(--renksiz);
   --ince: var(--renksiz);
   --kalin-zemin: var(--renksiz-zemin);

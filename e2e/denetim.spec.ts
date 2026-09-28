@@ -32,6 +32,10 @@ test.describe('Biçim Denetim Sayfası', () => {
 
     await expect(baslik(page)).toBeVisible()
     await expect(page).toHaveTitle('Biçim Denetimi · Morfemusta')
+    // Zemin sayfanın kendi açık rengi: oyunla paylaşılan genel.css sonra yüklense de.
+    expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe(
+      'rgb(244, 249, 251)',
+    )
     await expect(page.locator('tr[data-kok]')).toHaveCount(150)
     await expect(page.locator('td[data-etiket]')).toHaveCount(1200)
 

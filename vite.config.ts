@@ -37,8 +37,10 @@ export default defineConfig({
         start_url: TABAN,
         scope: TABAN,
         display: 'standalone',
-        background_color: '#bfe6f2',
-        theme_color: '#2a7fa8',
+        // tema.css'teki --zemin: açılış ekranının (ada haritası) ve oyun ekranlarının krem
+        // zemini. Manifest belirteç okuyamaz; değer burada yazılıdır (e2e/acilis.spec.ts denetler).
+        background_color: '#FFF6E9',
+        theme_color: '#FFF6E9',
         categories: ['education', 'games', 'kids'],
         icons: [
           { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },

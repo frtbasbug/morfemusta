@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { ekle } from '../motor/index.ts'
-import { BUKALEMUN_KOYU_GOREVLERI, type Gorev } from './gorevler.ts'
+import { bolgeBul } from './bolgeler.ts'
+import type { Gorev } from './gorevler.ts'
 import {
   adimiKur,
   koyBaslangici,
@@ -10,8 +11,11 @@ import {
   type KoyEylemi,
 } from './koy.ts'
 
+/** Bukalemun Koyu'nun görevleri: bölge tablosundaki yolundan. */
+const KOY_GOREVLERI = bolgeBul('koy')?.gorevler ?? []
+
 const gorev = (sira: number): Gorev => {
-  const bulunan = BUKALEMUN_KOYU_GOREVLERI.find((g) => g.sira === sira)
+  const bulunan = KOY_GOREVLERI.find((g) => g.sira === sira)
   if (!bulunan) throw new Error(`${sira}. görev yok`)
   return bulunan
 }
@@ -66,7 +70,7 @@ describe('adimiKur', () => {
   })
 
   it('sıra karışık ama sabit: her kuruluşta aynı', () => {
-    for (const g of BUKALEMUN_KOYU_GOREVLERI) {
+    for (const g of KOY_GOREVLERI) {
       g.etiketler.forEach((_etiket, sira) => {
         const bir = adimiKur(g, sira).secenekler.map((s) => s.yuzey)
         expect(adimiKur(g, sira).secenekler.map((s) => s.yuzey)).toEqual(bir)
@@ -75,7 +79,7 @@ describe('adimiKur', () => {
   })
 
   it('doğru bukalemun dört yerin dördüne de düşer; kalın -lAr iki yanda da olur', () => {
-    const adimlar = BUKALEMUN_KOYU_GOREVLERI.flatMap((g) =>
+    const adimlar = KOY_GOREVLERI.flatMap((g) =>
       g.etiketler.map((_etiket, sira) => adimiKur(g, sira)),
     )
     const yerler = adimlar.map((a) => a.secenekler.findIndex((s) => s.yuzey === a.parca.yuzey))
@@ -94,7 +98,7 @@ describe('adimiKur', () => {
 })
 
 describe('koyIndirgeyici', () => {
-  const baslangic = koyBaslangici(BUKALEMUN_KOYU_GOREVLERI)
+  const baslangic = koyBaslangici(KOY_GOREVLERI)
 
   it('başlangıç: 1. görev, seçim evresi, renkli', () => {
     expect(baslangic).toMatchObject({
@@ -109,6 +113,16 @@ describe('koyIndirgeyici', () => {
       renksiz: false,
     })
     expect(baslangic.adim?.govde).toBe('at')
+  })
+
+  it('kalınan görevden sürdürür; görevlerde olmayan yerde baştan başlar', () => {
+    const dorduncu = koyBaslangici(KOY_GOREVLERI, 3)
+    expect(dorduncu).toMatchObject({ gorevYeri: 3, evre: 'secim', renksiz: false })
+    expect(dorduncu.adim?.govde).toBe('göz')
+    expect(koyBaslangici(KOY_GOREVLERI, 8).renksiz).toBe(true)
+    for (const yer of [-1, 10, 2.5, Number.NaN]) {
+      expect(koyBaslangici(KOY_GOREVLERI, yer).gorevYeri, String(yer)).toBe(0)
+    }
   })
 
   it('dokun-dokun: seçer, aynısına dokununca bırakır, başkasına geçer', () => {
@@ -204,7 +218,7 @@ describe('koyIndirgeyici', () => {
     }
     expect(durum).toMatchObject({ evre: 'kapanis', adim: null, gorevYeri: 10 })
     expect(oynananGorev(durum)).toBeUndefined()
-    expect(kelimeler).toEqual(BUKALEMUN_KOYU_GOREVLERI.map((g) => ekle(g.kok, g.etiketler).bicim))
+    expect(kelimeler).toEqual(KOY_GOREVLERI.map((g) => ekle(g.kok, g.etiketler).bicim))
     // Kapanıştan sonra eylemler bir şey değiştirmez.
     expect(uygula(durum, { tur: 'sonraki' })).toBe(durum)
   })

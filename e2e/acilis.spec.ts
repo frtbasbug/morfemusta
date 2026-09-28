@@ -1,44 +1,43 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Locator, type Page } from '@playwright/test'
+import { bolge, haritaBasligi, yatayTasma } from './yardimcilar.ts'
 
-const baslik = (sayfa: Page) =>
-  sayfa.getByRole('heading', { level: 1, name: 'Morfemusta Adası' })
+// Açılış ekranı: ada haritası. Başlık Baloo 2, metin Andika; ikisi de pakete gömülü.
 
-// Andika'nın gerçekten yüklenip başlığa uygulandığını denetler.
-// document.fonts.check() burada kullanılmaz: ı (U+0131) hem latin hem latin-ext
-// aralığında olduğundan, tarayıcı yalnız latin'i indirse de check() false döner.
-const andikaYuklendi = (sayfa: Page) =>
-  baslik(sayfa).evaluate(async (h1) => {
+// Yazı tipinin gerçekten yüklenip öğeye uygulandığını denetler. document.fonts.check()
+// burada kullanılmaz: ı (U+0131) hem latin hem latin-ext aralığında olduğundan, tarayıcı
+// yalnız latin'i indirse de check() false döner.
+const yaziTipiYuklendi = (oge: Locator, aile: string) =>
+  oge.evaluate(async (el, aile) => {
     await document.fonts.ready
-    const stil = getComputedStyle(h1)
+    const stil = getComputedStyle(el)
     return (
-      stil.fontFamily.startsWith('Andika') &&
+      stil.fontFamily.replace(/["']/g, '').startsWith(aile) &&
       [...document.fonts].some(
         (yuz) =>
-          yuz.family.replace(/["']/g, '') === 'Andika' &&
+          yuz.family.replace(/["']/g, '') === aile &&
           yuz.weight === stil.fontWeight &&
           yuz.status === 'loaded',
       )
     )
-  })
+  }, aile)
 
-const yatayTasma = (sayfa: Page) =>
-  sayfa.evaluate(
-    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-  )
+const yaziTipleriYuklendi = async (sayfa: Page) =>
+  (await yaziTipiYuklendi(haritaBasligi(sayfa), 'Baloo 2')) &&
+  (await yaziTipiYuklendi(bolge(sayfa, 'Bukalemun Koyu').locator('.bolge__ad'), 'Andika'))
 
 test.describe('açılış ekranı', () => {
-  test('başlık telefonda Andika yazı tipiyle, taşmadan görünür', async ({ page }) => {
+  test('harita telefonda başlığıyla, yazı tipleriyle, taşmadan açılır', async ({ page }) => {
     await page.goto('./')
 
-    await expect(baslik(page)).toBeVisible()
+    await expect(haritaBasligi(page)).toBeVisible()
     await expect(page.locator('html')).toHaveAttribute('lang', 'tr')
     await expect(page).toHaveTitle('Morfemusta Adası')
-    expect(await andikaYuklendi(page)).toBe(true)
+    expect(await yaziTipleriYuklendi(page)).toBe(true)
     expect(await yatayTasma(page)).toBeLessThanOrEqual(0)
 
     // En dar yaygın telefon genişliğinde de taşma olmamalı.
     await page.setViewportSize({ width: 320, height: 568 })
-    await expect(baslik(page)).toBeInViewport()
+    await expect(haritaBasligi(page)).toBeInViewport()
     expect(await yatayTasma(page)).toBeLessThanOrEqual(0)
   })
 
@@ -53,7 +52,7 @@ test.describe('açılış ekranı', () => {
     })
 
     await page.goto('./')
-    await andikaYuklendi(page)
+    await yaziTipleriYuklendi(page)
     await page.waitForLoadState('networkidle')
 
     expect(disIstekler).toEqual([])
@@ -61,7 +60,10 @@ test.describe('açılış ekranı', () => {
 })
 
 test.describe('ana ekrana eklenebilir uygulama (PWA)', () => {
-  test('manifest ve ikonlar alt yolda doğru sunulur', async ({ page, request }) => {
+  test('manifest ve ikonlar alt yolda doğru sunulur; renkler zeminin belirteci', async ({
+    page,
+    request,
+  }) => {
     await page.goto('./')
     await expect(page.locator('link[rel="manifest"]')).toHaveAttribute(
       'href',
@@ -79,6 +81,15 @@ test.describe('ana ekrana eklenebilir uygulama (PWA)', () => {
       scope: '/morfemusta/',
       display: 'standalone',
     })
+
+    // Manifest ve tema rengi belirteç okuyamaz: değerleri tema.css'teki --zemin olmalı.
+    const zemin = await page.evaluate(() =>
+      getComputedStyle(document.documentElement).getPropertyValue('--zemin').trim().toLowerCase(),
+    )
+    expect(zemin).toBe('#fff6e9')
+    expect(manifest.background_color.toLowerCase()).toBe(zemin)
+    expect(manifest.theme_color.toLowerCase()).toBe(zemin)
+    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', /^#fff6e9$/i)
 
     const ikonlar: { src: string; sizes: string; purpose?: string }[] = manifest.icons
     expect(ikonlar.map((ikon) => ikon.sizes)).toEqual(
@@ -104,7 +115,7 @@ test.describe('ana ekrana eklenebilir uygulama (PWA)', () => {
     await context.setOffline(true)
     await page.reload()
 
-    await expect(baslik(page)).toBeVisible()
-    expect(await andikaYuklendi(page)).toBe(true)
+    await expect(haritaBasligi(page)).toBeVisible()
+    expect(await yaziTipleriYuklendi(page)).toBe(true)
   })
 })

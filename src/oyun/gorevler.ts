@@ -1,13 +1,13 @@
-// Oyun görevleri icerik/gorevler/*.csv dosyalarından okunur (CLAUDE.md, 4. kural). Görev
-// yalnız kökü ve ekleri verir; doğru biçim her zaman motordan gelir (ekle, olasiBicimler),
-// görev dosyasına yazılmaz.
+// Oyun görevleri icerik/gorevler/*.csv dosyalarından okunur (CLAUDE.md, 4. kural). Hangi
+// bölgenin hangi tabloyu oynadığını bölge tablosu söyler (bolgeler.ts). Görev yalnız kökü ve
+// ekleri verir; doğru biçim her zaman motordan gelir (ekle, olasiBicimler), görev dosyasına
+// yazılmaz.
 //
 //   sira      1'den başlayıp birer artar
 //   kok       kök (Bukalemun Koyu'nda sözlükten; gorevler.test.ts denetler)
 //   ekler     Leipzig kısaltmaları, eklenme sırasıyla, + ile: PL+POSS.1SG
 //   renksiz   evet: kalın ve ince aynı gri, büyüyle renkler geri gelir; boş: renkli
 
-import bukalemunKoyuMetni from '../../icerik/gorevler/bukalemun-koyu.csv?raw'
 import { EK_ENVANTERI, csvOku, ekle, type EkEnvanteri } from '../motor/index.ts'
 
 export interface Gorev {
@@ -51,6 +51,3 @@ export function gorevleriOku(csvMetni: string, envanter: EkEnvanteri = EK_ENVANT
   }
   return gorevler
 }
-
-/** icerik/gorevler/bukalemun-koyu.csv: Bukalemun Koyu'nun görevleri. */
-export const BUKALEMUN_KOYU_GOREVLERI: readonly Gorev[] = gorevleriOku(bukalemunKoyuMetni)

@@ -11,6 +11,10 @@
 // Oyunun durumu src/oyun/koy.ts'teki indirgeyicidedir; bu dosya görünümü ve hareketleri yazar.
 // Hareketler Web Animations API iledir (hareket.ts); hareket azaltma açıksa hiçbiri oynamaz,
 // yalnız renk ve yazı değişir.
+//
+// Bölgenin adı ve akşamı bölge tablosundandır (icerik/bolgeler.csv). Çocuk kaldığı görevden
+// sürdürür (baslangic); her görev bitince kabuk ilerlemeyi kaydeder (onGorevBitti). Görevler
+// bitince akşam olur: ortak akşam ekranı, o bölgede bugün kurulan kelimelerle.
 
 import {
   useEffect,
@@ -22,14 +26,18 @@ import {
   type Ref,
 } from 'react'
 import { flushSync } from 'react-dom'
-import { ekle, type EkParcasi } from '../motor/index.ts'
+import type { EkParcasi } from '../motor/index.ts'
 import Bukalemun from '../gorsel/Bukalemun.tsx'
 import { BUKALEMUN_KUTUSU, bukalemunCizimi } from '../gorsel/cizim.ts'
+import EkYazisi from '../gorsel/EkYazisi.tsx'
 import { bukalemunKiligi } from '../gorsel/kilik.ts'
 import KokYazisi from '../gorsel/KokYazisi.tsx'
+import KurulanKelime from '../gorsel/KurulanKelime.tsx'
 import UnluEtiketi from '../gorsel/UnluEtiketi.tsx'
 import '../gorsel/tema.css'
-import { BUKALEMUN_KOYU_GOREVLERI, type Gorev } from '../oyun/gorevler.ts'
+import type { Bolge } from '../oyun/bolgeler.ts'
+import type { Gorev } from '../oyun/gorevler.ts'
+import type { SozlukKarti } from '../oyun/ilerleme.ts'
 import {
   ANLAM_ETKILERI,
   denemeyiDegerlendir,
@@ -40,7 +48,9 @@ import {
   type Deneme,
   type Secenek,
 } from '../oyun/koy.ts'
+import AksamEkrani from './AksamEkrani.tsx'
 import { bekle, hareketAzMi, hareketleriKes, kaydir, oynat, type Nokta } from './hareket.ts'
+import { HaritaSimgesi } from './simgeler.tsx'
 import './BukalemunKoyu.css'
 
 /** Sürükleme sayılan en kısa yol (px); daha kısası dokunmadır. */
@@ -62,14 +72,27 @@ interface Surukleme {
 }
 
 export default function BukalemunKoyu({
-  gorevler = BUKALEMUN_KOYU_GOREVLERI,
-  onAnaSayfa,
+  bolge,
+  baslangic = 0,
+  bugunkuKartlar = [],
+  onGorevBitti,
+  onHarita,
 }: {
-  readonly gorevler?: readonly Gorev[]
-  /** Ana sayfaya dönüş; verilmezse düğmesi çıkmaz. */
-  readonly onAnaSayfa?: () => void
+  /** Bölge tablosundaki satırı: ad, akşam ve görevler. */
+  readonly bolge: Bolge
+  /** Kalınan görevin yeri (0'dan); yalnız açılışta okunur. */
+  readonly baslangic?: number
+  /** Bölgede bugün kurulan kelimelerin kartları: akşam ekranında listelenir. */
+  readonly bugunkuKartlar?: readonly SozlukKarti[]
+  /** Bir görev bitti (son ekin büyüsü oldu): kabuk ilerlemeyi ve kartı kaydeder. */
+  readonly onGorevBitti?: (gorev: Gorev) => void
+  /** Haritaya dönüş; verilmezse düğmesi çıkmaz. */
+  readonly onHarita?: () => void
 }) {
-  const [durum, gonder] = useReducer(koyIndirgeyici, gorevler, koyBaslangici)
+  const { gorevler } = bolge
+  const [durum, gonder] = useReducer(koyIndirgeyici, baslangic, (yer) =>
+    koyBaslangici(gorevler, yer),
+  )
   const gorev = oynananGorev(durum)
   const { adim, evre } = durum
 
@@ -78,7 +101,6 @@ export default function BukalemunKoyu({
   const kartlarRef = useRef<HTMLDivElement>(null)
   const yayRef = useRef<SVGSVGElement>(null)
   const sonrakiRef = useRef<HTMLButtonElement>(null)
-  const kapanisRef = useRef<HTMLHeadingElement>(null)
   const bukalemunlar = useRef(new Map<string, HTMLButtonElement>())
   const surukleme = useRef<Surukleme | null>(null)
   const tiklamayiYut = useRef(false)
@@ -93,11 +115,10 @@ export default function BukalemunKoyu({
     }
   }, [])
 
-  // Klavyeyle oynayan için odak: görev bitince Sıradaki'ye, kapanışta kartın başlığına, yeni
-  // görevde kıyıdaki ilk bukalemuna.
+  // Klavyeyle oynayan için odak: görev bitince Sıradaki'ye, yeni görevde kıyıdaki ilk
+  // bukalemuna. Akşam ekranı odağı kendi başlığına alır.
   useEffect(() => {
     if (evre === 'bitti') sonrakiRef.current?.focus()
-    if (evre === 'kapanis') kapanisRef.current?.focus()
   }, [evre])
 
   useEffect(() => {
@@ -108,33 +129,7 @@ export default function BukalemunKoyu({
   }, [durum.gorevYeri, durum.adim])
 
   if (evre === 'kapanis' || !gorev || !adim) {
-    return (
-      <main className="koy">
-        <Ust
-          gorevYeri={gorevler.length - 1}
-          gorevSayisi={gorevler.length}
-          onAnaSayfa={onAnaSayfa}
-        />
-        <section className="kapanis" aria-labelledby="kapanis-baslik">
-          <h2 id="kapanis-baslik" className="kapanis__baslik" ref={kapanisRef} tabIndex={-1}>
-            Koyda akşam oldu
-          </h2>
-          <p className="kapanis__metin">Bugün kurduğun kelimeler:</p>
-          <ul className="kapanis__kelimeler">
-            {gorevler.map((g) => (
-              <li key={g.sira}>
-                <KurulanKelime kok={g.kok} etiketler={g.etiketler} />
-              </li>
-            ))}
-          </ul>
-          {onAnaSayfa && (
-            <button type="button" className="koy__dugme" onClick={onAnaSayfa}>
-              Ana sayfa
-            </button>
-          )}
-        </section>
-      </main>
-    )
+    return <AksamEkrani baslik={bolge.aksam} kartlar={bugunkuKartlar} onHarita={onHarita} />
   }
 
   const secimde = evre === 'secim'
@@ -237,6 +232,8 @@ export default function BukalemunKoyu({
     await bekle(etki ? 400 : 0)
     if (!bagli.current) return
     flushSync(() => gonder({ tur: 'adimBitti' }))
+    // Son ekin büyüsü oldu: görev bitti, kabuk kaydeder.
+    if (gorev && adim && adim.sira + 1 === gorev.etiketler.length) onGorevBitti?.(gorev)
   }
 
   /** Kökteki ünlünün etiketi ile bukalemunun gözü arasında bir yay parlar. */
@@ -497,9 +494,10 @@ export default function BukalemunKoyu({
   return (
     <main className={durum.renksiz ? 'koy renksiz' : 'koy'} onKeyDown={tusaBasildi}>
       <Ust
+        ad={bolge.ad}
         gorevYeri={durum.gorevYeri}
         gorevSayisi={gorevler.length}
-        onAnaSayfa={onAnaSayfa}
+        onHarita={onHarita}
         baslikRef={baslikRef}
       />
       <p id="koy-yonerge" className="gizli">
@@ -593,36 +591,31 @@ export default function BukalemunKoyu({
   )
 }
 
-/** Üst çubuk: ana sayfa düğmesi, ekranın adı, görev sırası. */
+/** Üst çubuk: Harita düğmesi, bölgenin adı, görev sırası. */
 function Ust({
+  ad,
   gorevYeri,
   gorevSayisi,
-  onAnaSayfa,
+  onHarita,
   baslikRef,
 }: {
+  ad: string
   gorevYeri: number
   gorevSayisi: number
-  onAnaSayfa: (() => void) | undefined
+  onHarita: (() => void) | undefined
   baslikRef?: Ref<HTMLHeadingElement>
 }) {
   return (
     <header className="koy__ust">
-      {onAnaSayfa ? (
-        <button
-          type="button"
-          className="koy__ana-sayfa"
-          aria-label="Ana sayfa"
-          onClick={onAnaSayfa}
-        >
-          <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
-            <path d="M3.5 11.5L12 4l8.5 7.5M6 10v10h12V10M10 20v-5.5h4V20" />
-          </svg>
+      {onHarita ? (
+        <button type="button" className="koy__harita" aria-label="Harita" onClick={onHarita}>
+          <HaritaSimgesi />
         </button>
       ) : (
         <span />
       )}
       <h1 className="koy__baslik" ref={baslikRef} tabIndex={-1}>
-        Bukalemun Koyu
+        {ad}
       </h1>
       <p className="koy__sira">
         <span className="gizli">Görev </span>
@@ -640,43 +633,6 @@ function KelimeYazisi({ govde, ek }: { govde: string; ek: EkParcasi | null }) {
       {ek && <EkYazisi parca={ek} />}
     </span>
   )
-}
-
-/** Birleşen ek, bukalemunun renginde ve gövdesinin biçiminde (düz ya da yuvarlak). */
-function EkYazisi({ parca }: { parca: EkParcasi }) {
-  const { ozellikler } = bukalemunKiligi(parca)
-  const siniflar = [
-    'ek-yazisi',
-    ozellikler.kalin ? 'ek-yazisi--kalin' : 'ek-yazisi--ince',
-    ozellikler.yuvarlak ? 'ek-yazisi--yuvarlak' : 'ek-yazisi--duz',
-  ]
-  return <span className={siniflar.join(' ')}>{parca.yuzey}</span>
-}
-
-/** Sonuç kelimesi: gövde düz yazıyla, ekler bukalemunlarının renginde. */
-function SonucKelimesi({ govde, ekler }: { govde: string; ekler: readonly EkParcasi[] }) {
-  return (
-    <span className="sonuc-kelime">
-      <span className="gizli">{govde + ekler.map((p) => p.yuzey).join('')}</span>
-      <span aria-hidden="true">
-        {govde}
-        {ekler.map((parca) => (
-          <EkYazisi key={parca.etiket} parca={parca} />
-        ))}
-      </span>
-    </span>
-  )
-}
-
-/** Kurulan kelime (cepte ve kapanış kartında): biçimi ve parçaları motordan (ekle). */
-function KurulanKelime({ kok, etiketler }: { kok: string; etiketler: readonly string[] }) {
-  const { bicim, parcalar } = ekle(kok, etiketler)
-  const [ilk] = parcalar
-  // Ekler gövdeyi değiştirmediyse (yumuşama, düşme yok) her ek ayrı renklenir.
-  const oncekiler = (i: number) => parcalar.slice(0, i).map((p) => p.yuzey).join('')
-  const ayrik = ilk !== undefined && parcalar.every((p, i) => p.govde === ilk.govde + oncekiler(i))
-  if (!ilk || !ayrik) return <span className="sonuc-kelime">{bicim}</span>
-  return <SonucKelimesi govde={ilk.govde} ekler={parcalar} />
 }
 
 /** Yanlış taşımanın nedeni: aday, ilgili iki ünlüsü etiketli; altında cümle. */

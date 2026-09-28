@@ -1,0 +1,311 @@
+// Cihazdaki ilerleme: bölgelerde biten görevler ve kalınan yer, Sözlük kartları, ayarlar.
+// Yalnız cihazda, localStorage'da, sürüm numaralı tek bir anahtarda durur (ANAHTAR); hiçbir
+// yere gönderilmez (CLAUDE.md, 6. ve 14. kural).
+//
+// Saf TypeScript'tir: DOM'a dokunmaz. Depo dışarıdan verilir: tarayıcıda localStorage
+// (src/kabuk/depo.ts), testte bellekte bir nesne. Depo yoksa, okunamıyor ya da yazılamıyorsa
+// oyun bellekte sürer: buradaki işlevler depo yüzünden hata atmaz, konsola da yazmaz. Bozuk
+// kayıttan yalnız geçerli parçalar alınır; gerisi baştan başlar.
+//
+// Kaydın biçimi (sürüm 1):
+//   { "bolgeler": { "koy": { "bitenler": [1, 2, 3], "kaldigi": 3 } },
+//     "kartlar": [{ "kelime": "atlar", "kok": "at", "etiketler": ["PL"], "bolge": "koy",
+//                   "tarih": "2026-09-28T09:15:00.000Z", "sonKurulma": "2026-09-28T09:15:00.000Z" }],
+//     "ayarlar": { "hareket": "sistem", "renkler": "renkli" } }
+// Biçim değişirse anahtar da değişir (morfemusta.v2); eski kayıt yenisine taşınır.
+
+import { ekle } from '../motor/index.ts'
+import { BOLGELER, type Bolge } from './bolgeler.ts'
+import type { Gorev } from './gorevler.ts'
+
+/** Kaydın anahtarı: sürüm numaralı, tek. */
+export const ANAHTAR = 'morfemusta.v1'
+
+/** localStorage'ın kullanılan parçası. */
+export interface Depo {
+  getItem(anahtar: string): string | null
+  setItem(anahtar: string, deger: string): void
+}
+
+export interface Ayarlar {
+  /** sistem: cihazın hareket azaltma ayarına uyar; azalt: prefers-reduced-motion gibi. */
+  readonly hareket: 'sistem' | 'azalt'
+  /** renksiz: kalın ve ince her yerde aynı gri, büyüden sonra da (galerideki Renksiz). */
+  readonly renkler: 'renkli' | 'renksiz'
+}
+
+export interface BolgeIlerlemesi {
+  /** En az bir kez biten görevlerin sıraları, küçükten büyüğe. */
+  readonly bitenler: readonly number[]
+  /**
+   * Bölgeye dönülünce oynanacak görevin yeri (0'dan). Tur bitince görev sayısına eşittir;
+   * sonraki giriş baştan başlar (kaldigiGorev).
+   */
+  readonly kaldigi: number
+}
+
+/** Sözlük kartı: doğru kurulan bir kelime. Aynı kelime aynı bölgeden ikinci kez kart olmaz. */
+export interface SozlukKarti {
+  readonly kelime: string
+  readonly kok: string
+  /** Ekler, eklenme sırasıyla; biçim ve parçalar motordan gelir (ekle). */
+  readonly etiketler: readonly string[]
+  /** Kelimenin kurulduğu bölgenin kimliği. */
+  readonly bolge: string
+  /** Kartın tarihi: kelimenin bu bölgede ilk kurulduğu an (ISO 8601). */
+  readonly tarih: string
+  /** Kelimenin bu bölgede son kurulduğu an; akşam ekranı buna bakar. */
+  readonly sonKurulma: string
+}
+
+export interface Ilerleme {
+  /** Bölgelerin ilerlemesi, kimlikleriyle; hiç oynanmamış bölge yazılmaz. */
+  readonly bolgeler: Readonly<Record<string, BolgeIlerlemesi>>
+  /** Kartlar, kazanıldıkları sırayla. */
+  readonly kartlar: readonly SozlukKarti[]
+  readonly ayarlar: Ayarlar
+}
+
+export const VARSAYILAN_AYARLAR: Ayarlar = { hareket: 'sistem', renkler: 'renkli' }
+
+export const BOS_ILERLEME: Ilerleme = { bolgeler: {}, kartlar: [], ayarlar: VARSAYILAN_AYARLAR }
+
+// --- Depo ---------------------------------------------------------------------------------
+
+/** Kaydı okur. Depo yoksa, okunamıyorsa ya da kayıt bozuksa baştan başlanır; hata atmaz. */
+export function ilerlemeyiYukle(depo: Depo | null, bolgeler: readonly Bolge[] = BOLGELER): Ilerleme {
+  if (!depo) return BOS_ILERLEME
+  try {
+    const metin = depo.getItem(ANAHTAR)
+    return metin === null ? BOS_ILERLEME : ilerlemeyiCoz(JSON.parse(metin), bolgeler)
+  } catch {
+    // Depoya erişilemiyor ya da kayıt JSON değil: oyun baştan, bellekte.
+    return BOS_ILERLEME
+  }
+}
+
+/** Kaydeder. Yazılamazsa (depo yok, dolu ya da erişim yok) false döner; hata atmaz. */
+export function ilerlemeyiKaydet(depo: Depo | null, ilerleme: Ilerleme): boolean {
+  if (!depo) return false
+  try {
+    depo.setItem(ANAHTAR, JSON.stringify(ilerleme))
+    return true
+  } catch {
+    return false
+  }
+}
+
+const nesneMi = (x: unknown): x is Readonly<Record<string, unknown>> =>
+  typeof x === 'object' && x !== null && !Array.isArray(x)
+
+/** ISO 8601 zaman; geçersizse null. */
+function anOku(x: unknown): number | null {
+  if (typeof x !== 'string') return null
+  const an = Date.parse(x)
+  return Number.isNaN(an) ? null : an
+}
+
+/**
+ * Okunan kaydı denetler. Geçerli parçalar alınır, geçersizler atılır: bilinmeyen bölge,
+ * görevlerde olmayan sıra, motorun kuramadığı ya da biçimi tutmayan kart, tanınmayan ayar.
+ */
+export function ilerlemeyiCoz(ham: unknown, bolgeler: readonly Bolge[] = BOLGELER): Ilerleme {
+  if (!nesneMi(ham)) return BOS_ILERLEME
+  const hamBolgeler = nesneMi(ham.bolgeler) ? ham.bolgeler : {}
+  const bolgeIlerlemeleri = bolgeler.flatMap((bolge) => {
+    const kayit = Object.hasOwn(hamBolgeler, bolge.kimlik) ? hamBolgeler[bolge.kimlik] : undefined
+    const bolgeIlerlemesi = bolgeIlerlemesiniCoz(kayit, bolge)
+    return bolgeIlerlemesi ? [[bolge.kimlik, bolgeIlerlemesi] as const] : []
+  })
+
+  const kartlar: SozlukKarti[] = []
+  for (const hamKart of Array.isArray(ham.kartlar) ? ham.kartlar : []) {
+    const kart = kartiCoz(hamKart, bolgeler)
+    if (kart && !kartlar.some((k) => ayniKart(k, kart))) kartlar.push(kart)
+  }
+
+  const ayarlar = nesneMi(ham.ayarlar) ? ham.ayarlar : {}
+  return {
+    bolgeler: Object.fromEntries(bolgeIlerlemeleri),
+    kartlar,
+    ayarlar: {
+      hareket: ayarlar.hareket === 'azalt' ? 'azalt' : 'sistem',
+      renkler: ayarlar.renkler === 'renksiz' ? 'renksiz' : 'renkli',
+    },
+  }
+}
+
+function bolgeIlerlemesiniCoz(ham: unknown, bolge: Bolge): BolgeIlerlemesi | null {
+  if (!nesneMi(ham) || bolge.gorevler.length === 0) return null
+  const siralar = new Set(bolge.gorevler.map((g) => g.sira))
+  const bitenler = Array.isArray(ham.bitenler)
+    ? ham.bitenler.filter((s): s is number => typeof s === 'number' && siralar.has(s))
+    : []
+  const { kaldigi } = ham
+  const gecerli =
+    typeof kaldigi === 'number' &&
+    Number.isInteger(kaldigi) &&
+    kaldigi >= 0 &&
+    kaldigi <= bolge.gorevler.length
+  return {
+    bitenler: [...new Set(bitenler)].sort((a, b) => a - b),
+    kaldigi: gecerli ? kaldigi : 0,
+  }
+}
+
+function kartiCoz(ham: unknown, bolgeler: readonly Bolge[]): SozlukKarti | null {
+  if (!nesneMi(ham)) return null
+  const { kelime, kok, etiketler, bolge } = ham
+  if (typeof kelime !== 'string' || typeof kok !== 'string' || typeof bolge !== 'string') {
+    return null
+  }
+  if (!Array.isArray(etiketler) || etiketler.length === 0) return null
+  if (!etiketler.every((e): e is string => typeof e === 'string')) return null
+  if (!bolgeler.some((b) => b.kimlik === bolge)) return null
+  const tarih = anOku(ham.tarih)
+  if (tarih === null) return null
+  const sonKurulma = Math.max(tarih, anOku(ham.sonKurulma) ?? tarih)
+  try {
+    // Kart motorun kurduğu kelime olmalı.
+    if (ekle(kok, etiketler).bicim !== kelime) return null
+  } catch {
+    return null
+  }
+  return {
+    kelime,
+    kok,
+    etiketler: [...etiketler],
+    bolge,
+    tarih: new Date(tarih).toISOString(),
+    sonKurulma: new Date(sonKurulma).toISOString(),
+  }
+}
+
+const ayniKart = (a: SozlukKarti, b: SozlukKarti): boolean =>
+  a.bolge === b.bolge && a.kelime === b.kelime
+
+// --- Oyun ---------------------------------------------------------------------------------
+
+/**
+ * Görev bitti: görev bölgenin bitenlerine girer, sıradaki görev kalınan yer olur. Kurulan
+ * kelime Sözlük'e kart olarak düşer; kelimenin bu bölgeden kartı varsa yeni kart olmaz, yalnız
+ * son kurulma anı değişir (akşam ekranı onu da bugün kurulanlar arasında gösterir).
+ */
+export function gorevBitti(ilerleme: Ilerleme, bolge: Bolge, gorev: Gorev, simdi: Date): Ilerleme {
+  const eski = ilerleme.bolgeler[bolge.kimlik]
+  const bitenler = [...new Set([...(eski?.bitenler ?? []), gorev.sira])].sort((a, b) => a - b)
+  const an = simdi.toISOString()
+  const kart: SozlukKarti = {
+    kelime: ekle(gorev.kok, gorev.etiketler).bicim,
+    kok: gorev.kok,
+    etiketler: [...gorev.etiketler],
+    bolge: bolge.kimlik,
+    tarih: an,
+    sonKurulma: an,
+  }
+  const onceki = ilerleme.kartlar.find((k) => ayniKart(k, kart))
+  return {
+    ...ilerleme,
+    // Sıra 1'den başlar ve birer artar (gorevleriOku): sıradaki görevin yeri bitenin sırasıdır.
+    bolgeler: { ...ilerleme.bolgeler, [bolge.kimlik]: { bitenler, kaldigi: gorev.sira } },
+    kartlar: onceki
+      ? ilerleme.kartlar.map((k) => (k === onceki ? { ...k, sonKurulma: an } : k))
+      : [...ilerleme.kartlar, kart],
+  }
+}
+
+/** Bölgeye girilince oynanacak görevin yeri: kalınan görev; tur bittiyse baştan. */
+export function kaldigiGorev(ilerleme: Ilerleme, bolge: Bolge): number {
+  const kaldigi = ilerleme.bolgeler[bolge.kimlik]?.kaldigi ?? 0
+  return kaldigi < bolge.gorevler.length ? kaldigi : 0
+}
+
+/** Bölgenin bütün görevleri en az bir kez bitti mi. İçeriği olmayan bölge bitmez. */
+export function bolgeBittiMi(ilerleme: Ilerleme, bolge: Bolge): boolean {
+  const bitenler = new Set(ilerleme.bolgeler[bolge.kimlik]?.bitenler)
+  return bolge.gorevler.length > 0 && bolge.gorevler.every((g) => bitenler.has(g.sira))
+}
+
+/**
+ * Haritadaki durum:
+ *   acik          açık, oynanabilir
+ *   tamam         bütün görevleri en az bir kez bitti; yine oynanabilir
+ *   kilitli       önceki bölge bitmedi
+ *   hazirlaniyor  açık ama içeriği henüz yok
+ */
+export type BolgeDurumu = 'acik' | 'tamam' | 'kilitli' | 'hazirlaniyor'
+
+export interface HaritaBolgesi {
+  readonly bolge: Bolge
+  readonly durum: BolgeDurumu
+  /** Önceki bölge: kilitliyse önce onun bitmesi gerekir. İlk bölgede null. */
+  readonly onceki: Bolge | null
+}
+
+/** Bir bölge, öncekinin bütün görevleri en az bir kez bitince açılır. İlk bölge hep açıktır. */
+export function bolgeDurumlari(
+  ilerleme: Ilerleme,
+  bolgeler: readonly Bolge[] = BOLGELER,
+): HaritaBolgesi[] {
+  return bolgeler.map((bolge, i) => {
+    const onceki = bolgeler[i - 1] ?? null
+    const durum: BolgeDurumu =
+      onceki !== null && !bolgeBittiMi(ilerleme, onceki)
+        ? 'kilitli'
+        : bolge.gorevler.length === 0
+          ? 'hazirlaniyor'
+          : bolgeBittiMi(ilerleme, bolge)
+            ? 'tamam'
+            : 'acik'
+    return { bolge, durum, onceki }
+  })
+}
+
+// --- Sözlük -------------------------------------------------------------------------------
+
+/** İki an yerel saatle aynı günde mi. */
+export function ayniGun(a: Date, b: Date): boolean {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  )
+}
+
+/** Bölgede bugün kurulan kelimelerin kartları, kurulma sırasıyla (akşam ekranı). */
+export function bugununKartlari(ilerleme: Ilerleme, bolgeKimligi: string, simdi: Date): SozlukKarti[] {
+  return ilerleme.kartlar
+    .filter((k) => k.bolge === bolgeKimligi && ayniGun(new Date(k.sonKurulma), simdi))
+    .sort((a, b) => Date.parse(a.sonKurulma) - Date.parse(b.sonKurulma))
+}
+
+export interface SozlukGrubu {
+  readonly bolge: Bolge
+  /** En yeni kart önde. */
+  readonly kartlar: readonly SozlukKarti[]
+}
+
+/** Sözlük: kartlar bölgelere göre gruplu (bölge sırasıyla); her grupta en yeni kart önde. */
+export function sozlukGruplari(
+  ilerleme: Ilerleme,
+  bolgeler: readonly Bolge[] = BOLGELER,
+): SozlukGrubu[] {
+  // Aynı anda kazanılan kartlarda sonra kazanılan önde: ters sırayla kararlı sıralama.
+  const yeniOnde = [...ilerleme.kartlar]
+    .reverse()
+    .sort((a, b) => Date.parse(b.tarih) - Date.parse(a.tarih))
+  return bolgeler
+    .map((bolge) => ({ bolge, kartlar: yeniOnde.filter((k) => k.bolge === bolge.kimlik) }))
+    .filter((grup) => grup.kartlar.length > 0)
+}
+
+// --- Ayarlar ve sıfırlama ------------------------------------------------------------------
+
+export function ayarlariDegistir(ilerleme: Ilerleme, degisen: Partial<Ayarlar>): Ilerleme {
+  return { ...ilerleme, ayarlar: { ...ilerleme.ayarlar, ...degisen } }
+}
+
+/** Bütün ilerleme ve kartlar silinir; ayarlar kalır (renk körü çocuğun Renksiz'i gibi). */
+export function ilerlemeyiSifirla(ilerleme: Ilerleme): Ilerleme {
+  return { ...BOS_ILERLEME, ayarlar: ilerleme.ayarlar }
+}
