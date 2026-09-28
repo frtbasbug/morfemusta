@@ -1,12 +1,15 @@
 // Karakter Galerisi: görsel dilin örnek çizelgesi (galeri.html). Önce sekiz ünlü okul
-// çizelgesi düzeninde, sonra -lAr ve -(I)m bukalemunları, saklanan ünlü ve uymayan ek.
-// Oyundan bağlantı almaz. Renksiz düğmesi kalın ve ince renklerini aynı griye çevirir:
-// sekiz ünlü o zaman yalnız bedenlerinden ayırt edilir.
+// çizelgesi düzeninde ve aynı düzende kök etiketleri; sonra -lAr ve -(I)m bukalemunları,
+// saklanan ünlü ve uymayan ek. Oyundan bağlantı almaz. Renksiz düğmesi kalın ve ince
+// renklerini aynı griye çevirir: sekiz ünlü ve etiketleri o zaman yalnız biçimlerinden
+// ayırt edilir.
 
-import { useState } from 'react'
-import { unluBul } from '../motor/index.ts'
+import { useState, type ReactNode } from 'react'
+import { unluBul, type Unlu } from '../motor/index.ts'
 import Bukalemun from '../gorsel/Bukalemun.tsx'
+import { unluGovdesi } from '../gorsel/cizim.ts'
 import KokYazisi from '../gorsel/KokYazisi.tsx'
+import UnluEtiketi from '../gorsel/UnluEtiketi.tsx'
 import UnluKarti from '../gorsel/UnluKarti.tsx'
 import './KarakterGalerisi.css'
 import { GALERI_BOLUMLERI, type GaleriOrnegi } from './ornekler.ts'
@@ -24,6 +27,9 @@ const SUTUNLAR = [
   { ad: 'geniş', genis: true },
   { ad: 'dar', genis: false },
 ] as const
+
+const KALIN_GOVDE = unluGovdesi({ kalin: true })
+const INCE_GOVDE = unluGovdesi({ kalin: false })
 
 export default function KarakterGalerisi() {
   const [renksiz, setRenksiz] = useState(false)
@@ -49,7 +55,24 @@ export default function KarakterGalerisi() {
 
       <section className="galeri__bolum" aria-labelledby="bolum-unluler">
         <h2 id="bolum-unluler">Sekiz ünlü</h2>
-        <UnluCizelgesi />
+        <UnluCizelgesi
+          aciklama="Satırlar kalın ve ince; sütunlar düz ve yuvarlak, altlarında geniş ve dar."
+          hucre={(unlu) => <UnluKarti unlu={unlu} />}
+        />
+      </section>
+
+      <section className="galeri__bolum" aria-labelledby="bolum-etiket">
+        <h2 id="bolum-etiket">Kök etiketi</h2>
+        <UnluCizelgesi
+          aciklama={
+            'Kökün son ünlüsü, gövdesinin küçük bir kopyasında durur: en/boy oranı ' +
+            `karakterinki gibi (kalında ${KALIN_GOVDE.en}:${KALIN_GOVDE.boy}, incede ` +
+            `${INCE_GOVDE.en}:${INCE_GOVDE.boy}); düzde köşeli, yuvarlakta elips. Uyuma yalnız ` +
+            'kalınlık ve yuvarlaklık girer; etiket ikisini renksiz de gösterir.'
+          }
+          hucre={(unlu) => <UnluEtiketi unlu={unlu} />}
+          sinif="cizelge--etiket"
+        />
       </section>
 
       {GALERI_BOLUMLERI.map((bolum) => (
@@ -67,12 +90,19 @@ export default function KarakterGalerisi() {
   )
 }
 
-function UnluCizelgesi() {
+/** Okul çizelgesi: her hücrede bir ünlü, hücrenin çizimi verilir (kart ya da etiket). */
+function UnluCizelgesi({
+  aciklama,
+  hucre,
+  sinif,
+}: {
+  aciklama: string
+  hucre: (unlu: Unlu) => ReactNode
+  sinif?: string
+}) {
   return (
-    <table className="cizelge">
-      <caption className="galeri__aciklama">
-        Satırlar kalın ve ince; sütunlar düz ve yuvarlak, altlarında geniş ve dar.
-      </caption>
+    <table className={sinif ? `cizelge ${sinif}` : 'cizelge'}>
+      <caption className="galeri__aciklama">{aciklama}</caption>
       <colgroup>
         <col className="cizelge__satir-sutunu" />
       </colgroup>
@@ -110,11 +140,7 @@ function UnluCizelgesi() {
                   yuvarlak: grup.yuvarlak,
                   genis: sutun.genis,
                 })
-                return (
-                  <td key={unlu}>
-                    <UnluKarti unlu={unlu} />
-                  </td>
-                )
+                return <td key={unlu}>{hucre(unlu)}</td>
               }),
             )}
           </tr>

@@ -88,19 +88,23 @@ belirteçler `src/gorsel/tema.css`'tedir. Hepsinin örneği Karakter Galerisi'di
 
 Terimler resimdir: her özellik tek bir çizim boyutuna bağlıdır.
 
-| Özellik | Çizim boyutu | Ünlü karakteri (72×76) | Bukalemun ek (132×82) |
-|---------|--------------|------------------------|-----------------------|
-| kalın / ince | gövdenin eni; bukalemunda kalınlığı | en 58 / 34, yükseklik hep 56 | yükseklik 54 / 38, en hep 92 |
-| düz / yuvarlak | gövdenin biçimi | köşesi 7 yuvarlatılmış dikdörtgen / elips | köşesi 10 yuvarlatılmış dikdörtgen / elips |
-| geniş / dar | ağız | açık yarım ay / ince yarık | sola açılan ağız / ince yarık |
+| Özellik | Çizim boyutu | Ünlü karakteri (72×76) | Bukalemun ek (132×82) | Kök etiketi |
+|---------|--------------|------------------------|-----------------------|-------------|
+| kalın / ince | gövdenin eni; bukalemunda kalınlığı | en 58 / 34, yükseklik hep 56 | yükseklik 54 / 38, en hep 92 | en/boy 58:56 / 34:56 |
+| düz / yuvarlak | gövdenin biçimi | köşesi 7 yuvarlatılmış dikdörtgen / elips | köşesi 10 yuvarlatılmış dikdörtgen / elips | köşesi 4px dikdörtgen / elips |
+| geniş / dar | ağız | açık yarım ay / ince yarık | sola açılan ağız / ince yarık | (gösterilmez) |
 
 - **Renk** de kalınlığı gösterir (kalın turuncu, ince mavi), ama hiçbir zaman tek başına
   değil.
 - **Bukalemun ek**, ekin yüzeydeki ilk ünlüsünün kılığına girer. -lAr'da (a/e hep düz ve
   geniş) yalnız kalınlığı ve rengi değişir; -(I)m'de (ı/i/u/ü hep dar) biçimi de değişir.
   Başı solda, köke dönük: uyum geriye bakar. Ek yazısı gövdenin ortasındadır.
-- **Kök yazısı:** son ünlü bir etiketin içindedir. Etiketin zemini kalın ya da ince rengi;
-  köşesi düz ünlüde 4px, yuvarlakta tam yuvarlak; çerçevesi 2px mürekkep.
+- **Kök yazısı:** son ünlü bir etiketin içindedir. **Etiket, o ünlünün gövdesinin küçük bir
+  kopyasıdır:** en/boy oranı karakterinkiyle aynı (kalında 58:56, incede 34:56); düzde
+  köşesi 4px dikdörtgen, yuvarlakta elips. Zemini kalın ya da ince rengi, çerçevesi 2px
+  mürekkep. Harf incede de sığar (30px'lik kökte etiketin boyu 1.5em). Uyuma yalnız
+  kalınlık ve yuvarlaklık girer; etiket ikisini renksiz de gösterir. Genişlik (ağız)
+  etikette yoktur, uyuma girmez.
 - **Uymayan ek** (*ev* + *lar*): bukalemun -12 derece eğik durur (dönme noktası %45 %85);
   sonucun üstü çizili ve `--cizik` renginde.
 - **Saklanan ünlü** (*kedi* + POSS.1SG → *kedim*): bukalemun zemine karışır. Gövde, ibik,
@@ -125,7 +129,8 @@ Terimler resimdir: her özellik tek bir çizim boyutuna bağlıdır.
 | `--cizik` | #6B6781 | uymayan sonuç |
 
 **Renksiz mod** (renk körlüğü denetimi): `--kalin` ve `--ince` #8E8C99'a, iki zemin
-#E2E1E8'e döner. Sekiz ünlü o zaman da bedenlerinden ayırt edilmelidir.
+#E2E1E8'e döner. Sekiz ünlü o zaman da bedenlerinden, kök etiketleri de biçimlerinden ayırt
+edilmelidir.
 
 - **Çizgi kalınlıkları:** gövde 3 · göz akı 1.5 · ibik 2.5 · kuyruk ve bacak 5 (altında
   11'lik mürekkep) · kök etiketi 2 · ünlü kartı 2.5, köşe 18.
@@ -133,7 +138,8 @@ Terimler resimdir: her özellik tek bir çizim boyutuna bağlıdır.
   de OFL-1.1 ve pakete gömülü; dış yazı tipi sunucusu yok.
 - **Boyutlar:** ünlü harfi 30px · ek yazısı 20px kalın · kök 30px kalın · sonuç 22px kalın.
 - **Karşıtlık:** mürekkebin ince renk üstündeki karşıtlığı 4.3:1'dir; ince renk üstüne
-  18px'ten küçük yazı konmaz.
+  18px'ten küçük yazı konmaz. Bukalemun ek yazısıyla birlikte ölçeklendiği için 0.9'dan
+  küçük çizilmez (132 px'lik kutu en az 118.8 px); sığmayan dar ekranda satır kırılır.
 
 ### Üç kural
 

@@ -131,8 +131,7 @@
   line-height: 1.1;
 }
 
-/* Kök yazısı: son ünlüsü bir etiketin içinde. Etiketin zemini kalın ya da ince rengi; köşesi
-   düz ünlüde 4px, yuvarlakta tam yuvarlak; çerçevesi 2px mürekkep. */
+/* Kök yazısı: son ünlüsü bir etiketin içinde (ünlü etiketi). */
 .kok-yazisi {
   position: relative;
   font-family: var(--yazi-tipi);
@@ -143,33 +142,39 @@
   white-space: nowrap;
 }
 
-/* Harf etiketin ortasında durur: alttaki boşluk, küçük harfin gövdesini (x yüksekliği)
-   ortaya getirir. */
-.kok-yazisi__unlu {
+/* Ünlü etiketi: ünlü gövdesinin küçük kopyası. En/boy oranı bileşenden, çizimden gelir
+   (kalında 58:56, incede 34:56); düzde köşesi 4px dikdörtgen, yuvarlakta elips. Zemini kalın
+   ya da ince rengi, çerçevesi 2px mürekkep. Boyu 1.5em: 30px'lik kökte noktalı ü de incenin
+   elipsine sığar. Alttaki boşluk harfi ortaya getirir. */
+.unlu-etiketi {
   display: inline-grid;
   place-items: center;
   box-sizing: border-box;
-  width: 1.2em;
-  height: 1.2em;
+  height: 1.5em;
+  min-width: 0;
   margin-inline: 0.04em;
   padding-bottom: 0.2em;
   border: var(--cizgi-kok-etiketi) solid var(--murekkep);
+  color: var(--murekkep);
+  font-family: var(--yazi-tipi);
+  font-size: var(--boyut-kok);
+  font-weight: 700;
   line-height: 1;
 }
 
-.kok-yazisi__unlu--kalin {
+.unlu-etiketi--kalin {
   background: var(--kalin);
 }
 
-.kok-yazisi__unlu--ince {
+.unlu-etiketi--ince {
   background: var(--ince);
 }
 
-.kok-yazisi__unlu--duz {
+.unlu-etiketi--duz {
   border-radius: 4px;
 }
 
-.kok-yazisi__unlu--yuvarlak {
+.unlu-etiketi--yuvarlak {
   border-radius: 50%;
 }
 

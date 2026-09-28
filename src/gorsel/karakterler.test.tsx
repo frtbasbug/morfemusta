@@ -2,9 +2,10 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { ekle, type EkParcasi, type Unlu as UnluHarfi } from '../motor/index.ts'
 import Bukalemun from './Bukalemun.tsx'
-import { UNLULER, bukalemunCizimi, unluCizimi } from './cizim.ts'
+import { UNLULER, bukalemunCizimi, unluCizimi, unluGovdesi } from './cizim.ts'
 import KokYazisi from './KokYazisi.tsx'
 import Unlu from './Unlu.tsx'
+import UnluEtiketi from './UnluEtiketi.tsx'
 import UnluKarti from './UnluKarti.tsx'
 
 const SEKIZ_UNLU = Object.keys(UNLULER) as UnluHarfi[]
@@ -176,26 +177,59 @@ describe('Bukalemun', () => {
   })
 })
 
+describe('UnluEtiketi', () => {
+  it.each([
+    ['a', 'kalin', 'duz', '58 / 56'],
+    ['ı', 'kalin', 'duz', '58 / 56'],
+    ['o', 'kalin', 'yuvarlak', '58 / 56'],
+    ['u', 'kalin', 'yuvarlak', '58 / 56'],
+    ['e', 'ince', 'duz', '34 / 56'],
+    ['i', 'ince', 'duz', '34 / 56'],
+    ['ö', 'ince', 'yuvarlak', '34 / 56'],
+    ['ü', 'ince', 'yuvarlak', '34 / 56'],
+  ] as const)(
+    '%s: gövdenin küçük kopyası (%s, %s; en/boy %s)',
+    (unlu, kalinlik, bicim, oran) => {
+      expect(renderToStaticMarkup(<UnluEtiketi unlu={unlu} />)).toBe(
+        `<span class="unlu-etiketi unlu-etiketi--${kalinlik} unlu-etiketi--${bicim}" ` +
+          `style="aspect-ratio:${oran}">${unlu}</span>`,
+      )
+    },
+  )
+
+  it('en/boy oranı çizimdeki gövdeninkidir', () => {
+    for (const unlu of SEKIZ_UNLU) {
+      const { en, boy } = unluGovdesi(UNLULER[unlu])
+      expect(renderToStaticMarkup(<UnluEtiketi unlu={unlu} />)).toContain(
+        `style="aspect-ratio:${en} / ${boy}"`,
+      )
+    }
+  })
+
+  it('renk yazmaz: zemin sınıftan, CSS değişkeninden gelir', () => {
+    for (const unlu of SEKIZ_UNLU) {
+      expect(renderToStaticMarkup(<UnluEtiketi unlu={unlu} />)).not.toMatch(
+        /fill=|stroke=|#[0-9a-f]{3,8}\b|rgb\(|background/i,
+      )
+    }
+  })
+})
+
 describe('KokYazisi', () => {
   const gorunen = (kok: string) =>
     /<span aria-hidden="true">(.*)<\/span><\/span>$/.exec(renderToStaticMarkup(<KokYazisi kok={kok} />))?.[1]
+  const etiket = (unlu: UnluHarfi) => renderToStaticMarkup(<UnluEtiketi unlu={unlu} />)
 
-  it('son ünlü etikette: kuş → u (kalın, yuvarlak)', () => {
-    expect(gorunen('kuş')).toBe(
-      'k<span class="kok-yazisi__unlu kok-yazisi__unlu--kalin kok-yazisi__unlu--yuvarlak">u</span>ş',
-    )
+  it('son ünlü etikette: kuş → u', () => {
+    expect(gorunen('kuş')).toBe(`k${etiket('u')}ş`)
   })
 
-  it('birden çok ünlüde yalnız sonuncusu: kedi → i (ince, düz)', () => {
-    expect(gorunen('kedi')).toBe(
-      'ked<span class="kok-yazisi__unlu kok-yazisi__unlu--ince kok-yazisi__unlu--duz">i</span>',
-    )
+  it('birden çok ünlüde yalnız sonuncusu: kedi → i', () => {
+    expect(gorunen('kedi')).toBe(`ked${etiket('i')}`)
   })
 
   it('ünlü başta da olabilir: ev → e', () => {
-    expect(gorunen('ev')).toBe(
-      '<span class="kok-yazisi__unlu kok-yazisi__unlu--ince kok-yazisi__unlu--duz">e</span>v',
-    )
+    expect(gorunen('ev')).toBe(`${etiket('e')}v`)
   })
 
   it('ekran okuyucu kökü tek kelime olarak okur', () => {

@@ -107,9 +107,16 @@
   padding: 0;
 }
 
+.cizelge--etiket td {
+  text-align: center;
+}
+
 /* Örnek satırı: kök, bukalemun, ok, sonuç. Kök sağa yaslanır: bukalemunun başı ona döner.
-   Kök ve sonuç sütunlarının eni sabittir (en uzunları kedi ve kuşlar sığar): dar ekranda
-   bütün bukalemunlar aynı oranda küçülür, kalın ve ince karşılaştırılabilir kalır. */
+   Kök ve sonuç sütunlarının eni sabittir (en uzunları kedi ve kuşlar sığar), bütün
+   bukalemunlar aynı boyda kalır. Bukalemun ek yazısıyla birlikte ölçeklenir: 0.9'un altında
+   20px'lik yazı 18px'in altına iner, ince rengin üstünde okunmaz (tema.css). Bu yüzden
+   bukalemun en az 7.425rem (132px × 0.9) çizilir; satır buna sığmayan dar ekranda
+   (23.25rem'e kadar) ok ve sonuç alt satıra, bukalemunun altına geçer. */
 .ornekler {
   display: grid;
   gap: 0.9rem;
@@ -120,22 +127,36 @@
 
 .ornek {
   display: grid;
-  grid-template-columns: 6rem minmax(0, 8.25rem) 1.75rem 4.5rem;
+  grid-template-columns: 6rem minmax(7.425rem, 8.25rem) 1.75rem 4.5rem;
+  grid-template-areas: 'kok bukalemun ok sonuc';
   align-items: center;
   justify-content: start;
   column-gap: 0.5rem;
 }
 
+@media (max-width: 23.25rem) {
+  .ornek {
+    grid-template-columns: 6rem 1.75rem minmax(0, 1fr);
+    grid-template-areas:
+      'kok bukalemun bukalemun'
+      '. ok sonuc';
+    row-gap: 0.25rem;
+  }
+}
+
 .ornek__kok {
+  grid-area: kok;
   justify-self: end;
 }
 
 .ornek__bukalemun {
+  grid-area: bukalemun;
   display: block;
   min-width: 0;
 }
 
 .ornek__ok {
+  grid-area: ok;
   display: block;
   fill: none;
   stroke: var(--soluk);
@@ -145,6 +166,7 @@
 }
 
 .ornek__sonuc {
+  grid-area: sonuc;
   font-size: var(--boyut-sonuc);
   font-weight: 700;
   white-space: nowrap;

@@ -13,9 +13,14 @@
 - **Belirteçler (`src/gorsel/tema.css`):** on renk, Renksiz mod (`.renksiz`: kalın ve ince
   #8E8C99, iki zemin #E2E1E8), çizgi kalınlıkları, yazı tipleri, boyutlar.
 - **Bileşenler (`src/gorsel/`):** `Unlu` (72×76), `Bukalemun` (132×82), `KokYazisi`,
-  `UnluKarti`. Her karakterde `role="img"` ve `aria-label` ("a: kalın, düz, geniş";
-  "lar bukalemunu, a: kalın, düz, geniş"; "m bukalemunu, saklanan i: ince, düz, dar").
-  `boyut` yalnız ölçekler. SVG'de yalnız geometri var; renkler CSS değişkenlerinden.
+  `UnluEtiketi`, `UnluKarti`. Her karakterde `role="img"` ve `aria-label` ("a: kalın, düz,
+  geniş"; "lar bukalemunu, a: kalın, düz, geniş"; "m bukalemunu, saklanan i: ince, düz,
+  dar"). `boyut` yalnız ölçekler. SVG'de yalnız geometri var; renkler CSS değişkenlerinden.
+- **Kök etiketi (`UnluEtiketi`), kullanıcının isteğiyle:** son ünlünün etiketi, ünlü
+  gövdesinin küçük bir kopyası. En/boy oranı çizimden (`unluGovdesi`: kalında 58:56, incede
+  34:56); düzde köşesi 4px dikdörtgen, yuvarlakta elips; boyu 1.5em (30px'lik kökte
+  45px). Harf incede de sığar (en sıkı durum incenin elipsinde ü). Etiket kalınlığı ve
+  yuvarlaklığı renksiz de gösterir. DESIGN.md'nin görsel koduna yazıldı.
 - **Bukalemunun kılığı (`src/gorsel/kilik.ts`):** `ekle()` sonucundaki ek parçasının yüzeydeki
   ilk ünlüsü. Ek ünlüsüz kalırsa saklanan (I)'nın uyumla olacağı ünlü; bunu motorun `uyum`
   işlevi verir. Uyumsuz durum `uyumsuz` prop'uyla seçilir.
@@ -24,35 +29,35 @@
 - **Yazı tipleri:** `@fontsource/baloo-2` eklendi (800; yalnız latin ve latin-ext, yaklaşık
   34 KB). woff2 dosyaları PWA önbelleğinde; Google Fonts'a istek yok.
 - **Karakter Galerisi (`galeri.html`, `src/galeri/`):** sekiz ünlü okul çizelgesi düzeninde;
-  -lAr (kuşlar, gözler); -(I)m (kızım, evim, yolum, gözüm); saklanan (kedim); uymayan
-  (*evlar*, tek elle kurulan örnek). Her satır kök, bukalemun, ok, sonuç. Üstte Renksiz
-  düğmesi (`aria-pressed`). Oyundan bağlantı yok, `noindex`, önbellekte. Dar ekranda bütün
-  bukalemunlar aynı oranda küçülür (kök ve sonuç sütunları sabit).
+  aynı düzende sekiz kök etiketi; -lAr (kuşlar, gözler); -(I)m (kızım, evim, yolum, gözüm);
+  saklanan (kedim); uymayan (*evlar*, tek elle kurulan örnek). Her satır kök, bukalemun, ok,
+  sonuç. Üstte Renksiz düğmesi (`aria-pressed`). Oyundan bağlantı yok, `noindex`,
+  önbellekte.
+- **Dar ekranda bukalemun küçülmez (Codex incelemesinin bulgusu, doğrulandı):** 320 px'te
+  bukalemun 68 px'e iniyor, 20px'lik ek yazısı ince rengin üstünde 10px'e düşüyordu
+  (18px kuralına aykırı). Artık bukalemun en az 0.9 ölçekte çizilir; satıra sığmayan dar
+  ekranda (23.25rem'e kadar) ok ve sonuç alt satıra geçer.
 - **Kurallar testi (`src/gorsel/kurallar.test.ts`):** renk değeri yalnız `tema.css`'te;
   degrade ve bulanıklık yok; tek gölge ünlü kartınınki; görsel kodda resim dosyası yok.
   Vitest CSS'i boşalttığı için `vite.config.ts`'e `test.css.include` (yalnız `?raw`) eklendi.
-- **Testler:** 454 birim testi (görsel 126: çizim 43, bileşenler 34, kurallar 27, kılık 19,
-  bağımsızlık 3; galeri 9; motor 306; denetim sayfası 11; açılış ekranı 2) ve 14 uçtan uca
-  test (açılış 4, denetim 5, galeri 5: telefonda ve 320 px'te taşmadan açılış, sekiz ünlü ve
-  sekiz bukalemun, konsol hatası yok; yazı tipleri gömülü, Google Fonts'a ve başka sunucuya
-  istek yok; Renksiz'de `--kalin` = `--ince`; oyunda bağlantı yok; çevrim dışı açılış, yazı
-  tipleriyle).
+- **Testler:** 476 birim testi (görsel 146: çizim 51, bileşenler 44, kurallar 29, kılık 19,
+  bağımsızlık 3; galeri 11; motor 306; denetim sayfası 11; açılış ekranı 2) ve 15 uçtan uca
+  test (açılış 4, denetim 5, galeri 6: telefonda, 360 ve 320 px'te taşmadan açılış, ek yazısı
+  hiçbir genişlikte 18px'in altında değil, sekiz ünlü ve sekiz bukalemun, konsol hatası yok;
+  harf her kök etiketine sığar; yazı tipleri gömülü, Google Fonts'a ve başka sunucuya istek
+  yok; Renksiz'de `--kalin` = `--ince`, kalın ve ince etiketlerin enleri farklı; oyunda
+  bağlantı yok; çevrim dışı açılış, yazı tipleriyle).
 - **DESIGN.md:** "Görsel dil" bölümü (görsel kod, belirteçler, üç kural). **CLAUDE.md:**
   11. kural, yeni kitaplık, üç giriş sayfası, görsel dil notları.
 
-### Kullanıcının onayını bekleyenler
+### Kullanıcının onayladıkları
 
-- **Renksiz modda sekiz ünlü bedenlerinden ayırt ediliyor mu:** bitti ölçütü, gözle onay.
-- **Tarifte açık kalan yerlerdeki yorumlar:**
-  1. Saklanan bukalemunda ağız çizilmiyor (saklanan ünlü söylenmez); göz tümseği de zemine
-     karışıyor. Yalnız göz akı ve bebek düz çizgiyle görünür.
-  2. Ünlü kartının zemini kalın ya da ince zemin rengi (`--kalin-zemin`, `--ince-zemin`).
-  3. Kök etiketi 1.2em kare (düz ünlüde, köşe 4px) ya da daire (yuvarlakta).
-  4. "-lAr'da yalnız eni ve rengi değişir": bukalemunda kalınlık yüksekliktir (54 / 38, en
-     hep 92). DESIGN.md'de "kalınlığı ve rengi" diye yazıldı.
-- **Kök etiketinde kalınlık yalnız renkle gösteriliyor** (harfin kendisi dışında). Renksiz
-  modda etiket kalın ile inceyi ayırmıyor; "renk hiçbir zaman tek başına değil" ilkesiyle
-  gerilimde. Öneri: etiketin eni de kalınlığa bağlanabilir (kalında geniş, incede dar).
+- Renksiz modda sekiz ünlü bedenlerinden ayırt ediliyor (bitti ölçütü).
+- Tarifte açık kalan dört yer: saklanan bukalemunda ağız yok ve göz tümseği de zemine
+  karışıyor; ünlü kartının zemini kalın ya da ince zemin rengi; kök etiketinin köşesi düzde
+  4px, yuvarlakta elips; bukalemunda kalınlık yüksekliktir (54 / 38, en hep 92).
+- Kök etiketi ünlü gövdesinin küçük kopyası olur (yukarıda); böylece kalınlık etikette de
+  renkten bağımsız görünür.
 
 ### Açık kalanlar
 

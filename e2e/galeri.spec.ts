@@ -37,6 +37,71 @@ const degisken = (oge: Locator, ad: string) =>
 
 const dolgu = (oge: Locator) => oge.evaluate((el) => getComputedStyle(el).fill)
 
+// Ek yazısının ekrandaki boyu (px). Bukalemun yazısıyla birlikte ölçeklenir; ince rengin
+// üstünde 18px'ten küçük yazı olmaz (tema.css).
+const ekYazisiBoylari = (sayfa: Page) =>
+  bukalemunlar(sayfa).evaluateAll((svgler) =>
+    svgler.map((svg) => {
+      const olcek = svg.clientWidth / (svg as SVGSVGElement).viewBox.baseVal.width
+      return parseFloat(getComputedStyle(svg.querySelector('text')!).fontSize) * olcek
+    }),
+  )
+
+const etiketOlculeri = (sayfa: Page) =>
+  sayfa.locator('.cizelge--etiket .unlu-etiketi').evaluateAll((ogeler) =>
+    ogeler.map((oge) => {
+      const kutu = oge.getBoundingClientRect()
+      const stil = getComputedStyle(oge)
+      return {
+        harf: oge.textContent ?? '',
+        en: kutu.width,
+        boy: kutu.height,
+        zemin: stil.backgroundColor,
+        kose: stil.borderTopLeftRadius,
+      }
+    }),
+  )
+
+// Harfin mürekkep kutusu (canvas ölçüsü) etiketin çerçeve içine sığıyor mu: düzde
+// dikdörtgene, yuvarlakta elipse. Kutunun dört köşesi de içeride olmalı; harf kutusundan
+// daha yuvarlak olduğu için bu denetim temkinlidir. Sığmayan harfleri döner.
+const sigmayanHarfler = (etiketler: Locator) =>
+  etiketler.evaluateAll((ogeler) => {
+    const ctx = document.createElement('canvas').getContext('2d')!
+    return ogeler.flatMap((etiket) => {
+      const stil = getComputedStyle(etiket)
+      ctx.font = `${stil.fontWeight} ${stil.fontSize} ${stil.fontFamily}`
+      const harf = etiket.textContent ?? ''
+      const olcu = ctx.measureText(harf)
+      const aralik = document.createRange()
+      aralik.selectNodeContents(etiket)
+      const metin = aralik.getBoundingClientRect()
+      const taban = metin.bottom - olcu.fontBoundingBoxDescent
+      const sol = metin.left - olcu.actualBoundingBoxLeft
+      const sag = metin.left + olcu.actualBoundingBoxRight
+      const ust = taban - olcu.actualBoundingBoxAscent
+      const alt = taban + olcu.actualBoundingBoxDescent
+      const kutu = etiket.getBoundingClientRect()
+      const cerceve = parseFloat(stil.borderTopWidth)
+      const cx = kutu.left + kutu.width / 2
+      const cy = kutu.top + kutu.height / 2
+      const a = kutu.width / 2 - cerceve
+      const b = kutu.height / 2 - cerceve
+      const elips = etiket.classList.contains('unlu-etiketi--yuvarlak')
+      const icinde = [
+        [sol, ust],
+        [sag, ust],
+        [sol, alt],
+        [sag, alt],
+      ].every(([x, y]) =>
+        elips
+          ? ((x! - cx) / a) ** 2 + ((y! - cy) / b) ** 2 <= 1
+          : Math.abs(x! - cx) <= a && Math.abs(y! - cy) <= b,
+      )
+      return icinde ? [] : [harf]
+    })
+  })
+
 test.describe('Karakter Galerisi', () => {
   test('telefonda açılır; sekiz ünlü ve sekiz bukalemun görünür; konsol hatası yok', async ({
     page,
@@ -58,14 +123,27 @@ test.describe('Karakter Galerisi', () => {
     }
     await expect(page.getByText('kedim', { exact: true })).toBeVisible()
     expect(await yatayTasma(page)).toBeLessThanOrEqual(0)
+    expect(Math.min(...(await ekYazisiBoylari(page)))).toBeGreaterThanOrEqual(18)
 
-    // En dar yaygın telefon genişliğinde de.
-    await page.setViewportSize({ width: 320, height: 568 })
-    await expect(baslik(page)).toBeInViewport()
-    expect(await yatayTasma(page)).toBeLessThanOrEqual(0)
+    // Dar telefonlarda da: taşma yok, bukalemun küçülüp ek yazısını 18px'in altına indirmez.
+    for (const en of [360, 320]) {
+      await page.setViewportSize({ width: en, height: 640 })
+      await expect(baslik(page)).toBeInViewport()
+      expect(await yatayTasma(page), `${en}px`).toBeLessThanOrEqual(0)
+      expect(Math.min(...(await ekYazisiBoylari(page))), `${en}px`).toBeGreaterThanOrEqual(18)
+    }
 
     await page.waitForLoadState('networkidle')
     expect(hatalar).toEqual([])
+  })
+
+  test('harf her kök etiketine sığar, incenin elipsine de', async ({ page }) => {
+    await page.goto(GALERI)
+    await page.evaluate(() => document.fonts.ready)
+    const etiketler = page.locator('.unlu-etiketi')
+    // Çizelgedeki sekiz etiket ve örnek satırlarındaki sekiz kök.
+    await expect(etiketler).toHaveCount(16)
+    expect(await sigmayanHarfler(etiketler)).toEqual([])
   })
 
   test('yazı tipleri pakete gömülü; Google Fonts\'a ve başka sunucuya istek gitmez', async ({
@@ -106,6 +184,8 @@ test.describe('Karakter Galerisi', () => {
     await expect(dugme).toHaveAttribute('aria-pressed', 'false')
     expect(await degisken(a, '--kalin')).not.toBe(await degisken(a, '--ince'))
     expect(await dolgu(kalinGovde)).not.toBe(await dolgu(inceGovde))
+    const renkliEtiketler = await etiketOlculeri(page)
+    expect(renkliEtiketler[0]!.zemin).not.toBe(renkliEtiketler[4]!.zemin)
 
     await dugme.click()
     await expect(dugme).toHaveAttribute('aria-pressed', 'true')
@@ -115,6 +195,19 @@ test.describe('Karakter Galerisi', () => {
     expect(await degisken(a, '--ince-zemin')).toBe('#e2e1e8')
     expect(await dolgu(kalinGovde)).toBe(await dolgu(inceGovde))
     expect(await dolgu(kalinGovde)).toBe('rgb(142, 140, 153)')
+
+    // Kök etiketleri renksiz de okunur: kalın ile ince eninden, düz ile yuvarlak köşesinden.
+    const etiketler = await etiketOlculeri(page)
+    expect(etiketler.map((e) => e.harf)).toEqual(['a', 'ı', 'o', 'u', 'e', 'i', 'ö', 'ü'])
+    expect(new Set(etiketler.map((e) => e.zemin)).size).toBe(1)
+    const kalinlar = etiketler.slice(0, 4)
+    const inceler = etiketler.slice(4)
+    for (const kalin of kalinlar) {
+      for (const ince of inceler) expect(kalin.en, `${kalin.harf} / ${ince.harf}`).toBeGreaterThan(ince.en)
+      expect(kalin.en / kalin.boy, kalin.harf).toBeCloseTo(58 / 56, 2)
+    }
+    for (const ince of inceler) expect(ince.en / ince.boy, ince.harf).toBeCloseTo(34 / 56, 2)
+    expect(etiketler.map((e) => e.kose)).toEqual(['4px', '4px', '50%', '50%', '4px', '4px', '50%', '50%'])
 
     // Tekrar basınca renkler döner.
     await dugme.click()

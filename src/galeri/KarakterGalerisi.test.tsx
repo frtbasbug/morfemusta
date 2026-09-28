@@ -29,9 +29,52 @@ describe('KarakterGalerisi', () => {
       'ö: ince, yuvarlak, geniş',
       'ü: ince, yuvarlak, dar',
     ])
-    expect(eslesmeler(html, /scope="colgroup"[^>]*>([^<]*)</g)).toEqual(['düz', 'yuvarlak'])
-    expect(eslesmeler(html, /<th scope="col">([^<]*)</g)).toEqual(['geniş', 'dar', 'geniş', 'dar'])
-    expect(eslesmeler(html, /<th scope="row">([^<]*)</g)).toEqual(['kalın', 'ince'])
+    const cizelge = /<table class="cizelge">(.*?)<\/table>/.exec(html)?.[1] ?? ''
+    expect(eslesmeler(cizelge, /scope="colgroup"[^>]*>([^<]*)</g)).toEqual(['düz', 'yuvarlak'])
+    expect(eslesmeler(cizelge, /<th scope="col">([^<]*)</g)).toEqual([
+      'geniş',
+      'dar',
+      'geniş',
+      'dar',
+    ])
+    expect(eslesmeler(cizelge, /<th scope="row">([^<]*)</g)).toEqual(['kalın', 'ince'])
+    expect(cizelge.match(/class="unlu-karti /g)).toHaveLength(8)
+  })
+
+  it('bölümler sırayla: sekiz ünlü, kök etiketi, -lAr, -(I)m, saklanan, uymayan', () => {
+    expect(eslesmeler(html, /<h2 id="[^"]*">([^<]*)<\/h2>/g)).toEqual([
+      'Sekiz ünlü',
+      'Kök etiketi',
+      '-lAr',
+      '-(I)m',
+      'Saklanan ünlü',
+      'Uymayan ek',
+    ])
+  })
+
+  it('kök etiketleri ünlülerle aynı çizelge düzeninde: a ı o u, e i ö ü', () => {
+    const cizelge = /<table class="cizelge cizelge--etiket">(.*?)<\/table>/.exec(html)?.[1] ?? ''
+    expect(eslesmeler(cizelge, /class="unlu-etiketi ([^"]*)"[^>]*>([^<]*)</g)).toEqual([
+      'unlu-etiketi--kalin unlu-etiketi--duz',
+      'unlu-etiketi--kalin unlu-etiketi--duz',
+      'unlu-etiketi--kalin unlu-etiketi--yuvarlak',
+      'unlu-etiketi--kalin unlu-etiketi--yuvarlak',
+      'unlu-etiketi--ince unlu-etiketi--duz',
+      'unlu-etiketi--ince unlu-etiketi--duz',
+      'unlu-etiketi--ince unlu-etiketi--yuvarlak',
+      'unlu-etiketi--ince unlu-etiketi--yuvarlak',
+    ])
+    expect(eslesmeler(cizelge, /class="unlu-etiketi [^"]*"[^>]*>([^<]*)</g)).toEqual([
+      'a',
+      'ı',
+      'o',
+      'u',
+      'e',
+      'i',
+      'ö',
+      'ü',
+    ])
+    expect(cizelge).toContain('(kalında 58:56, incede 34:56)')
   })
 
   it('sekiz bukalemun: -lAr, -(I)m, saklanan, uymayan', () => {

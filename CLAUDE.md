@@ -126,6 +126,9 @@ DESIGN.md  NEXT.md  CLAUDE.md
   Karakterlerdeki çizgi kalınlıkları birimsizdir (SVG kullanıcı birimi), karakterle
   ölçeklenir. Bileşenler `tema.css`'i kendileri yükler; yazı tipleri sayfa girişinde yüklenir
   (galeri: `src/galeri/main.tsx`). `.renksiz` sınıfının içinde kalın ve ince aynı gridir.
+  Kök etiketinin (`UnluEtiketi`) en/boy oranı `cizim.ts`'teki `unluGovdesi`'nden gelir, CSS'te
+  yazılmaz. Bukalemun 0.9 ölçeğin altına küçültülmez: ek yazısı ince rengin üstünde 18px'in
+  altına inerdi (galeride dar ekranda satır kırılır; `e2e/galeri.spec.ts` denetler).
 - **Saf görsel hesaplar:** `src/gorsel/cizim.ts` ve `kilik.ts` motor gibi DOM'suz derlenir
   (`tsconfig.motor.json`) ve yalnız motorun genel kapısını içe aktarır
   (`src/gorsel/bagimsizlik.test.ts`). Ünlü tablosu motorunkidir. Saklanan ünlünün kılığı

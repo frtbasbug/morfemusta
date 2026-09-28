@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { Unlu, UnluOzellikleri } from '../motor/index.ts'
-import { UNLULER, bukalemunCizimi, unluCizimi } from './cizim.ts'
+import { UNLULER, bukalemunCizimi, unluCizimi, unluGovdesi } from './cizim.ts'
 
 const SEKIZ_UNLU = Object.entries(UNLULER) as [Unlu, UnluOzellikleri][]
 
@@ -120,6 +120,11 @@ describe('kalın / ince: gövde eni', () => {
       expect([kalin.boy, ince.boy]).toEqual([56, 56])
     },
   )
+
+  it.each(SEKIZ_UNLU)('%s: unluGovdesi çizilen gövdenin eni ve boyudur (kök etiketinin oranı)', (_unlu, o) => {
+    expect(unluGovdesi(o)).toEqual(govdeKutusu(unluCizimi(o).govde))
+    expect(unluGovdesi(o)).toEqual(o.kalin ? { en: 58, boy: 56 } : { en: 34, boy: 56 })
+  })
 
   it.each(SEKIZ_UNLU.filter(([, o]) => o.kalin))(
     '%s: kalın bukalemun inceden kalın (54 / 38); eni hep 92',

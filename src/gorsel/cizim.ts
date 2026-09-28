@@ -89,12 +89,22 @@ const govde = (
 const yarik = (x1: number, x2: number, y: number, t: number): string =>
   `M${f(x1)} ${f(y - t)}H${f(x2)}A${t} ${t} 0 0 1 ${f(x2)} ${f(y + t)}H${f(x1)}A${t} ${t} 0 0 1 ${f(x1)} ${f(y - t)}Z`
 
+/**
+ * Ünlü gövdesinin eni ve boyu: kalında 58 × 56, incede 34 × 56. Kök etiketi de gövdenin küçük
+ * bir kopyası olarak bu orandadır (UnluEtiketi).
+ */
+export function unluGovdesi({ kalin }: Pick<UnluOzellikleri, 'kalin'>): {
+  readonly en: number
+  readonly boy: number
+} {
+  return { en: kalin ? 58 : 34, boy: 56 }
+}
+
 /** Ünlü karakteri, 72×76 kutu. */
 export function unluCizimi({ kalin, yuvarlak, genis }: UnluOzellikleri): UnluCizimi {
   const cx = 36
   const cy = 40
-  const H = 56
-  const W = kalin ? 58 : 34
+  const { en: W, boy: H } = unluGovdesi({ kalin })
   const my = cy + 8
   const mw = genis ? W * 0.52 : W * 0.3
   return {
