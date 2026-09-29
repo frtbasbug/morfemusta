@@ -3,7 +3,12 @@ import { describe, expect, it } from 'vitest'
 import { bolgeBul, type Bolge } from '../oyun/bolgeler.ts'
 import type { Gorev } from '../oyun/gorevler.ts'
 import { BOS_ILERLEME, gorevBitti, sozlukGruplari, type Ilerleme } from '../oyun/ilerleme.ts'
+import KokYazisi from '../gorsel/KokYazisi.tsx'
+import UnluEtiketi from '../gorsel/UnluEtiketi.tsx'
+import type { Unlu } from '../motor/index.ts'
 import Sozluk from './Sozluk.tsx'
+
+const etiketi = (unlu: Unlu) => renderToStaticMarkup(<UnluEtiketi unlu={unlu} />)
 
 const KOY = bolgeBul('koy') as Bolge
 const eslesmeler = (html: string, desen: RegExp) => [...html.matchAll(desen)].map((m) => m[1])
@@ -57,12 +62,15 @@ describe('Sozluk', () => {
   it('kartta kelime, kök ve ekler (birleşen ek görünümüyle), bölge ve tarih', () => {
     const html = sozluk(ILERLEME)
     const toplarim = /<article class="sozluk-karti"><h3 class="sozluk-karti__kelime">toplarım<\/h3>(.*?)<\/article>/.exec(html)?.[1]
+    // Kökün son ünlüsü ve eklerin ünlüleri etikette: uyum etiketlerin eninden okunur.
     expect(toplarim).toBe(
-      '<p class="sozluk-karti__parcalar"><span class="sozluk-karti__kok">top</span>' +
+      '<p class="sozluk-karti__parcalar"><span class="sozluk-karti__kok">' +
+        renderToStaticMarkup(<KokYazisi kok="top" />) +
+        '</span>' +
         '<span class="sozluk-karti__arti" aria-hidden="true">+</span>' +
-        '<span class="ek-yazisi ek-yazisi--kalin ek-yazisi--duz">lar</span>' +
+        `<span class="ek-yazisi ek-yazisi--kalin ek-yazisi--duz">l${etiketi('a')}r</span>` +
         '<span class="sozluk-karti__arti" aria-hidden="true">+</span>' +
-        '<span class="ek-yazisi ek-yazisi--kalin ek-yazisi--duz">ım</span></p>' +
+        `<span class="ek-yazisi ek-yazisi--kalin ek-yazisi--duz">${etiketi('ı')}m</span></p>` +
         '<p class="sozluk-karti__kunye"><span>Bukalemun Koyu</span><span aria-hidden="true"> · </span>' +
         '<time dateTime="2026-09-28">28 Eylül 2026</time></p>',
     )

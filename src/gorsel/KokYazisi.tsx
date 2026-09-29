@@ -8,18 +8,32 @@ import './tema.css'
 
 export default function KokYazisi({ kok }: { readonly kok: string }) {
   const metin = kok.normalize('NFC')
-  const unlu = sonUnlu(metin)
-  if (unlu === undefined) return <span className="kok-yazisi">{metin}</span>
+  if (sonUnlu(metin) === undefined) return <span className="kok-yazisi">{metin}</span>
 
-  const konum = metin.lastIndexOf(unlu)
   return (
     <span className="kok-yazisi">
       <span className="kok-yazisi__okunan">{metin}</span>
       <span aria-hidden="true">
-        {metin.slice(0, konum)}
-        <UnluEtiketi unlu={unlu} />
-        {metin.slice(konum + 1)}
+        <EtiketliKok kok={metin} />
       </span>
     </span>
+  )
+}
+
+/**
+ * Kökün görünen yazısı: son ünlüsü etikette. Ekran okuyucuya ayrıca okunan bir yazının
+ * yanında, gizli yerde kullanılır (KokYazisi, KurulanKelime).
+ */
+export function EtiketliKok({ kok }: { readonly kok: string }) {
+  const metin = kok.normalize('NFC')
+  const unlu = sonUnlu(metin)
+  if (unlu === undefined) return metin
+  const konum = metin.lastIndexOf(unlu)
+  return (
+    <>
+      {metin.slice(0, konum)}
+      <UnluEtiketi unlu={unlu} />
+      {metin.slice(konum + 1)}
+    </>
   )
 }

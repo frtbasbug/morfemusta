@@ -2,7 +2,11 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { bolgeBul, type Bolge } from '../oyun/bolgeler.ts'
 import { BOS_ILERLEME, bugununKartlari, gorevBitti } from '../oyun/ilerleme.ts'
+import UnluEtiketi from '../gorsel/UnluEtiketi.tsx'
+import type { Unlu } from '../motor/index.ts'
 import AksamEkrani from './AksamEkrani.tsx'
+
+const etiketi = (unlu: Unlu) => renderToStaticMarkup(<UnluEtiketi unlu={unlu} />)
 
 const KOY = bolgeBul('koy') as Bolge
 const BUGUN = new Date(2026, 8, 28, 10)
@@ -25,7 +29,10 @@ describe('AksamEkrani', () => {
       'evler',
       'kuşlar',
     ])
-    expect(html).toContain('<span class="ek-yazisi ek-yazisi--ince ek-yazisi--duz">ler</span>')
+    // Kökün ve ekin ünlüsü etikette: evler'de ikisi de ince (dar), atlar'da ikisi de kalın.
+    expect(html).toContain(
+      `<span aria-hidden="true">${etiketi('e')}v<span class="ek-yazisi ek-yazisi--ince ek-yazisi--duz">l${etiketi('e')}r</span></span>`,
+    )
   })
 
   it('tek düğme: Haritaya dön', () => {

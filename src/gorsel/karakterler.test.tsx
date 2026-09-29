@@ -170,6 +170,14 @@ describe('Bukalemun', () => {
     expect(renderToStaticMarkup(<Bukalemun parca={EVLAR} />)).not.toContain('uyumsuz')
   })
 
+  it('yazısız: ek yazısı çizilmez, çizimin gerisi aynı (haritadaki süs işareti)', () => {
+    const yazili = renderToStaticMarkup(<Bukalemun parca={parca('at', 'PL')} boyut={0.42} />)
+    const yazisiz = renderToStaticMarkup(<Bukalemun parca={parca('at', 'PL')} boyut={0.42} yazisiz />)
+    expect(yazili).toContain('class="bukalemun__yazi"')
+    expect(yazisiz).not.toMatch(/<text|bukalemun__yazi/)
+    expect(yazisiz).toBe(yazili.replace(/<text class="bukalemun__yazi"[^>]*>lar<\/text>/, ''))
+  })
+
   it('132×82 viewBox; boyut yalnız ölçekler', () => {
     const bir = renderToStaticMarkup(<Bukalemun parca={parca('kuş', 'PL')} />)
     const yarim = renderToStaticMarkup(<Bukalemun parca={parca('kuş', 'PL')} boyut={0.5} />)
@@ -217,29 +225,74 @@ describe('UnluEtiketi', () => {
   })
 })
 
+/** Ünlü etiketinin çıktısı: kökte de ekte de aynı bileşen. */
+const etiketi = (unlu: UnluHarfi) => renderToStaticMarkup(<UnluEtiketi unlu={unlu} />)
+
+/** Etiketlerin kalınlığı (en) ve biçimi, çıktıdaki sırayla: kalin-duz, ince-yuvarlak ... */
+const etiketSiniflari = (html: string) =>
+  [...html.matchAll(/class="unlu-etiketi unlu-etiketi--(kalin|ince) unlu-etiketi--(duz|yuvarlak)"/g)].map(
+    ([, kalinlik, bicim]) => `${kalinlik}-${bicim}`,
+  )
+
 describe('EkYazisi (birleşen ek)', () => {
   it.each([
-    ['at', 'PL', 'lar', 'kalin', 'duz'],
-    ['ev', 'PL', 'ler', 'ince', 'duz'],
-    ['kız', 'POSS.1SG', 'ım', 'kalin', 'duz'],
-    ['top', 'POSS.1SG', 'um', 'kalin', 'yuvarlak'],
-    ['göz', 'POSS.1SG', 'üm', 'ince', 'yuvarlak'],
-  ] as const)('%s + %s: %s, %s ve %s', (kok, etiket, yuzey, kalinlik, bicim) => {
-    expect(renderToStaticMarkup(<EkYazisi parca={parca(kok, etiket)} />)).toBe(
-      `<span class="ek-yazisi ek-yazisi--${kalinlik} ek-yazisi--${bicim}">${yuzey}</span>`,
+    ['at', 'PL', 'l', 'a', 'r', 'kalin', 'duz'],
+    ['ev', 'PL', 'l', 'e', 'r', 'ince', 'duz'],
+    ['kız', 'POSS.1SG', '', 'ı', 'm', 'kalin', 'duz'],
+    ['top', 'POSS.1SG', '', 'u', 'm', 'kalin', 'yuvarlak'],
+    ['göz', 'POSS.1SG', '', 'ü', 'm', 'ince', 'yuvarlak'],
+  ] as const)(
+    '%s + %s: kutu bukalemunun renginde ve biçiminde, ünlü (%s%s%s) kök etiketiyle aynı etikette',
+    (kok, etiket, once, unlu, sonra, kalinlik, bicim) => {
+      expect(renderToStaticMarkup(<EkYazisi parca={parca(kok, etiket)} />)).toBe(
+        `<span class="ek-yazisi ek-yazisi--${kalinlik} ek-yazisi--${bicim}">` +
+          `${once}${etiketi(unlu)}${sonra}</span>`,
+      )
+    },
+  )
+
+  it('ekteki her ünlü etikette: ev + POSS.3PL → l(e)r(i)', () => {
+    expect(renderToStaticMarkup(<EkYazisi parca={parca('ev', 'POSS.3PL')} />)).toBe(
+      `<span class="ek-yazisi ek-yazisi--ince ek-yazisi--duz">l${etiketi('e')}r${etiketi('i')}</span>`,
     )
+  })
+
+  it('saklanan ünlü etiket almaz: kedi + POSS.1SG → yalnız m', () => {
+    expect(renderToStaticMarkup(<EkYazisi parca={parca('kedi', 'POSS.1SG')} />)).toBe(
+      '<span class="ek-yazisi ek-yazisi--ince ek-yazisi--duz">m</span>',
+    )
+  })
+
+  it('kalın ve ince ekin etiketi farklı enin oranında (renksiz de ayrılır)', () => {
+    const kalin = renderToStaticMarkup(<EkYazisi parca={parca('at', 'PL')} />)
+    const ince = renderToStaticMarkup(<EkYazisi parca={parca('ev', 'PL')} />)
+    expect(kalin).toContain('style="aspect-ratio:58 / 56"')
+    expect(ince).toContain('style="aspect-ratio:34 / 56"')
   })
 })
 
 describe('KurulanKelime', () => {
-  it('gövde düz yazıyla, her ek birleşen ek görünümünde; ekran okuyucu tek kelime okur', () => {
+  it('gövdenin son ünlüsü ve eklerin ünlüleri etikette; ekran okuyucu tek kelime okur', () => {
     const html = renderToStaticMarkup(<KurulanKelime kok="top" etiketler={['PL', 'POSS.1SG']} />)
     expect(html).toBe(
       '<span class="sonuc-kelime"><span class="sonuc-kelime__okunan">toplarım</span>' +
-        '<span aria-hidden="true">top' +
-        '<span class="ek-yazisi ek-yazisi--kalin ek-yazisi--duz">lar</span>' +
-        '<span class="ek-yazisi ek-yazisi--kalin ek-yazisi--duz">ım</span></span></span>',
+        `<span aria-hidden="true">t${etiketi('o')}p` +
+        `<span class="ek-yazisi ek-yazisi--kalin ek-yazisi--duz">l${etiketi('a')}r</span>` +
+        `<span class="ek-yazisi ek-yazisi--kalin ek-yazisi--duz">${etiketi('ı')}m</span>` +
+        '</span></span>',
     )
+  })
+
+  it('uyum etiketlerin eninden okunur: koyun her kelimesinde bütün etiketler aynı kalınlıkta', () => {
+    for (const [kok, etiketler, beklenen] of [
+      ['at', ['PL'], ['kalin-duz', 'kalin-duz']],
+      ['göz', ['PL'], ['ince-yuvarlak', 'ince-duz']],
+      ['gül', ['POSS.1SG'], ['ince-yuvarlak', 'ince-yuvarlak']],
+      ['top', ['PL', 'POSS.1SG'], ['kalin-yuvarlak', 'kalin-duz', 'kalin-duz']],
+    ] as const) {
+      const html = renderToStaticMarkup(<KurulanKelime kok={kok} etiketler={etiketler} />)
+      expect(etiketSiniflari(html), kok).toEqual(beklenen)
+    }
   })
 
   it('sonraki ek önceki eki değiştirdiyse (kedi + cik + im: kediciğim) kelime düz yazılır', () => {
@@ -248,14 +301,17 @@ describe('KurulanKelime', () => {
     ).toBe('<span class="sonuc-kelime">kediciğim</span>')
   })
 
-  it('tek ek gövdeyi değiştirse de (çocuk + um) ek ayrı renklenir: gövde motorunki', () => {
+  it('tek ek gövdeyi değiştirse de (çocuk + um) ek ayrı: gövde motorunki, son ünlüsü etikette', () => {
     expect(renderToStaticMarkup(<KurulanKelime kok="çocuk" etiketler={['POSS.1SG']} />)).toContain(
-      '<span aria-hidden="true">çocuğ<span class="ek-yazisi ek-yazisi--kalin ek-yazisi--yuvarlak">um</span>',
+      `<span aria-hidden="true">çoc${etiketi('u')}ğ` +
+        `<span class="ek-yazisi ek-yazisi--kalin ek-yazisi--yuvarlak">${etiketi('u')}m</span>`,
     )
   })
 
-  it('renk yazmaz', () => {
-    expect(renderToStaticMarkup(<KurulanKelime kok="göz" etiketler={['PL']} />)).not.toMatch(RENK_YAZISI)
+  it('renk yazmaz: renkler sınıftan, CSS değişkeninden gelir', () => {
+    expect(renderToStaticMarkup(<KurulanKelime kok="göz" etiketler={['PL']} />)).not.toMatch(
+      /fill=|stroke=|#[0-9a-f]{3,8}\b|rgb\(|background/i,
+    )
   })
 })
 

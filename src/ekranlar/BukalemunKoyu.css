@@ -322,8 +322,14 @@ button.kelime-karti {
   z-index: 3;
   left: 0;
   right: 0;
-  bottom: 1rem;
+  bottom: 0.8rem;
   text-align: center;
+}
+
+/* Cebin önündeki kelime etiketleriyle cebin ağzına sığsın diye 18px: ince renk üstünde en
+   küçük boy (DESIGN.md, "Karşıtlık"). */
+.cep__yazi .sonuc-kelime {
+  font-size: 1.125rem;
 }
 
 /* Kökteki ünlü ile bukalemun arasındaki yay. Rengi bukalemununki; parlaması yalnız kalınlık
@@ -408,7 +414,7 @@ button.kelime-karti {
   }
 
   .cep__yazi {
-    bottom: 0.7rem;
+    bottom: 0.45rem;
   }
 }
 

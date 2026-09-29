@@ -155,9 +155,12 @@ DESIGN.md  NEXT.md  CLAUDE.md
   Kök etiketinin (`UnluEtiketi`) en/boy oranı `cizim.ts`'teki `unluGovdesi`'nden gelir, CSS'te
   yazılmaz. Bukalemun 0.9 ölçeğin altına küçültülmez: ek yazısı ince rengin üstünde 18px'in
   altına inerdi (galeride dar ekranda satır kırılır; `e2e/galeri.spec.ts` denetler). Tek ayrık
-  durum haritadaki koy işaretidir (0.42; kalın bukalemun, süs; DESIGN.md, "Karşıtlık").
+  durum haritadaki koy işaretidir (0.42, `yazisiz`: süs; DESIGN.md, "Karşıtlık").
   Birleşen ek (`EkYazisi`) ve kurulan kelime (`KurulanKelime`) de `src/gorsel`'dedir: koy,
-  Sözlük ve akşam ekranı aynı görünümü kullanır.
+  Sözlük ve akşam ekranı aynı görünümü kullanır. Ekin her ünlüsü, kökün son ünlüsü gibi
+  `UnluEtiketi`'ndedir; uyum etiketlerin eninden okunur, Renksiz'de de. Etiket kökte
+  `--boyut-kok` boyundadır; ek kutusunda, sonuç kelimesinde ve Sözlük kartında yazının
+  boyunu alır (`font-size: 1em`).
 - **Oyunun mantığı (`src/oyun`):** saf TypeScript; `tsconfig.motor.json` onu da DOM'suz
   derler, `src/oyun/bagimsizlik.test.ts` içe aktarmaları tarar (yalnız motorun genel kapısı,
   kendi dosyaları, `icerik/bolgeler.csv?raw` ve `icerik/gorevler/*.csv?raw`). Bölge tablosu

@@ -70,9 +70,9 @@
 - **Denetim sayfasının zemini** main'de koyu maviydi (`--deniz-koyu`), açık olması
   gerekirken: derlemede paylaşılan `genel.css` sayfanın kendi CSS'inden sonra yükleniyor.
   Artık kendi açık rengi geçerli (`:root:has(.denetim)`); uçtan uca test denetliyor.
-- **Testler:** 726 birim testi ve 37 uçtan uca test.
+- **Testler:** 731 birim testi ve 38 uçtan uca test.
   - Birim testlerinin dağılımı: motor 366 (değişmedi), oyun mantığı 87 (ilerleme 33, bölgeler
-    8), görsel dil 200 (kurallar 74), ekranlar 36, kabuk 15, galeri 11, denetim sayfası 11.
+    8), görsel dil 205 (kurallar 74), ekranlar 36, kabuk 15, galeri 11, denetim sayfası 11.
   - İlerleme deposunun birim testleri: kaydet, yükle, bozuk veri, depo yok, kilit açma, kart
     tekrarı, bugünün kartları; sıfırlama ve ayarlar.
   - Uçtan uca testler (`harita.spec.ts`, `ilerleme.spec.ts`):
@@ -83,7 +83,9 @@
     - Renksiz ve Azalt yeniden yüklemeden sonra yerinde;
     - sıfırlama;
     - localStorage hata atarken, bozuk kayıtta ve dolu depoda oyun sürer;
-    - geri tuşu; 360×640'ta sığma.
+    - geri tuşu; 360×640'ta sığma;
+    - Renksiz'de kalın ve ince ek etiketlerinin enleri farklı, kökün ve ekin etiketi aynı
+      ende (`ek-etiketi.spec.ts`).
   - Koyun mevcut testleri haritadan girer (`e2e/yardimcilar.ts`).
 
 ### Kullanıcının verdikleri
@@ -91,7 +93,7 @@
 - Oturumun tarifi (on madde), bölge tablosu, ekran metinleri ve iki yeni belirteç
   (`--deniz` #CFE8E0, `--kara` #F4E6C8) oturum başında geldi. Tablo hiç değiştirilmedi.
 
-### Oturumda seçilen küçük ayrıntılar (kullanıcıya ayrıca sorulmadı)
+### Kullanıcının onayladıkları (oturumda seçildi, PR'da onaylandı)
 
 - **Alt gezinme bölge ekranında yok:** koy 360×640'ta kaydırmadan sığsın diye. Haritaya koyun
   üst çubuğundaki Harita düğmesiyle dönülür.
@@ -104,14 +106,44 @@
     kurduğun kelimeler"dedir. Yoksa ikinci günün akşamı boş kalırdı.
 - **Sıfırlama ayarları silmez** (renk körü bir çocuğun Renksiz'i gibi). Sil'den sonra *İlerleme
   ve kartlar silindi.* yazılır.
+- **Koyun işareti:** koyun ilk görevinin bukalemunudur (*at* + *lar*, kalın), 0.42 ölçekle.
+  Kullanıcının isteğiyle yazısızdır (`Bukalemun`'un `yazisiz` seçeneği): ek yazısı o boyda
+  okunmuyordu, işaret süstür. DESIGN.md'deki 0.9 kuralına ayrık durum olarak yazıldı.
+
+### Kullanıcının kararı: birleşen ekte ünlü etiketi (Renksiz'de de uyum)
+
+- Ek kutusu kalır: ekin sınırını gösterir, bukalemunun renginde ve biçiminde.
+- Ekin ünlüsü kök etiketiyle aynı etikettedir (`UnluEtiketi`): kalında geniş, incede dar; düzde
+  köşeli, yuvarlakta elips. Uyum, kökteki ve ekteki etiketlerin aynı ende olmasından okunur;
+  Renksiz'de de görünür.
+- Bukalemun Koyu'ndaki sonuçta (kelime kartı, cep), Sözlük kartlarında ve akşam ekranında
+  uygulandı. Sonuç kelimesinde ve Sözlük kartında kökün son ünlüsü de etikette.
+- Test: Renksiz'de kalın ve ince ek etiketlerinin enleri farklı, her kelimede kökün ve ekin
+  etiketi aynı ende (`e2e/ek-etiketi.spec.ts`: cep, akşam, Sözlük).
+- Oturumda seçilenler: ekte birden çok ünlü varsa her biri etikettedir (*ları*: *a* da *ı* da;
+  bugünkü eklerde tek ünlü var). Etiket yazının boyundadır: kökte 30px, sonuçta 22px,
+  Sözlük'te 20px, cebin önünde 18px (cebin ağzına sığsın; ince renk üstünde en küçük boy).
+
+### Oturumda seçilen küçük ayrıntılar (kullanıcıya ayrıca sorulmadı)
+
 - **Durumların simgeleri:** açıkta üçgen, tamamda tamam işareti, kilitlide kilit, hazırlananda
   kum saati. Durum adları: Açık, Tamam, Kilitli, Hazırlanıyor.
-- **Koyun işareti:**
-  - Koyun ilk görevinin bukalemunudur (*at* + *lar*, kalın) ve 0.42 ölçekle çizilir.
-  - DESIGN.md'deki 0.9 kuralına ayrık durum olarak yazıldı: işaret süstür, adı düğmenin
-    yazısıdır. Mürekkebin kalın renk üstündeki karşıtlığı 7:1, renksiz gri üstünde 5:1.
 - **Süs:** Ayarlar'da Renkler'in yanında a/e örnek etiketleri; akşam ekranında hilal simgesi.
 - **Tur bitince yeni tur baştan başlar.** Tamam bölge yine oynanabilir.
+
+### Plan: iOS'ta ilerlemenin korunması (kullanıcının kararı; Oturum 11, kod bugün yok)
+
+- WebKit, ana ekrana eklenmemiş sitede yedi gün etkileşim olmazsa betiğin yazdığı depoyu
+  (localStorage) siler. Ana ekrana eklenen web uygulaması bu silmeden muaftır.
+- Oturum 11'de iPhone Safari'de bir kez gösterilen küçük bir "Ana ekrana ekle" ipucu gelir.
+
+### Plan: eski cihazlar (kullanıcının kararı; Oturum 11, kod bugün yok)
+
+- En düşük tarayıcı hedefi Oturum 11'de, en eski cihazda denemeden sonra kararlaştırılır.
+- Bugün derleme Vite'ın varsayılan hedefine göredir (baseline-widely-available: Safari 16.4+,
+  Chrome 111+, Firefox 114+). Harita `dvh`'ye ve kap sorgusu birimlerine (`cqw`, `cqh`)
+  dayanır; hedef düşerse bunların geri dönüşleri de birlikte ele alınır (Lightning CSS, hedefin
+  desteklediği özellikler için geri dönüşü derlemede siler).
 
 ### Plan: nedenin iki sınırı (kullanıcının kararı; kod bugün değişmedi)
 
@@ -133,13 +165,6 @@
 
 ### Açık kalanlar
 
-- **Renksiz'de birleşen ekin kalınlığı görünmüyor:** `EkYazisi` kalınlığı yalnız renkle
-  gösterir; düz ile yuvarlak biçimden ayrılır, kalın ile ince ayrılmaz. Ayarlar'da Renksiz
-  açıkken Sözlük'te ve akşam ekranında kalın ve ince ek aynı görünür. Bir tasarım kararı
-  gerekir; örneğin ekin kutusu bukalemun gibi kalınlığa göre boylanabilir.
-- **iOS Safari ilerlemeyi silebilir:** ana ekrana eklenmemiş sitede, yedi gün etkileşim
-  olmazsa Safari betiğin yazdığı depoyu (localStorage) siler. Ana ekrana eklenen uygulamada
-  bu olmaz. Gerçek telefonda denenmeli; gerekirse oyun, ana ekrana eklemeyi önerebilir.
 - **Kilit türetilir, saklanmaz:** bir görev tablosu büyürse bitmiş bölge yeniden açık olur,
   ardındaki bölge kilitlenir. Tablolar yalnız onayla değiştiği için bugün sorun değil;
   gerekirse açılan bölgeler kayda yazılır.
@@ -149,10 +174,6 @@
   - işareti `AdaHaritasi.tsx`'teki `isaret`'e.
   Haritada yalnız dört bölgenin yeri var (`BOLGE_YERLERI`); beşinci bölge yer ve yol ister
   (test denetler).
-- **Eski tarayıcılar:** derleme Vite'ın varsayılan hedefine göredir (baseline-widely-available:
-  Safari 16.4+, Chrome 111+, Firefox 114+). Harita `dvh`'ye ve kap sorgusu birimlerine
-  (`cqw`, `cqh`) dayanır; daha eski tarayıcıda (okullardaki eski iPad'ler, iOS 15) çalışmayabilir.
-  Gerekirse hedef ve geri dönüşler birlikte ele alınır.
 - **Tema rengi haritada krem:** tarayıcının çubuğu krem, haritanın denizi yeşilimsi. Gerekirse
   ekrana göre değişir.
 - **Kılık dışı yüzey hata verir:** `neden`, ekin kılıklarından olmayan yüzeyi reddeder

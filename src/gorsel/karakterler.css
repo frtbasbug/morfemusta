@@ -178,7 +178,9 @@
   border-radius: 50%;
 }
 
-/* Birleşen ek (at + lar): ek, bukalemunun renginde kalır; düzde köşeli, yuvarlakta hap. */
+/* Birleşen ek (at + lar): ek, bukalemunun renginde bir kutuda kalır; düzde köşeli, yuvarlakta
+   hap. Kutu ekin sınırıdır; ekin ünlüsü kök etiketiyle aynı etikettedir (uyum etiketlerin
+   eninden okunur, Renksiz'de de). */
 .ek-yazisi {
   display: inline-block;
   margin-inline-start: 0.06em;
@@ -203,13 +205,20 @@
   border-radius: 999px;
 }
 
-/* Kurulan kelime: gövde düz, ekler birleşen ek görünümünde. */
+/* Kurulan kelime: gövdenin son ünlüsü etikette, ekler birleşen ek görünümünde. */
 .sonuc-kelime {
   font-family: var(--yazi-tipi);
   font-size: var(--boyut-sonuc);
   font-weight: 700;
   line-height: 1.4;
   white-space: nowrap;
+}
+
+/* Ek kutusunda ve sonuç kelimesinde etiket yazının boyundadır: kök etiketiyle yan yana aynı
+   boyda durur (kökte 30px, sonuçta 22px), enleri karşılaştırılabilir. */
+.ek-yazisi .unlu-etiketi,
+.sonuc-kelime .unlu-etiketi {
+  font-size: 1em;
 }
 
 /* Ekran okuyucu kökü ve kurulan kelimeyi tek kelime olarak okur; etiketli ve renkli görünüm

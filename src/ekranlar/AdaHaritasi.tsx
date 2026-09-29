@@ -103,14 +103,17 @@ export function yumusakYol(noktalar: readonly Nokta[], kapali = false): string {
 
 const KIYI_YOLU = yumusakYol(KIYI, true)
 
-/** Bölgenin haritadaki işareti. Yalnız Bukalemun Koyu'nunki çizildi. */
+/**
+ * Bölgenin haritadaki işareti. Yalnız Bukalemun Koyu'nunki çizildi: koyun ilk görevinin
+ * bukalemunu, küçük ve yazısız (süs; ek yazısı bu boyda okunmaz).
+ */
 function isaret(bolge: Bolge): ReactNode {
   if (bolge.kimlik !== 'koy') return null
   const [gorev] = bolge.gorevler
   const [etiket] = gorev?.etiketler ?? []
   if (!gorev || etiket === undefined) return null
   const [parca] = ekle(gorev.kok, [etiket]).parcalar
-  return parca ? <Bukalemun parca={parca} boyut={0.42} /> : null
+  return parca ? <Bukalemun parca={parca} boyut={0.42} yazisiz /> : null
 }
 
 export default function AdaHaritasi({

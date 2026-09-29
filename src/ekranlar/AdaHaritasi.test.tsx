@@ -88,11 +88,14 @@ describe('AdaHaritasi', () => {
     for (const { adi, ad, yazi } of dugmeler(harita(KOY_BITTI))) expect(adi).toBe(`${ad}, ${yazi}`)
   })
 
-  it('koyun işareti küçük bir bukalemun (ilk görevinin, kalın lar); öteki bölgelerin işareti yok', () => {
+  it('koyun işareti küçük, yazısız bir bukalemun (ilk görevinin); öteki bölgelerin işareti yok', () => {
     expect(dugmeler(ilk).map((d) => d.isaret)).toEqual([true, false, false, false])
-    expect(ilk).toMatch(
-      /<span class="bolge__isaret" aria-hidden="true"><svg class="bukalemun bukalemun--kalin" viewBox="0 0 132 82" width="55.44" height="34.44" role="img" aria-label="lar bukalemunu, a: kalın, düz, geniş">/,
+    const isaret = /<span class="bolge__isaret" aria-hidden="true">(<svg.*?<\/svg>)<\/span>/.exec(ilk)?.[1]
+    expect(isaret).toMatch(
+      /^<svg class="bukalemun bukalemun--kalin" viewBox="0 0 132 82" width="55.44" height="34.44" role="img" aria-label="lar bukalemunu, a: kalın, düz, geniş">/,
     )
+    // Ek yazısı 0.42 ölçekte okunmaz: işaret süstür, yazısı yok.
+    expect(isaret).not.toMatch(/<text|bukalemun__yazi/)
   })
 
   it('ileti yeri boş: kilitli bölgeye dokununca nedeni burada yazılır', () => {

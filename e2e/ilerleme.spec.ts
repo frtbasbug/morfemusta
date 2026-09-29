@@ -80,8 +80,11 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
     // En yeni kart önde; kartta kök ve ekler, bölge ve tarih.
     await expect(kartKelimeleri(page)).toHaveText(['kuşlar', 'evler', 'atlar'])
     const atlar = page.locator('.sozluk-karti').filter({ hasText: 'atlar' })
-    await expect(atlar.locator('.sozluk-karti__kok')).toHaveText('at')
+    // Kök ekran okuyucuya tek kelime okunur; görünende son ünlüsü etikette, ekin ünlüsü de.
+    await expect(atlar.locator('.sozluk-karti__kok .kok-yazisi__okunan')).toHaveText('at')
+    await expect(atlar.locator('.sozluk-karti__kok .unlu-etiketi')).toHaveText('a')
     await expect(atlar.locator('.ek-yazisi')).toHaveText('lar')
+    await expect(atlar.locator('.ek-yazisi .unlu-etiketi')).toHaveText('a')
     await expect(atlar.locator('.sozluk-karti__kunye')).toContainText('Bukalemun Koyu')
     await expect(atlar.locator('time')).toHaveAttribute('datetime', /^\d{4}-\d{2}-\d{2}$/)
 

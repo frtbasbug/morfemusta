@@ -99,7 +99,8 @@ Terimler resimdir: her özellik tek bir çizim boyutuna bağlıdır.
   değil.
 - **Bukalemun ek**, ekin yüzeydeki ilk ünlüsünün kılığına girer. -lAr'da (a/e hep düz ve
   geniş) yalnız kalınlığı ve rengi değişir; -(I)m'de (ı/i/u/ü hep dar) biçimi de değişir.
-  Başı solda, köke dönük: uyum geriye bakar. Ek yazısı gövdenin ortasındadır.
+  Başı solda, köke dönük: uyum geriye bakar. Ek yazısı gövdenin ortasındadır. Süs olarak
+  küçük çizilen bukalemun (haritadaki koy işareti) yazısızdır.
 - **Kök yazısı:** son ünlü bir etiketin içindedir. **Etiket, o ünlünün gövdesinin küçük bir
   kopyasıdır:** en/boy oranı karakterinkiyle aynı (kalında 58:56, incede 34:56); düzde
   köşesi 4px dikdörtgen, yuvarlakta elips. Zemini kalın ya da ince rengi, çerçevesi 2px
@@ -109,8 +110,18 @@ Terimler resimdir: her özellik tek bir çizim boyutuna bağlıdır.
 - **Uymayan ek** (*ev* + *lar*): bukalemun -12 derece eğik durur (dönme noktası %45 %85);
   sonucun üstü çizili ve `--cizik` renginde. Oyunda eğilme bir harekettir: bukalemun eğilir,
   düşer, kıyıya döner ("Bukalemun Koyu").
-- **Birleşen ek** (*at* + *lar*): ek, bukalemunun renginde kalır; çerçevesi 2px mürekkep,
-  düzde köşeli, yuvarlakta hap biçiminde. Yazısı mürekkep, kökle aynı boyda.
+- **Birleşen ek** (*at* + *lar*): ek, bukalemunun renginde bir kutuda kalır; çerçevesi 2px
+  mürekkep, düzde köşeli, yuvarlakta hap biçiminde. Kutu ekin sınırını gösterir. Yazısı
+  mürekkep, kökle aynı boyda. **Ekin ünlüsü kök etiketiyle aynı etikettedir:** kalında geniş,
+  incede dar; düzde köşeli, yuvarlakta elips. Uyum, kökteki ve ekteki iki etiketin aynı ende
+  olmasından okunur; bu yüzden Renksiz'de de görünür (renk gider, en kalır).
+  - Sonuç kelimesinde kökün son ünlüsü de etiketindedir: *toplarım*'da *o*, *a* ve *ı* üç
+    etikettir; zincirde her etiket bir öncekiyle aynı endedir.
+  - Ekte birden çok ünlü varsa her biri etikettedir (-lArI'da *ları*: *a* da *ı* da).
+    Saklanan ünlü (*kedi* + *m*) etiket almaz: söylenmez.
+  - Bukalemun Koyu'ndaki sonuçta (kelime kartı, cep), Sözlük kartlarında ve akşam ekranında
+    böyledir. Etiket yazının boyundadır: kökte 30px, sonuçta 22px, Sözlük'te 20px; cebin
+    önünde 18px (cebin ağzına sığsın; ince renk üstünde en küçük boy).
 - **Saklanan ünlü** (*kedi* + POSS.1SG → *kedim*): bukalemun zemine karışır. Gövde, ibik,
   göz tümseği, kuyruk ve bacaklar zemin renginde, dış hatları 4 3 kesik mürekkep çizgisi;
   gözü görünür kalır, üstünde yalnız *m* yazar. Biçimi uyumun seçeceği ünlününkidir (*i*).
@@ -150,9 +161,8 @@ büyüden sonra da gri kalır.
 - **Karşıtlık:** mürekkebin ince renk üstündeki karşıtlığı 4.3:1'dir; ince renk üstüne
   18px'ten küçük yazı konmaz. Bukalemun ek yazısıyla birlikte ölçeklendiği için 0.9'dan
   küçük çizilmez (132 px'lik kutu en az 118.8 px); sığmayan dar ekranda satır kırılır.
-  Tek ayrık durum haritadaki koy işaretidir: süstür, adı düğmenin yazısıdır, ek yazısı
-  okunmak için değildir. Kalın bir bukalemundur (mürekkebin kalın renk üstündeki karşıtlığı
-  7:1, renksiz gri üstünde 5:1) ve 0.42 ölçekle çizilir.
+  Tek ayrık durum haritadaki koy işaretidir: süstür, adı düğmenin yazısıdır. Ek yazısı o boyda
+  okunmayacağı için yazısız çizilir, 0.42 ölçekle.
 
 ### Üç kural
 

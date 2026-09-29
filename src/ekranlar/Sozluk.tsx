@@ -1,11 +1,13 @@
 // Sözlük (DESIGN.md, "Sözlük"): doğru kurulan her kelime bir karttır. Kartlar bölgelere göre
 // gruplu, bölge tablosunun sırasıyla; her grupta en yeni kart önde. Kartta kelime, kök ve
-// ekler (Bukalemun Koyu'ndaki birleşen ek görünümüyle), bölge ve tarih. Ekler ve biçim
-// motordan gelir (ekle); kartta yalnız kök ve ek etiketleri saklıdır.
+// ekler (Bukalemun Koyu'ndaki birleşen ek görünümüyle: kökün son ünlüsü ve ekin ünlüsü
+// etikette, uyum etiketlerin eninden okunur), bölge ve tarih. Ekler ve biçim motordan gelir
+// (ekle); kartta yalnız kök ve ek etiketleri saklıdır.
 
 import { Fragment, useEffect, useRef } from 'react'
 import { ekle } from '../motor/index.ts'
 import EkYazisi from '../gorsel/EkYazisi.tsx'
+import KokYazisi from '../gorsel/KokYazisi.tsx'
 import type { Bolge } from '../oyun/bolgeler.ts'
 import type { SozlukGrubu, SozlukKarti } from '../oyun/ilerleme.ts'
 import './Sozluk.css'
@@ -64,7 +66,9 @@ function Kart({ kart, bolge }: { kart: SozlukKarti; bolge: Bolge }) {
     <article className="sozluk-karti">
       <h3 className="sozluk-karti__kelime">{kart.kelime}</h3>
       <p className="sozluk-karti__parcalar">
-        <span className="sozluk-karti__kok">{kart.kok}</span>
+        <span className="sozluk-karti__kok">
+          <KokYazisi kok={kart.kok} />
+        </span>
         {parcalar.map((parca) => (
           <Fragment key={parca.etiket}>
             <span className="sozluk-karti__arti" aria-hidden="true">

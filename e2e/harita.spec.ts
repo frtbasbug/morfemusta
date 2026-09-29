@@ -63,6 +63,8 @@ test.describe('ada haritası', () => {
     // Koyun işareti küçük bir bukalemun; öteki bölgelerin işareti henüz yok.
     await expect(bolgeDugmeleri(page).locator('.bolge__isaret .bukalemun')).toHaveCount(1)
     await expect(bolge(page, 'Bukalemun Koyu').locator('.bukalemun')).toBeVisible()
+    // İşaret süstür: ek yazısı yok (0.42 ölçekte okunmazdı).
+    await expect(bolge(page, 'Bukalemun Koyu').locator('.bukalemun text')).toHaveCount(0)
     expect(hatalar).toEqual([])
   })
 
