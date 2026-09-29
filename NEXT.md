@@ -120,9 +120,14 @@
   uygulandı. Sonuç kelimesinde ve Sözlük kartında kökün son ünlüsü de etikette.
 - Test: Renksiz'de kalın ve ince ek etiketlerinin enleri farklı, her kelimede kökün ve ekin
   etiketi aynı ende (`e2e/ek-etiketi.spec.ts`: cep, akşam, Sözlük).
-- Oturumda seçilenler: ekte birden çok ünlü varsa her biri etikettedir (*ları*: *a* da *ı* da;
-  bugünkü eklerde tek ünlü var). Etiket yazının boyundadır: kökte 30px, sonuçta 22px,
-  Sözlük'te 20px, cebin önünde 18px (cebin ağzına sığsın; ince renk üstünde en küçük boy).
+- Oturumda seçilip kullanıcının onayladıkları:
+  - Ekte birden çok ünlü varsa her biri etikettedir. *ları*'da *a* köke, *ı* da *a*'ya uyar;
+    etiketler uyum zincirini gösterir. Bugünkü eklerde tek ünlü var.
+  - Etiket yazının boyundadır: kökte 30px, sonuçta 22px, Sözlük'te 20px, cebin önünde 18px.
+    Cepteki 18px, yazı cebin ağzına sığsın diye seçildi; ince renk üstünde izin verilen en
+    küçük boydur.
+  - Sözlük kartının boşlukları daraltıldı. Dar ekranda kök + ek satırı yine kırılıyor;
+    kullanıcı küçük saydı, Oturum 11'e kaldı (açık kalanlarda).
 
 ### Oturumda seçilen küçük ayrıntılar (kullanıcıya ayrıca sorulmadı)
 
@@ -176,6 +181,11 @@
   (test denetler).
 - **Tema rengi haritada krem:** tarayıcının çubuğu krem, haritanın denizi yeşilimsi. Gerekirse
   ekrana göre değişir.
+- **Sözlük kartında kök + ek satırı kırılıyor (Oturum 11; kullanıcı küçük saydı):**
+  - 360 px'te Sözlük iki sütundur, kart 158 px'tir; *topum* ve *toplarım*'da ek alt satıra
+    kayıyor.
+  - 375–412 px'te yalnız *toplarım* (iki ek) kırılıyor.
+  - 320 px'te Sözlük tek sütundur; hiçbir kart kırılmıyor.
 - **Kılık dışı yüzey hata verir:** `neden`, ekin kılıklarından olmayan yüzeyi reddeder
   (`lır`, `lr`). Saklanan ünlüde (kedi + `im`) seçenek sunacak bir bölge gelirse ayrı bir
   neden gerekir.
@@ -213,7 +223,11 @@
     "Ana Ekrana Ekle". Ardından uçak modunda açılış.
   - Geri tuşu: ana ekrana eklenmiş uygulamada (tam ekran) koydan ve Sözlük'ten haritaya,
     haritadan dışarı.
+  - Yayından sonraki ilk açılış eski sürümü gösterebilir. `registerSW.js` service worker'ı
+    yalnız kaydeder: yeni sürüm arka planda iner ve devreye girer, açık sayfa yenilenmez.
+    Uygulama kapatılıp açılınca yeni sürüm gelir.
   - İlerleme: birkaç görev, uygulamayı kapatıp açma; Firefox'ta kalıcı depo izni sorabilir.
+  - Renksiz: her kelimede kökün ve ekin etiketi aynı ende (koyda, Sözlük'te, akşamda).
   - Bukalemun Koyu'nda parmakla sürükleme: uçtan uca testler Chromium'da fareyle ve CDP
     dokunmasıyla sınıyor; iOS Safari'de Pointer Events ile `touch-action` denenmeli.
   - Denetim sayfası: <https://frtbasbug.github.io/morfemusta/denetim.html>. Karakter
