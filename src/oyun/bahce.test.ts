@@ -124,7 +124,7 @@ describe('Kök Bahçesi görevleri', () => {
   })
 
   it('görevin kuralı bozuksa hata verir', () => {
-    const gorev = (ekler: string): Gorev => ({ sira: 1, kok: 'göz', etiketler: ekler.split('+'), renksiz: false })
+    const gorev = (ekler: string): Gorev => ({ sira: 1, tur: 1, turdakiSira: 1, kok: 'göz', etiketler: ekler.split('+'), renksiz: false })
     expect(() => bahceGorevi(gorev('PL'))).toThrow('yapım eki yok')
     expect(() => bahceGorevi(gorev('LIK+PL+POSS.1SG'))).toThrow('birden çok çekim eki var')
     expect(() => bahceGorevi(gorev('LIK+PL+AGT'))).toThrow('ek sırası bozuk')
@@ -179,7 +179,14 @@ describe('denemeyiDegerlendir', () => {
   })
 
   it('aynı ek iki kez varsa ikisi de sıradakinin yerine geçer (göz + LIK + AGT + LIK)', () => {
-    const a = bahceGorevi({ sira: 1, kok: 'göz', etiketler: ['LIK', 'AGT', 'LIK'], renksiz: false })
+    const a = bahceGorevi({
+      sira: 1,
+      tur: 1,
+      turdakiSira: 1,
+      kok: 'göz',
+      etiketler: ['LIK', 'AGT', 'LIK'],
+      renksiz: false,
+    })
     expect(dogruMu(denemeyiDegerlendir(a, 0, 2))).toBe(true)
     expect(denemeyiDegerlendir(a, 0, 1).cumle).toBe('gözlükçülük: önce lük, sonra çü.')
   })

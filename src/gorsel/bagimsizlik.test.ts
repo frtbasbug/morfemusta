@@ -1,15 +1,15 @@
-// Görsel dilin hesapları (çizim geometrisi, karonun, ağacın ve cebin geometrisi, bukalemunun
-// kılığı) motor gibi saf
+// Görsel dilin hesapları (çizim geometrisi, karonun, ağacın, cebin ve yaratığın süslerinin
+// geometrisi, bukalemunun kılığı) motor gibi saf
 // TypeScript'tir: React'i, DOM'u ya da CSS'i içe aktarmaz. Yalnız motorun genel kapısını
 // (src/motor/index.ts) ve birbirini kullanırlar. DOM küresellerini ayrıca
 // tsconfig.motor.json yakalar (lib'de DOM yok).
 
 import { describe, expect, it } from 'vitest'
 
-const SAF_DOSYALAR = ['./agac.ts', './cep.ts', './cizim.ts', './karo.ts', './kilik.ts']
+const SAF_DOSYALAR = ['./agac.ts', './cep.ts', './cizim.ts', './karo.ts', './kilik.ts', './yaratik.ts']
 
 const kaynaklar = import.meta.glob<string>(
-  ['./agac.ts', './cep.ts', './cizim.ts', './karo.ts', './kilik.ts'],
+  ['./agac.ts', './cep.ts', './cizim.ts', './karo.ts', './kilik.ts', './yaratik.ts'],
   { query: '?raw', import: 'default', eager: true },
 )
 
@@ -18,7 +18,7 @@ const ICE_AKTARMA =
   /\b(?:import|export)\b[^'"`;]*?\bfrom\s*['"]([^'"]+)['"]|\bimport\s*\(?\s*['"]([^'"]+)['"]/g
 
 const izinli = (yol: string) =>
-  yol === '../motor/index.ts' || /^\.\/(agac|cep|cizim|karo|kilik)\.ts$/.test(yol)
+  yol === '../motor/index.ts' || /^\.\/(agac|cep|cizim|karo|kilik|yaratik)\.ts$/.test(yol)
 
 describe('görsel hesapların bağımsızlığı', () => {
   it('kaynak dosyalar bulunur', () => {

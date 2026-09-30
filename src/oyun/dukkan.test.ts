@@ -99,7 +99,14 @@ describe('Fıstıkçı Şahap\'ın Dükkânı görevleri', () => {
 })
 
 describe('gorevinSiniri', () => {
-  const gorev = (kok: string, etiketler: string[]): Gorev => ({ sira: 1, kok, etiketler, renksiz: false })
+  const gorev = (kok: string, etiketler: string[]): Gorev => ({
+    sira: 1,
+    tur: 1,
+    turdakiSira: 1,
+    kok,
+    etiketler,
+    renksiz: false,
+  })
 
   it('sınırı olmayan ya da birden çok sınırı olan görev hata verir', () => {
     expect(() => gorevinSiniri(gorev('ev', ['PL']))).toThrow('tam bir ünsüz sınırı olmalı; 0 sınır')

@@ -225,3 +225,26 @@
   padding: 0;
   list-style: none;
 }
+
+/* Uydurukçuklar: ilk turun yaratıkları, adlarıyla; yıldız ve harita işareti. */
+.yaratiklar,
+.yaratiklar__parcalar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 1rem 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.yaratiklar__yaratik {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+}
+
+.yaratiklar__parcalar {
+  margin-top: 1rem;
+  align-items: center;
+}

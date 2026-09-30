@@ -31,6 +31,7 @@ Tasarım için `DESIGN.md`, güncel durum ve sıradaki hedef için `NEXT.md` oku
 | `npm run ikonlar` | `scripts/ikon.svg`'den `public/` ikonlarını yeniden üretir |
 | `node scripts/denetim-bicimleri.mjs` | Biçim Denetim Sayfası'ndaki bütün biçimleri sekmeli metin olarak yazar |
 | `python3 scripts/zeyrek-denetimi.py` | O biçimleri zeyrek ile sınar (elle; CI'da yok, aşağıdaki nota bakın) |
+| `node scripts/uydurma-uret.mjs --tohum 7 --sayi 30` | Uydurma kök adayları: `uydurma-adaylari.tsv` (zeyrek gerekir; `--zeyreksiz` ile onsuz) |
 
 Biçim Denetim Sayfası: <http://localhost:5173/morfemusta/denetim.html> (yayında
 `/morfemusta/denetim.html`). Karakter Galerisi: <http://localhost:5173/morfemusta/galeri.html>
@@ -52,32 +53,35 @@ src/
   genel.css          genel stil (tema.css belirteçleriyle); .gizli yardımcı sınıfı
   ekranlar/          ekran bileşenleri ve yanlarında birim testleri (*.test.tsx): ada haritası
                      (AdaHaritasi), Bukalemun Koyu, Fıstıkçı Şahap'ın Dükkânı (FistikciSahap),
-                     Kök Bahçesi (KokBahcesi),
+                     Kök Bahçesi (KokBahcesi), Uydurukçuklar (Uydurukcuklar),
                      bölge ekranlarının üst çubuğu (BolgeUstu), Sözlük, Ayarlar, akşam ekranı,
                      alt gezinme;
                      hareket.ts: ekranların hareketleri (Web Animations API, hareket azaltmaya
                      uyar); simgeler.tsx: arayüz simgeleri
   kabuk/             hash yönlendirici (yonlendirici.ts) ve cihaz deposu (depo.ts: localStorage,
                      kalıcı depo isteği, useIlerleme); testleri yanında
-  oyun/              oyunun saf mantığı: bölge tablosu (bolgeler.ts), görev tabloları, seçenekler,
-                     Bukalemun Koyu'nun (koy.ts), dükkânın (dukkan.ts) ve bahçenin (bahce.ts)
-                     durumu (indirgeyici),
+  oyun/              oyunun saf mantığı: bölge tablosu (bolgeler.ts), görev tabloları (turlarıyla),
+                     seçenekler, Bukalemun Koyu'nun (koy.ts), dükkânın (dukkan.ts), bahçenin
+                     (bahce.ts) ve Uydurukçuklar'ın (uyduruk.ts) durumu (indirgeyici),
                      cihazdaki ilerleme (ilerleme.ts:
                      kayıt, kilitler, Sözlük kartları); testleri yanında
   motor/             biçimbilim motoru: saf TypeScript, genel kapısı index.ts; testleri yanında;
                      ünsüz sınırı sinir.ts'te (sinirSecenekleri), ek sırası sira.ts'te
-                     (ekSirasiHatasi)
+                     (ekSirasiHatasi), uydurma kök denetimi uydurma.ts'te (uydurmaDenetimi)
   denetim/           Biçim Denetim Sayfası (denetim.html'in girişi, verisi, testleri)
   gorsel/            görsel dil: çizim geometrisi (cizim.ts), ünsüz karosu (karo.ts, Karo.tsx),
                      ağaç (agac.ts, Agac.tsx), cep (cep.ts), bukalemunun kılığı (kilik.ts),
+                     yaratık (yaratik.ts, Yaratik.tsx),
                      belirteçler (tema.css), karakter bileşenleri; testleri yanında
   galeri/            Karakter Galerisi (galeri.html'in girişi, örnekleri, testleri)
 icerik/              içerik CSV dosyaları (ekler.csv: ek envanteri; kokler.csv: kök sözlüğü;
-                     bolgeler.csv: adanın bölgeleri; gorevler/: bölgelerin görev tabloları,
-                     bukalemun-koyu.csv, fistikci-sahap.csv ve kok-bahcesi.csv)
+                     bolgeler.csv: adanın bölgeleri; yasakli-diziler.csv: uydurma kökte
+                     yasak diziler; gorevler/: bölgelerin görev tabloları, bukalemun-koyu.csv,
+                     fistikci-sahap.csv, kok-bahcesi.csv ve uydurukcuklar.csv)
 tests/               altin-bicimler.csv: motorun altın tablosu; neden.csv ve neden-unsuz.csv:
                      yanlış biçimin nedenleri (motorun neden işlevinin sözleşmesi; uyum, gövde
-                     ve ek başı); ek-sirasi.csv: ek sırası denetiminin sözleşmesi
+                     ve ek başı); neden-kaynastirma.csv: kaynaştırma nedeni; ek-sirasi.csv: ek
+                     sırası denetiminin sözleşmesi; uydurma-denetimi.csv: uydurma kök denetimi
 index.html           oyun
 denetim.html         Biçim Denetim Sayfası (ayrı giriş sayfası)
 galeri.html          Karakter Galerisi (ayrı giriş sayfası)
@@ -119,8 +123,9 @@ DESIGN.md  NEXT.md  CLAUDE.md
     üç özellikten üretilir; ağız duygu göstermez; renkler yalnız `src/gorsel/tema.css`'teki
     belirteçlerdendir. `cizim.ts`'teki sayılar ve yollar tuvaldekilerdir, kullanıcının onayı
     olmadan değişmez (`cizim.test.ts` başvuru koduyla karşılaştırır).
-12. **`tests/neden.csv`, `tests/neden-unsuz.csv`, `tests/ek-sirasi.csv` ve
-    `icerik/gorevler/*.csv` yalnız kullanıcının onayıyla değişir.**
+12. **`tests/neden.csv`, `tests/neden-unsuz.csv`, `tests/neden-kaynastirma.csv`,
+    `tests/ek-sirasi.csv`, `tests/uydurma-denetimi.csv` ve `icerik/gorevler/*.csv` yalnız
+    kullanıcının onayıyla değişir.**
     Neden tablosu `neden` işlevinin, ek sırası tablosu `ekSirasiHatasi`'nın, görev tabloları
     oyunun sözleşmesidir: testi geçirmek için
     satır değiştirilmez, silinmez, eklenmez. Bir satır yanlış görünürse iş durur ve
@@ -128,14 +133,19 @@ DESIGN.md  NEXT.md  CLAUDE.md
 13. **`icerik/bolgeler.csv` de yalnız kullanıcının onayıyla değişir.** Bölge tablosu adanın
     sözleşmesidir: sıra, kimlik, ad, akşam ekranının başlığı ve görev tablosunun yolu.
     `gorevler` sütunu boş olan bölgenin içeriği henüz yoktur (haritada "hazırlanıyor");
-    onları Oturum 7 (Fıstıkçı Şahap'ın Dükkânı), 8 (Kök Bahçesi) ve 9 (Uydurukçuklar)
-    dolduracak. Testi geçirmek için satır değiştirilmez, silinmez, eklenmez. (Oturum 7'de
-    dükkânın, Oturum 8'de bahçenin satırı kullanıcının onayıyla doldu.)
+    Oturum 7 (Fıstıkçı Şahap'ın Dükkânı), 8 (Kök Bahçesi) ve 9 (Uydurukçuklar) doldurdu.
+    Testi geçirmek için satır değiştirilmez, silinmez, eklenmez. (Oturum 7'de dükkânın,
+    Oturum 8'de bahçenin, Oturum 9'da Uydurukçuklar'ın satırı kullanıcının onayıyla doldu.)
 14. **Hiçbir veri cihazdan çıkmaz.** İlerleme, Sözlük kartları ve ayarlar yalnız cihazda,
     `localStorage`'da, sürüm numaralı tek anahtarda (`morfemusta.v1`) durur. Sunucuya,
     analitiğe, uzak günlüğe ya da başka bir cihaza gönderilmez; hesap ve eşitleme yok. Depo
     yoksa ya da erişilemiyorsa oyun bellekte sürer. Uçtan uca testler dış isteği ve GET dışı
     isteği denetler.
+
+15. **Uydurma kökler ve yasaklı diziler yalnız kullanıcının onayıyla değişir.** Uydurma kökler
+    `icerik/gorevler/uydurukcuklar.csv`'dedir; yasaklı diziler `icerik/yasakli-diziler.csv`'de.
+    Testi geçirmek için kök ya da dizi değiştirilmez, silinmez, eklenmez. Üreteç
+    (`scripts/uydurma-uret.mjs`) yalnız aday dosyası yazar; oyuna hiçbir kök onaysız girmez.
 
 ## Adlandırma
 
@@ -202,6 +212,14 @@ DESIGN.md  NEXT.md  CLAUDE.md
   gövde kelimelerinin eklerini verir, `gorevBitti` onları kart yapar (verilmezse kart görevin
   kelimesidir). Ağacın geometrisi `src/gorsel/agac.ts`'te, cebinki `cep.ts`'te (saf; koy da
   kullanır). Sepetin sırası `sepetTohumu` ile sabittir.
+- **Uydurukçuklar:** görev tablosu turludur (`tur,sira,kok,ekler`); `gorevleriOku` onu da okur.
+  `Gorev.sira` bütün tablodaki sıradır (1–100), `tur` ve `turdakiSira` ayrıca. İlerleme kaydın
+  biçimini değiştirmeden tutulur: `kaldigi` bütün tablodaki yerdir (10 = 2. turun başı), ekran
+  `turunYeri` ile turunu oynar. `bolgeBittiMi` bir turu biten bölgeyi tamam sayar (tursuz bölgede
+  tek tur bütün görevlerdir). Kıyıdaki kılıklar `adimiKur(..., { kaynastirma: true })` ile gelir
+  (`yuzeySecenekleri`'nin kaynaştırma seçeneği). Sınır adımında kart çocuğun seçtiği biçimi
+  saklar: ekran `onGorevBitti(gorev, undefined, kelime)`; `kartiCoz` kelimeyi
+  `olasiBicimler`'de arar. Sözlük ve akşam ekranı parçaları o biçimden okur (`kurulanEkleme`).
 - **Ek sırası:** `ekle`, `olasiBicimler` (ve onları çağıran her şey: `neden`,
   `sinirSecenekleri`) sırası bozuk dizide hata atar (`göz + PL + LIK`). Kayıttan okunan böyle
   bir kart atılır (`kartiCoz` hatayı yutar).
@@ -241,7 +259,7 @@ DESIGN.md  NEXT.md  CLAUDE.md
   sıfırlama kimliği (`sifirlama`) de var. `App.tsx` ikisini de bölge ekranının `key`'ine koyar;
   görev `ekrandaGorevBitti` ile yazılır: kimlik değiştiyse yazılmaz, ekran baştan açılır.
   Çok sekmede kalan durumlar `NEXT.md`'de (Oturum 11).
-- **Saf görsel hesaplar:** `src/gorsel/cizim.ts`, `karo.ts` ve `kilik.ts` motor gibi DOM'suz derlenir
+- **Saf görsel hesaplar:** `src/gorsel/cizim.ts`, `karo.ts`, `kilik.ts` ve `yaratik.ts` motor gibi DOM'suz derlenir
   (`tsconfig.motor.json`) ve yalnız motorun genel kapısını içe aktarır
   (`src/gorsel/bagimsizlik.test.ts`). Ünlü tablosu motorunkidir. Saklanan ünlünün kılığı
   motorun `uyum` işlevinden gelir (Oturum 4'te dışa açıldı); uyum kuralı arayüzde yazılmaz.

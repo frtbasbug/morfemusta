@@ -15,11 +15,13 @@ import Karo from '../gorsel/Karo.tsx'
 import { karoAdi, karoTuru } from '../gorsel/karo.ts'
 import UnluEtiketi from '../gorsel/UnluEtiketi.tsx'
 import UnluKarti from '../gorsel/UnluKarti.tsx'
+import Yaratik, { UydurukIsareti, Yildiz } from '../gorsel/Yaratik.tsx'
 import './KarakterGalerisi.css'
 import {
   GALERI_AGACI,
   GALERI_BOLUMLERI,
   GALERI_KAROLARI,
+  GALERI_YARATIKLARI,
   type GaleriOrnegi,
 } from './ornekler.ts'
 
@@ -146,6 +148,34 @@ export default function KarakterGalerisi() {
             </li>
           </ul>
         </div>
+      </section>
+
+      <section className="galeri__bolum" aria-labelledby="bolum-yaratik">
+        <h2 id="bolum-yaratik">Uydurukçuklar</h2>
+        <p className="galeri__aciklama">
+          Uydurma kelime kanıttır. Yaratık adındaki son ünlünün karakteridir; üstünde kök başına
+          sabit tohumlu küçük süsler (boynuz, benek). Süs ünlüden değil kökten gelir; ağız
+          hiçbir zaman değişmez. Bulunmada yıldız yaratığın üstünde durur, yönelmede ona doğru
+          uçar.
+        </p>
+        <ul className="yaratiklar">
+          {GALERI_YARATIKLARI.map((kok) => (
+            <li key={kok} className="yaratiklar__yaratik">
+              <Yaratik kok={kok} />
+              <KokYazisi kok={kok} />
+            </li>
+          ))}
+        </ul>
+        <ul className="yaratiklar__parcalar">
+          <li role="img" aria-label="Büyünün yıldızı">
+            <Yildiz boyut={1.4} />
+          </li>
+          {GALERI_YARATIKLARI[0] && (
+            <li role="img" aria-label="Uydurukçuklar'ın harita işareti">
+              <UydurukIsareti kok={GALERI_YARATIKLARI[0]} />
+            </li>
+          )}
+        </ul>
       </section>
     </main>
   )

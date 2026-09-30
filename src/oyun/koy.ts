@@ -57,14 +57,25 @@ export function secenekTohumu(gorevSirasi: number, adimSirasi: number): number {
   return gorevSirasi * 100 + adimSirasi
 }
 
-export function adimiKur(gorev: Gorev, sira: number): Adim {
+/**
+ * Görevin sıradaki ek adımı. Kaynaştırma açıksa (Uydurukçuklar) kıyıya kaynaştırmalı ve
+ * kaynaştırmasız kılıklar birlikte gelir: -(y)A için ya, ye, a, e (yuzeySecenekleri).
+ */
+export function adimiKur(
+  gorev: Gorev,
+  sira: number,
+  { kaynastirma = false }: { readonly kaynastirma?: boolean } = {},
+): Adim {
   const etiket = gorev.etiketler[sira]
   if (etiket === undefined) throw new Error(`${gorev.sira}. görevde ${sira + 1}. ek yok`)
   const onceki = ekle(gorev.kok, gorev.etiketler.slice(0, sira))
   const sonuc = ekle(gorev.kok, gorev.etiketler.slice(0, sira + 1))
   const parca = sonuc.parcalar[sira]
   if (!parca) throw new Error(`${gorev.kok} + ${etiket}: motor ek parçası vermedi`)
-  const yuzeyler = tohumluKaristir(yuzeySecenekleri(parca), secenekTohumu(gorev.sira, sira))
+  const yuzeyler = tohumluKaristir(
+    yuzeySecenekleri(parca, { kaynastirma }),
+    secenekTohumu(gorev.sira, sira),
+  )
   return {
     sira,
     etiket,

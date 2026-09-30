@@ -173,6 +173,9 @@ taş, yumuşak ünsüz jöle.** Bölgenin adı sert ünsüzlerin okul hatırlat�
 | `--govde` | #D9B48F | Kök Bahçesi: ağacın kökü ve gövde halkaları |
 | `--yaprak` | #A8D5A2 | Kök Bahçesi: ağacın tacı |
 
+`--yanak` Uydurukçuklar'ın yıldızında da kullanılır; `--zemin` yaratığın boynuzunda ve
+beneğinde.
+
 Kalın ve ince renkleri (ve zeminleri) yalnız dilbilgisel anlam taşır: süste, haritada ya da
 arayüzde kullanılmaz. Haritada bukalemun gibi dilbilgisel bir figür kendi renginde durabilir.
 Ünsüz karolarında da kullanılmazlar: onlar ünlülerin; karo taş ya da jöle rengindedir. Ağaçta
@@ -200,7 +203,8 @@ büyüden sonra da gri kalır.
 
 1. **Karakterler yalnız koddan, üç özellikten üretilir.** Elle çizilmiş karakter dosyası ve
    karaktere özel süs (şapka, el, eşya) yok. Yeni bir görsel öğe sekiz ünlünün hepsine aynı
-   işlevle gelir.
+   işlevle gelir. Uydurukçuklar'ın yaratığının süsleri (boynuz, benek) bu kurala uyar: kökten
+   gelirler, sekiz ünlünün hepsine aynı işlevle eklenirler, özellikleri değiştirmezler.
 2. **Ağız ünlü yüksekliğini gösterir, duygu göstermez.** Oyun durumu ağzı değiştirmez;
    sevinç ve üzüntü hareketle ya da eğimle anlatılır.
 3. **Yalnız belirteçlerdeki renkler.** Degrade ve bulanık gölge yok; tek gölge ünlü
@@ -247,16 +251,20 @@ içindeyse neden yoktur. Değilse sırayla üç şey sınanır; bulunan nedenler
 1. **Gövde sınırı** (Fıstıkçı Şahap'ın Dükkânı): kökün son ünsüzü taş mı, jöle mi? Taş
    seçildi, jöle olmalıydı: *yumuşama* (*kitapım*). Jöle seçildi, taş olmalıydı: tek heceli
    kökte *inatçı* (*tobum*), çok heceli kökte *yumuşamaz* (*sepedi*).
-2. **Ek başı:** D ve C, adayda kendinden önceki sese göre beklenir (yerel): sert ünsüzden sonra
-   taş, değilse jöle. Jöle seçildi, taş olmalıydı: *sertleşme* (*kitapda*). Taş seçildi, jöle
-   olmalıydı: *yumuşak* (*evte*, *suçu*).
+2. **Ek başı:** önce kaynaştırma: (y), (n) ve (s) ile başlayan ekte kaynaştırmalı ve
+   kaynaştırmasız yüzey de kılıktır (*zelü* + *ye* / *e*). Ayraçlı ünsüz adayda önceki sese göre
+   beklenir (yerel): ünlüden sonra girer, ünsüzden sonra girmez. Girmedi, girmeliydi ya da
+   girdi, girmemeliydi: *kaynaştırma* (*zelüe*, *fıngılya*). Sonra D ve C, yine önceki sese
+   göre: sert ünsüzden sonra taş, değilse jöle. Jöle seçildi, taş olmalıydı: *sertleşme*
+   (*kitapda*). Taş seçildi, jöle olmalıydı: *yumuşak* (*evte*, *suçu*).
 3. **Ünlü uyumu:** ekler soldan sağa yerel uyumla sınanır: ekin ünlüsü, adayda kendinden önceki
    son ünlüye göre beklenir ve seçilenle karşılaştırılır; uyuşmayan özellikler (kalınlık,
    yuvarlaklık) yazılır. Yerel sınama yüzünden *toplerim* yalnız çoğulun kalınlığını alır:
    *im*, önündeki *e*'ye uyduğu için suçlanmaz.
 
 Hiçbiri bulunamazsa (istisna: *saatlar*; ünlü düşmesi: *ağızım*) tek neden "diğer"dir.
-Sözleşmeleri `tests/neden.csv` (uyum) ve `tests/neden-unsuz.csv`'dir (gövde ve ek başı).
+Sözleşmeleri `tests/neden.csv` (uyum), `tests/neden-unsuz.csv` (gövde ve ek başı) ve
+`tests/neden-kaynastirma.csv`'dir (kaynaştırma).
 
 Çocuğa yalnız ilk nedenin cümlesi gösterilir (`nedenCumlesi`); önce bakılan ünlü, sonra
 seçilen:
@@ -279,6 +287,8 @@ Gövde ve ek başı nedenlerinin cümleleri; harfler ve kök görevden gelir:
 | yumuşamaz | *sepet kelimesinde t taş kalır.* |
 | sertleşme | *p taş, ekin başı da taş olur: t.* |
 | yumuşak | *v jöle, ekin başı da jöle kalır: d.* Önceki ses ünlüyse: *Ünlüden sonra ekin başı jöle kalır: c.* |
+| kaynaştırma (eksik) | *İki ünlü yan yana gelmez: araya y girer.* (n ve s'de harf değişir) |
+| kaynaştırma (fazla) | *Ünsüzden sonra araya y girmez.* |
 
 ## Fıstıkçı Şahap'ın Dükkânı
 
@@ -378,6 +388,76 @@ Ağaç koddan çizilir (`src/gorsel/agac.ts`, saf; bileşeni `Agac.tsx`). Aşağ
 - **Haritadaki işaret:** küçük bir ağaç (gövde ve yuvarlak taç, 30×34), yazısız; süstür, adı
   düğmenin yazısıdır.
 
+## Uydurukçuklar
+
+Dördüncü bölge: uydurma kelime kanıttır (wug). Her görevde adı uydurma bir kök olan bir yaratık
+var (*fıngıl*, *pıtak*, *zelü*); çocuk Bukalemun Koyu'ndaki gibi doğru bukalemunu yaratığa
+taşır. Görevler `icerik/gorevler/uydurukcuklar.csv`'dedir (tur, sıra, kök, ekler; 10 tur × 10
+görev); doğru biçim görev dosyasına yazılmaz, motordan gelir. Her turda aynı on görev şekli
+vardır (test denetler).
+
+| Ek | Görev | Kılıklar | Büyü (resimsiz) |
+|----|-------|----------|-----------------|
+| -lAr | çoğalt | *lar, ler* | yaratık üçe çoğalır |
+| -(I)m | sahiplen | *ım, im, um, üm* | yaratık cebe girer (Koy'daki cep) |
+| -DA | bir yere koy | *da, de, ta, te* | küçük bir yıldız yaratığın üstünde durur (bulunma) |
+| -(y)A | ona gönder | *ya, ye, a, e* | yıldız yaratığa doğru uçar (yönelme); ardında kesik bir iz |
+
+- **Yalnız kategorik kurallar puanlanır:** ünlü uyumu, benzeşme, kaynaştırma (`neden`). -(y)A'da
+  kaynaştırmalı ve kaynaştırmasız kılıklar birlikte gelir. Seçeneklerin sırası sabit tohumla
+  karışıktır (Koy'daki gibi).
+- **Sınır adımı:** kök p, ç, t ya da k ile bitip iyelik alınca doğru bukalemun oturduktan sonra
+  Dükkân'ın tezgâhı gelir (taş solda, jöle sağda). İki karo da doğrudur (Becker, Ketrez &
+  Nevins 2011); cümle: *İkisi de olur: pıtakım, pıtağım.* Jöle seçilirse kökün taşı erir.
+  Kurulan biçim çocuğun seçtiğidir; Sözlük kartı onu saklar.
+- **Yanlışsa** bukalemun düşer, kıyıya döner; denenen biçim üstü çizili, ilgili iki ses vurgulu
+  (ünlü etiketinde, ünsüz çerçevede), altında cümle. Ceza, puan ve süre yok.
+- **Turlar:** yarım kalan tur kaldığı yerden sürer. Tur bitince akşam olur (*Uydurukçuklarda
+  akşam oldu*); bölgeye sonraki girişte bir sonraki tur gelir, 10. turdan sonra 1. tura
+  dönülür. Tur kayıttadır: kalınan yer bütün tablodaki yerdir (10: 2. turun başı). Bölge ilk
+  tur bitince tamam sayılır.
+- **Kabuk** öteki bölgelerinki aynen: üst çubuk (sıra turdaki: *3 / 10*), sürdürme, akşam
+  ekranı. Taşıma sürükle-bırak, dokun-dokun (önce bukalemun ya da karo, sonra yaratık) ya da
+  klavye (Tab ve Enter). Dokunma alanları en az 44 px.
+- **Hareket azaltma** açıksa hiçbir şey hareket etmez; yıldız, kopyalar ve cep hemen yerinde.
+- **Sığma:** en kalabalık görev (dört bukalemun ve cep) 360×640'ta ve 320×568'de kaydırmadan
+  sığar; alçak ekranda yaratık küçülür.
+
+### Yaratık
+
+- **Yaratık adındaki son ünlünün karakteridir** ("Ünlü karakterleri"): *pıtak* kalın, düz,
+  geniş; *zelü* ince, yuvarlak, dar. Büyük boy (1.8 ölçek; alçak ekranda küçülür). Adı altında,
+  kök yazısıyla (son ünlüsü etikette).
+- **Süsler kökten gelir:** kök başına sabit tohumlu (FNV-1a) küçük boynuz (yok, iki ya da tek)
+  ve benekler (0, 2 ya da 3; en az bir süs var). Geometri `src/gorsel/yaratik.ts`'te (saf,
+  `cizim.ts`'in sayılarına dokunmaz). Süs sekiz ünlünün hepsine aynı işlevle gelir; karakterin
+  üç özelliğini değiştirmez; gözlere ve ağza değmez.
+- **Ağız hiçbir zaman değişmez** (üç kural).
+- **Renkler:** boynuz krem, mürekkep çizgili (ibik gibi); benek krem; yıldız `--yanak`,
+  mürekkep çizgili. Kalın ve ince renkleri süste kullanılmaz; gövde ünlünün rengindedir.
+- **Haritadaki işaret:** küçük bir yaratık (ilk görevin yaratığı, *fıngıl*; 0.42 ölçek), yazısız.
+- **Sözlük kartı:** uydurma kelimenin (kökü sözlükte olmayan) kartının köşesinde küçük bir
+  yaratık işareti; ekran okuyucuya *Uydurma kelime*.
+
+### Uydurma kök denetimi
+
+Motorun `uydurmaDenetimi(kok)` işlevi sırayla sınar, ilk bozukluğu döner (sözleşmesi
+`tests/uydurma-denetimi.csv`; görev tablosunun 100 kökü de geçer):
+
+1. **ses:** iki hece; ilk ses *b c ç d f g h k m n p s ş t v y z*'den biri; ilk hece ünsüz +
+   ünlü; iki ünlü arasında bir ya da iki ünsüz (ikiyse ilki *l r n m s ş z y*'den biri, ikisi
+   aynı değil, n'den sonra b ya da p yok); sonda ünlü ya da *p ç t k s ş z l r m n y*'den tek
+   bir ünsüz; ikinci hecede o ve ö yok; iki hece aynı ünsüz ve ünlüyle başlamaz; ğ ve j yok.
+   Kök içi ünlü uyumu aranmaz (*zelü* en yakın ünlü kuralını sınar).
+2. **sözlük:** kök sözlükte.
+3. **yasak:** kök ya da oyun biçimleri (PL, POSS.1SG, LOC, DAT, ACC) yasaklı bir dizi içerir
+   (`icerik/yasakli-diziler.csv`); "başta" dizileri yalnız kökün başında aranır.
+4. **ek:** kök, başka bir kök ile envanterdeki bir ekin en az iki harflik yüzeyi gibi okunur
+   (*kuş + lar*).
+
+Aday kökleri `scripts/uydurma-uret.mjs` üretir (tohumlu, aynı kurallarla; gerçek kelimeler
+zeyrek'le elenir). Çıktı yalnız bir aday dosyasıdır: oyuna kök kullanıcının onayıyla girer.
+
 ## Ada haritası
 
 Açılış ekranıdır; başlığı *Morfemusta Adası*. Bölgeler `icerik/bolgeler.csv`'dedir (sıra,
@@ -389,7 +469,8 @@ kimlik, ad, akşam, görev tablosu); görev tablosu boş olan bölgenin içeriğ
 - **Bölgeler gerçek düğmelerdir:** tablodaki sırayla, sıralı bir listede, yol boyunca dizili.
   Her düğme bir tabeladır: bölgenin adı, altında durumu. Düğmenin adı görünen yazının
   aynısıdır (*Bukalemun Koyu, Açık*).
-- **Kilit:** bir bölge, öncekinin bütün görevleri en az bir kez bitince açılır. İlk bölge hep
+- **Kilit:** bir bölge, öncekinin bir turu bitince açılır: tursuz bölgede bütün görevleri en az
+  bir kez, Uydurukçuklar'da ilk turu. İlk bölge hep
   açıktır; içeriği olmayan bölge bitmez, ardındaki bölge kilitli kalır.
 - **Durum yalnız renkle verilmez;** simge ve yazıyla da görünür:
 
@@ -404,8 +485,8 @@ kimlik, ad, akşam, görev tablosu); görev tablosu boş olan bölgenin içeriğ
   harita kaymaz, çocuğun sonraki dokunuşu yerini şaşırmaz.
 - **İşaretler:** Bukalemun Koyu'nun işareti küçük bir bukalemundur: koyun ilk görevinin
   bukalemunu (*at* + *lar*). Fıstıkçı Şahap'ın Dükkânı'nınki yan yana küçük bir taş ve bir jöle
-  karosudur, yazısız. Kök Bahçesi'ninki küçük bir ağaçtır, yazısız. Uydurukçuklar'ınkini kendi
-  oturumu çizecek.
+  karosudur, yazısız. Kök Bahçesi'ninki küçük bir ağaçtır, yazısız. Uydurukçuklar'ınki küçük bir
+  yaratıktır, yazısız.
 - **Renkler:** deniz, kara, krem, mürekkep, soluk ve ayraç. Kalın ve ince renkleri kullanılmaz;
   yalnız bukalemun ve karolar, dilbilgisel figürler olarak kendi renklerindedir. Gölge ve
   degrade yok.
@@ -437,7 +518,9 @@ gövdeden düşer: her yapım adımının kelimesi (*çiçekçi*; *çiçekçiler
 - **Ekran:** kartlar bölgelere göre gruplu, bölge tablosunun sırasıyla; her grupta en yeni
   kart önde.
 - **Boşsa:** *Sözlüğün henüz boş. Bir kelime kurunca kartı buraya gelir.*
-- Kartta yalnız kök ve ek etiketleri saklıdır; biçim ve ekler her açılışta motordan gelir.
+- Kartta kelime, kök ve ek etiketleri saklıdır; ekler her açılışta motordan gelir. Kelime
+  motorun kabul ettiği biçimlerden biridir: uydurma kökte çocuğun seçtiği (*pıtağım* ya da
+  *pıtakım*; ikisi ayrı karttır).
 
 ## Akşam ekranı
 
@@ -492,8 +575,9 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
 3. **Kök Bahçesi** — yapım ekleri gövdeyi büyütür
    (*göz → gözlük → gözlükçü → gözlükçülük*); çekim ekleri tepeye meyve gibi asılır;
    meyvenin üstüne gövde çıkmaz (yukarıda).
-4. **Uydurukçuklar** — uydurma yaratıklar (*fıngıl*, *pıtak*, *mömüş*) çoğaltılır,
-   sahiplenilir, bir yere konur: *fıngıllar*, *pıtağım* ya da *pıtakım*, *mömüşte*.
+4. **Uydurukçuklar** — uydurma yaratıklar (*fıngıl*, *pıtak*, *mömüş*, *zelü*) çoğaltılır,
+   sahiplenilir, bir yere konur, onlara gönderilir: *fıngıllar*, *pıtağım* ya da *pıtakım*,
+   *mömüşte*, *zelüye* (yukarıda).
 
 ## Sonraki bölgeler
 

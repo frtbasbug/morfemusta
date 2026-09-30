@@ -153,3 +153,4 @@ dev-dist
 
 # Python (scripts/zeyrek-denetimi.py)
 __pycache__/
+uydurma-adaylari.tsv

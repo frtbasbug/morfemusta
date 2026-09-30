@@ -98,7 +98,13 @@ test.describe('Kök Bahçesi', () => {
     await expect(page.getByText(/puan|seri|süre|skor/i)).toHaveCount(0)
     await page.getByRole('button', { name: 'Haritaya dön' }).click()
     await expect(bolge(page, 'Kök Bahçesi')).toHaveAccessibleName('Kök Bahçesi, Tamam')
-    await expect(bolge(page, 'Uydurukçuklar')).toHaveAccessibleName('Uydurukçuklar, Hazırlanıyor')
+    // Bahçe bitince Uydurukçuklar açılır ve girilir.
+    await expect(bolge(page, 'Uydurukçuklar')).toHaveAccessibleName('Uydurukçuklar, Açık')
+    await bolge(page, 'Uydurukçuklar').click()
+    await expect(page.getByRole('heading', { level: 1, name: 'Uydurukçuklar' })).toBeVisible()
+    await expect(sira(page)).toHaveText('Görev 1 / 10')
+    await page.getByRole('button', { name: 'Harita', exact: true }).click()
+    await expect(haritaBasligi(page)).toBeVisible()
 
     // Sözlük'te kart gövdeden: çiçekçi var, çiçekçiler yok.
     await gezinme(page, 'Sözlük').click()

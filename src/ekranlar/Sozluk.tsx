@@ -2,12 +2,15 @@
 // gruplu, bölge tablosunun sırasıyla; her grupta en yeni kart önde. Kartta kelime, kök ve
 // ekler (Bukalemun Koyu'ndaki birleşen ek görünümüyle: kökün son ünlüsü ve ekin ünlüsü
 // etikette, uyum etiketlerin eninden okunur), bölge ve tarih. Ekler ve biçim motordan gelir
-// (ekle); kartta yalnız kök ve ek etiketleri saklıdır.
+// (ekle); kartta kelime, kök ve ek etiketleri saklıdır. Uydurma kökte kelime çocuğun seçtiği
+// biçimdir (pıtağım ya da pıtakım); parçaları o biçimden okunur.
 
 import { Fragment, useEffect, useRef } from 'react'
-import { ekle } from '../motor/index.ts'
+import { KOK_SOZLUGU } from '../motor/index.ts'
 import EkYazisi from '../gorsel/EkYazisi.tsx'
 import KokYazisi from '../gorsel/KokYazisi.tsx'
+import { kurulanEkleme } from '../gorsel/KurulanKelime.tsx'
+import Yaratik from '../gorsel/Yaratik.tsx'
 import type { Bolge } from '../oyun/bolgeler.ts'
 import type { SozlukGrubu, SozlukKarti } from '../oyun/ilerleme.ts'
 import './Sozluk.css'
@@ -58,12 +61,22 @@ export default function Sozluk({ gruplar }: { readonly gruplar: readonly SozlukG
   )
 }
 
-/** Sözlük kartı: kelime; kök ve ekler; bölge ve tarih. */
+/**
+ * Sözlük kartı: kelime; kök ve ekler; bölge ve tarih. Uydurma kelimenin (kökü sözlükte yok)
+ * kartının köşesinde küçük bir yaratık işareti var.
+ */
 function Kart({ kart, bolge }: { kart: SozlukKarti; bolge: Bolge }) {
-  const { parcalar } = ekle(kart.kok, kart.etiketler)
+  const { parcalar } = kurulanEkleme(kart.kok, kart.etiketler, kart.kelime)
   const tarih = new Date(kart.tarih)
+  const uydurma = !KOK_SOZLUGU.has(kart.kok)
   return (
-    <article className="sozluk-karti">
+    <article className={uydurma ? 'sozluk-karti sozluk-karti--uydurma' : 'sozluk-karti'}>
+      {uydurma && (
+        <span className="sozluk-karti__yaratik">
+          <Yaratik kok={kart.kok} boyut={0.36} adsiz />
+          <span className="gizli">Uydurma kelime</span>
+        </span>
+      )}
       <h3 className="sozluk-karti__kelime">{kart.kelime}</h3>
       <p className="sozluk-karti__parcalar">
         <span className="sozluk-karti__kok">

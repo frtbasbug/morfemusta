@@ -2,7 +2,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { KOK_SOZLUGU, ekle } from '../motor/index.ts'
 import KarakterGalerisi from './KarakterGalerisi.tsx'
-import { GALERI_BOLUMLERI, UYMAYAN_ORNEK } from './ornekler.ts'
+import { GALERI_BOLUMLERI, GALERI_YARATIKLARI, UYMAYAN_ORNEK } from './ornekler.ts'
 
 const eslesmeler = (html: string, desen: RegExp) => [...html.matchAll(desen)].map((m) => m[1])
 
@@ -42,7 +42,7 @@ describe('KarakterGalerisi', () => {
     expect(cizelge.match(/class="unlu-karti /g)).toHaveLength(8)
   })
 
-  it('bölümler sırayla: sekiz ünlü, kök etiketi, -lAr, -(I)m, saklanan, uymayan, karolar, bahçe', () => {
+  it('bölümler sırayla: sekiz ünlü, kök etiketi, -lAr, -(I)m, saklanan, uymayan, karolar, bahçe, Uydurukçuklar', () => {
     expect(eslesmeler(html, /<h2 id="[^"]*">([^<]*)<\/h2>/g)).toEqual([
       'Sekiz ünlü',
       'Kök etiketi',
@@ -52,7 +52,32 @@ describe('KarakterGalerisi', () => {
       'Uymayan ek',
       'Ünsüz karoları',
       'Kök Bahçesi',
+      'Uydurukçuklar',
     ])
+  })
+
+  it('Uydurukçuklar: ilk turun on yaratığı adlarıyla, yıldız ve yazısız harita işareti', () => {
+    const bolum = /<section[^>]*aria-labelledby="bolum-yaratik">(.*?)<\/section>/.exec(html)?.[1] ?? ''
+    expect(eslesmeler(bolum, /class="kok-yazisi__okunan">([^<]*)</g)).toEqual([
+      'fıngıl',
+      'nöfel',
+      'pobul',
+      'pıtak',
+      'mömüş',
+      'cofar',
+      'zolku',
+      'zelü',
+      'kıbı',
+      'zitep',
+    ])
+    // Yaratık adındaki son ünlünün karakteridir: pıtak kalın ve düz, zelü ince ve yuvarlak.
+    expect(bolum).toContain('aria-label="pıtak: a, kalın, düz, geniş"')
+    expect(bolum).toContain('aria-label="zelü: ü, ince, yuvarlak, dar"')
+    for (const kok of GALERI_YARATIKLARI) expect(KOK_SOZLUGU.has(kok), kok).toBe(false)
+    expect(bolum).toContain('aria-label="Büyünün yıldızı"')
+    const isaret = /aria-label="Uydurukçuklar&#x27;ın harita işareti">(.*?)<\/li>/.exec(bolum)?.[1] ?? ''
+    expect(isaret).toMatch(/^<span class="uyduruk-isareti"><svg class="yaratik /)
+    expect(isaret).not.toMatch(/<text/)
   })
 
   it('kök etiketleri ünlülerle aynı çizelge düzeninde: a ı o u, e i ö ü', () => {

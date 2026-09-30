@@ -1,0 +1,541 @@
+/* Uydurukçuklar. Renkler, çizgiler ve yazı tipleri yalnız tema.css'teki belirteçlerden
+   (DESIGN.md, "Üç kural"; kurallar.test.ts denetler). Degrade, bulanıklık ve gölge yok.
+   Kıyı, cep ve yay Bukalemun Koyu'nunkilerdir; tezgâh ve yuva Fıstıkçı Şahap'ın Dükkânı'nın.
+   Hareketler hareket.ts'tedir; buradaki geçişler yalnız hareket azaltma kapalıyken oynar. */
+
+.uyduruk {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  padding-block:
+    calc(env(safe-area-inset-top) + 0.75rem) calc(env(safe-area-inset-bottom) + 0.75rem);
+  padding-inline: max(calc(env(safe-area-inset-left) + 1rem), calc((100% - 30rem) / 2))
+    max(calc(env(safe-area-inset-right) + 1rem), calc((100% - 30rem) / 2));
+  background: var(--zemin);
+  color: var(--murekkep);
+  font-family: var(--yazi-tipi);
+  line-height: 1.4;
+}
+
+/* Sahne: yaratık ve adı, altında neden ya da Sıradaki. Boylar sabittir; neden görününce
+   kıyıdaki bukalemunlar yerinden oynamaz. */
+.uyduruk__sahne {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding-block: 0.75rem 0.25rem;
+}
+
+/* Yaratık ve adı tek bir hedeftir: bukalemun ya da karo buraya taşınır. */
+.uyduruk__hedef {
+  display: grid;
+  justify-items: center;
+  gap: 0.3rem;
+  box-sizing: border-box;
+  min-width: 10rem;
+  padding: 0.4rem 1rem 0.5rem;
+  border: 2.5px dashed transparent;
+  border-radius: var(--kose-unlu-karti);
+  background: none;
+  color: var(--murekkep);
+  font: inherit;
+  cursor: pointer;
+}
+
+/* Bir bukalemun ya da karo seçiliyken yaratık onu bekler. */
+.uyduruk__hedef--bekliyor {
+  border-color: var(--murekkep);
+}
+
+/* Sürüklenen bukalemun ya da karo yaratığın üstünde. */
+.uyduruk__hedef--ustunde {
+  outline: 4px solid var(--murekkep);
+  outline-offset: 2px;
+}
+
+.uyduruk__hedef:focus-visible,
+.uyduruk__dugme:focus-visible {
+  outline: 3px solid var(--murekkep);
+  outline-offset: 4px;
+}
+
+/* Yaratıklar aynı ızgara hücresinde: çoğulda iki kopya arkadan iki yana açılır. */
+.uyduruk__yaratiklar {
+  position: relative;
+  display: grid;
+  isolation: isolate;
+}
+
+.uyduruk__yaratiklar > * {
+  grid-area: 1 / 1;
+}
+
+.uyduruk__yaratik,
+.uyduruk__kopya {
+  display: block;
+  line-height: 0;
+}
+
+.uyduruk__yaratiklar .yaratik {
+  width: 8.125rem;
+}
+
+.uyduruk__kopya {
+  z-index: -1;
+}
+
+.uyduruk__kopya--1 {
+  transform: translateX(-58%) scale(0.8);
+}
+
+.uyduruk__kopya--2 {
+  transform: translateX(58%) scale(0.8);
+}
+
+/* Büyünün yıldızı. Bulunma: yaratığın üstünde durur. Yönelme: yaratığın yanına gelmiştir;
+   ardında geldiği yönü gösteren kesik bir iz kalır (hareket azaltmada da okunur). */
+.uyduruk__yildiz {
+  position: absolute;
+  z-index: 2;
+  line-height: 0;
+}
+
+.uyduruk__yildiz--ustte {
+  top: -0.9rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.uyduruk__yildiz--yanda {
+  top: 38%;
+  right: -1.6rem;
+}
+
+.uyduruk__iz {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  width: 2.25rem;
+  border-top: 3px dashed var(--ayrac);
+}
+
+/* Yaratığın adı: kök yazısı (son ünlüsü etikette); büyüden sonra ek birleşen ek görünümünde. */
+.uyduruk__ad {
+  font-size: var(--boyut-kok);
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.uyduruk__ad .unlu-etiketi {
+  font-size: 1em;
+}
+
+/* Sınırdaki yuva: boşken kesik çerçeve; karo oturunca karonun kendisi (Dükkân'daki gibi). */
+.uyduruk__yuva {
+  display: inline-grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 2.2em;
+  height: 2.2em;
+  margin-inline: 0.04em;
+  vertical-align: middle;
+  border: 3px dashed var(--murekkep);
+  border-radius: 0.4em;
+  background: var(--zemin);
+}
+
+.uyduruk__yuva--dolu {
+  border-color: transparent;
+  background: none;
+}
+
+.uyduruk__yuva .karo {
+  width: 100%;
+  height: 100%;
+}
+
+.uyduruk__alt {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 0.6rem;
+  min-height: 6.5rem;
+}
+
+/* Neden: aday (ilgili iki ses vurgulu) ve altında cümle. Aday uymayan sonuçtur: üstü çizili
+   ve --cizik renginde. Vurgulu sesler satır içi bloktur; çizgi onlara geçmez. Ünlü
+   etiketinde, ünsüz çerçevededir. */
+.uyduruk__neden {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  text-align: center;
+}
+
+.uyduruk__aday {
+  margin: 0;
+  color: var(--cizik);
+  font-size: var(--boyut-kok);
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.uyduruk__aday .unlu-etiketi {
+  font-size: 1em;
+  color: var(--murekkep);
+}
+
+.uyduruk__ses {
+  display: inline-block;
+  padding: 0 0.08em;
+  border: 2px solid var(--murekkep);
+  border-radius: 0.2em;
+  color: var(--murekkep);
+  line-height: 1.1;
+}
+
+.uyduruk__cumle {
+  max-width: 21rem;
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.35;
+}
+
+.uyduruk__dugme {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0 1.5rem;
+  border: 2.5px solid var(--murekkep);
+  border-radius: 999px;
+  background: var(--murekkep);
+  color: var(--zemin);
+  font: inherit;
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Kıyı çizgisi. */
+.uyduruk__dalga {
+  display: block;
+  width: 100%;
+  height: 0.75rem;
+  margin-top: 0.25rem;
+  fill: none;
+  stroke: var(--ayrac);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.uyduruk__dalga path {
+  vector-effect: non-scaling-stroke;
+}
+
+/* Kıyı: iki sütun. Bukalemun 0.9'dan (7.425rem) küçük çizilmez: ince rengin üstünde yazı
+   18px'in altına inmesin (tema.css). */
+.uyduruk__kiyi {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(calc(7.425rem + 6px), calc(8.25rem + 6px)));
+  justify-content: center;
+  gap: 0.75rem 1rem;
+  margin: 0;
+  padding: 0.75rem 0 0.5rem;
+  list-style: none;
+}
+
+.uyduruk__yer {
+  position: relative;
+  display: grid;
+  place-items: end center;
+}
+
+.uyduruk__bukalemun {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 3px dashed transparent;
+  border-radius: 16px;
+  background: none;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.uyduruk__bukalemun .bukalemun {
+  width: 100%;
+  pointer-events: none;
+}
+
+.uyduruk__bukalemun[aria-pressed='true'],
+.uyduruk__karo[aria-pressed='true'] {
+  border-color: var(--murekkep);
+}
+
+.uyduruk__bukalemun[aria-disabled='true'],
+.uyduruk__karo[aria-disabled='true'] {
+  cursor: default;
+}
+
+.uyduruk__bukalemun:focus-visible,
+.uyduruk__karo:focus-visible {
+  outline: 3px solid var(--murekkep);
+  outline-offset: 2px;
+}
+
+.uyduruk__tasinan,
+.uyduruk__bukalemun--etkin {
+  z-index: 5;
+  cursor: grabbing;
+}
+
+.uyduruk__bukalemun--birlesti {
+  visibility: hidden;
+}
+
+/* Tezgâh (sınır adımı): taş hep solda, jöle hep sağda; altlarında sert / yumuşak. */
+.uyduruk__tezgah {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  margin: 0;
+  padding: 0.75rem 0 0.4rem;
+  border-bottom: 3px solid var(--murekkep);
+  list-style: none;
+}
+
+.uyduruk__karo-yeri {
+  display: grid;
+}
+
+.uyduruk__karo {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0.15rem;
+  min-width: 5.5rem;
+  padding: 0.25rem 0.5rem 0.2rem;
+  border: 3px dashed transparent;
+  border-radius: 16px;
+  background: none;
+  color: var(--murekkep);
+  font: inherit;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.uyduruk__karo .karo {
+  pointer-events: none;
+}
+
+.uyduruk__karo-turu {
+  color: var(--soluk);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Yuvaya oturan karo tezgâhta yer tutar ama görünmez: karo yuvadadır. */
+.uyduruk__karo--oturdu .karo {
+  visibility: hidden;
+}
+
+/* Cep (yalnız iyelik görevlerinde): ekranın altında. Yaratık cebe girer; cebin önü onu örter,
+   kelime cebin önünde yazılıdır. */
+.uyduruk__cep {
+  position: relative;
+  z-index: 3;
+  width: 12.5rem;
+  height: 5.5rem;
+  margin: 0.5rem auto 0;
+}
+
+.uyduruk__cep-on {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 4rem;
+  overflow: visible;
+}
+
+.uyduruk__cep-govde {
+  fill: var(--zemin);
+  stroke: var(--murekkep);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.uyduruk__cep-dikis {
+  fill: none;
+  stroke: var(--ayrac);
+  stroke-width: 2;
+  stroke-dasharray: var(--kesik-cizgi);
+  vector-effect: non-scaling-stroke;
+}
+
+.uyduruk__cep-yuva {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%) scale(0.5);
+  transform-origin: top center;
+}
+
+.uyduruk__cep-yazi {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  bottom: 0.8rem;
+  text-align: center;
+}
+
+/* Cebin önündeki kelime 18px: ince renk üstünde en küçük boy (DESIGN.md, "Karşıtlık"). */
+.uyduruk__cep-yazi .sonuc-kelime {
+  font-size: 1.125rem;
+}
+
+/* Kökteki ünlü ile bukalemun arasındaki yay. Rengi bukalemununki; parlaması yalnız kalınlık
+   ve saydamlıkla (bulanıklık yok). */
+.uyduruk__yay {
+  --yay-rengi: var(--kalin);
+  position: fixed;
+  z-index: 4;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.uyduruk__yay--ince {
+  --yay-rengi: var(--ince);
+}
+
+.uyduruk__yay--gorunur {
+  opacity: 1;
+}
+
+.uyduruk__yay path {
+  fill: none;
+  stroke: var(--yay-rengi);
+  stroke-linecap: round;
+}
+
+.uyduruk__yay-hale {
+  stroke-width: 14;
+  opacity: 0.35;
+}
+
+.uyduruk__yay-yolu {
+  stroke-width: 5;
+}
+
+/* Alçak ekranda (360×640 ve 320×568 gibi) yaratık küçülür, boşluklar daralır: yaratık, kıyı
+   ve cep kaydırmadan birlikte görünsün. Bukalemunlar ve karolar küçülmez. */
+@media (max-height: 44rem) {
+  .uyduruk {
+    padding-block:
+      calc(env(safe-area-inset-top) + 0.5rem) calc(env(safe-area-inset-bottom) + 0.5rem);
+  }
+
+  .uyduruk__sahne {
+    gap: 0.25rem;
+    padding-block: 0.25rem 0;
+  }
+
+  .uyduruk__hedef {
+    gap: 0.15rem;
+    padding-block: 0.2rem 0.3rem;
+  }
+
+  .uyduruk__yaratiklar .yaratik {
+    width: 6rem;
+  }
+
+  .uyduruk__alt {
+    gap: 0.4rem;
+    min-height: 5.5rem;
+  }
+
+  .uyduruk__cumle {
+    font-size: 1.1rem;
+  }
+
+  .uyduruk__kiyi {
+    row-gap: 0.4rem;
+    padding-block: 0.4rem 0.25rem;
+  }
+
+  .uyduruk__cep {
+    height: 4.5rem;
+    margin-top: 0.25rem;
+  }
+
+  .uyduruk__cep-on {
+    height: 3.25rem;
+  }
+
+  .uyduruk__cep-yazi {
+    bottom: 0.45rem;
+  }
+}
+
+/* Çok alçak ekranda (320×568) yaratık, neden ve cümle bir kez daha küçülür: yanlış bir
+   denemenin nedeni de kıyıyı kaydırmadan sığsın. */
+@media (max-height: 37rem) {
+  .uyduruk__yaratiklar .yaratik {
+    width: 4.75rem;
+  }
+
+  .uyduruk__hedef {
+    padding-block: 0 0.15rem;
+  }
+
+  .uyduruk__ad,
+  .uyduruk__aday {
+    font-size: 1.625rem;
+  }
+
+  .uyduruk__alt {
+    gap: 0.3rem;
+    min-height: 5rem;
+  }
+
+  .uyduruk__cumle {
+    font-size: 1rem;
+  }
+}
+
+/* Seçilen bukalemun ya da karo hafifçe kalkar; yalnız hareket azaltma kapalıyken. Kalkış
+   translate özelliğiyledir: taşıma hareketleri transform'u oynatır, geçiş onlara karışmaz. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-hareket='azalt']) .uyduruk__bukalemun,
+  :root:not([data-hareket='azalt']) .uyduruk__karo {
+    transition: translate 150ms ease-out;
+  }
+
+  :root:not([data-hareket='azalt']) .uyduruk__bukalemun[aria-pressed='true'],
+  :root:not([data-hareket='azalt']) .uyduruk__karo[aria-pressed='true'] {
+    translate: 0 -6px;
+  }
+}

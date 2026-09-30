@@ -29,14 +29,16 @@ describe('adanın bölgeleri', () => {
     ])
   })
 
-  it('koyun, dükkânın ve bahçenin içeriği var: görevleri kendi tablolarından', () => {
-    expect(BOLGELER.map((b) => b.gorevler.length)).toEqual([10, 10, 10, 0])
+  it('dört bölgenin de içeriği var: görevleri kendi tablolarından', () => {
+    expect(BOLGELER.map((b) => b.gorevler.length)).toEqual([10, 10, 10, 100])
     const koy = GOREV_TABLOLARI['icerik/gorevler/bukalemun-koyu.csv'] ?? ''
     expect(bolgeBul('koy')?.gorevler).toEqual(gorevleriOku(koy))
     const dukkan = GOREV_TABLOLARI['icerik/gorevler/fistikci-sahap.csv'] ?? ''
     expect(bolgeBul('dukkan')?.gorevler).toEqual(gorevleriOku(dukkan))
     const bahce = GOREV_TABLOLARI['icerik/gorevler/kok-bahcesi.csv'] ?? ''
     expect(bolgeBul('bahce')?.gorevler).toEqual(gorevleriOku(bahce))
+    const uyduruk = GOREV_TABLOLARI['icerik/gorevler/uydurukcuklar.csv'] ?? ''
+    expect(bolgeBul('uyduruk')?.gorevler).toEqual(gorevleriOku(uyduruk))
   })
 
   it('her görev tablosu yoluyla bilinir, metni dosyanınkidir', () => {
@@ -67,7 +69,7 @@ describe('bolgeleriOku', () => {
         kimlik: 'ada',
         ad: 'Ada',
         aksam: 'Adada akşam oldu',
-        gorevler: [{ sira: 1, kok: 'ev', etiketler: ['PL'], renksiz: false }],
+        gorevler: [{ sira: 1, tur: 1, turdakiSira: 1, kok: 'ev', etiketler: ['PL'], renksiz: false }],
       },
       { sira: 2, kimlik: 'tepe', ad: 'Tepe', aksam: 'Tepede akşam oldu', gorevler: [] },
     ])

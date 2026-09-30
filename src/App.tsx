@@ -15,6 +15,7 @@ import BukalemunKoyu from './ekranlar/BukalemunKoyu.tsx'
 import FistikciSahap from './ekranlar/FistikciSahap.tsx'
 import KokBahcesi from './ekranlar/KokBahcesi.tsx'
 import Sozluk from './ekranlar/Sozluk.tsx'
+import Uydurukcuklar from './ekranlar/Uydurukcuklar.tsx'
 import { useIlerleme } from './kabuk/depo.ts'
 import { HARITA, useRota } from './kabuk/yonlendirici.ts'
 import {
@@ -32,12 +33,13 @@ import {
  * eklenir; ekranı olmayan bölgeye girilmez. Bölge ekranları aynı kabuğu alır: bölge, kalınan
  * görev, bugünün kartları, görev bitti ve haritaya dönüş. Görev bitince ekran kartların
  * eklerini de verebilir (Kök Bahçesi: yalnız gövde kelimeleri); vermezse kart görevin
- * kelimesidir.
+ * kelimesidir. Kurulan kelimeyi de verebilir (Uydurukçuklar: çocuğun seçtiği pıtağım).
  */
 const BOLGE_EKRANLARI = {
   koy: BukalemunKoyu,
   dukkan: FistikciSahap,
   bahce: KokBahcesi,
+  uyduruk: Uydurukcuklar,
 } as const
 
 const ekraniVar = (kimlik: string): kimlik is keyof typeof BOLGE_EKRANLARI =>
@@ -88,8 +90,10 @@ export default function App() {
         bolge={girilen}
         baslangic={kaldigiGorev(ilerleme, girilen)}
         bugunkuKartlar={bugununKartlari(ilerleme, girilen.kimlik, new Date())}
-        onGorevBitti={(gorev, kartEkleri?: readonly (readonly string[])[]) =>
-          degistir((i) => ekrandaGorevBitti(i, girilen, gorev, new Date(), sifirlama, kartEkleri))
+        onGorevBitti={(gorev, kartEkleri?: readonly (readonly string[])[], kelime?: string) =>
+          degistir((i) =>
+            ekrandaGorevBitti(i, girilen, gorev, new Date(), sifirlama, kartEkleri, kelime),
+          )
         }
         onHarita={() => git(HARITA)}
       />

@@ -16,11 +16,14 @@
 //     "ayarlar": { "hareket": "sistem", "renkler": "renkli" },
 //     "sifirlama": 0 }
 // sifirlama: sıfırlama kimliği, her sıfırlamada bir artar; eksikse 0 sayılır.
+// kaldigi bütün tablodaki yerdir (0'dan); turlu bölgede (Uydurukçuklar) turu da o verir: 10,
+// 2. turun başıdır. Kartın kelimesi motorun kabul ettiği biçimlerden biridir (olasiBicimler):
+// uydurma kökte çocuğun seçtiği biçim (pıtakım ya da pıtağım).
 // Biçim değişirse anahtar da değişir (morfemusta.v2); eski kayıt yenisine taşınır.
 
-import { ekle } from '../motor/index.ts'
+import { ekle, olasiBicimler } from '../motor/index.ts'
 import { BOLGELER, type Bolge } from './bolgeler.ts'
-import type { Gorev } from './gorevler.ts'
+import { turlar, type Gorev } from './gorevler.ts'
 
 /** Kaydın anahtarı: sürüm numaralı, tek. */
 export const ANAHTAR = 'morfemusta.v1'
@@ -265,8 +268,8 @@ function kartiCoz(ham: unknown, bolgeler: readonly Bolge[]): SozlukKarti | null 
   if (tarih === null) return null
   const sonKurulma = Math.max(tarih, anOku(ham.sonKurulma) ?? tarih)
   try {
-    // Kart motorun kurduğu kelime olmalı.
-    if (ekle(kok, etiketler).bicim !== kelime) return null
+    // Kart motorun kurduğu kelime olmalı (uydurma kökte iki biçimden biri).
+    if (!olasiBicimler(kok, etiketler).includes(kelime)) return null
   } catch {
     return null
   }
@@ -292,6 +295,9 @@ const ayniKart = (a: SozlukKarti, b: SozlukKarti): boolean =>
  *
  * Kartların ekleri verilirse kartlar onlardır, sırayla: Kök Bahçesi'nde kart yalnız gövdeden
  * düşer (çiçekçi; çiçekçiler değil). Verilmezse tek kart görevin kelimesidir.
+ *
+ * Kelime verilirse (Uydurukçuklar: çocuğun seçtiği pıtağım) görevin ekleriyle kurulan kart
+ * onu saklar; motorun kabul ettiği biçimlerden biri değilse ekle'ninki yazılır.
  */
 export function gorevBitti(
   ilerleme: Ilerleme,
@@ -299,14 +305,21 @@ export function gorevBitti(
   gorev: Gorev,
   simdi: Date,
   kartEkleri: readonly (readonly string[])[] = [gorev.etiketler],
+  kelime?: string,
 ): Ilerleme {
   const eski = ilerleme.bolgeler[bolge.kimlik]
   const bitenler = [...new Set([...(eski?.bitenler ?? []), gorev.sira])].sort((a, b) => a - b)
   const an = simdi.toISOString()
   let kartlar = ilerleme.kartlar
   for (const etiketler of kartEkleri) {
+    const secilen =
+      kelime !== undefined &&
+      etiketler.join('+') === gorev.etiketler.join('+') &&
+      olasiBicimler(gorev.kok, etiketler).includes(kelime)
+        ? kelime
+        : undefined
     const kart: SozlukKarti = {
-      kelime: ekle(gorev.kok, etiketler).bicim,
+      kelime: secilen ?? ekle(gorev.kok, etiketler).bicim,
       kok: gorev.kok,
       etiketler: [...etiketler],
       bolge: bolge.kimlik,
@@ -339,28 +352,38 @@ export function ekrandaGorevBitti(
   simdi: Date,
   sifirlama: number,
   kartEkleri?: readonly (readonly string[])[],
+  kelime?: string,
 ): Ilerleme {
   return ilerleme.sifirlama === sifirlama
-    ? gorevBitti(ilerleme, bolge, gorev, simdi, kartEkleri)
+    ? gorevBitti(ilerleme, bolge, gorev, simdi, kartEkleri, kelime)
     : ilerleme
 }
 
-/** Bölgeye girilince oynanacak görevin yeri: kalınan görev; tur bittiyse baştan. */
+/**
+ * Bölgeye girilince oynanacak görevin yeri (bütün tablodaki): kalınan görev. Turlu bölgede tur
+ * bitince sonraki turun başı; son tur bittiyse (ya da tursuz bölgenin turu) baştan.
+ */
 export function kaldigiGorev(ilerleme: Ilerleme, bolge: Bolge): number {
   const kaldigi = ilerleme.bolgeler[bolge.kimlik]?.kaldigi ?? 0
   return kaldigi < bolge.gorevler.length ? kaldigi : 0
 }
 
-/** Bölgenin bütün görevleri en az bir kez bitti mi. İçeriği olmayan bölge bitmez. */
+/**
+ * Bölge bitti mi: turlarından birinin bütün görevleri en az bir kez bitti. Tursuz bölgenin tek
+ * turu bütün görevleridir; turlu bölge (Uydurukçuklar) ilk tur bitince tamam sayılır. İçeriği
+ * olmayan bölge bitmez.
+ */
 export function bolgeBittiMi(ilerleme: Ilerleme, bolge: Bolge): boolean {
   const bitenler = new Set(ilerleme.bolgeler[bolge.kimlik]?.bitenler)
-  return bolge.gorevler.length > 0 && bolge.gorevler.every((g) => bitenler.has(g.sira))
+  return turlar(bolge.gorevler).some(
+    (tur) => tur.length > 0 && tur.every((g) => bitenler.has(g.sira)),
+  )
 }
 
 /**
  * Haritadaki durum:
  *   acik          açık, oynanabilir
- *   tamam         bütün görevleri en az bir kez bitti; yine oynanabilir
+ *   tamam         bir turu (tursuz bölgede bütün görevleri) bitti; yine oynanabilir
  *   kilitli       önceki bölge bitmedi
  *   hazirlaniyor  açık ama içeriği henüz yok
  */
@@ -373,7 +396,7 @@ export interface HaritaBolgesi {
   readonly onceki: Bolge | null
 }
 
-/** Bir bölge, öncekinin bütün görevleri en az bir kez bitince açılır. İlk bölge hep açıktır. */
+/** Bir bölge, önceki bölge bitince (bolgeBittiMi) açılır. İlk bölge hep açıktır. */
 export function bolgeDurumlari(
   ilerleme: Ilerleme,
   bolgeler: readonly Bolge[] = BOLGELER,

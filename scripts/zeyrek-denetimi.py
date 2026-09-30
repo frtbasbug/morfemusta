@@ -22,6 +22,12 @@ Depo kökünde, npm bağımlılıkları kuruluyken:
 NLTK'nin punkt_tab verisi inmezse (vekil sunucu arkasında):
 
     NLTK_ALLOW_PROXIED_URLOPEN=1 python3 scripts/zeyrek-denetimi.py
+
+Uydurma kök adayları (scripts/uydurma-uret.mjs kullanır): standart girdiden satır satır
+kökleri okur, zeyrek'in çözümleyebildiklerini (gerçek kelime ya da gerçek kelime + ek gibi
+okunanları) standart çıktıya yazar:
+
+    printf 'pıtak\nkalem\n' | python3 scripts/zeyrek-denetimi.py --adaylar
 """
 
 import csv
@@ -104,7 +110,29 @@ def ozet(cozumleme):
     return '+'.join([girdi, *cozumleme.morphemes[1:]])
 
 
+def zeyrek_hazirla():
+    nltk_verisini_hazirla()
+    # Zeyrek bulduğu her çözümlemeyi WARNING düzeyinde günlüğe yazar.
+    logging.getLogger('zeyrek').setLevel(logging.ERROR)
+    import zeyrek
+
+    return zeyrek.MorphAnalyzer()
+
+
+def adaylari_ele():
+    """Standart girdideki köklerden zeyrek'in çözümleyebildiklerini yazar."""
+    kokler = [satir.strip() for satir in sys.stdin if satir.strip()]
+    cozumleyici = zeyrek_hazirla()
+    for kok in kokler:
+        cozumlemeler = [c for kelime in cozumleyici.analyze(kok) for c in kelime if c.pos != 'Unk']
+        if cozumlemeler:
+            print(kok)
+
+
 def main():
+    if '--adaylar' in sys.argv[1:]:
+        adaylari_ele()
+        return
     satirlar = bicimleri_al()
     nltk_verisini_hazirla()
 
