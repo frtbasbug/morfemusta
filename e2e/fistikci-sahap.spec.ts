@@ -253,6 +253,45 @@ test.describe("Fıstıkçı Şahap'ın Dükkânı", () => {
     expect(await yol('karo--tas')).not.toBe(await yol('karo--jole'))
   })
 
+  test('görev biter bitmez sayfa kapansa da görev ve kart kaydedilir (raf hareketini beklemez)', async ({
+    page,
+  }) => {
+    await page.goto('./')
+    await page.evaluate(
+      ([anahtar, kayit]) => localStorage.setItem(anahtar, kayit),
+      [
+        ANAHTAR,
+        JSON.stringify({
+          bolgeler: { ...KOY_BITTI.bolgeler, dukkan: { bitenler: [1, 2, 3, 4, 5, 6, 7, 8, 9], kaldigi: 9 } },
+        }),
+      ] as const,
+    )
+    await page.reload()
+    await bolge(page, 'Dükkânı').click()
+    await expect(sira(page)).toHaveText('Görev 10 / 10')
+
+    // Sıradaki DOM'a girdiği anda (raf hareketi sürerken) kayıt okunur: sayfa o an kapansa
+    // cihazda kalan kayıt budur. Görev ve kart, Sıradaki göründüğünde yazılmış olmalı.
+    const kayitAni = page.evaluate(
+      (anahtar) =>
+        new Promise<string | null>((coz) => {
+          const izleyici = new MutationObserver(() => {
+            const dugmeler = [...document.querySelectorAll('button')]
+            if (!dugmeler.some((d) => d.textContent === 'Sıradaki')) return
+            izleyici.disconnect()
+            coz(localStorage.getItem(anahtar))
+          })
+          izleyici.observe(document.body, { childList: true, subtree: true })
+        }),
+      ANAHTAR,
+    )
+    await karo(page, 'taş').tap()
+    await kart(page).tap()
+    const anlik = JSON.parse((await kayitAni) ?? '{}')
+    expect(anlik.bolgeler?.dukkan?.bitenler).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+    expect(anlik.kartlar?.map((k: { kelime: string }) => k.kelime)).toEqual(['fıstıkçı'])
+  })
+
   test('Harita düğmesi haritaya döner', async ({ page }) => {
     await dukkaniAc(page)
     await page.getByRole('button', { name: 'Harita', exact: true }).click()
