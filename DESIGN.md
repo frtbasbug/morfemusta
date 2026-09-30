@@ -321,6 +321,9 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
   Bir pencerede olan öteki pencerede de hemen görünür. Bölge ekranı açıkken başka pencere o
   bölgenin ilerlemesini değiştirirse (görev, sıfırlama) ekran kalınan yerden yeniden açılır,
   sıfırlamadan sonra baştan; ayar değişikliği oyunu kesmez.
+- Sıfırlama geri alınmaz. Kayıtta bir sıfırlama kimliği var; her sıfırlamada artar. Bölge
+  ekranı açılırken kimliği alır, görev bitince yazmadan önce karşılaştırır. Farklıysa ekran
+  açıkken ilerleme sıfırlanmıştır: hiçbir şey yazılmaz, ekran baştan açılır.
 - Tarayıcı destekliyorsa ilk kayıttan sonra kalıcı depo istenir
   (`navigator.storage.persist()`): yer darlığında kayıt silinmesin.
 

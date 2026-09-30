@@ -10,6 +10,7 @@ import {
   bolgeDurumlari,
   bugununKartlari,
   degisenBolgeler,
+  ekrandaGorevBitti,
   gorevBitti,
   ilerlemeyiCoz,
   ilerlemeyiKaydet,
@@ -109,6 +110,7 @@ describe('kaydet ve yükle', () => {
         },
       ],
       ayarlar: { hareket: 'sistem', renkler: 'renkli' },
+      sifirlama: 0,
     })
   })
 
@@ -117,6 +119,7 @@ describe('kaydet ve yükle', () => {
       bolgeler: {},
       kartlar: [],
       ayarlar: { hareket: 'sistem', renkler: 'renkli' },
+      sifirlama: 0,
     })
   })
 })
@@ -190,9 +193,38 @@ describe('iki pencere (sekme, ana ekrandaki uygulama) aynı depoyu paylaşır', 
     expect(ilerlemeyiYukle(depo)).toEqual({
       ...BOS_ILERLEME,
       ayarlar: { hareket: 'sistem', renkler: 'renksiz' },
+      sifirlama: 1,
     })
     expect(a.tazele()).toBe(true)
     expect(a.ilerleme).toEqual(b.ilerleme)
+  })
+
+  it('sıfırlama geri alınmaz: A 5. görevdeyken B sıfırlar; A 5. görevi bitirince kayıt boş kalır, A baştan başlar', () => {
+    const { depo, a, b } = ikiPencere()
+    a.degistir((i) => oyna(i, KOY, 4))
+    // A'nın bölge ekranı 5. görevde açık; açılırken kaydın sıfırlama kimliğini aldı.
+    expect(kaldigiGorev(a.ilerleme, KOY)).toBe(4)
+    const acilis = a.ilerleme.sifirlama
+
+    b.degistir(ilerlemeyiSifirla)
+    const bos = ilerlemeyiYukle(depo)
+    expect(bos).toEqual({ ...BOS_ILERLEME, sifirlama: acilis + 1 })
+
+    // A, sıfırlamayı görmeden 5. görevi bitirir. Yazmadan önce kimliği karşılaştırır: farklı,
+    // hiçbir şey yazılmaz.
+    expect(a.degistir((i) => ekrandaGorevBitti(i, KOY, gorevi(5), BUGUN, acilis))).toBe(false)
+    expect(ilerlemeyiYukle(depo)).toEqual(bos)
+    // A son kaydı aldı: kimliği değişti (ekran yeniden açılır), baştan başlar.
+    expect(a.ilerleme).toEqual(bos)
+    expect(a.ilerleme.sifirlama).not.toBe(acilis)
+    expect(kaldigiGorev(a.ilerleme, KOY)).toBe(0)
+  })
+
+  it('kimlik aynıysa ekranda biten görev kaydedilir', () => {
+    const { depo, a } = ikiPencere()
+    const acilis = a.ilerleme.sifirlama
+    expect(a.degistir((i) => ekrandaGorevBitti(i, KOY, gorevi(1), BUGUN, acilis))).toBe(true)
+    expect(ilerlemeyiYukle(depo)).toEqual(gorevBitti(BOS_ILERLEME, KOY, gorevi(1), BUGUN))
   })
 
   it('aynı kelimeyi iki pencere kurarsa tek kart kalır', () => {
@@ -337,6 +369,14 @@ describe('bozuk veri', () => {
     expect(yukle({ bolgeler: { koy: { kaldigi: 4 } } }).bolgeler).toEqual({
       koy: { bitenler: [], kaldigi: 4 },
     })
+  })
+
+  it('sıfırlama kimliği sıfır ya da pozitif tam sayıdır; değilse 0', () => {
+    expect(yukle({ sifirlama: 3 }).sifirlama).toBe(3)
+    for (const sifirlama of [-1, 2.5, '3', null, Number.MAX_SAFE_INTEGER + 2]) {
+      expect(yukle({ sifirlama }).sifirlama).toBe(0)
+    }
+    expect(yukle({}).sifirlama).toBe(0)
   })
 
   it('tanınmayan ayar varsayılana döner, tanınan kalır', () => {
@@ -542,7 +582,13 @@ describe('ayarlar ve sıfırlama', () => {
   it('sıfırlama bütün ilerlemeyi ve kartları siler, ayarları bırakır', () => {
     const ilerleme = ayarlariDegistir(oyna(BOS_ILERLEME, KOY, 10), { renkler: 'renksiz' })
     const sifir = ilerlemeyiSifirla(ilerleme)
-    expect(sifir).toEqual({ ...BOS_ILERLEME, ayarlar: { hareket: 'sistem', renkler: 'renksiz' } })
+    expect(sifir).toEqual({
+      ...BOS_ILERLEME,
+      ayarlar: { hareket: 'sistem', renkler: 'renksiz' },
+      sifirlama: 1,
+    })
+    // Her sıfırlamada kimlik bir artar.
+    expect(ilerlemeyiSifirla(sifir).sifirlama).toBe(2)
     expect(bolgeDurumlari(sifir).map((b) => b.durum)).toEqual([
       'acik',
       'kilitli',

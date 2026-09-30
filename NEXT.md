@@ -60,10 +60,17 @@
       güncellenir.
   - Codex'in ikinci bulgusu: bölge ekranı açıkken başka sekme ilerlemeyi sıfırlarsa açık ekran
     eski görevinde kalıyordu; o görev bitince kayıt `{bitenler: [5], kaldigi: 5}` olup sonraki
-    giriş altıncı görevden başlıyordu. Artık başka pencere bir bölgenin ilerlemesini değiştirince
-    (görev, sıfırlama) o bölgenin dış sürümü artar (`degisenBolgeler`) ve açık ekran kalınan
-    yerden, sıfırlamadan sonra baştan yeniden açılır. Ayar ya da yalnız kart değişikliği oyunu
-    kesmez; bu pencerenin kendi görevi de ekranı kesmez.
+    giriş altıncı görevden başlıyordu. Kullanıcının tarifiyle düzeldi:
+    - Bölge ekranı dışarıdan gelen değişikliği izler. Başka pencere bir bölgenin ilerlemesini
+      değiştirince (görev, sıfırlama) o bölgenin dış sürümü artar (`degisenBolgeler`); dış sürüm
+      ekranın anahtarındadır, ekran en son kayıttan yeniden açılır. Ayar ya da yalnız kart
+      değişikliği ve bu pencerenin kendi görevi ekranı kesmez.
+    - Sıfırlama geri alınmaz: kayıtta bir sıfırlama kimliği var (`sifirlama`, her sıfırlamada
+      bir artar; kaydın biçimi sürüm 1'de, yayımlanmadan önce genişletildi, eksikse 0). Bölge
+      ekranı açılırken kimliği alır (kimlik ekranın anahtarında); görev bitince yazmadan önce
+      son kayıttakiyle karşılaştırır (`ekrandaGorevBitti`). Farklıysa hiçbir şey yazılmaz, ekran
+      son kayıttan, baştan açılır. `storage` olayı ulaşmayan bir sekme de sıfırlamayı geri
+      alamaz.
   - İlk başarılı kayıttan sonra, sayfa başına bir kez `navigator.storage.persist()` istenir.
   - "Hiçbir veri cihazdan çıkmaz" CLAUDE.md'ye 14. kural olarak yazıldı.
 - **Sözlük** (`Sozluk.tsx`):
@@ -89,8 +96,8 @@
 - **Denetim sayfasının zemini** main'de koyu maviydi (`--deniz-koyu`), açık olması
   gerekirken: derlemede paylaşılan `genel.css` sayfanın kendi CSS'inden sonra yükleniyor.
   Artık kendi açık rengi geçerli (`:root:has(.denetim)`); uçtan uca test denetliyor.
-- **Testler:** 743 birim testi ve 41 uçtan uca test.
-  - Birim testlerinin dağılımı: motor 366 (değişmedi), oyun mantığı 99 (ilerleme 45, bölgeler
+- **Testler:** 746 birim testi ve 42 uçtan uca test.
+  - Birim testlerinin dağılımı: motor 366 (değişmedi), oyun mantığı 102 (ilerleme 48, bölgeler
     8), görsel dil 205 (kurallar 74), ekranlar 36, kabuk 15, galeri 11, denetim sayfası 11.
   - İlerleme deposunun birim testleri: kaydet, yükle, bozuk veri, depo yok, iki pencere, kilit
     açma, kart tekrarı, bugünün kartları; sıfırlama ve ayarlar.
@@ -104,7 +111,9 @@
     - localStorage hata atarken, bozuk kayıtta ve dolu depoda oyun sürer;
     - iki sekme: görevler, kartlar ve ayar korunur; değişiklik öteki sekmeye hemen yansır;
       `storage` olayı ulaşmayan eski sekme de ötekini ezmez; açık bölge ekranı öteki sekmenin
-      görevinden sonra kalınan yerden, sıfırlamasından sonra baştan açılır;
+      görevinden sonra kalınan yerden, sıfırlamasından sonra baştan açılır; sıfırlama geri
+      alınmaz (A 5. görevdeyken B sıfırlar, A 5. görevi bitirir: kayıt boş kalır, A baştan
+      başlar; birim testinde de);
     - geri tuşu; 360×640'ta sığma;
     - Renksiz'de kalın ve ince ek etiketlerinin enleri farklı, kökün ve ekin etiketi aynı
       ende (`ek-etiketi.spec.ts`).
@@ -171,6 +180,31 @@
   Chrome 111+, Firefox 114+). Harita `dvh`'ye ve kap sorgusu birimlerine (`cqw`, `cqh`)
   dayanır; hedef düşerse bunların geri dönüşleri de birlikte ele alınır (Lightning CSS, hedefin
   desteklediği özellikler için geri dönüşü derlemede siler).
+
+### Plan: çok sekmede kalan durumlar (kullanıcının kararı; Oturum 11, kod bugün yok)
+
+- **`storage` olayı ulaşmayan pencere** (arka planda donmuş sekme, geri tuşuyla önbellekten
+  dönen sayfa): harita, Sözlük, ayarlar ve açık bölge ekranı, pencere bir sonraki kez yazana
+  kadar eski kalır. Yazarken son kayıt okunur: hiçbir şey kaybolmaz, sıfırlama geri alınmaz.
+  Ama:
+  - başka pencere görev bitirdiyse (sıfırlama yok), açık ekran kendi görevinden sürer, son
+    kayıttan yeniden açılmaz;
+  - sıfırlamadan sonra böyle bir pencerede bölgeye girilirse ekran eski kimlikle açılır: ilk
+    biten görev yazılmaz, ekran baştan açılır, çocuk o görevi yeniden oynar.
+  - Öneri: `visibilitychange` ve `pageshow`'da kaydı yeniden okumak (`tazele`), `storage`
+    olayı gibi işlemek.
+- **Aynı bölge iki pencerede aynı anda:** bir pencerede görev bitince ötekinin açık ekranı son
+  kayıttan yeniden açılır; o penceredeki yarım görev (yerleşmiş bukalemun) gider. Tek cihazda
+  pek olmaz.
+- **Kalınan yer birleşmez:** son görevin bittiği pencere belirler. Eski bir pencere daha önceki
+  bir görevi bitirirse kalınan yer geri gider; biten görevler ve kartlar kalır.
+- **Dolu depo:** bir pencere yazamıyorken öteki yazarsa, ilkinin yazılamamış ilerlemesi
+  ötekinin kaydıyla değişir.
+- **Güncelleme sırasında iki sürüm:** yeni sürüm devreye girse de açık sayfa eski kodla sürer
+  (sayfa kendiliğinden yenilenmez). Eski kod tanımadığı alanları yazarken düşürür
+  (`ilerlemeyiCoz` yalnız bildiklerini alır). Bugün sorun yok: kayıt bu sürümle ilk kez
+  yayımlanıyor. Kaydın biçimi değişirse (yeni alan ya da `morfemusta.v2`), eski ve yeni
+  sürümün birlikte açık kalabileceği hesaba katılmalı.
 
 ### Plan: nedenin iki sınırı (kullanıcının kararı; kod bugün değişmedi)
 

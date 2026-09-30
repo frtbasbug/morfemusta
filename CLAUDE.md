@@ -209,8 +209,10 @@ DESIGN.md  NEXT.md  CLAUDE.md
   (anahtar `e2e/yardimcilar.ts`'te). Aynı cihazdaki pencereler (sekme, ana ekrandaki
   uygulama) kaydı paylaşır: `pencereKaydi` her değişikliği depodaki son kayda uygular (bellekteki
   kopyaya değil); `useIlerleme` başka pencerenin yazdığını `storage` olayıyla alır. O pencere bir
-  bölgenin ilerlemesini değiştirdiyse bölgenin dış sürümü artar (`degisenBolgeler`); `App.tsx`
-  bunu bölge ekranının `key`'ine koyar, ekran kalınan yerden yeniden açılır.
+  bölgenin ilerlemesini değiştirdiyse bölgenin dış sürümü artar (`degisenBolgeler`). Kayıtta
+  sıfırlama kimliği (`sifirlama`) de var. `App.tsx` ikisini de bölge ekranının `key`'ine koyar;
+  görev `ekrandaGorevBitti` ile yazılır: kimlik değiştiyse yazılmaz, ekran baştan açılır.
+  Çok sekmede kalan durumlar `NEXT.md`'de (Oturum 11).
 - **Saf görsel hesaplar:** `src/gorsel/cizim.ts` ve `kilik.ts` motor gibi DOM'suz derlenir
   (`tsconfig.motor.json`) ve yalnız motorun genel kapısını içe aktarır
   (`src/gorsel/bagimsizlik.test.ts`). Ünlü tablosu motorunkidir. Saklanan ünlünün kılığı

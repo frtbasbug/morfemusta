@@ -19,7 +19,7 @@ import {
   ayarlariDegistir,
   bolgeDurumlari,
   bugununKartlari,
-  gorevBitti,
+  ekrandaGorevBitti,
   ilerlemeyiSifirla,
   kaldigiGorev,
   sozlukGruplari,
@@ -61,15 +61,23 @@ export default function App() {
   }, [girilemez, git])
 
   if (girilen) {
-    // Bölgenin ilerlemesi başka bir pencerede değişirse (görev, sıfırlama) ekran kalınan yerden
-    // yeniden açılır: dış sürüm anahtara girer. Bu pencerenin kendi görevi ekranı kesmez.
+    // Bölge ekranı en son kayıttan açılır ve dışarıdan gelen değişikliği izler; ikisi de ekranın
+    // anahtarındadır:
+    //   - dış sürüm: başka pencere bölgenin ilerlemesini değiştirince (görev, sıfırlama) artar;
+    //   - sıfırlama kimliği: ekran açılırken aldığı kimlik. Görev bitince yazmadan önce son
+    //     kayıttakiyle karşılaştırılır (ekrandaGorevBitti); farklıysa hiçbir şey yazılmaz, son
+    //     kaydın kimliği anahtara girer ve ekran baştan açılır. Sıfırlama geri alınmaz.
+    // Bu pencerenin kendi görevi ve ayar değişikliği ekranı kesmez.
+    const { sifirlama } = ilerleme
     return (
       <BukalemunKoyu
-        key={`${girilen.kimlik}:${disSurumler[girilen.kimlik] ?? 0}`}
+        key={`${girilen.kimlik}:${sifirlama}:${disSurumler[girilen.kimlik] ?? 0}`}
         bolge={girilen}
         baslangic={kaldigiGorev(ilerleme, girilen)}
         bugunkuKartlar={bugununKartlari(ilerleme, girilen.kimlik, new Date())}
-        onGorevBitti={(gorev) => degistir((i) => gorevBitti(i, girilen, gorev, new Date()))}
+        onGorevBitti={(gorev) =>
+          degistir((i) => ekrandaGorevBitti(i, girilen, gorev, new Date(), sifirlama))
+        }
         onHarita={() => git(HARITA)}
       />
     )

@@ -168,11 +168,12 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
     await bolge(page, 'Bukalemun Koyu').click()
     await expect(sira(page)).toHaveText('Görev 1 / 10')
 
-    // Kayıtta ilerleme ve kart kalmadı; ayarlar kaldı.
+    // Kayıtta ilerleme ve kart kalmadı; ayarlar kaldı. Sıfırlama kimliği bir arttı.
     expect(await kayit(page)).toEqual({
       bolgeler: {},
       kartlar: [],
       ayarlar: { hareket: 'sistem', renkler: 'renksiz' },
+      sifirlama: 1,
     })
   })
 
@@ -304,6 +305,42 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
       bolgeler: { koy: { bitenler: [1], kaldigi: 1 } },
       kartlar: [{ kelime: 'atlar' }],
     })
+    expect(hatalar.flat()).toEqual([])
+  })
+
+  test('sıfırlama geri alınmaz: A 5. görevdeyken B sıfırlar; A 5. görevi bitirince kayıt boş kalır, A baştan başlar', async ({
+    context,
+  }) => {
+    const a = await context.newPage()
+    const b = await context.newPage()
+    const hatalar = [hatalariTopla(a), hatalariTopla(b)]
+    // A'ya storage olayı ulaşmaz (ör. arka planda donmuş sekme): sıfırlamayı görmeden 5. görevde
+    // kalır. Olay ulaşsaydı A'nın ekranı sıfırlanınca hemen baştan açılırdı (yukarıdaki test).
+    await a.addInitScript(() => {
+      window.addEventListener('storage', (olay) => olay.stopImmediatePropagation(), true)
+    })
+    await koyuAc(a)
+    await gorevleriOyna(a, 0, 3)
+    await expect(sira(a)).toHaveText('Görev 5 / 10')
+
+    await b.goto('./')
+    await gezinme(b, 'Ayarlar').click()
+    await b.getByRole('button', { name: 'İlerlemeyi sıfırla' }).click()
+    await b.getByRole('button', { name: 'Sil' }).click()
+    const bos = {
+      bolgeler: {},
+      kartlar: [],
+      ayarlar: { hareket: 'sistem', renkler: 'renkli' },
+      sifirlama: 1,
+    }
+    expect(await kayit(b)).toEqual(bos)
+
+    // A 5. görevi (kız + ım) bitirir. Yazmadan önce sıfırlama kimliğini karşılaştırır: farklı,
+    // hiçbir şey yazılmaz; ekran son kayıttan, baştan açılır.
+    await bukalemun(a, 'ım').tap()
+    await kart(a).tap()
+    await expect(sira(a)).toHaveText('Görev 1 / 10')
+    expect(await kayit(a)).toEqual(bos)
     expect(hatalar.flat()).toEqual([])
   })
 

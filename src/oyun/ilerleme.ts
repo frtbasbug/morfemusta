@@ -13,7 +13,9 @@
 //   { "bolgeler": { "koy": { "bitenler": [1, 2, 3], "kaldigi": 3 } },
 //     "kartlar": [{ "kelime": "atlar", "kok": "at", "etiketler": ["PL"], "bolge": "koy",
 //                   "tarih": "2026-09-28T09:15:00.000Z", "sonKurulma": "2026-09-28T09:15:00.000Z" }],
-//     "ayarlar": { "hareket": "sistem", "renkler": "renkli" } }
+//     "ayarlar": { "hareket": "sistem", "renkler": "renkli" },
+//     "sifirlama": 0 }
+// sifirlama: sıfırlama kimliği, her sıfırlamada bir artar; eksikse 0 sayılır.
 // Biçim değişirse anahtar da değişir (morfemusta.v2); eski kayıt yenisine taşınır.
 
 import { ekle } from '../motor/index.ts'
@@ -66,11 +68,22 @@ export interface Ilerleme {
   /** Kartlar, kazanıldıkları sırayla. */
   readonly kartlar: readonly SozlukKarti[]
   readonly ayarlar: Ayarlar
+  /**
+   * Sıfırlama kimliği: ilerleme her sıfırlandığında bir artar. Bölge ekranı açılırken alır,
+   * görev bitince yazmadan önce karşılaştırır (ekrandaGorevBitti): sıfırlamayı görmemiş bir
+   * pencere onu geri alamaz.
+   */
+  readonly sifirlama: number
 }
 
 export const VARSAYILAN_AYARLAR: Ayarlar = { hareket: 'sistem', renkler: 'renkli' }
 
-export const BOS_ILERLEME: Ilerleme = { bolgeler: {}, kartlar: [], ayarlar: VARSAYILAN_AYARLAR }
+export const BOS_ILERLEME: Ilerleme = {
+  bolgeler: {},
+  kartlar: [],
+  ayarlar: VARSAYILAN_AYARLAR,
+  sifirlama: 0,
+}
 
 // --- Depo ---------------------------------------------------------------------------------
 
@@ -206,6 +219,7 @@ export function ilerlemeyiCoz(ham: unknown, bolgeler: readonly Bolge[] = BOLGELE
   }
 
   const ayarlar = nesneMi(ham.ayarlar) ? ham.ayarlar : {}
+  const { sifirlama } = ham
   return {
     bolgeler: Object.fromEntries(bolgeIlerlemeleri),
     kartlar,
@@ -213,6 +227,10 @@ export function ilerlemeyiCoz(ham: unknown, bolgeler: readonly Bolge[] = BOLGELE
       hareket: ayarlar.hareket === 'azalt' ? 'azalt' : 'sistem',
       renkler: ayarlar.renkler === 'renksiz' ? 'renksiz' : 'renkli',
     },
+    sifirlama:
+      typeof sifirlama === 'number' && Number.isSafeInteger(sifirlama) && sifirlama >= 0
+        ? sifirlama
+        : 0,
   }
 }
 
@@ -293,6 +311,22 @@ export function gorevBitti(ilerleme: Ilerleme, bolge: Bolge, gorev: Gorev, simdi
       ? ilerleme.kartlar.map((k) => (k === onceki ? { ...k, sonKurulma: an } : k))
       : [...ilerleme.kartlar, kart],
   }
+}
+
+/**
+ * Bölge ekranında biten görev. Ekran açılırken kaydın sıfırlama kimliğini alır (sifirlama);
+ * görev bitince, yazmadan önce son kayıttakiyle karşılaştırır. Aynıysa görev kaydedilir
+ * (gorevBitti). Farklıysa ekran açıkken ilerleme sıfırlanmıştır: kayıt değişmez, sıfırlama geri
+ * alınmaz; ekran son kayıttan, baştan açılır (App.tsx: kimlik ekranın anahtarındadır).
+ */
+export function ekrandaGorevBitti(
+  ilerleme: Ilerleme,
+  bolge: Bolge,
+  gorev: Gorev,
+  simdi: Date,
+  sifirlama: number,
+): Ilerleme {
+  return ilerleme.sifirlama === sifirlama ? gorevBitti(ilerleme, bolge, gorev, simdi) : ilerleme
 }
 
 /** Bölgeye girilince oynanacak görevin yeri: kalınan görev; tur bittiyse baştan. */
@@ -386,7 +420,10 @@ export function ayarlariDegistir(ilerleme: Ilerleme, degisen: Partial<Ayarlar>):
   return { ...ilerleme, ayarlar: { ...ilerleme.ayarlar, ...degisen } }
 }
 
-/** Bütün ilerleme ve kartlar silinir; ayarlar kalır (renk körü çocuğun Renksiz'i gibi). */
+/**
+ * Bütün ilerleme ve kartlar silinir; ayarlar kalır (renk körü çocuğun Renksiz'i gibi). Sıfırlama
+ * kimliği bir artar: açık bölge ekranları sıfırlamayı geri alamaz (ekrandaGorevBitti).
+ */
 export function ilerlemeyiSifirla(ilerleme: Ilerleme): Ilerleme {
-  return { ...BOS_ILERLEME, ayarlar: ilerleme.ayarlar }
+  return { ...BOS_ILERLEME, ayarlar: ilerleme.ayarlar, sifirlama: ilerleme.sifirlama + 1 }
 }
