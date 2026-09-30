@@ -97,8 +97,15 @@ describe('Bukalemun Koyu görevleri', () => {
 describe('gorevleriOku', () => {
   it('satırı okur: ekler + ile ayrılır, renksiz evet ya da boş', () => {
     expect(gorevleriOku(`${BASLIK}1,ev,PL,\n2,top,PL+POSS.1SG,evet\n`)).toEqual([
-      { sira: 1, kok: 'ev', etiketler: ['PL'], renksiz: false },
-      { sira: 2, kok: 'top', etiketler: ['PL', 'POSS.1SG'], renksiz: true },
+      { sira: 1, tur: 1, turdakiSira: 1, kok: 'ev', etiketler: ['PL'], renksiz: false },
+      {
+        sira: 2,
+        tur: 1,
+        turdakiSira: 2,
+        kok: 'top',
+        etiketler: ['PL', 'POSS.1SG'],
+        renksiz: true,
+      },
     ])
   })
 
@@ -114,8 +121,8 @@ describe('gorevleriOku', () => {
 
   it('renksiz sütunu isteğe bağlı: yoksa her görev renkli', () => {
     expect(gorevleriOku('sira,kok,ekler\n1,ev,PL\n2,kitap,LOC\n')).toEqual([
-      { sira: 1, kok: 'ev', etiketler: ['PL'], renksiz: false },
-      { sira: 2, kok: 'kitap', etiketler: ['LOC'], renksiz: false },
+      { sira: 1, tur: 1, turdakiSira: 1, kok: 'ev', etiketler: ['PL'], renksiz: false },
+      { sira: 2, tur: 1, turdakiSira: 2, kok: 'kitap', etiketler: ['LOC'], renksiz: false },
     ])
   })
 

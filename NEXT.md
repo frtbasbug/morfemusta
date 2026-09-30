@@ -1,6 +1,212 @@
 # Sıradaki
 
-## Son oturum: Oturum 8 — Kök Bahçesi (2026-09-30)
+## Son oturum: Oturum 9 — Uydurukçuklar (2026-09-30)
+
+### Bitenler
+
+- **Veri, verildiği gibi:** `icerik/gorevler/uydurukcuklar.csv` (10 tur × 10 görev, 100 kök),
+  `icerik/yasakli-diziler.csv` (43 dizi), `tests/neden-kaynastirma.csv` (22 satır) ve
+  `tests/uydurma-denetimi.csv` (15 satır) hiç değiştirilmeden kaydedildi. Onaylı tek veri
+  değişikliği: `icerik/bolgeler.csv`'de `uyduruk` satırının `gorevler` sütunu
+  `icerik/gorevler/uydurukcuklar.csv`. Sözlük, altın tablo, neden tabloları ve öteki tablolar
+  değişmedi. CLAUDE.md'ye 15. kural: uydurma kökler ve yasaklı diziler yalnız kullanıcının
+  onayıyla değişir (12. kurala iki yeni test tablosu da eklendi).
+- **Motor: kaynaştırma nedeni** (`src/motor/neden.ts`): (y), (n) ve (s) ile başlayan ekte
+  kaynaştırmalı ve kaynaştırmasız yüzey de kılıktır (`kaynastirmaKarsiti`). Ünlüden sonra
+  ayraçlı ünsüz yoksa ya da ünsüzden sonra varsa `<ETİKET>:kaynaştırma` (eksik / fazla); ek
+  başı adımında, ünlü uyumundan önce. Cümleler: *İki ünlü yan yana gelmez: araya y girer.* (n,
+  s'de harf değişir) ve *Ünsüzden sonra araya y girmez.* `yuzeySecenekleri(parca, {
+  kaynastirma: true })` iki kılık takımını birlikte verir (ya, ye, a, e); `unsuz: true` D ve C
+  yuvasının taşını ve jölesini de (da, de, ta, te). 22 satır, `neden.csv`
+  ve `neden-unsuz.csv` geçiyor; altın tablonun 202 satırı değişmeden geçiyor.
+- **Motor: uydurma kök denetimi** (`src/motor/uydurma.ts`, `uydurmaDenetimi(kok)`): ses, sözlük,
+  yasak, ek; ilk bozukluk döner. 15 satır ve görev tablosunun 100 kökü geçiyor.
+- **Üreteç** (`scripts/uydurma-uret.mjs`): tohumlu, aynı kurallarla aday kurar, denetimden
+  geçirir, görev tablosundakileri atlar; gerçek kelimeleri `scripts/zeyrek-denetimi.py
+  --adaylar` ile zeyrek eler (CI'da yok). Çıktı yalnız `uydurma-adaylari.tsv` (git'e girmez).
+  Kullanım:
+
+  ```
+  pip install zeyrek
+  node scripts/uydurma-uret.mjs --tohum 7 --sayi 30               # uydurma-adaylari.tsv
+  node scripts/uydurma-uret.mjs --tohum 7 --sayi 30 --cikti a.tsv
+  node scripts/uydurma-uret.mjs --tohum 7 --zeyreksiz              # zeyrek yoksa (elenmez)
+  NLTK_ALLOW_PROXIED_URLOPEN=1 node scripts/uydurma-uret.mjs ...   # vekil sunucu arkasında
+  ```
+
+  Sütunlar: `kok`, `son` (ünlü / pçtk / öteki: görev şekline göre seçmek için), `unlu` (son
+  ünlü, yaratığın karakteri). Aynı tohum ve sayı aynı dosyayı verir. Oyuna kök yalnız onayla,
+  görev tablosu elle değişerek girer.
+- **Oyun mantığı:**
+  - Görev tablosu turlu (`tur,sira,kok,ekler`): `Gorev`'e `tur` ve `turdakiSira` eklendi;
+    `sira` bütün tablodaki sıradır. `turlar`, `turunYeri` (`src/oyun/gorevler.ts`).
+  - İlerleme kaydın biçimi değişmeden: `kaldigi` bütün tablodaki yer (10 = 2. turun başı, 100
+    → 1. tura dönüş). `bolgeBittiMi`: bir turu biten bölge tamam (Uydurukçuklar ilk turla).
+  - Kart çocuğun kurduğu biçimi saklar (`gorevBitti(..., kelime)`); `kartiCoz` kelimeyi
+    `olasiBicimler`'de arar (önceden yalnız `ekle`). *pıtakım* ve *pıtağım* ayrı kartlar.
+  - `src/oyun/uyduruk.ts`: adım (kaynaştırmalı kılıklar, Koy'un tohumu), sınır adımı
+    (`uydurukSiniri`: gövde sınırında iki karo da doğruysa), `sinirCumlesi`, `kurulanBicim`,
+    büyüler, indirgeyici (sec, dene, dustu, birlesti, karoSec, karoDene, buyuye, etki, bitti,
+    sonraki).
+- **Görsel dil:** yaratık (`src/gorsel/yaratik.ts` saf, `Yaratik.tsx`): son ünlünün karakteri,
+  kök başına tohumlu boynuz (yok / iki / tek) ve benek (0 / 2 / 3; en az bir süs); ağız
+  `unluCizimi`'nin. Yıldız (`--yanak`). Harita işareti: *fıngıl* 0.42, yazısız. Galeride
+  "Uydurukçuklar" bölümü: ilk turun on yaratığı, yıldız, işaret. Sözlük'te uydurma kelimenin
+  kartında köşe işareti. DESIGN.md'de "Uydurukçuklar", "Yaratık", "Uydurma kök denetimi".
+- **Ekran** (`src/ekranlar/Uydurukcuklar.tsx`): öteki bölgelerin kabuğu; yaratık ve adı hedef,
+  kıyıda bukalemunlar; doğruda yay, zıplama, büyü; sınır adımında Dükkân'ın tezgâhı (jölede
+  taş erir), *İkisi de olur: pıtakım, pıtağım.*; yanlışta düşüş, üstü çizili aday, ilgili iki
+  ses, cümle. Cep yalnız iyelik görevlerinde. Sürükle-bırak (bukalemun ve karo), dokun-dokun,
+  klavye.
+- **Testler:** 1262 birim testi ve 78 uçtan uca test (hepsi yeşil; PR düzeltmesiyle).
+  - Birim: `neden-kaynastirma.test.ts`, `uydurma-denetimi.test.ts`, `uyduruk.test.ts` (100 kök
+    denetimden geçer, her turda aynı on görev şekli, her doğru biçim seçeneklerden kurulur,
+    tek doğru bukalemun, sınır adımı, indirgeyici), `yaratik.test.ts`, turlar ve kartlar
+    (`ilerleme.test.ts`), `Uydurukcuklar.test.tsx`, Sözlük, galeri, harita, kurallar.
+  - Uçtan uca (`e2e/uydurukcuklar.spec.ts`): 1. tur dokun-dokun, akşam, haritada tamam, ikinci
+    girişte *pıbız*, Sözlük'te 10 kart ve işaretler; yarım tur sürer; 8. görevde *e* →
+    kaynaştırma cümlesi, ü ve e etikette; 4. görevde jöle → *pıtağım* kartı, taş → *pıtakım*
+    kartı (yeniden yüklemeden sonra da); klavye; sürükle-bırak (bukalemun ve karo); hareket
+    azaltma; Pixel 7, 360×640 ve 320×568'de taşma yok, dokunma alanları en az 44 px; Renksiz;
+    Harita düğmesi. `kok-bahcesi.spec.ts`: bahçe bitince Uydurukçuklar açılır ve girilir.
+
+### PR'dan sonra düzeltilen (kullanıcının bulgusu)
+
+- **LOC'ta dört kılık:** kıyıda yalnız ünlü kılıkları vardı (*mömüş*: te, ta); benzeşme hiç
+  sınanmıyordu. Artık `yuzeySecenekleri(parca, { unsuz: true })` D ve C yuvasının taşını ve
+  jölesini de verir (`neden`'in kabul ettiği yüzeyler); Uydurukçuklar kaynaştırmayla birlikte
+  açar: LOC'ta da, de, ta, te. Birim testleri (seçenekler, *mömüş* + *de* ve *zolku* + *ta*
+  nedenleri) ve uçtan uca testler: 5. görevde *de* → *ş taş, ekin başı da taş olur: t.*; 7.
+  görevde *ta* → *Ünlüden sonra ekin başı jöle kalır: d.*; dört bukalemun Pixel 7, 360×640 ve
+  320×568'de kaydırmadan sığar. Codex'in incelemesi (`f207c9d`) bulgu vermedi.
+
+### Kullanıcının verdikleri
+
+- Oturumun tarifi (altı madde), dört tablo, onaylı tek veri değişikliği, kaynaştırma ve sınır
+  cümleleri, uydurma kök kuralları oturum başında geldi.
+
+### Oturumda seçilen küçük ayrıntılar (kullanıcıya ayrıca sorulmadı)
+
+- **"Sonda" tek ünsüz:** denetimde *sonda ünlü ya da p ç t k s ş z l r m n y* kuralı, son
+  ünlüden sonra en çok bir ünsüz olarak okundu (*pıtaks* → ses). 100 kök bu okumayla geçiyor.
+- **Tur kayıtta ayrı alan değil:** `kaldigi` bütün tablodaki yer olduğu için tur ondan okunur;
+  kaydın biçimi (ve anahtarı) değişmedi.
+- **Bölge tamam:** herhangi bir turu bitince (ilk bitenin 1. tur olması sıra gereği).
+- **Kaynaştırma karşıtı** zamir n ya da tekrarlanmayan çoğul alan ekte yok (*evine* için
+  *eviye* kılık sayılmaz); bugünkü görevlerde yok.
+- **Süslerin rengi:** boynuz ve benek `--zemin` (boynuz mürekkep çizgili), yıldız `--yanak`;
+  yeni belirteç istenmedi. Yıldız bulunmada yaratığın başının üstünde, yönelmede sağ yanında
+  (ardında kesik `--ayrac` iz: hareket azaltmada da yön okunur).
+- **Ölçüler:** yaratık 1.8 ölçek (130 px); 44rem'den alçak ekranda 96 px, 37rem'den alçakta
+  76 px ve ad 26 px. Cep yalnız iyelik görevlerinde. Sınır cümlesi karo oturunca görünür.
+- **Sınır adımında hedefin adı** *pıta … ım*; bittiğinde kurulan biçim. Kart ve akşam ekranı
+  çocuğun biçimini gösterir; kök ve ek satırı kökü (*pıtak* + *ım*) gösterir.
+- **Yay ve zıplama** Koy'dan kopyalandı (ekranlar arasında ortak modül yok, Dükkân'daki gibi).
+
+### Açık kalanlar
+
+Oturum 9'da eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak):
+
+- **İki sürüm aynı anda açıkken** eski kod *pıtağım* kartını tanımaz ve kaydı yazarken atar
+  (`kartiCoz` eski sürümde yalnız `ekle`'ninkini kabul ediyordu). Güncelleme sırasında bir kez
+  olabilir.
+- **Tur numarası ekranda yok:** üst çubukta yalnız *3 / 10*. Gerekirse *2. tur* yazılır.
+- **Uydurukçuklar'da parmakla sürükleme** uçtan uca sınanmadı (fareyle sınandı; Koy ve
+  Dükkân'da CDP dokunmasıyla sınanıyor).
+- **Kaynaştırma nedeninde `su`:** aday kök + yüzeydir (`su` + `a` → *sua*); motorun gövdesi
+  (*suy*) nedene girmez. Tablodaki satırlar böyle; *suya* doğru.
+- **Uydurma kök denetiminde `ek`** yalnız tek ekle bakar (*kuş + lar*); iki ekli okuma
+  (*kuş + lar + ım* gibi uzun kök) aranmaz; bugün kökler iki hecelidir.
+
+Önceki oturumlardan kalanlar:
+
+- **Karo geometrisi tuvalden gelmedi:** `karo.ts`'teki yollar oturumda yazıldı; `cizim.ts` gibi
+  bir başvuru testi yok. Tuvalde çizilirse sayılar oradan alınır ve karşılaştırma testi eklenir.
+- **Birden çok sınırlı görev yok:** `gorevinSiniri` tam bir sınır ister. Zincirli bir dükkân
+  görevi (*kitabımda*: gövde ve ek başı) gelirse ekran sınırları sırayla sormalı.
+- **İkizleşen kökte gövde sınırı sayılmıyor** (*hakkı*): bir görev isterse ayrı bir sınır türü
+  gerekir.
+- **Ek başı nedeninde ünlüden sonraki C/D'nin kalınlığı** ayrıca uyum nedeni de alır (*kitapde*:
+  `LOC:sertleşme;LOC:kalınlık`); ekranda yalnız ilk neden görünür.
+- **Kilit türetilir, saklanmaz:** bir görev tablosu büyürse bitmiş bölge yeniden açık olur,
+  ardındaki bölge kilitlenir. Tablolar yalnız onayla değiştiği için bugün sorun değil;
+  gerekirse açılan bölgeler kayda yazılır.
+- **Yeni bölge üç yere eklenir** (Uydurukçuklar'la dört bölgenin dördü de dolu):
+  - ekranı `App.tsx`'teki `BOLGE_EKRANLARI`'na (kimlikten ekrana; ekranı olmayan bölgeye
+    girilmez);
+  - görev tablosu `GOREV_TABLOLARI`'na;
+  - işareti `AdaHaritasi.tsx`'teki `isaret`'e.
+  Haritada yalnız dört bölgenin yeri var (`BOLGE_YERLERI`); beşinci bölge yer ve yol ister
+  (test denetler). Kartları görevin kelimesi değilse ekran `onGorevBitti`'ye kartların eklerini
+  de verir (bahçe gibi).
+- **Tema rengi haritada krem:** tarayıcının çubuğu krem, haritanın denizi yeşilimsi. Gerekirse
+  ekrana göre değişir.
+- **Sözlük kartında kök + ek satırı kırılıyor (Oturum 11; kullanıcı küçük saydı):**
+  - 360 px'te Sözlük iki sütundur, kart 158 px'tir; *topum* ve *toplarım*'da ek alt satıra
+    kayıyor.
+  - 375–412 px'te yalnız *toplarım* (iki ek) kırılıyor.
+  - 320 px'te Sözlük tek sütundur; hiçbir kart kırılmıyor.
+- **Kılık dışı yüzey hata verir:** `neden`, ekin kılıklarından olmayan yüzeyi reddeder
+  (`lır`, `lr`). Saklanan ünlüde (kedi + `im`) seçenek sunacak bir bölge gelirse ayrı bir
+  neden gerekir.
+- **Koy'da anlam etkisi yalnız PL ve POSS.1SG için** (`ANLAM_ETKILERI`, `src/oyun/koy.ts`).
+  -CIk, -lI ve -sIz'in büyüleri Kök Bahçesi'nde (`buyusu`, `src/oyun/bahce.ts`); -DA'nınki ve
+  -(y)A'nınki (yıldız) Uydurukçuklar'da (`UYDURUK_BUYULERI`, `src/oyun/uyduruk.ts`).
+- **Sesli mod yok:** 1–2. sınıf için neden cümlesi (dükkânınkiler de) ve haritanın iletileri okunarak verilmeli
+  (DESIGN.md, "Koleksiyon ve modlar").
+- **Galerinin uymayan örneği hâlâ elle:** `neden` artık var; istenirse galeri *evlar*'ı
+  motordan kurar, nedenini de gösterir.
+- **İkonlar yer tutucu:** `scripts/ikon.svg`'deki ada çizimi eski renklerde. Haritadaki adayla
+  ya da koddan üretilen bir karakterle yeniden çizilebilir (`npm run ikonlar`).
+- **Bukalemun yazısı yalnız kısa eklerle sınandı** (lar, ım, m). Uzun yüzeyler (ör. -lArI,
+  -(n)In) gövdeye sığmayabilir.
+- **Saklanan ünlüde ince ek hesaba katılmıyor:** ek parçası kökün sözlük işaretini taşımıyor.
+  Sözlükte ünlüyle biten ince-ek kökü yok; eklenirse `kilik.test.ts` kırılır.
+- **Galerinin örnekleri kodda** (`src/galeri/ornekler.ts`): galeri oyun içeriği değil, görsel
+  dilin çizelgesi sayıldı (4. kural); kökler sözlükte olmak zorunda (test denetler).
+- **`iş` sözlükte yok:** Oturum 2'nin 85. altın satırı (`iş,AGT,işçi`) uydurma kökle
+  çalışıyor. Biçim değişmiyor; istenirse `iş` sözlüğe eklenir (kullanıcı onayıyla).
+- **Denetim sayfasında yalnız sözlük kökleri ve sekiz ek var:** uydurma kökler, yapım
+  zincirleri (gözlüğüm) ve öteki ekler (ABL, INS, POSS.2SG ...) yok; gerekirse eklenir.
+- **Ek adları CSV'de yok:** yönelme, bulunma, ayrılma gibi Türkçe adlar canlandırılacak
+  (DESIGN.md, "Terimler resimdir"). Arayüz gerektirince `ekler.csv`'ye sütun eklenebilir.
+- **Kökte yalnız 29 küçük harf kabul ediliyor:** *kâr*, *hâlâ* gibi düzeltme işaretli
+  kökler ve büyük harf şimdilik hata veriyor (motorda da sözlükte de).
+- **Gerçek telefonda doğrulama (PR birleşince):**
+  - Adres: <https://frtbasbug.github.io/morfemusta/>.
+  - Kurulum: Android Chrome'da "Uygulamayı yükle / Ana ekrana ekle"; iOS Safari'de Paylaş →
+    "Ana Ekrana Ekle". Ardından uçak modunda açılış.
+  - Geri tuşu: ana ekrana eklenmiş uygulamada (tam ekran) koydan ve Sözlük'ten haritaya,
+    haritadan dışarı.
+  - Yayından sonraki ilk açılış eski sürümü gösterebilir. `registerSW.js` service worker'ı
+    yalnız kaydeder: yeni sürüm arka planda iner ve devreye girer, açık sayfa yenilenmez.
+    Uygulama kapatılıp açılınca yeni sürüm gelir.
+  - İlerleme: birkaç görev, uygulamayı kapatıp açma; Firefox'ta kalıcı depo izni sorabilir.
+  - Renksiz: her kelimede kökün ve ekin etiketi aynı ende (koyda, Sözlük'te, akşamda).
+  - Bukalemun Koyu'nda ve dükkânda parmakla sürükleme: uçtan uca testler Chromium'da fareyle
+    ve CDP dokunmasıyla sınıyor; iOS Safari'de Pointer Events ile `touch-action` denenmeli.
+  - Dükkân: taşın erimesi ve jölenin taşa dönmesi telefonda okunaklı mı; Renksiz'de taş ve
+    jöle ayrılıyor mu.
+  - Bahçe: halka büyümesi, kartın düşmesi, meyvenin cebe girmesi ve *kalemliğ*'deki erime
+    telefonda okunaklı mı; sepetten ağaca parmakla sürükleme; Renksiz'de halka ve meyve.
+  - Uydurukçuklar: yaratığın boyu ve süsleri, yıldızın uçuşu, cebe giriş ve tezgâhta *pıtak*
+    taşının erimesi telefonda okunaklı mı; bukalemunu ve karoyu yaratığa parmakla sürükleme.
+  - Denetim sayfası: <https://frtbasbug.github.io/morfemusta/denetim.html>. Karakter
+    Galerisi: <https://frtbasbug.github.io/morfemusta/galeri.html>.
+- **Yön kilidi yok:** manifest'te `orientation` yazılı değil. Telefonda dikey kilit mi,
+  sınıf modu (etkileşimli tahta) için yatay mı, karar bekliyor. Yatay telefonda harita
+  32rem'lik çerçeveyle kaydırılarak görünür.
+- **DESIGN.md künyeleri:** Aksu-Koç & Slobin (1985) ile Becker, Ketrez & Nevins (2011)
+  yalnız kısa atıfla geçiyor. Tam künye, doğrulanmış kaynaktan eklenebilir.
+- **Önbellek boyutu:**
+  - Andika'nın Kiril ve Vietnamca alt kümeleri de önbelleğe giriyor (yaklaşık 80 KB). Türkçe
+    için `latin` ve `latin-ext` yeter; Baloo 2 bu yüzden yalnız onlarla yükleniyor.
+  - Andika için de alt küme dosyaları içe aktarılabilir ya da `workbox.globIgnores` ile
+    ayıklanabilir.
+  - Denetim sayfası ve galeri de önbelleğe giriyor; girmezlerse service worker onları oyuna
+    düşürür, çıkarılmamalı.
+
+## Önceki oturum: Oturum 8 — Kök Bahçesi (2026-09-30)
 
 ### Bitenler
 
@@ -82,7 +288,7 @@
 
 ### Açık kalanlar
 
-Oturum 8'de eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak):
+Oturum 8'de eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak; öncekiler Oturum 9'un listesinde):
 
 - **Ek etiketinde ü, 20px'te elipse tam sığmıyor:** galeri testi harfin kutusunun köşelerini
   elipste arar; kök etiketlerinde (24–30px) sığıyor, halkadaki *lük*, *çü*'nün ü'sü (20px)
@@ -100,102 +306,7 @@ Oturum 8'de eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak):
 - **Meyvenin ek yazısı 18px:** üç meyve tacın içine sığsın diye; ince renk üstünde izin verilen
   en küçük boy.
 
-Önceki oturumlardan kalanlar:
-
-
-- **Karo geometrisi tuvalden gelmedi:** `karo.ts`'teki yollar oturumda yazıldı; `cizim.ts` gibi
-  bir başvuru testi yok. Tuvalde çizilirse sayılar oradan alınır ve karşılaştırma testi eklenir.
-- **Uydurma kökte gövde sınırı (Uydurukçuklar, Oturum 9):** iki karo da doğru. Çocuk jöleyi
-  seçerse kurulan kelime (*pıtağı*) raf ve kart için `ekle`'nin varsayılanı (*pıtakı*) olur;
-  kart yalnız kök ve etiketleri saklıyor. Uydurukçuklar'da seçilen biçimin saklanması gerekebilir.
-- **Birden çok sınırlı görev yok:** `gorevinSiniri` tam bir sınır ister. Zincirli bir dükkân
-  görevi (*kitabımda*: gövde ve ek başı) gelirse ekran sınırları sırayla sormalı.
-- **İkizleşen kökte gövde sınırı sayılmıyor** (*hakkı*): bir görev isterse ayrı bir sınır türü
-  gerekir.
-- **Ek başı nedeninde ünlüden sonraki C/D'nin kalınlığı** ayrıca uyum nedeni de alır (*kitapde*:
-  `LOC:sertleşme;LOC:kalınlık`); ekranda yalnız ilk neden görünür.
-- **Kilit türetilir, saklanmaz:** bir görev tablosu büyürse bitmiş bölge yeniden açık olur,
-  ardındaki bölge kilitlenir. Tablolar yalnız onayla değiştiği için bugün sorun değil;
-  gerekirse açılan bölgeler kayda yazılır.
-- **Yeni bölge üç yere eklenir:**
-  - ekranı `App.tsx`'teki `BOLGE_EKRANLARI`'na (kimlikten ekrana; ekranı olmayan bölgeye
-    girilmez);
-  - görev tablosu `GOREV_TABLOLARI`'na;
-  - işareti `AdaHaritasi.tsx`'teki `isaret`'e.
-  Haritada yalnız dört bölgenin yeri var (`BOLGE_YERLERI`); beşinci bölge yer ve yol ister
-  (test denetler). Kartları görevin kelimesi değilse ekran `onGorevBitti`'ye kartların eklerini
-  de verir (bahçe gibi).
-- **Tema rengi haritada krem:** tarayıcının çubuğu krem, haritanın denizi yeşilimsi. Gerekirse
-  ekrana göre değişir.
-- **Sözlük kartında kök + ek satırı kırılıyor (Oturum 11; kullanıcı küçük saydı):**
-  - 360 px'te Sözlük iki sütundur, kart 158 px'tir; *topum* ve *toplarım*'da ek alt satıra
-    kayıyor.
-  - 375–412 px'te yalnız *toplarım* (iki ek) kırılıyor.
-  - 320 px'te Sözlük tek sütundur; hiçbir kart kırılmıyor.
-- **Kılık dışı yüzey hata verir:** `neden`, ekin kılıklarından olmayan yüzeyi reddeder
-  (`lır`, `lr`). Saklanan ünlüde (kedi + `im`) seçenek sunacak bir bölge gelirse ayrı bir
-  neden gerekir.
-- **Koy'da anlam etkisi yalnız PL ve POSS.1SG için** (`ANLAM_ETKILERI`, `src/oyun/koy.ts`).
-  -CIk, -lI ve -sIz'in büyüleri Kök Bahçesi'nde (`buyusu`, `src/oyun/bahce.ts`); -(y)A'nınki
-  (gönderir) henüz hiçbir bölgede yok.
-- **Sesli mod yok:** 1–2. sınıf için neden cümlesi (dükkânınkiler de) ve haritanın iletileri okunarak verilmeli
-  (DESIGN.md, "Koleksiyon ve modlar").
-- **Galerinin uymayan örneği hâlâ elle:** `neden` artık var; istenirse galeri *evlar*'ı
-  motordan kurar, nedenini de gösterir.
-- **İkonlar yer tutucu:** `scripts/ikon.svg`'deki ada çizimi eski renklerde. Haritadaki adayla
-  ya da koddan üretilen bir karakterle yeniden çizilebilir (`npm run ikonlar`).
-- **Bukalemun yazısı yalnız kısa eklerle sınandı** (lar, ım, m). Uzun yüzeyler (ör. -lArI,
-  -(n)In) gövdeye sığmayabilir.
-- **Saklanan ünlüde ince ek hesaba katılmıyor:** ek parçası kökün sözlük işaretini taşımıyor.
-  Sözlükte ünlüyle biten ince-ek kökü yok; eklenirse `kilik.test.ts` kırılır.
-- **Galerinin örnekleri kodda** (`src/galeri/ornekler.ts`): galeri oyun içeriği değil, görsel
-  dilin çizelgesi sayıldı (4. kural); kökler sözlükte olmak zorunda (test denetler).
-- **`iş` sözlükte yok:** Oturum 2'nin 85. altın satırı (`iş,AGT,işçi`) uydurma kökle
-  çalışıyor. Biçim değişmiyor; istenirse `iş` sözlüğe eklenir (kullanıcı onayıyla).
-- **Uydurma kökte ikinci biçimin parçaları dışarıda yok:** `olasiBicimler` yalnız dizgi
-  döner. Arayüz çocuğun seçtiği yumuşamış biçimi (pıtağım) canlandırmak isterse `ekle.ts`'deki
-  `turet` işlevi dışa açılabilir.
-- **Denetim sayfasında yalnız sözlük kökleri ve sekiz ek var:** uydurma kökler, yapım
-  zincirleri (gözlüğüm) ve öteki ekler (ABL, INS, POSS.2SG ...) yok; gerekirse eklenir.
-- **Ek adları CSV'de yok:** yönelme, bulunma, ayrılma gibi Türkçe adlar canlandırılacak
-  (DESIGN.md, "Terimler resimdir"). Arayüz gerektirince `ekler.csv`'ye sütun eklenebilir.
-- **Kökte yalnız 29 küçük harf kabul ediliyor:** *kâr*, *hâlâ* gibi düzeltme işaretli
-  kökler ve büyük harf şimdilik hata veriyor (motorda da sözlükte de).
-- **Gerçek telefonda doğrulama (PR birleşince):**
-  - Adres: <https://frtbasbug.github.io/morfemusta/>.
-  - Kurulum: Android Chrome'da "Uygulamayı yükle / Ana ekrana ekle"; iOS Safari'de Paylaş →
-    "Ana Ekrana Ekle". Ardından uçak modunda açılış.
-  - Geri tuşu: ana ekrana eklenmiş uygulamada (tam ekran) koydan ve Sözlük'ten haritaya,
-    haritadan dışarı.
-  - Yayından sonraki ilk açılış eski sürümü gösterebilir. `registerSW.js` service worker'ı
-    yalnız kaydeder: yeni sürüm arka planda iner ve devreye girer, açık sayfa yenilenmez.
-    Uygulama kapatılıp açılınca yeni sürüm gelir.
-  - İlerleme: birkaç görev, uygulamayı kapatıp açma; Firefox'ta kalıcı depo izni sorabilir.
-  - Renksiz: her kelimede kökün ve ekin etiketi aynı ende (koyda, Sözlük'te, akşamda).
-  - Bukalemun Koyu'nda ve dükkânda parmakla sürükleme: uçtan uca testler Chromium'da fareyle
-    ve CDP dokunmasıyla sınıyor; iOS Safari'de Pointer Events ile `touch-action` denenmeli.
-  - Dükkân: taşın erimesi ve jölenin taşa dönmesi telefonda okunaklı mı; Renksiz'de taş ve
-    jöle ayrılıyor mu.
-  - Bahçe: halka büyümesi, kartın düşmesi, meyvenin cebe girmesi ve *kalemliğ*'deki erime
-    telefonda okunaklı mı; sepetten ağaca parmakla sürükleme; Renksiz'de halka ve meyve.
-  - Denetim sayfası: <https://frtbasbug.github.io/morfemusta/denetim.html>. Karakter
-    Galerisi: <https://frtbasbug.github.io/morfemusta/galeri.html>.
-- **Yön kilidi yok:** manifest'te `orientation` yazılı değil. Telefonda dikey kilit mi,
-  sınıf modu (etkileşimli tahta) için yatay mı, karar bekliyor. Yatay telefonda harita
-  32rem'lik çerçeveyle kaydırılarak görünür.
-- **DESIGN.md künyeleri:** Aksu-Koç & Slobin (1985) ile Becker, Ketrez & Nevins (2011)
-  yalnız kısa atıfla geçiyor. Tam künye, doğrulanmış kaynaktan eklenebilir.
-- **Önbellek boyutu:**
-  - Andika'nın Kiril ve Vietnamca alt kümeleri de önbelleğe giriyor (yaklaşık 80 KB). Türkçe
-    için `latin` ve `latin-ext` yeter; Baloo 2 bu yüzden yalnız onlarla yükleniyor.
-  - Andika için de alt küme dosyaları içe aktarılabilir ya da `workbox.globIgnores` ile
-    ayıklanabilir.
-  - Denetim sayfası ve galeri de önbelleğe giriyor; girmezlerse service worker onları oyuna
-    düşürür, çıkarılmamalı.
-
-
-
-## Önceki oturum: Oturum 7 — Fıstıkçı Şahap'ın Dükkânı (2026-09-30)
+## Daha önceki oturum: Oturum 7 — Fıstıkçı Şahap'ın Dükkânı (2026-09-30)
 
 ### Bitenler
 
@@ -291,7 +402,7 @@ Oturum 8'de eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak):
 - **Taşın çokgeni ve jölenin damlası** oturumda çizildi (`karo.ts`); kullanıcı isterse tuvalde
   yeniden çizilir, sayılar değişir.
 
-## Daha önceki oturum: Oturum 6 — oyun kabuğu (2026-09-28)
+## Daha da önceki oturum: Oturum 6 — oyun kabuğu (2026-09-28)
 
 ### Bitenler
 
@@ -515,17 +626,8 @@ Oturum 8'de eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak):
    - Fıstıkçı Şahap'ın Dükkânı'nda çocuk gövdeyi de seçecek (*kitap* / *kitab*). `neden`'e bir
      gövde parçası eklenecek.
 
-## Sıradaki hedef: Oturum 9 — Uydurukçuklar
+## Sıradaki hedef: Oturum 10
 
-Kapsam oturum başında kullanıcıyla belirlenir. Bilinenler:
-
-- Uydurma yaratıklar (*fıngıl*, *pıtak*, *mömüş*) çoğaltılır, sahiplenilir, bir yere konur:
-  *fıngıllar*, *pıtağım* ya da *pıtakım*, *mömüşte* (DESIGN.md, "MVP bölgeleri"). Uydurma
-  kökte yalnız kategorik kurallar puanlanır; ünsüz yumuşamasında iki biçim de doğrudur.
-- Uydurma kökte seçilen biçimin (yumuşamış *pıtağım*) kartta saklanması gerekebilir: kart
-  bugün yalnız kök ve etiketleri saklıyor (açık kalanlarda).
-- Görev tablosu `icerik/gorevler/`'e gelir ve `GOREV_TABLOLARI`'na eklenir; bölge tablosunun
-  `uyduruk` satırındaki `gorevler` sütunu kullanıcının onayıyla dolar (12. ve 13. kural).
-- Ekranı `BOLGE_EKRANLARI`'na, işareti haritaya eklenir; kabuğu öteki bölgeler gibi
-  (`BolgeUstu`, sürdürme, akşam: *Uydurukçuklarda akşam oldu*).
-- Sonrası: Oturum 11'de açık kalanlar.
+Kapsam oturum başında kullanıcıyla belirlenir. MVP'nin dört bölgesi dolu (DESIGN.md, "MVP
+bölgeleri"); sonraki bölgeler DESIGN.md'de ("Sonraki bölgeler"). Sonrası: Oturum 11'de açık
+kalanlar.

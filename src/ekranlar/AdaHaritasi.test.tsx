@@ -79,11 +79,21 @@ describe('AdaHaritasi', () => {
     ])
   })
 
-  it('bahçe bitince: üçü tamam, Uydurukçuklar hazırlanıyor', () => {
+  it('bahçe bitince: üçü tamam, Uydurukçuklar açık', () => {
     expect(dugmeler(harita(BAHCE_BITTI)).map(({ durum, yazi }) => [durum, yazi])).toEqual([
       ['tamam', 'Tamam'],
       ['tamam', 'Tamam'],
       ['tamam', 'Tamam'],
+      ['acik', 'Açık'],
+    ])
+  })
+
+  it('içeriği olmayan açık bölge hazırlanıyor', () => {
+    const bos: Bolge = { ...KOY, kimlik: 'ova', ad: 'Ova', gorevler: [] }
+    const html = renderToStaticMarkup(
+      <AdaHaritasi bolgeler={[{ bolge: bos, durum: 'hazirlaniyor', onceki: null }]} onBolge={() => {}} />,
+    )
+    expect(dugmeler(html).map(({ durum, yazi }) => [durum, yazi])).toEqual([
       ['hazirlaniyor', 'Hazırlanıyor'],
     ])
   })
@@ -92,7 +102,13 @@ describe('AdaHaritasi', () => {
     const simgeler = (html: string) =>
       eslesmeler(html, /<span class="bolge__durum">(<svg[^>]*>.*?<\/svg>)/g)
     const [acik, kilitli] = simgeler(ilk)
-    const [tamam, , , hazirlaniyor] = simgeler(harita(BAHCE_BITTI))
+    const [tamam] = simgeler(harita(BAHCE_BITTI))
+    const bos: Bolge = { ...KOY, kimlik: 'ova', ad: 'Ova', gorevler: [] }
+    const [hazirlaniyor] = simgeler(
+      renderToStaticMarkup(
+        <AdaHaritasi bolgeler={[{ bolge: bos, durum: 'hazirlaniyor', onceki: null }]} onBolge={() => {}} />,
+      ),
+    )
     expect(new Set([acik, kilitli, tamam, hazirlaniyor]).size).toBe(4)
     for (const simge of [acik, kilitli, tamam, hazirlaniyor]) {
       expect(simge).toMatch(/^<svg class="simge" [^>]*aria-hidden="true"/)
@@ -124,8 +140,17 @@ describe('AdaHaritasi', () => {
     expect(isaret).not.toMatch(/<text|ek-yazisi/)
   })
 
-  it('koyun işareti küçük, yazısız bir bukalemun (ilk görevinin); uydurukta işaret yok', () => {
-    expect(dugmeler(ilk).map((d) => d.isaret)).toEqual([true, true, true, false])
+  it('Uydurukçuklar\'ın işareti küçük bir yaratık (ilk görevinin: fıngıl), yazısız', () => {
+    const isaret = /data-bolge="uyduruk".*?<span class="bolge__isaret" aria-hidden="true">(.*?)<\/span><span class="bolge__yazi">/.exec(ilk)?.[1]
+    // fıngıl: son ünlüsü ı (kalın); 0.42 ölçekte 72×76 → 30.24×31.92.
+    expect(isaret).toMatch(
+      /^<span class="uyduruk-isareti"><svg class="yaratik unlu unlu--kalin" data-boynuz="[a-z]+" viewBox="0 0 72 76" width="30.24" height="31.92" aria-hidden="true">/,
+    )
+    expect(isaret).not.toMatch(/<text/)
+  })
+
+  it('koyun işareti küçük, yazısız bir bukalemun (ilk görevinin); her bölgenin işareti var', () => {
+    expect(dugmeler(ilk).map((d) => d.isaret)).toEqual([true, true, true, true])
     const isaret = /<span class="bolge__isaret" aria-hidden="true">(<svg.*?<\/svg>)<\/span>/.exec(ilk)?.[1]
     expect(isaret).toMatch(
       /^<svg class="bukalemun bukalemun--kalin" viewBox="0 0 132 82" width="55.44" height="34.44" role="img" aria-label="lar bukalemunu, a: kalın, düz, geniş">/,

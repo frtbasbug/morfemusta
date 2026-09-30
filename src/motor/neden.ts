@@ -9,9 +9,11 @@
 //   1. gövde sınırı (sinir.ts): kökün son ünsüzü taş mı, jöle mi? Taş seçildi, jöle olmalıydı:
 //      yumuşama (kitapım). Jöle seçildi, taş olmalıydı: tek heceli kökte inatçı (tobum), çok
 //      heceli kökte yumuşamaz (sepedi).
-//   2. ek başı: D ve C, adayda kendinden önceki sese göre beklenir (yerel): sert ünsüzden sonra
-//      taş, değilse jöle. Jöle seçildi, taş olmalıydı: sertleşme (kitapda). Taş seçildi, jöle
-//      olmalıydı: yumuşak (evte, suçu).
+//   2. ek başı: (y), (n) ve (s) ile başlayan ekte kaynaştırma, adayda önceki sese göre (yerel):
+//      ünlüden sonra ayraçlı ünsüz girer, ünsüzden sonra girmez. Girmedi, girmeliydi: eksik
+//      (zelüe); girdi, girmemeliydi: fazla (fıngılya). Sonra D ve C, yine önceki sese göre:
+//      sert ünsüzden sonra taş, değilse jöle. Jöle seçildi, taş olmalıydı: sertleşme
+//      (kitapda). Taş seçildi, jöle olmalıydı: yumuşak (evte, suçu).
 //   3. ünlü uyumu: ekin her ünlüsü, adayda kendinden önceki son ünlüye bakılarak beklenir
 //      (istisnasız, olağan uyum) ve seçilen ünlüyle karşılaştırılır; uyuşmayan özellikler
 //      (kalınlık, yuvarlaklık) yazılır. Yerel sınama yüzünden toplerim yalnız çoğulun
@@ -20,7 +22,16 @@
 // Hiçbiri bulunamazsa aday başka bir yüzden yanlıştır (istisna: saatlar; ünlü düşmesi:
 // ağızım) ve tek neden "diğer"dir.
 
-import { ekle, olasiBicimler, uyum, type EkParcasi, type KopyalananOzellik } from './ekle.ts'
+import {
+  ekle,
+  govdeOlayiMi,
+  olasiBicimler,
+  uyum,
+  type EkOlayi,
+  type EkParcasi,
+  type KopyalananOzellik,
+  type Olay,
+} from './ekle.ts'
 import { EK_ENVANTERI, type EkEnvanteri } from './envanter.ts'
 import { sablonuCoz, type Birim, type UnluArkafonemi } from './sablon.ts'
 import { ALFABE, UNLULER, sonUnluKonumu, unluMu, type Unlu } from './ses.ts'
@@ -85,12 +96,31 @@ export interface EkBasiNedeni {
   readonly secilenKonumu: number
 }
 
+/**
+ * (y), (n) ya da (s) ile başlayan ekte kaynaştırma (Oturum 9):
+ *   eksik  önceki ses ünlü, ayraçlı ünsüz girmedi (zelüe, kediin)
+ *   fazla  önceki ses ünsüz, ayraçlı ünsüz girdi (fıngılya, fıngılnın)
+ */
+export interface KaynastirmaNedeni {
+  readonly tur: 'kaynaştırma'
+  readonly durum: 'eksik' | 'fazla'
+  /** Ekin etiketi: DAT, GEN. */
+  readonly etiket: string
+  /** Ayraçlı ünsüz: y, n ya da s. */
+  readonly harf: string
+  /** Adayda ekten önceki ses (ü, l) ve yeri. */
+  readonly bakilan: string
+  readonly bakilanKonumu: number
+  /** Adayda ekin ilk sesinin yeri: eksikte ekin ünlüsü (e), fazlada giren ünsüz (y). */
+  readonly secilenKonumu: number
+}
+
 /** Hiçbir sınamada fark yok, aday yine de yanlış: istisna ya da ünlü düşmesi. */
 export interface DigerNeden {
   readonly tur: 'diğer'
 }
 
-export type Neden = GovdeNedeni | EkBasiNedeni | UyumNedeni | DigerNeden
+export type Neden = GovdeNedeni | EkBasiNedeni | KaynastirmaNedeni | UyumNedeni | DigerNeden
 
 type UnluBirimi = Extract<Birim, { arkafonem: UnluArkafonemi }>
 
@@ -134,10 +164,26 @@ function unluYuvalari(parca: EkParcasi): UnluYuvasi[] {
  * ünlüler konarak elde edilen yüzeyler, alfabe sırasıyla. Doğru yüzey (parca.yuzey) de
  * içlerindedir. Ek yüzeyde ünlüsüz kalırsa (kedim) tek kılık vardır.
  *
+ * Seçenekler (Uydurukçuklar): kaynaştırma açıksa kaynaştırmalı ve kaynaştırmasız kılıklar
+ * birlikte gelir (ya, ye, a, e); ünsüz açıksa D ve C yuvalarında taş ve jöle de (da, de, ta,
+ * te): neden'in kabul ettiği bütün yüzeyler.
+ *
  *     yuzeySecenekleri(ekle('at', ['PL']).parcalar[0])         // ["lar", "ler"]
  *     yuzeySecenekleri(ekle('kız', ['POSS.1SG']).parcalar[0])  // ["ım", "im", "um", "üm"]
  */
-export function yuzeySecenekleri(parca: EkParcasi): string[] {
+export function yuzeySecenekleri(
+  parca: EkParcasi,
+  {
+    kaynastirma = false,
+    unsuz = false,
+  }: { readonly kaynastirma?: boolean; readonly unsuz?: boolean } = {},
+): string[] {
+  const karsit = kaynastirma ? kaynastirmaKarsiti(parca) : undefined
+  const parcalar = [parca, ...(karsit ? [karsit] : [])]
+  return [...new Set(parcalar.flatMap(unsuz ? kabulYuzeyleri : unluKiliklari))]
+}
+
+function unluKiliklari(parca: EkParcasi): string[] {
   let secenekler = [parca.yuzey]
   for (const { konum, unluler } of unluYuvalari(parca)) {
     secenekler = secenekler.flatMap((yuzey) =>
@@ -145,6 +191,35 @@ export function yuzeySecenekleri(parca: EkParcasi): string[] {
     )
   }
   return secenekler
+}
+
+/**
+ * Ekin kaynaştırma karşıtı: (y), (n) ya da (s) ile başlayan ekte ayraçlı ünsüz yüzeye çıktıysa
+ * onsuz, çıkmadıysa onunla kurulan parça (zelü + ye → e; fıngıl + a → ya). Olayların yerleri
+ * yeni yüzeye göre kayar; ünlü ve ünsüz yuvaları ondan okunur. Ek bu türden değilse ya da
+ * zamir n ya da tekrarlanmayan çoğul almışsa undefined.
+ */
+export function kaynastirmaKarsiti(parca: EkParcasi): EkParcasi | undefined {
+  const bulunan = kaynastirmaOlayi(parca)
+  if (!bulunan) return undefined
+  const { olay, ses } = bulunan
+  const yazim = olay.birim
+  const { konum } = olay
+  const cikti = olay.tur === 'kaynaştırma'
+  const kay = cikti ? -1 : 1
+  const olaylar = parca.olaylar.map((o): Olay => {
+    if (o === olay) {
+      return cikti
+        ? { tur: 'saklanma', birim: yazim, konum, aciklama: `saklanma: ${yazim}` }
+        : { tur: 'kaynaştırma', birim: yazim, sonuc: ses, konum, aciklama: `kaynaştırma: ${ses}` }
+    }
+    if (govdeOlayiMi(o) || o.konum < konum || (cikti && o.konum === konum)) return o
+    return { ...o, konum: o.konum + kay }
+  })
+  const yuzey = cikti
+    ? parca.yuzey.slice(0, konum) + parca.yuzey.slice(konum + 1)
+    : parca.yuzey.slice(0, konum) + ses + parca.yuzey.slice(konum)
+  return { ...parca, yuzey, olaylar }
 }
 
 function farkliOzellikler(beklenen: Unlu, secilen: Unlu): KopyalananOzellik[] {
@@ -156,9 +231,29 @@ function farkliOzellikler(beklenen: Unlu, secilen: Unlu): KopyalananOzellik[] {
   return farklar
 }
 
+type KaynastirmaOlayi = Extract<EkOlayi, { tur: 'kaynaştırma' | 'saklanma' }>
+
+/**
+ * (y), (n) ya da (s) ile başlayan ekte ayraçlı ünsüzün olayı: yüzeye çıktıysa kaynaştırma,
+ * çıkmadıysa saklanma. Ek bu türden değilse, zamir n ya da tekrarlanmayan çoğul almışsa
+ * undefined.
+ */
+function kaynastirmaOlayi(parca: EkParcasi): { olay: KaynastirmaOlayi; ses: string } | undefined {
+  const [ilkBirim] = sablonuCoz(parca.sablon)
+  if (ilkBirim?.tur !== 'ayracli-unsuz') return undefined
+  if (parca.olaylar.some((o) => o.tur === 'zamir n' || o.tur === 'çoğul tekrarlanmaz')) {
+    return undefined
+  }
+  const olay = parca.olaylar.find(
+    (o): o is KaynastirmaOlayi =>
+      (o.tur === 'kaynaştırma' || o.tur === 'saklanma') && o.birim === ilkBirim.yazim,
+  )
+  return olay ? { olay, ses: ilkBirim.ses } : undefined
+}
+
 /** Ekin kabul edilen yüzeyleri: ünlü kılıkları, D ve C yuvalarında taş ya da jöle. */
 function kabulYuzeyleri(parca: EkParcasi): string[] {
-  let yuzeyler = yuzeySecenekleri(parca)
+  let yuzeyler = unluKiliklari(parca)
   for (const { konum, tas, jole } of unsuzYuvalari(parca)) {
     yuzeyler = yuzeyler.flatMap((y) =>
       [tas, jole].map((harf) => y.slice(0, konum) + harf + y.slice(konum + 1)),
@@ -210,7 +305,7 @@ export function neden(
   if (olasiBicimler(temizKok, etiketler, envanter, sozluk).includes(aday)) return []
 
   const govdeNedenleri: GovdeNedeni[] = []
-  const ekBasiNedenleri: EkBasiNedeni[] = []
+  const ekBasiNedenleri: (KaynastirmaNedeni | EkBasiNedeni)[] = []
   const uyumNedenleri: UyumNedeni[] = []
 
   // 1. Gövde sınırı.
@@ -235,17 +330,40 @@ export function neden(
   // kılıklar yalnız bu yuvalarda ayrılır.
   const { parcalar: dogruParcalar } = ekle(temizKok, etiketler, envanter, sozluk)
   let bas = temizGovde.length
-  dogruParcalar.forEach((parca, i) => {
+  dogruParcalar.forEach((dogruParca, i) => {
     const secilen = secilenler[i] ?? ''
-    const kiliklar = kabulYuzeyleri(parca)
-    if (!kiliklar.includes(secilen)) {
+    // Seçilen yüzey doğru parçanın ya da kaynaştırma karşıtının kılığıdır (zelü + e).
+    const karsit = kaynastirmaKarsiti(dogruParca)
+    const parca = [dogruParca, ...(karsit ? [karsit] : [])].find((p) =>
+      kabulYuzeyleri(p).includes(secilen),
+    )
+    if (!parca) {
+      const kiliklar = [dogruParca, ...(karsit ? [karsit] : [])].flatMap(kabulYuzeyleri)
       throw new Error(
-        `"${secilen}", ${parca.etiket} ekinin (${parca.sablon}) kılıklarından biri değil: ` +
-          kiliklar.join(', '),
+        `"${secilen}", ${dogruParca.etiket} ekinin (${dogruParca.sablon}) kılıklarından biri ` +
+          `değil: ${kiliklar.join(', ')}`,
       )
     }
 
-    // 2. Ek başı: yerel, adayda önceki sese göre.
+    // 2. Ek başı: önce kaynaştırma, sonra D ve C; yerel, adayda önceki sese göre.
+    const kaynastirma = kaynastirmaOlayi(parca)
+    if (kaynastirma) {
+      const secilenKonumu = bas + kaynastirma.olay.konum
+      const bakilanKonumu = secilenKonumu - 1
+      const bakilan = aday[bakilanKonumu] ?? ''
+      const girdi = kaynastirma.olay.tur === 'kaynaştırma'
+      if (unluMu(bakilan) !== girdi) {
+        ekBasiNedenleri.push({
+          tur: 'kaynaştırma',
+          durum: girdi ? 'fazla' : 'eksik',
+          etiket: parca.etiket,
+          harf: kaynastirma.ses,
+          bakilan,
+          bakilanKonumu,
+          secilenKonumu,
+        })
+      }
+    }
     for (const { konum, tas, jole } of unsuzYuvalari(parca)) {
       const secilenKonumu = bas + konum
       const bakilanKonumu = secilenKonumu - 1
@@ -309,6 +427,8 @@ const yuvarlaklikAdi = (unlu: Unlu): string => (UNLULER[unlu].yuvarlak ? 'yuvarl
  *
  * Gövde ve ek başı:
  *
+ *     kaynaştırma  İki ünlü yan yana gelmez: araya y girer.   (eksik; n ve s'de harf değişir)
+ *                  Ünsüzden sonra araya y girmez.             (fazla)
  *     yumuşama   p ünlüden önce jöle olur: b.
  *     inatçı     top inatçı: p taş kalır.
  *     yumuşamaz  sepet kelimesinde t taş kalır.
@@ -334,6 +454,10 @@ export function nedenCumlesi(nedenler: readonly Neden[]): string {
           return `${ilk.kok} kelimesinde ${ilk.tas} taş kalır.`
       }
       break
+    case 'kaynaştırma':
+      return ilk.durum === 'eksik'
+        ? `İki ünlü yan yana gelmez: araya ${ilk.harf} girer.`
+        : `Ünsüzden sonra araya ${ilk.harf} girmez.`
     case 'ek başı':
       if (ilk.ad === 'sertleşme') {
         return `${ilk.bakilan} taş, ekin başı da taş olur: ${ilk.beklenen}.`

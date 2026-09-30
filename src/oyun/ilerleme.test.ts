@@ -62,6 +62,8 @@ function oyna(ilerleme: Ilerleme, bolge: Bolge, n: number, baslangic = BUGUN): I
 
 const gorev = (sira: number, kok: string, etiketler: string[]): Gorev => ({
   sira,
+  tur: 1,
+  turdakiSira: sira,
   kok,
   etiketler,
   renksiz: false,
@@ -359,12 +361,19 @@ describe('bozuk veri', () => {
       '{"bolgeler": {' +
         '"koy": {"bitenler": [3, 1, 1, 11, 0, -2, 2.5, "4", null], "kaldigi": 12},' +
         '"yok": {"bitenler": [1], "kaldigi": 1},' +
-        '"uyduruk": {"bitenler": [1], "kaldigi": 1},' +
+        '"uyduruk": {"bitenler": [1, 100, 101], "kaldigi": 100},' +
         '"__proto__": {"bitenler": [1], "kaldigi": 1}}}',
     )
     // koy: geçerli sıralar tekilleşir ve sıralanır; kaldigi görev sayısını aşarsa 0.
-    // yok: tabloda yok. uyduruk: içeriği yok, ilerlemesi olamaz.
-    expect(ilerleme.bolgeler).toEqual({ koy: { bitenler: [1, 3], kaldigi: 0 } })
+    // yok: tabloda yok. uyduruk: 100 görevi var (10 tur); sıra ve kaldigi bütün tablodadır.
+    expect(ilerleme.bolgeler).toEqual({
+      koy: { bitenler: [1, 3], kaldigi: 0 },
+      uyduruk: { bitenler: [1, 100], kaldigi: 100 },
+    })
+    // İçeriği olmayan bölgenin ilerlemesi olamaz.
+    expect(
+      ilerlemeyiCoz({ bolgeler: { ova: { bitenler: [1], kaldigi: 1 } } }, KUCUK_ADA).bolgeler,
+    ).toEqual({})
     expect(Object.getPrototypeOf(ilerleme.bolgeler)).toBe(Object.prototype)
     expect(yukle({ bolgeler: { koy: 'bitti' } }).bolgeler).toEqual({})
     expect(yukle({ bolgeler: { koy: { kaldigi: 4 } } }).bolgeler).toEqual({
@@ -440,7 +449,7 @@ describe('kilit açma', () => {
     ])
   })
 
-  it('bahçe bitince bahçe tamam; Uydurukçuklar açılır ama hazırlanıyor', () => {
+  it('bahçe bitince bahçe tamam; Uydurukçuklar açılır', () => {
     const dukkan = bolgeBul('dukkan') as Bolge
     const bahce = bolgeBul('bahce') as Bolge
     const ucu = oyna(oyna(oyna(BOS_ILERLEME, KOY, 10), dukkan, 10), bahce, 10)
@@ -448,8 +457,46 @@ describe('kilit açma', () => {
       ['koy', 'tamam', undefined],
       ['dukkan', 'tamam', 'koy'],
       ['bahce', 'tamam', 'dukkan'],
-      ['uyduruk', 'hazirlaniyor', 'bahce'],
+      ['uyduruk', 'acik', 'bahce'],
     ])
+  })
+
+  it('Uydurukçuklar ilk tur bitince tamam; tur bitince sonraki giriş sonraki turdan', () => {
+    const uyduruk = bolgeBul('uyduruk') as Bolge
+    expect(uyduruk.gorevler).toHaveLength(100)
+    const dokuz = oyna(BOS_ILERLEME, uyduruk, 9)
+    expect(bolgeBittiMi(dokuz, uyduruk)).toBe(false)
+    expect(kaldigiGorev(dokuz, uyduruk)).toBe(9)
+    const on = oyna(BOS_ILERLEME, uyduruk, 10)
+    expect(bolgeBittiMi(on, uyduruk)).toBe(true)
+    // Tur kayıtta: kaldigi 10, 2. turun başı (pıbız).
+    expect(on.bolgeler.uyduruk?.kaldigi).toBe(10)
+    expect(uyduruk.gorevler[kaldigiGorev(on, uyduruk)]?.kok).toBe('pıbız')
+    // 10. turdan sonra 1. tura dönülür.
+    const hepsi = oyna(BOS_ILERLEME, uyduruk, 100)
+    expect(hepsi.bolgeler.uyduruk?.kaldigi).toBe(100)
+    expect(kaldigiGorev(hepsi, uyduruk)).toBe(0)
+    // Yalnız 2. tur biterse de bölge tamamdır (turlarından biri).
+    const ikinci = uyduruk.gorevler
+      .slice(10, 20)
+      .reduce((i, g) => gorevBitti(i, uyduruk, g, BUGUN), BOS_ILERLEME)
+    expect(bolgeBittiMi(ikinci, uyduruk)).toBe(true)
+  })
+
+  it('kartın kelimesi uydurma kökte çocuğun seçtiği biçimdir; kayıttan da okunur', () => {
+    const uyduruk = bolgeBul('uyduruk') as Bolge
+    const pitak = uyduruk.gorevler[3] as Gorev
+    expect(pitak.kok).toBe('pıtak')
+    const jole = gorevBitti(BOS_ILERLEME, uyduruk, pitak, BUGUN, undefined, 'pıtağım')
+    const tas = gorevBitti(jole, uyduruk, pitak, BUGUN, undefined, 'pıtakım')
+    expect(tas.kartlar.map((k) => k.kelime)).toEqual(['pıtağım', 'pıtakım'])
+    expect(ilerlemeyiCoz(JSON.parse(JSON.stringify(tas))).kartlar).toEqual(tas.kartlar)
+    // Motorun kabul etmediği kelime verilirse ekle'ninki yazılır; kayıttaki de atılır.
+    const yanlis = gorevBitti(BOS_ILERLEME, uyduruk, pitak, BUGUN, undefined, 'pıtabım')
+    expect(yanlis.kartlar.map((k) => k.kelime)).toEqual(['pıtakım'])
+    expect(
+      ilerlemeyiCoz({ kartlar: [{ ...tas.kartlar[0], kelime: 'pıtabım' }] }).kartlar,
+    ).toEqual([])
   })
 
   it('görevler hangi sırayla ya da kaç turda biterse bitsin: her biri en az bir kez', () => {

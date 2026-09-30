@@ -142,9 +142,9 @@ test.describe('Karakter Galerisi', () => {
     await page.evaluate(() => document.fonts.ready)
     // Kök etiketleri: ek yazısındaki etiketler (ağacın halkaları ve meyveleri) sayılmaz.
     const etiketler = page.locator('.unlu-etiketi:not(.ek-yazisi .unlu-etiketi)')
-    // Çizelgedeki sekiz etiket, örnek satırlarındaki sekiz kök ve Kök Bahçesi'ndeki ağacın
-    // kökü (göz, 24px).
-    await expect(etiketler).toHaveCount(17)
+    // Çizelgedeki sekiz etiket, örnek satırlarındaki sekiz kök, Kök Bahçesi'ndeki ağacın
+    // kökü (göz, 24px) ve Uydurukçuklar'ın on yaratığının adı.
+    await expect(etiketler).toHaveCount(27)
     expect(await sigmayanHarfler(etiketler)).toEqual([])
   })
 

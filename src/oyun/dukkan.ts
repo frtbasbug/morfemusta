@@ -78,12 +78,15 @@ export function denemeyiDegerlendir(gorev: Gorev, sinir: Sinir, karo: Karo): Den
 }
 
 /**
- * Nedenin ilgili iki sesi: gövdede seçilen ünsüz ve ardındaki ünlü (p ünlüden önce); ek
- * başında önceki ses ve seçilen ünsüz (p taş, ekin başı da taş).
+ * Nedenin ilgili iki sesi, adaydaki yerleriyle: gövdede seçilen ünsüz ve ardındaki ünlü (p
+ * ünlüden önce); ek başında önceki ses ve seçilen ünsüz (p taş, ekin başı da taş);
+ * kaynaştırmada ekten önceki ses ve ekin ilk sesi (zelü + e: ü ve e; fıngıl + ya: l ve y);
+ * uyumda bakılan ve seçilen ünlü. Uydurukçuklar da kullanır.
  */
-function ilgiliSesler(ilk: Neden | undefined): readonly [number, number] | null {
+export function ilgiliSesler(ilk: Neden | undefined): readonly [number, number] | null {
   if (ilk?.tur === 'gövde') return [ilk.secilenKonumu, ilk.secilenKonumu + 1]
   if (ilk?.tur === 'ek başı') return [ilk.bakilanKonumu, ilk.secilenKonumu]
+  if (ilk?.tur === 'kaynaştırma') return [ilk.bakilanKonumu, ilk.secilenKonumu]
   if (ilk?.tur === 'uyum') return [ilk.bakilanKonumu, ilk.secilenKonumu]
   return null
 }

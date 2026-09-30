@@ -14,8 +14,15 @@ export type {
 } from './ekle.ts'
 export { EK_ENVANTERI, ekEnvanteriniOku } from './envanter.ts'
 export type { EkEnvanteri, EkTanimi, EkTuru } from './envanter.ts'
-export { neden, nedenCumlesi, yuzeySecenekleri } from './neden.ts'
-export type { DigerNeden, EkBasiNedeni, GovdeNedeni, Neden, UyumNedeni } from './neden.ts'
+export { kaynastirmaKarsiti, neden, nedenCumlesi, yuzeySecenekleri } from './neden.ts'
+export type {
+  DigerNeden,
+  EkBasiNedeni,
+  GovdeNedeni,
+  KaynastirmaNedeni,
+  Neden,
+  UyumNedeni,
+} from './neden.ts'
 export { ekBasiBeklenen, sinirSecenekleri, unsuzYuvalari } from './sinir.ts'
 export type { Karo, Sinir, SinirYeri, UnsuzYuvasi } from './sinir.ts'
 export { ekSirasiHatasi } from './sira.ts'
@@ -26,3 +33,10 @@ export { SERT_UNSUZLER, UNLULER, YUMUSAMA, sonUnlu, unluBul } from './ses.ts'
 export type { Unlu, UnluOzellikleri, YumusayanUnsuz } from './ses.ts'
 export { KOK_SOZLUGU, kokSozlugunuOku } from './sozluk.ts'
 export type { Istisna, KokGirdisi, KokSozlugu } from './sozluk.ts'
+export { OYUN_EKLERI, YASAKLI_DIZILER, uydurmaDenetimi, yasakliDizileriOku } from './uydurma.ts'
+export type {
+  UydurmaBozuklugu,
+  UydurmaBozuklugunTuru,
+  YasakliDizi,
+  YasakYeri,
+} from './uydurma.ts'

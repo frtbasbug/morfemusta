@@ -4,6 +4,7 @@
 // denetler. Yalnız uymayan örnek elle kurulur: motor uymayan biçim üretmez.
 
 import { ekle, sinirSecenekleri, type EkParcasi, type Karo } from '../motor/index.ts'
+import { bolgeBul } from '../oyun/bolgeler.ts'
 
 export interface GaleriOrnegi {
   readonly kok: string
@@ -106,3 +107,11 @@ export const GALERI_AGACI: {
   if (!meyve) throw new Error('göz + LIK+AGT+PL: meyve yok')
   return { kok: 'göz', bicim, halkalar, meyve }
 })()
+
+/**
+ * Uydurukçuklar'ın yaratıkları: bölgenin ilk turunun kökleri, görev tablosundan
+ * (icerik/gorevler/uydurukcuklar.csv); kökler uydurmadır, sözlükte yoktur.
+ */
+export const GALERI_YARATIKLARI: readonly string[] = (bolgeBul('uyduruk')?.gorevler ?? [])
+  .filter((g) => g.tur === 1)
+  .map((g) => g.kok)

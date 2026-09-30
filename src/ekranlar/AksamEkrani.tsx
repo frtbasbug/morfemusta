@@ -40,7 +40,7 @@ export default function AksamEkrani({
             <ul className="aksam__kelimeler">
               {kartlar.map((kart) => (
                 <li key={kart.kelime}>
-                  <KurulanKelime kok={kart.kok} etiketler={kart.etiketler} />
+                  <KurulanKelime kok={kart.kok} etiketler={kart.etiketler} kelime={kart.kelime} />
                 </li>
               ))}
             </ul>

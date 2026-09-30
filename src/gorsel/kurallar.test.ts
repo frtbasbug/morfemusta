@@ -128,3 +128,15 @@ describe('karakterler yalnız koddan üretilir', () => {
     )
   })
 })
+
+describe('Uydurukçuklar: süsler kalın ve ince renklerini anmaz', () => {
+  it('yaratığın süsleri ve yıldız yalnız süs belirteçlerinden', () => {
+    const karakterler = stiller['./karakterler.css'] ?? ''
+    const susKurallari = karakterler.slice(karakterler.indexOf("/* Uydurukçuklar'ın yaratığı"))
+    expect(susKurallari).toMatch(/\.yaratik__boynuz/)
+    expect(susKurallari.match(/--(?:kalin|ince)(?:-zemin)?\b/g) ?? []).toEqual([])
+    expect(kodlar['./yaratik.ts']).toBeDefined()
+    expect(kodlar['./Yaratik.tsx']).toBeDefined()
+    expect(stiller['../ekranlar/Uydurukcuklar.css']).toMatch(/\{[^}]+\}/)
+  })
+})

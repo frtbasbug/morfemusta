@@ -44,6 +44,23 @@
   background: var(--zemin);
 }
 
+/* Uydurma kelimenin kartı: köşede küçük bir yaratık (süs; adı gizli yazıdadır). Kelime
+   işaretin altına girmesin diye sağda yer bırakır. */
+.sozluk-karti--uydurma {
+  position: relative;
+}
+
+.sozluk-karti__yaratik {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.5rem;
+  line-height: 0;
+}
+
+.sozluk-karti--uydurma .sozluk-karti__kelime {
+  padding-right: 1.6rem;
+}
+
 .sozluk-karti__kelime {
   margin: 0;
   font-size: 1.6rem;

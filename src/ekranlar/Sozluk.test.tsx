@@ -76,4 +76,19 @@ describe('Sozluk', () => {
     )
     expect(html).toContain('<time dateTime="2026-09-27">27 Eylül 2026</time>')
   })
+
+  it('uydurma kelimenin kartı çocuğun seçtiği biçimi gösterir; köşesinde küçük bir yaratık', () => {
+    const UYDURUK = bolgeBul('uyduruk') as Bolge
+    const pitak = UYDURUK.gorevler[3] as Gorev
+    const ilerleme = gorevBitti(BOS_ILERLEME, UYDURUK, pitak, BUGUN, undefined, 'pıtağım')
+    const html = sozluk(ilerleme)
+    const kart = /<article class="sozluk-karti sozluk-karti--uydurma">(.*?)<\/article>/.exec(html)?.[1] ?? ''
+    expect(kart).toMatch(/^<span class="sozluk-karti__yaratik"><svg class="yaratik [^"]*"[^>]*aria-hidden="true">/)
+    expect(kart).toContain('<span class="gizli">Uydurma kelime</span>')
+    expect(kart).toContain('<h3 class="sozluk-karti__kelime">pıtağım</h3>')
+    // Kök ve ek: pıtak + ım.
+    expect(eslesmeler(kart, /class="kok-yazisi__okunan">([^<]*)</g)).toEqual(['pıtak'])
+    // Sözlükteki kökün kartında işaret yok.
+    expect(sozluk(ILERLEME)).not.toContain('sozluk-karti__yaratik')
+  })
 })

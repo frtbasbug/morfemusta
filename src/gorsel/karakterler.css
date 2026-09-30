@@ -421,3 +421,39 @@
   display: block;
   overflow: visible;
 }
+
+/* Uydurukçuklar'ın yaratığı (yaratik.ts, Yaratik.tsx): ünlü karakteri ve kök başına süsler.
+   Süsler belirteç renklerindedir: boynuz krem ve mürekkep çizgili (bukalemunun ibiği gibi),
+   benek krem. Kalın ve ince renkleri süste kullanılmaz; gövdenin rengi ünlününkidir. */
+.yaratik__boynuz {
+  fill: var(--zemin);
+  stroke: var(--murekkep);
+  stroke-width: var(--cizgi-ibik);
+  stroke-linejoin: round;
+}
+
+.yaratik__benek {
+  fill: var(--zemin);
+}
+
+/* Büyünün yıldızı: bulunmada yaratığın üstünde durur, yönelmede ona doğru uçar. */
+.yildiz {
+  display: block;
+  overflow: visible;
+}
+
+.yildiz__govde {
+  fill: var(--yanak);
+  stroke: var(--murekkep);
+  stroke-width: var(--cizgi-ibik);
+  stroke-linejoin: round;
+}
+
+/* Uydurukçuklar'ın harita işareti: küçük bir yaratık. */
+.uyduruk-isareti {
+  display: inline-flex;
+}
+
+.uyduruk-isareti .yaratik {
+  display: block;
+}

@@ -1,6 +1,7 @@
 // Adanın bölgeleri icerik/bolgeler.csv'den okunur (CLAUDE.md, 4. ve 13. kural: tablo yalnız
 // kullanıcının onayıyla değişir). Ada haritasında bölgeler tablodaki sırayla, bir yol boyunca
-// dizilir. Bir bölge, öncekinin bütün görevleri en az bir kez bitince açılır (ilerleme.ts).
+// dizilir. Bir bölge, öncekinin bir turu bitince açılır (ilerleme.ts); tursuz bölgenin tek turu
+// bütün görevleridir.
 //
 //   sira      1'den başlayıp birer artar
 //   kimlik    adreste (#/bolge/koy) ve cihazdaki kayıtta bölgenin adı: küçük ASCII harfler
@@ -13,6 +14,7 @@ import bolgelerMetni from '../../icerik/bolgeler.csv?raw'
 import bukalemunKoyuMetni from '../../icerik/gorevler/bukalemun-koyu.csv?raw'
 import fistikciSahapMetni from '../../icerik/gorevler/fistikci-sahap.csv?raw'
 import kokBahcesiMetni from '../../icerik/gorevler/kok-bahcesi.csv?raw'
+import uydurukcuklarMetni from '../../icerik/gorevler/uydurukcuklar.csv?raw'
 import { csvOku } from '../motor/index.ts'
 import { gorevleriOku, type Gorev } from './gorevler.ts'
 
@@ -35,6 +37,7 @@ export const GOREV_TABLOLARI: Readonly<Record<string, string>> = {
   'icerik/gorevler/bukalemun-koyu.csv': bukalemunKoyuMetni,
   'icerik/gorevler/fistikci-sahap.csv': fistikciSahapMetni,
   'icerik/gorevler/kok-bahcesi.csv': kokBahcesiMetni,
+  'icerik/gorevler/uydurukcuklar.csv': uydurukcuklarMetni,
 }
 
 const BASLIKLAR = ['sira', 'kimlik', 'ad', 'aksam', 'gorevler'] as const

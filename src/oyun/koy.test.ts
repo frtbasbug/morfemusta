@@ -102,6 +102,8 @@ describe('adimiKur', () => {
 describe('denemeyiDegerlendir: aday motorun gövdeleriyle kurulur', () => {
   const gorevi = (kok: string, ekler: string): Gorev => ({
     sira: 1,
+    tur: 1,
+    turdakiSira: 1,
     kok,
     etiketler: ekler.split('+'),
     renksiz: false,

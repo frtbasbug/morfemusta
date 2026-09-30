@@ -5,14 +5,15 @@
 // Durum yalnız renkle değil, simge ve yazıyla da görünür: açık (üçgen), tamam (tamam işareti),
 // kilitli (kilit), hazırlanıyor (kum saati). Kilitli ya da hazırlanan bölgeye dokununca başlığın
 // altında nedeni yazılır. Kalın ve ince renkleri haritada kullanılmaz: onlar yalnız dilbilgisel
-// anlam taşır. Bukalemun Koyu'nun işareti bir bukalemundur (koyun ilk görevinin bukalemunu);
-// öteki bölgelerin işaretlerini kendi oturumları çizecek.
+// anlam taşır. Her bölgenin işareti süstür, yazısızdır: koyda bukalemun, dükkânda taş ve jöle,
+// bahçede ağaç, Uydurukçuklar'da yaratık.
 
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { ekle } from '../motor/index.ts'
 import { BahceIsareti } from '../gorsel/Agac.tsx'
 import Bukalemun from '../gorsel/Bukalemun.tsx'
 import DukkanIsareti from '../gorsel/DukkanIsareti.tsx'
+import { UydurukIsareti } from '../gorsel/Yaratik.tsx'
 import type { Bolge } from '../oyun/bolgeler.ts'
 import type { BolgeDurumu, HaritaBolgesi } from '../oyun/ilerleme.ts'
 import type { Nokta } from './hareket.ts'
@@ -110,10 +111,15 @@ const KIYI_YOLU = yumusakYol(KIYI, true)
  *   koy     koyun ilk görevinin bukalemunu, küçük ve yazısız (süs; ek yazısı bu boyda okunmaz)
  *   dukkan  yan yana küçük bir taş ve bir jöle karosu, yazısız
  *   bahce   küçük bir ağaç, yazısız
+ *   uyduruk küçük bir yaratık: ilk görevin yaratığı (fıngıl), yazısız
  */
 function isaret(bolge: Bolge): ReactNode {
   if (bolge.kimlik === 'dukkan') return <DukkanIsareti />
   if (bolge.kimlik === 'bahce') return <BahceIsareti />
+  if (bolge.kimlik === 'uyduruk') {
+    const [gorev] = bolge.gorevler
+    return gorev ? <UydurukIsareti kok={gorev.kok} /> : null
+  }
   if (bolge.kimlik !== 'koy') return null
   const [gorev] = bolge.gorevler
   const [etiket] = gorev?.etiketler ?? []
