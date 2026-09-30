@@ -16,7 +16,8 @@
   ayraçlı ünsüz yoksa ya da ünsüzden sonra varsa `<ETİKET>:kaynaştırma` (eksik / fazla); ek
   başı adımında, ünlü uyumundan önce. Cümleler: *İki ünlü yan yana gelmez: araya y girer.* (n,
   s'de harf değişir) ve *Ünsüzden sonra araya y girmez.* `yuzeySecenekleri(parca, {
-  kaynastirma: true })` iki kılık takımını birlikte verir (ya, ye, a, e). 22 satır, `neden.csv`
+  kaynastirma: true })` iki kılık takımını birlikte verir (ya, ye, a, e); `unsuz: true` D ve C
+  yuvasının taşını ve jölesini de (da, de, ta, te). 22 satır, `neden.csv`
   ve `neden-unsuz.csv` geçiyor; altın tablonun 202 satırı değişmeden geçiyor.
 - **Motor: uydurma kök denetimi** (`src/motor/uydurma.ts`, `uydurmaDenetimi(kok)`): ses, sözlük,
   yasak, ek; ilk bozukluk döner. 15 satır ve görev tablosunun 100 kökü geçiyor.
@@ -57,7 +58,7 @@
   taş erir), *İkisi de olur: pıtakım, pıtağım.*; yanlışta düşüş, üstü çizili aday, ilgili iki
   ses, cümle. Cep yalnız iyelik görevlerinde. Sürükle-bırak (bukalemun ve karo), dokun-dokun,
   klavye.
-- **Testler:** 1259 birim testi ve 75 uçtan uca test (hepsi yeşil).
+- **Testler:** 1262 birim testi ve 78 uçtan uca test (hepsi yeşil; PR düzeltmesiyle).
   - Birim: `neden-kaynastirma.test.ts`, `uydurma-denetimi.test.ts`, `uyduruk.test.ts` (100 kök
     denetimden geçer, her turda aynı on görev şekli, her doğru biçim seçeneklerden kurulur,
     tek doğru bukalemun, sınır adımı, indirgeyici), `yaratik.test.ts`, turlar ve kartlar
@@ -68,6 +69,16 @@
     kartı (yeniden yüklemeden sonra da); klavye; sürükle-bırak (bukalemun ve karo); hareket
     azaltma; Pixel 7, 360×640 ve 320×568'de taşma yok, dokunma alanları en az 44 px; Renksiz;
     Harita düğmesi. `kok-bahcesi.spec.ts`: bahçe bitince Uydurukçuklar açılır ve girilir.
+
+### PR'dan sonra düzeltilen (kullanıcının bulgusu)
+
+- **LOC'ta dört kılık:** kıyıda yalnız ünlü kılıkları vardı (*mömüş*: te, ta); benzeşme hiç
+  sınanmıyordu. Artık `yuzeySecenekleri(parca, { unsuz: true })` D ve C yuvasının taşını ve
+  jölesini de verir (`neden`'in kabul ettiği yüzeyler); Uydurukçuklar kaynaştırmayla birlikte
+  açar: LOC'ta da, de, ta, te. Birim testleri (seçenekler, *mömüş* + *de* ve *zolku* + *ta*
+  nedenleri) ve uçtan uca testler: 5. görevde *de* → *ş taş, ekin başı da taş olur: t.*; 7.
+  görevde *ta* → *Ünlüden sonra ekin başı jöle kalır: d.*; dört bukalemun Pixel 7, 360×640 ve
+  320×568'de kaydırmadan sığar. Codex'in incelemesi (`f207c9d`) bulgu vermedi.
 
 ### Kullanıcının verdikleri
 

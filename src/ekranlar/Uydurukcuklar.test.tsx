@@ -22,10 +22,12 @@ describe('Uydurukcuklar', () => {
     expect(html).toMatch(/class="uyduruk__ad" aria-hidden="true">fıng<span class="unlu-etiketi[^"]*"[^>]*>ı<\/span>l</)
   })
 
-  it('kıyıda ekin bukalemunları; yönelmede kaynaştırmalı ve kaynaştırmasız dört kılık', () => {
+  it('kıyıda ekin bukalemunları; yönelmede kaynaştırmalı ve kaynaştırmasız, bulunmada taş ve jöle dört kılık', () => {
     expect(eslesmeler(html, /aria-label="([^" ]+) bukalemunu/g).sort()).toEqual(['lar', 'ler'])
     const zelu = renderToStaticMarkup(<Uydurukcuklar bolge={UYDURUK} baslangic={7} />)
     expect(eslesmeler(zelu, /aria-label="([^" ]+) bukalemunu/g).sort()).toEqual(['a', 'e', 'ya', 'ye'])
+    const momus = renderToStaticMarkup(<Uydurukcuklar bolge={UYDURUK} baslangic={4} />)
+    expect(eslesmeler(momus, /aria-label="([^" ]+) bukalemunu/g).sort()).toEqual(['da', 'de', 'ta', 'te'])
   })
 
   it('kalınan yer bütün tablodadır: 10, 2. turun ilk yaratığı (pıbız)', () => {

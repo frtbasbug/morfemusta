@@ -40,12 +40,15 @@ export const UYDURUK_BUYULERI: Readonly<Record<string, UydurukBuyusu>> = {
   DAT: 'yıldız gelir',
 }
 
-/** Görevin tek adımı: kök + tek ek; kıyıda kaynaştırmalı ve kaynaştırmasız kılıklar. */
+/**
+ * Görevin tek adımı: kök + tek ek. Kıyıda neden'in kabul ettiği bütün kılıklar: kaynaştırmalı
+ * ve kaynaştırmasız (ya, ye, a, e), D yuvasında taş ve jöle (da, de, ta, te); benzeşme de sınanır.
+ */
 export function uydurukAdimi(gorev: Gorev): Adim {
   if (gorev.etiketler.length !== 1) {
     throw new Error(`${gorev.sira}. görevde (${gorev.kok}) tek bir ek olmalı`)
   }
-  return adimiKur(gorev, 0, { kaynastirma: true })
+  return adimiKur(gorev, 0, { kaynastirma: true, unsuz: true })
 }
 
 /**

@@ -157,6 +157,44 @@ test.describe('Uydurukçuklar', () => {
     await expect(hedef(page)).toHaveAccessibleName('zelüye')
   })
 
+  test('5. görevde (mömüş) de seçilince benzeşme cümlesi: ş taş, ekin başı da taş olur', async ({
+    page,
+  }) => {
+    await uydurugaGir(page, 4)
+    await expect(hedef(page)).toHaveAccessibleName('mömüş')
+    // Kıyıda dört kılık: da, de, ta, te.
+    await expect(page.getByRole('button', { name: /bukalemunu,/ })).toHaveCount(4)
+    for (const yuzey of ['da', 'de', 'ta', 'te']) await expect(bukalemun(page, yuzey)).toHaveCount(1)
+    await bukalemun(page, 'de').tap()
+    await hedef(page).tap()
+    await expect(neden(page).locator('.uyduruk__cumle')).toHaveText('ş taş, ekin başı da taş olur: t.')
+    // İlgili iki ses: ş ve d, çerçevede.
+    await expect(neden(page).locator('.uyduruk__aday .uyduruk__ses')).toHaveText(['ş', 'd'])
+    await secilebilir(bukalemun(page, 'te'))
+    await bukalemun(page, 'te').tap()
+    await hedef(page).tap()
+    await expect(sonraki(page)).toBeVisible()
+    await expect(hedef(page)).toHaveAccessibleName('mömüşte')
+  })
+
+  test('7. görevde (zolku) ta seçilince: Ünlüden sonra ekin başı jöle kalır', async ({ page }) => {
+    await uydurugaGir(page, 6)
+    await expect(hedef(page)).toHaveAccessibleName('zolku')
+    await bukalemun(page, 'ta').tap()
+    await hedef(page).tap()
+    await expect(neden(page).locator('.uyduruk__cumle')).toHaveText(
+      'Ünlüden sonra ekin başı jöle kalır: d.',
+    )
+    // İlgili iki ses: u etikette, t çerçevede.
+    await expect(neden(page).locator('.uyduruk__aday .unlu-etiketi')).toHaveText('u')
+    await expect(neden(page).locator('.uyduruk__aday .uyduruk__ses')).toHaveText('t')
+    await secilebilir(bukalemun(page, 'da'))
+    await bukalemun(page, 'da').tap()
+    await hedef(page).tap()
+    await expect(sonraki(page)).toBeVisible()
+    await expect(hedef(page)).toHaveAccessibleName('zolkuda')
+  })
+
   for (const secilen of ['jöle', 'taş'] as const) {
     const kelime = secilen === 'jöle' ? 'pıtağım' : 'pıtakım'
     test(`4. görevde (pıtak) ${secilen} seçilince Sözlük'te ${kelime} kartı`, async ({ page }) => {
@@ -284,6 +322,35 @@ test.describe('Uydurukçuklar', () => {
       await secilebilir(karo(page, 'taş'))
       await denetle()
       await karo(page, 'taş').tap()
+      await hedef(page).tap()
+      await expect(sonraki(page)).toBeVisible()
+      await denetle()
+    }
+  })
+
+  test("bulunmada dört bukalemun telefonda, 360×640'ta ve 320×568'de kaydırmadan sığar", async ({
+    page,
+  }) => {
+    for (const boyut of [null, { width: 360, height: 640 }, { width: 320, height: 568 }]) {
+      if (boyut) await page.setViewportSize(boyut)
+      const etiket = `${boyut?.width ?? 'Pixel 7'}`
+      // mömüş: dört bukalemun (da, de, ta, te); yanlış seçimin cümlesi de görünür.
+      await uydurugaGir(page, 4)
+      await expect(page.getByRole('button', { name: /bukalemunu,/ })).toHaveCount(4)
+      const denetle = async () => {
+        expect(await yatayTasma(page), etiket).toBe(0)
+        expect(await dikeyTasma(page), etiket).toBe(0)
+        for (const oge of await page.locator('.uyduruk__bukalemun, .uyduruk__hedef').all()) {
+          const kutu = (await oge.boundingBox())!
+          expect(Math.min(kutu.width, kutu.height), etiket).toBeGreaterThanOrEqual(44)
+        }
+      }
+      await bukalemun(page, 'de').tap()
+      await hedef(page).tap()
+      await expect(neden(page).locator('.uyduruk__cumle')).not.toBeEmpty()
+      await denetle()
+      await secilebilir(bukalemun(page, 'te'))
+      await bukalemun(page, 'te').tap()
       await hedef(page).tap()
       await expect(sonraki(page)).toBeVisible()
       await denetle()

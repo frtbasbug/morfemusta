@@ -216,8 +216,9 @@ DESIGN.md  NEXT.md  CLAUDE.md
   `Gorev.sira` bütün tablodaki sıradır (1–100), `tur` ve `turdakiSira` ayrıca. İlerleme kaydın
   biçimini değiştirmeden tutulur: `kaldigi` bütün tablodaki yerdir (10 = 2. turun başı), ekran
   `turunYeri` ile turunu oynar. `bolgeBittiMi` bir turu biten bölgeyi tamam sayar (tursuz bölgede
-  tek tur bütün görevlerdir). Kıyıdaki kılıklar `adimiKur(..., { kaynastirma: true })` ile gelir
-  (`yuzeySecenekleri`'nin kaynaştırma seçeneği). Sınır adımında kart çocuğun seçtiği biçimi
+  tek tur bütün görevlerdir). Kıyıdaki kılıklar `adimiKur(..., { kaynastirma: true, unsuz: true })`
+  ile gelir (`yuzeySecenekleri`'nin seçenekleri: `neden`'in kabul ettiği bütün yüzeyler; LOC'ta
+  da, de, ta, te). Sınır adımında kart çocuğun seçtiği biçimi
   saklar: ekran `onGorevBitti(gorev, undefined, kelime)`; `kartiCoz` kelimeyi
   `olasiBicimler`'de arar. Sözlük ve akşam ekranı parçaları o biçimden okur (`kurulanEkleme`).
 - **Ek sırası:** `ekle`, `olasiBicimler` (ve onları çağıran her şey: `neden`,

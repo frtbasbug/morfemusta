@@ -93,7 +93,18 @@ describe('Uydurukçuklar görev tablosu', () => {
     },
   )
 
-  it('seçenekler: PL ve LOC iki, POSS.1SG ve DAT dört (ya, ye, a, e)', () => {
+  it('seçenekler: LOC dört (da, de, ta, te); benzeşme de sınanır', () => {
+    for (const g of GOREVLER.filter((g) => g.etiketler[0] === 'LOC')) {
+      expect(uydurukAdimi(g).secenekler.map((s) => s.yuzey).sort()).toHaveLength(4)
+    }
+    const momus = GOREVLER.find((g) => g.kok === 'mömüş') as Gorev
+    expect(uydurukAdimi(momus).secenekler.map((s) => s.yuzey).sort()).toEqual(['da', 'de', 'ta', 'te'])
+    expect(GOREVLER.filter((g) => uydurukAdimi(g).secenekler.length === 2).map((g) => g.etiketler[0])).toEqual(
+      Array(20).fill('PL'),
+    )
+  })
+
+  it('seçenekler: PL iki, POSS.1SG, LOC ve DAT dört (DAT: ya, ye, a, e)', () => {
     const [, , , , , , , zelu] = GOREVLER
     expect(zelu?.kok).toBe('zelü')
     expect(
@@ -140,6 +151,17 @@ describe('Uydurukçuklar: nedenler ve sınır', () => {
     expect(deneme.aday).toBe('zelüe')
     expect(deneme.cumle).toBe('İki ünlü yan yana gelmez: araya y girer.')
     expect(ilgiliSesler(deneme.nedenler[0])).toEqual([3, 4])
+  })
+
+  it('mömüş + de: sertleşme; zolku + ta: ünlüden sonra jöle kalır; ilgili iki ses', () => {
+    const momus = gorev('mömüş')
+    const de = denemeyiDegerlendir(momus, uydurukAdimi(momus), 'de')
+    expect(de.cumle).toBe('ş taş, ekin başı da taş olur: t.')
+    expect(ilgiliSesler(de.nedenler[0])).toEqual([4, 5])
+    const zolku = gorev('zolku')
+    const ta = denemeyiDegerlendir(zolku, uydurukAdimi(zolku), 'ta')
+    expect(ta.cumle).toBe('Ünlüden sonra ekin başı jöle kalır: d.')
+    expect(ilgiliSesler(ta.nedenler[0])).toEqual([4, 5])
   })
 
   it('kıbı + ye: kalınlık; ilgili iki ses ı ve e', () => {

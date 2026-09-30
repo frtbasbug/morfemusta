@@ -403,8 +403,9 @@ vardır (test denetler).
 | -DA | bir yere koy | *da, de, ta, te* | küçük bir yıldız yaratığın üstünde durur (bulunma) |
 | -(y)A | ona gönder | *ya, ye, a, e* | yıldız yaratığa doğru uçar (yönelme); ardında kesik bir iz |
 
-- **Yalnız kategorik kurallar puanlanır:** ünlü uyumu, benzeşme, kaynaştırma (`neden`). -(y)A'da
-  kaynaştırmalı ve kaynaştırmasız kılıklar birlikte gelir. Seçeneklerin sırası sabit tohumla
+- **Yalnız kategorik kurallar puanlanır:** ünlü uyumu, benzeşme, kaynaştırma (`neden`). Kıyıya
+  `neden`'in kabul ettiği bütün kılıklar gelir: -(y)A'da kaynaştırmalı ve kaynaştırmasız,
+  -DA'da D yuvasının taşı ve jölesi (*mömüş* + *de*: *ş taş, ekin başı da taş olur: t.*). Seçeneklerin sırası sabit tohumla
   karışıktır (Koy'daki gibi).
 - **Sınır adımı:** kök p, ç, t ya da k ile bitip iyelik alınca doğru bukalemun oturduktan sonra
   Dükkân'ın tezgâhı gelir (taş solda, jöle sağda). İki karo da doğrudur (Becker, Ketrez &

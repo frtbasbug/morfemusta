@@ -59,12 +59,13 @@ export function secenekTohumu(gorevSirasi: number, adimSirasi: number): number {
 
 /**
  * Görevin sıradaki ek adımı. Kaynaştırma açıksa (Uydurukçuklar) kıyıya kaynaştırmalı ve
- * kaynaştırmasız kılıklar birlikte gelir: -(y)A için ya, ye, a, e (yuzeySecenekleri).
+ * kaynaştırmasız kılıklar birlikte gelir: -(y)A için ya, ye, a, e; ünsüz açıksa D ve C
+ * yuvalarının taş ve jölesi de: -DA için da, de, ta, te (yuzeySecenekleri).
  */
 export function adimiKur(
   gorev: Gorev,
   sira: number,
-  { kaynastirma = false }: { readonly kaynastirma?: boolean } = {},
+  secenekler: { readonly kaynastirma?: boolean; readonly unsuz?: boolean } = {},
 ): Adim {
   const etiket = gorev.etiketler[sira]
   if (etiket === undefined) throw new Error(`${gorev.sira}. görevde ${sira + 1}. ek yok`)
@@ -73,7 +74,7 @@ export function adimiKur(
   const parca = sonuc.parcalar[sira]
   if (!parca) throw new Error(`${gorev.kok} + ${etiket}: motor ek parçası vermedi`)
   const yuzeyler = tohumluKaristir(
-    yuzeySecenekleri(parca, { kaynastirma }),
+    yuzeySecenekleri(parca, secenekler),
     secenekTohumu(gorev.sira, sira),
   )
   return {

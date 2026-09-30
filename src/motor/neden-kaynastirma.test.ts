@@ -125,6 +125,23 @@ describe('neden: kaynaştırma', () => {
     expect(yuzeySecenekleri(loc!, { kaynastirma: true })).toEqual(['ta', 'te'])
   })
 
+  it('seçenekler: ünsüz açıksa D ve C yuvalarında taş ve jöle de (neden\'in kabul ettikleri)', () => {
+    const [momus] = ekle('mömüş', ['LOC']).parcalar
+    expect(yuzeySecenekleri(momus!, { unsuz: true }).sort()).toEqual(['da', 'de', 'ta', 'te'])
+    const [zolku] = ekle('zolku', ['LOC']).parcalar
+    expect(yuzeySecenekleri(zolku!, { kaynastirma: true, unsuz: true }).sort()).toEqual([
+      'da',
+      'de',
+      'ta',
+      'te',
+    ])
+    // Kaynaştırma ve ünsüz birlikte: -(y)A'da D/C yuvası yok, dört kılık kalır.
+    const [zelu] = ekle('zelü', ['DAT']).parcalar
+    expect(yuzeySecenekleri(zelu!, { kaynastirma: true, unsuz: true })).toEqual(['ya', 'ye', 'a', 'e'])
+    // Her seçenek neden'in kabul ettiği yüzeydir (hata vermez).
+    for (const yuzey of ['da', 'de', 'ta', 'te']) expect(() => neden('mömüş', ['LOC'], [yuzey])).not.toThrow()
+  })
+
   it('kılık dışı yüzey yine hata verir', () => {
     expect(() => neden('zelü', ['DAT'], ['yi'])).toThrow(/kılıklarından biri değil/)
   })

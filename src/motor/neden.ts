@@ -164,15 +164,23 @@ function unluYuvalari(parca: EkParcasi): UnluYuvasi[] {
  * ünlüler konarak elde edilen yüzeyler, alfabe sırasıyla. Doğru yüzey (parca.yuzey) de
  * içlerindedir. Ek yüzeyde ünlüsüz kalırsa (kedim) tek kılık vardır.
  *
+ * Seçenekler (Uydurukçuklar): kaynaştırma açıksa kaynaştırmalı ve kaynaştırmasız kılıklar
+ * birlikte gelir (ya, ye, a, e); ünsüz açıksa D ve C yuvalarında taş ve jöle de (da, de, ta,
+ * te): neden'in kabul ettiği bütün yüzeyler.
+ *
  *     yuzeySecenekleri(ekle('at', ['PL']).parcalar[0])         // ["lar", "ler"]
  *     yuzeySecenekleri(ekle('kız', ['POSS.1SG']).parcalar[0])  // ["ım", "im", "um", "üm"]
  */
 export function yuzeySecenekleri(
   parca: EkParcasi,
-  { kaynastirma = false }: { readonly kaynastirma?: boolean } = {},
+  {
+    kaynastirma = false,
+    unsuz = false,
+  }: { readonly kaynastirma?: boolean; readonly unsuz?: boolean } = {},
 ): string[] {
   const karsit = kaynastirma ? kaynastirmaKarsiti(parca) : undefined
-  return [parca, ...(karsit ? [karsit] : [])].flatMap(unluKiliklari)
+  const parcalar = [parca, ...(karsit ? [karsit] : [])]
+  return [...new Set(parcalar.flatMap(unsuz ? kabulYuzeyleri : unluKiliklari))]
 }
 
 function unluKiliklari(parca: EkParcasi): string[] {
