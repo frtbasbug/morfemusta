@@ -17,7 +17,7 @@ import KokBahcesi from './ekranlar/KokBahcesi.tsx'
 import Sozluk from './ekranlar/Sozluk.tsx'
 import Uydurukcuklar from './ekranlar/Uydurukcuklar.tsx'
 import { useIlerleme } from './kabuk/depo.ts'
-import { bolgeSesleriniIndir } from './ses/calar.ts'
+import { bolgeSesleriniIndir, sus } from './ses/calar.ts'
 import { SesSaglayici } from './ses/Ses.tsx'
 import { HARITA, useRota } from './kabuk/yonlendirici.ts'
 import {
@@ -75,6 +75,13 @@ export default function App() {
   useEffect(() => {
     if (girilemez) git(HARITA)
   }, [girilemez, git])
+
+  // Ekran değişince çalan ses susar (haritaya dönüş, alt gezinme, geri tuşu). Yerleşim etkisidir:
+  // yeni ekranın sesli modda söyleyişi (useEffect) ondan sonra başlar, kesilmez.
+  const ekranAnahtari = rota.ekran === 'bolge' ? `bolge:${rota.kimlik}` : rota.ekran
+  useLayoutEffect(() => {
+    sus()
+  }, [ekranAnahtari])
 
   // Bölgenin sesleri ilk girişte arka planda iner (arayüzünkiler ve koyunkiler önbellekte hazır).
   const girilenKimlik = girilen?.kimlik

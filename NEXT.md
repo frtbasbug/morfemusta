@@ -49,7 +49,7 @@
 - **Ses Denetim Sayfası** (`ses.html`, dördüncü giriş): 690 ses bölge bölge, çal düğmesi,
   okunuşu farklıysa altında; Hatalı işaretleri cihazda (`morfemusta.ses-denetimi.v1`); *Listeyi
   kopyala*. Üstte aynı beş cümle iki hızda; hızı kullanıcı seçecek.
-- **Testler:** 2022 birim testi ve 87 uçtan uca test (hepsi yeşil; tür denetimi temiz).
+- **Testler:** 2024 birim testi ve 88 uçtan uca test (hepsi yeşil; tür denetimi temiz).
   - Birim: `okunus.test.ts` (harf adları, ok ve tire, tablo), `metinler.test.ts` (gruplar,
     örnek metinler; her metnin `ses-listesi.json`'da dosyası ve güncel okunuşu; artık dosya
     yok), `emoji.test.ts` (her kök sözlükte, her dosya var, Twemoji adları), `Ses.test.tsx`
@@ -62,6 +62,18 @@
     Ayarlar; at kartında 🐎, çoğulda üç; Koy'un sesleri service worker önbelleğinde,
     Uydurukçuklar'ınki girişte iner; `ses.html` açılır, çalar, işaretler kalır, *Listeyi
     kopyala* panoya koyar, çevrim dışı açılır.
+
+### PR'dan sonra düzeltilen (Codex'in iki bulgusu, doğrulandı)
+
+- **Çalışma anı önbelleğindeki ses sürümsüzdü:** önceden inmeyen bölgelerin (Dükkân, Bahçe,
+  Uydurukçuklar) sesi yeniden üretilirse adı ve adresi aynı kalıyor, `CacheFirst` eskisini hep
+  veriyordu. Artık adreste içeriğin sürümü var (`?v=<sürüm>`, `kayitAdresi`); bölge indirilirken
+  önbellekteki eski sürümler silinir. Ön bellekteki (arayüz ve Koy) seslerin adresi yalın
+  kaldı: sürümünü Workbox tutar. Birim testi (`calar.test.ts`), uçtan uca test (adresi sürümlü).
+- **Ekran değişince ses sürüyordu:** çalar modül düzeyinde; haritaya dönünce eski ekranın sözü
+  bitene kadar çalıyordu. Artık `App.tsx` ekran değişince susturur (yerleşim etkisi: yeni
+  ekranın söyleyişi ondan sonra başlar). Uçtan uca test: ses çalarken Harita'ya dokununca susar,
+  dizinin kalanı çalmaz (düzeltme olmadan kırmızıydı).
 
 ### Kullanıcının verdikleri
 

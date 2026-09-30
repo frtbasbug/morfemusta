@@ -19,6 +19,8 @@ export interface SesKaydi {
   readonly dosya: string
   readonly okunus: string
   readonly bolgeler: readonly string[]
+  /** Dosyanın içeriğinin özeti: ses yeniden üretilince değişir. */
+  readonly surum: string
 }
 
 /** Metinden sesine: ses-listesi.json. */
@@ -35,6 +37,17 @@ export const sesVarMi = (metin: string): boolean => Object.hasOwn(SESLER, metin.
 /** Dosyanın adresi: public/ses/ altında, sitenin alt yoluyla. */
 export const sesAdresi = (dosya: string): string => `${import.meta.env.BASE_URL}ses/${dosya}`
 
+/** Arayüzün ve koyun sesleri service worker'ın ön belleğindedir (vite.config.ts). */
+export const onceIner = (kayit: SesKaydi): boolean =>
+  kayit.bolgeler.includes('arayuz') || kayit.bolgeler.includes('koy')
+
+/**
+ * Sesin adresi. Ön bellektekinin adresi yalın: sürümünü Workbox tutar (sorgu eklenseydi ön
+ * bellekle eşleşmez, çevrim dışı çalmazdı). Ötekilerin adresinde içeriğin sürümü var: ses
+ * yeniden üretilince adres de değişir, çalışma anı önbelleğindeki eski kayıt kullanılmaz.
+ */
+export const kayitAdresi = (kayit: SesKaydi): string =>
+  onceIner(kayit) ? sesAdresi(kayit.dosya) : `${sesAdresi(kayit.dosya)}?v=${kayit.surum}`
 /** 8 kHz, tek örneklik sessiz WAV: iOS'ta sesi açmak için. */
 const SESSIZ =
   'data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQIAAACAgA=='
@@ -52,17 +65,17 @@ function audio(): HTMLAudioElement | null {
   return oge
 }
 
-function blobAdresi(dosya: string): Promise<string | null> {
-  let adres = bloblar.get(dosya)
+function blobAdresi(kaynak: string): Promise<string | null> {
+  let adres = bloblar.get(kaynak)
   if (!adres) {
-    adres = fetch(sesAdresi(dosya))
+    adres = fetch(kaynak)
       .then((yanit) => (yanit.ok ? yanit.blob() : null))
       .then((blob) => (blob ? URL.createObjectURL(blob) : null))
       .catch(() => null)
-    bloblar.set(dosya, adres)
+    bloblar.set(kaynak, adres)
     // İnmeyen ses bir sonraki denemede yeniden istenir.
     void adres.then((a) => {
-      if (a === null) bloblar.delete(dosya)
+      if (a === null) bloblar.delete(kaynak)
     })
   }
   return adres
@@ -95,26 +108,27 @@ export function sus(): void {
  * Çalma bitince (ya da kesilince) döner.
  */
 export function cal(metinler: string | readonly string[]): Promise<void> {
-  const dosyalar: { dosya: string; metin: string }[] = []
+  const sesler: { adres: string; metin: string }[] = []
   for (const metin of typeof metinler === 'string' ? [metinler] : metinler) {
     const kayit = SESLER[metin.normalize('NFC')]
-    if (kayit) dosyalar.push({ dosya: kayit.dosya, metin: metin.normalize('NFC') })
+    if (kayit) sesler.push({ adres: kayitAdresi(kayit), metin: metin.normalize('NFC') })
   }
-  return sirayla(dosyalar)
+  return sirayla(sesler)
 }
 
 /** Listede olmayan bir dosyayı çalar (Ses Denetim Sayfası'nın örnekleri: ornek/yavas-1.mp3). */
 export function dosyaCal(dosya: string, metin: string): Promise<void> {
-  return sirayla([{ dosya, metin }])
+  return sirayla([{ adres: sesAdresi(dosya), metin }])
 }
 
-async function sirayla(dosyalar: readonly { dosya: string; metin: string }[]): Promise<void> {
+async function sirayla(sesler: readonly { adres: string; metin: string }[]): Promise<void> {
   const kimlik = ++dizi
   const a = audio()
   if (!a) return
   a.pause()
-  for (const { dosya, metin } of dosyalar) {
-    const adres = await blobAdresi(dosya)
+  for (const ses of sesler) {
+    const { metin } = ses
+    const adres = await blobAdresi(ses.adres)
     if (kimlik !== dizi) return
     if (!adres) continue
     a.src = adres
@@ -157,11 +171,18 @@ export async function bolgeSesleriniIndir(kimlik: string): Promise<void> {
   indirilen.add(kimlik)
   try {
     const onbellek = await caches.open(SES_ONBELLEGI)
-    for (const { dosya, bolgeler } of Object.values(SESLER)) {
-      if (!bolgeler.includes(kimlik) || bolgeler.includes('koy') || bolgeler.includes('arayuz')) {
-        continue
-      }
-      const adres = sesAdresi(dosya)
+    // Eski sürümler (ses yeniden üretildi, metin artık yok) silinir.
+    const gecerli = new Set(
+      Object.values(SESLER)
+        .filter((k) => !onceIner(k))
+        .map((k) => new URL(kayitAdresi(k), location.href).href),
+    )
+    for (const istek of await onbellek.keys()) {
+      if (!gecerli.has(istek.url)) await onbellek.delete(istek)
+    }
+    for (const kayit of Object.values(SESLER)) {
+      if (!kayit.bolgeler.includes(kimlik) || onceIner(kayit)) continue
+      const adres = kayitAdresi(kayit)
       if (!(await onbellek.match(adres))) await onbellek.add(adres)
     }
   } catch {

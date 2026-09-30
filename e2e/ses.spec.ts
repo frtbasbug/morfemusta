@@ -25,10 +25,13 @@ const KURULANLAR = KELIMELER.map((k, i) => (i === 9 ? ['toplar', k] : [k]))
 
 type Ses = 'kapali' | 'dokununca' | 'sesli'
 
-/** Ses ayarını kurar (ilk açılışta) ve çalma çağrılarını kaydeder. */
-function calmalariKaydet(sayfa: Page, ses?: Ses) {
+/**
+ * Ses ayarını kurar (ilk açılışta) ve çalma çağrılarını kaydeder. bitmez: çalan ses hiç bitmez
+ * (susturma testi); pause çağrısı ⏹ olarak kaydedilir.
+ */
+function calmalariKaydet(sayfa: Page, ses?: Ses, bitmez = false) {
   return sayfa.addInitScript(
-    ([anahtar, ayar]) => {
+    ([anahtar, ayar, surer]) => {
       if (ayar && sessionStorage.getItem('kuruldu') === null) {
         sessionStorage.setItem('kuruldu', 'evet')
         localStorage.setItem(anahtar!, JSON.stringify({ ayarlar: { ses: ayar } }))
@@ -38,11 +41,16 @@ function calmalariKaydet(sayfa: Page, ses?: Ses) {
       HTMLMediaElement.prototype.play = function () {
         const metin = this.dataset.metin
         if (metin) kayit.push(metin)
-        setTimeout(() => this.dispatchEvent(new Event('ended')), 0)
+        if (!surer) setTimeout(() => this.dispatchEvent(new Event('ended')), 0)
         return Promise.resolve()
       }
+      const durdur = HTMLMediaElement.prototype.pause
+      HTMLMediaElement.prototype.pause = function () {
+        if (surer && this.dataset.metin) kayit.push('⏹')
+        durdur.call(this)
+      }
     },
-    [ANAHTAR, ses ?? ''] as const,
+    [ANAHTAR, ses ?? '', bitmez] as const,
   )
 }
 
@@ -123,6 +131,23 @@ test.describe('sesli mod', () => {
     await page.getByRole('navigation', { name: 'Gezinme' }).getByRole('link', { name: 'Sözlük' }).tap()
     await page.locator('.sozluk-karti').first().tap()
     await expect.poll(() => sonCalinan(page)).toBe('atlar')
+  })
+})
+
+test.describe('ekran değişince', () => {
+  test.use({ contextOptions: { reducedMotion: 'reduce' } })
+
+  test('haritaya dönünce çalan ses susar; dizinin kalanı çalmaz', async ({ page }) => {
+    await calmalariKaydet(page, 'sesli', true)
+    await page.goto('./')
+    await bolge(page, 'Bukalemun Koyu').tap()
+    // Bölgenin adı çalıyor (bitmiyor); kök sırada bekliyor.
+    await expect.poll(() => calinanlar(page)).toEqual(['Bukalemun Koyu'])
+    await page.getByRole('button', { name: 'Harita', exact: true }).tap()
+    await expect(page.getByRole('heading', { level: 1, name: 'Morfemusta Adası' })).toBeVisible()
+    await expect.poll(() => calinanlar(page)).toEqual(['Bukalemun Koyu', '⏹'])
+    await page.waitForTimeout(300)
+    expect(await calinanlar(page)).toEqual(['Bukalemun Koyu', '⏹'])
   })
 })
 
@@ -232,7 +257,8 @@ test.describe('önbellek', () => {
         () =>
           page.evaluate(async (dosya) => {
             const onbellek = await caches.open('morfemusta-ses')
-            return (await onbellek.keys()).some((istek) => istek.url.endsWith(`/ses/${dosya}`))
+            // Adreste içeriğin sürümü var: ses yeniden üretilince eski kayıt kullanılmaz.
+            return (await onbellek.keys()).some((istek) => /\?v=[0-9a-f]{12}$/.test(istek.url) && istek.url.includes(`/ses/${dosya}?v=`))
           }, sesDosyasi('fıngıl')),
         { timeout: 20_000 },
       )

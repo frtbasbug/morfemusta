@@ -263,7 +263,11 @@ DESIGN.md  NEXT.md  CLAUDE.md
   `additionalManifestEntries` ile ön belleğe girer (sürüm dosyanın içeriğinden); öteki
   bölgelerinki `morfemusta-ses` önbelleğine bölgeye ilk girişte arka planda iner
   (`bolgeSesleriniIndir`) ve service worker'ın `runtimeCaching`'i (CacheFirst) oradan verir.
-  Kalıp düzenli ifadedir, işlev değil: service worker'a metin olarak kopyalanır.
+  Kalıp düzenli ifadedir, işlev değil: service worker'a metin olarak kopyalanır. Önceden inmeyen
+  seslerin adresinde içeriğin sürümü var (`?v=<sürüm>`, `kayitAdresi`): ses yeniden üretilince
+  adres değişir, eski sürümler bölge indirilirken silinir. Ön bellektekilerin adresi yalın kalır
+  (Workbox `v`'yi yok saymaz; sorgu eklenirse ön bellekle eşleşmez). Ekran değişince `App.tsx`
+  çalan sesi susturur (`useLayoutEffect`: yeni ekranın söyleyişinden önce).
 - **Ses üretimi (`scripts/ses-uret.py`):** `pip install piper-tts lameenc`; model
   (`tr_TR-dfki-medium`) huggingface.co'dan `.piper/`'a iner (git'e girmez); betik MODEL_CARD'da
   lisansı (by-nc-sa/4.0) arar. Hız: Piper'ın `length_scale`'i 1.2 (biraz yavaş); örnekler 1.2 ve

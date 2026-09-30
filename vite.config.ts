@@ -78,7 +78,8 @@ export default defineConfig({
         runtimeCaching: [
           {
             // İşlev değil düzenli ifade: kalıp service worker'a metin olarak kopyalanır.
-            urlPattern: /\/morfemusta\/ses\/.+\.mp3$/,
+            // Önceden inmeyen seslerin adresinde sürüm var (?v=…, src/ses/calar.ts).
+            urlPattern: /\/morfemusta\/ses\/.+\.mp3(\?.*)?$/,
             handler: 'CacheFirst',
             options: { cacheName: SES_ONBELLEGI },
           },
