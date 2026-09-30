@@ -3,7 +3,7 @@
 
 export { csvOku } from './csv.ts'
 export type { CsvKaydi } from './csv.ts'
-export { ekle, govdeOlayiMi, olasiBicimler, uyum } from './ekle.ts'
+export { ekle, govdeOlayiMi, olasiBicimler, olasiEklemeler, uyum, yumusakKarsilik } from './ekle.ts'
 export type {
   EklemeSonucu,
   EkOlayi,
@@ -15,7 +15,9 @@ export type {
 export { EK_ENVANTERI, ekEnvanteriniOku } from './envanter.ts'
 export type { EkEnvanteri, EkTanimi, EkTuru } from './envanter.ts'
 export { neden, nedenCumlesi, yuzeySecenekleri } from './neden.ts'
-export type { DigerNeden, Neden, UyumNedeni } from './neden.ts'
+export type { DigerNeden, EkBasiNedeni, GovdeNedeni, Neden, UyumNedeni } from './neden.ts'
+export { ekBasiBeklenen, sinirSecenekleri, unsuzYuvalari } from './sinir.ts'
+export type { Karo, Sinir, SinirYeri, UnsuzYuvasi } from './sinir.ts'
 export { sablonuCoz } from './sablon.ts'
 export type { Birim, UnluArkafonemi, UnsuzArkafonemi } from './sablon.ts'
 export { SERT_UNSUZLER, UNLULER, YUMUSAMA, sonUnlu, unluBul } from './ses.ts'

@@ -51,24 +51,30 @@ src/
   App.tsx            kök bileşen: kabuk (yönlendirme, ilerleme, ayarların uygulanması)
   genel.css          genel stil (tema.css belirteçleriyle); .gizli yardımcı sınıfı
   ekranlar/          ekran bileşenleri ve yanlarında birim testleri (*.test.tsx): ada haritası
-                     (AdaHaritasi), Bukalemun Koyu, Sözlük, Ayarlar, akşam ekranı, alt gezinme;
+                     (AdaHaritasi), Bukalemun Koyu, Fıstıkçı Şahap'ın Dükkânı (FistikciSahap),
+                     bölge ekranlarının üst çubuğu (BolgeUstu), Sözlük, Ayarlar, akşam ekranı,
+                     alt gezinme;
                      hareket.ts: ekranların hareketleri (Web Animations API, hareket azaltmaya
                      uyar); simgeler.tsx: arayüz simgeleri
   kabuk/             hash yönlendirici (yonlendirici.ts) ve cihaz deposu (depo.ts: localStorage,
                      kalıcı depo isteği, useIlerleme); testleri yanında
   oyun/              oyunun saf mantığı: bölge tablosu (bolgeler.ts), görev tabloları, seçenekler,
-                     Bukalemun Koyu'nun durumu (indirgeyici), cihazdaki ilerleme (ilerleme.ts:
+                     Bukalemun Koyu'nun (koy.ts) ve dükkânın (dukkan.ts) durumu (indirgeyici),
+                     cihazdaki ilerleme (ilerleme.ts:
                      kayıt, kilitler, Sözlük kartları); testleri yanında
-  motor/             biçimbilim motoru: saf TypeScript, genel kapısı index.ts; testleri yanında
+  motor/             biçimbilim motoru: saf TypeScript, genel kapısı index.ts; testleri yanında;
+                     ünsüz sınırı sinir.ts'te (sinirSecenekleri)
   denetim/           Biçim Denetim Sayfası (denetim.html'in girişi, verisi, testleri)
-  gorsel/            görsel dil: çizim geometrisi (cizim.ts), bukalemunun kılığı (kilik.ts),
-                     belirteçler (tema.css), karakter bileşenleri; testleri yanında
+  gorsel/            görsel dil: çizim geometrisi (cizim.ts), ünsüz karosu (karo.ts, Karo.tsx),
+                     bukalemunun kılığı (kilik.ts), belirteçler (tema.css), karakter
+                     bileşenleri; testleri yanında
   galeri/            Karakter Galerisi (galeri.html'in girişi, örnekleri, testleri)
 icerik/              içerik CSV dosyaları (ekler.csv: ek envanteri; kokler.csv: kök sözlüğü;
                      bolgeler.csv: adanın bölgeleri; gorevler/: bölgelerin görev tabloları,
-                     ör. bukalemun-koyu.csv)
-tests/               altin-bicimler.csv: motorun altın tablosu; neden.csv: yanlış biçimin
-                     nedenleri (motorun neden işlevinin sözleşmesi)
+                     bukalemun-koyu.csv ve fistikci-sahap.csv)
+tests/               altin-bicimler.csv: motorun altın tablosu; neden.csv ve neden-unsuz.csv:
+                     yanlış biçimin nedenleri (motorun neden işlevinin sözleşmesi; uyum, gövde
+                     ve ek başı)
 index.html           oyun
 denetim.html         Biçim Denetim Sayfası (ayrı giriş sayfası)
 galeri.html          Karakter Galerisi (ayrı giriş sayfası)
@@ -110,7 +116,8 @@ DESIGN.md  NEXT.md  CLAUDE.md
     üç özellikten üretilir; ağız duygu göstermez; renkler yalnız `src/gorsel/tema.css`'teki
     belirteçlerdendir. `cizim.ts`'teki sayılar ve yollar tuvaldekilerdir, kullanıcının onayı
     olmadan değişmez (`cizim.test.ts` başvuru koduyla karşılaştırır).
-12. **`tests/neden.csv` ve `icerik/gorevler/*.csv` yalnız kullanıcının onayıyla değişir.**
+12. **`tests/neden.csv`, `tests/neden-unsuz.csv` ve `icerik/gorevler/*.csv` yalnız kullanıcının
+    onayıyla değişir.**
     Neden tablosu `neden` işlevinin, görev tabloları oyunun sözleşmesidir: testi geçirmek için
     satır değiştirilmez, silinmez, eklenmez. Bir satır yanlış görünürse iş durur ve
     kullanıcıya sorulur. Görev tablosunda doğru biçim yazılmaz; her zaman motordan gelir.
@@ -118,7 +125,8 @@ DESIGN.md  NEXT.md  CLAUDE.md
     sözleşmesidir: sıra, kimlik, ad, akşam ekranının başlığı ve görev tablosunun yolu.
     `gorevler` sütunu boş olan bölgenin içeriği henüz yoktur (haritada "hazırlanıyor");
     onları Oturum 7 (Fıstıkçı Şahap'ın Dükkânı), 8 (Kök Bahçesi) ve 9 (Uydurukçuklar)
-    dolduracak. Testi geçirmek için satır değiştirilmez, silinmez, eklenmez.
+    dolduracak. Testi geçirmek için satır değiştirilmez, silinmez, eklenmez. (Oturum 7'de
+    dükkânın satırı kullanıcının onayıyla doldu.)
 14. **Hiçbir veri cihazdan çıkmaz.** İlerleme, Sözlük kartları ve ayarlar yalnız cihazda,
     `localStorage`'da, sürüm numaralı tek anahtarda (`morfemusta.v1`) durur. Sunucuya,
     analitiğe, uzak günlüğe ya da başka bir cihaza gönderilmez; hesap ve eşitleme yok. Depo
@@ -177,6 +185,12 @@ DESIGN.md  NEXT.md  CLAUDE.md
   (fill yok): kalıcı durum hareketten önce satır içi stile yazılır. Seçilen bukalemunun
   kalkışı `translate` özelliğiyledir, `transform`'la değil: CSS geçişi basamaklamada
   animasyonların üstündedir; `transform`'a geçiş konsaydı taşıma hareketlerini bozardı.
+- **Fıstıkçı Şahap'ın Dükkânı:** doğru karo motordan gelir: `sinirSecenekleri` görevin
+  sınırını (gövde ya da ek başı, taş ve jöle harfleri, doğrular) verir; `neden(kok, etiketler,
+  parcalar, govde)` adayı sınar. Görev tablosunun `renksiz` sütunu yoktur; `gorevleriOku` bu
+  sütunu isteğe bağlı okur. Görevin tam bir sınırı olmalı (`gorevinSiniri` hata verir). Karonun
+  geometrisi `src/gorsel/karo.ts`'tedir, `cizim.ts`'e yazılmadı (oradaki sayılar tuvalinkidir).
+  Bölge ekranları `App.tsx`'teki `BOLGE_EKRANLARI`'nda, aynı kabuk özellikleriyle durur.
 - **Sürükle-bırak:** Pointer Events ve `setPointerCapture`; bukalemun düğmelerinde
   `touch-action: none`. Sürüklemenin sonundaki tıklama seçim sayılmaz; klavyenin tıklaması
   (`detail` 0) hiç yutulmaz. Uçtan uca testte fareyle `page.mouse`, parmakla CDP
@@ -213,7 +227,7 @@ DESIGN.md  NEXT.md  CLAUDE.md
   sıfırlama kimliği (`sifirlama`) de var. `App.tsx` ikisini de bölge ekranının `key`'ine koyar;
   görev `ekrandaGorevBitti` ile yazılır: kimlik değiştiyse yazılmaz, ekran baştan açılır.
   Çok sekmede kalan durumlar `NEXT.md`'de (Oturum 11).
-- **Saf görsel hesaplar:** `src/gorsel/cizim.ts` ve `kilik.ts` motor gibi DOM'suz derlenir
+- **Saf görsel hesaplar:** `src/gorsel/cizim.ts`, `karo.ts` ve `kilik.ts` motor gibi DOM'suz derlenir
   (`tsconfig.motor.json`) ve yalnız motorun genel kapısını içe aktarır
   (`src/gorsel/bagimsizlik.test.ts`). Ünlü tablosu motorunkidir. Saklanan ünlünün kılığı
   motorun `uyum` işlevinden gelir (Oturum 4'te dışa açıldı); uyum kuralı arayüzde yazılmaz.

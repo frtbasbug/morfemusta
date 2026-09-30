@@ -128,6 +128,28 @@ Terimler resimdir: her özellik tek bir çizim boyutuna bağlıdır.
   Ağzı çizilmez: saklanan ünlü söylenmez.
 - **Ünlü kartı:** karakter ve altında harfi; zemini kalın ya da ince zemin rengi.
 
+### Ünsüz karoları
+
+Fıstıkçı Şahap'ın Dükkânı'nda sınırdaki ünsüz bir karodur. Terimler resimdir: **sert ünsüz
+taş, yumuşak ünsüz jöle.** Bölgenin adı sert ünsüzlerin okul hatırlatıcısıdır: FıSTıKÇı ŞaHaP
+= f s t k ç ş h p.
+
+| Karo | Biçim | İz | Renk | Tür |
+|------|-------|----|------|-----|
+| taş | köşeleri yontulmuş bir çokgen | kısa bir çatlak (`--cizik`) | `--tas` | sert |
+| jöle | yuvarlak bir damla | küçük bir parıltı (`--zemin`) | `--jole` | yumuşak |
+
+- **Kutu 72×72.** İkisinin de çizgisi 3 mürekkep; harf ortada, 30px Andika kalın. Geometri
+  `src/gorsel/karo.ts`'te (saf, `cizim.ts` gibi DOM'suz), bileşen `Karo.tsx`'te.
+- **Biçim ayırır, renk pekiştirir:** Renksiz'de iki karo aynı gridir, çokgen ve damla yine
+  ayrılır.
+- **Kalın ve ince renkleri karolarda kullanılmaz;** onlar ünlülerindir.
+- **Erişilebilir ad:** harf ve türü (*p, sert*; *b, yumuşak*).
+- **Tezgâhta** taş hep solda, jöle hep sağda; altlarında küçük yazıyla türleri: *sert* /
+  *yumuşak*.
+- **Haritadaki işaret:** yan yana küçük bir taş ve bir jöle karosu (0.375 ölçek, 27 px),
+  yazısız; süstür, adı düğmenin yazısıdır.
+
 ### Belirteçler
 
 | Renk | Değer | Nerede |
@@ -144,17 +166,21 @@ Terimler resimdir: her özellik tek bir çizim boyutuna bağlıdır.
 | `--cizik` | #6B6781 | uymayan sonuç |
 | `--deniz` | #CFE8E0 | ada haritasında deniz |
 | `--kara` | #F4E6C8 | ada haritasında kara; kilitli ve hazırlanan bölgenin tabelası |
+| `--tas` | #B3ADA4 | ünsüz karosu: taş (sert ünsüz) |
+| `--jole` | #BFE9CF | ünsüz karosu: jöle (yumuşak ünsüz) |
 
 Kalın ve ince renkleri (ve zeminleri) yalnız dilbilgisel anlam taşır: süste, haritada ya da
 arayüzde kullanılmaz. Haritada bukalemun gibi dilbilgisel bir figür kendi renginde durabilir.
+Ünsüz karolarında da kullanılmazlar: onlar ünlülerin; karo taş ya da jöle rengindedir.
 
-**Renksiz mod** (renk körlüğü denetimi): `--kalin` ve `--ince` #8E8C99'a, iki zemin
-#E2E1E8'e döner. Sekiz ünlü o zaman da bedenlerinden, kök etiketleri de biçimlerinden ayırt
-edilmelidir. Ayarlar'daki Renksiz bunu bütün oyuna uygular (`html[data-renkler="renksiz"]`);
+**Renksiz mod** (renk körlüğü denetimi): `--kalin` ve `--ince` #8E8C99'a, iki zemin,
+`--tas` ve `--jole` #E2E1E8'e döner. Sekiz ünlü o zaman da bedenlerinden, kök etiketleri de
+biçimlerinden, taş ve jöle de biçimlerinden (çokgen ve damla) ayırt edilmelidir. Ayarlar'daki Renksiz bunu bütün oyuna uygular (`html[data-renkler="renksiz"]`);
 büyüden sonra da gri kalır.
 
 - **Çizgi kalınlıkları:** gövde 3 · göz akı 1.5 · ibik 2.5 · kuyruk ve bacak 5 (altında
-  11'lik mürekkep) · kök etiketi 2 · ünlü kartı 2.5, köşe 18.
+  11'lik mürekkep) · kök etiketi 2 · ünlü kartı 2.5, köşe 18 · ünsüz karosu 3, taşın çatlağı
+  2.5.
 - **Yazı tipleri:** Andika 400 ve 700 (harfler, metin); Baloo 2 800 (başlık, logo). İkisi
   de OFL-1.1 ve pakete gömülü; dış yazı tipi sunucusu yok.
 - **Boyutlar:** ünlü harfi 30px · ek yazısı 20px kalın · kök 30px kalın · sonuç 22px kalın.
@@ -207,13 +233,24 @@ renksiz); doğru biçim görev dosyasına yazılmaz, motordan gelir (`olasiBicim
 
 ### Yanlış biçimin nedeni
 
-Motorun `neden(kok, etiketler, parcalar)` işlevi, her ek için seçilen yüzeyleri (*lar*, *um*)
-alır. Aday, kök ile seçilen yüzeylerin art arda yazılmasıdır. Aday `olasiBicimler` içindeyse
-neden yoktur. Değilse ekler soldan sağa yerel uyumla sınanır: ekin ünlüsü, adayda kendinden
-önceki son ünlüye göre beklenir ve seçilenle karşılaştırılır; uyuşmayan özellikler (kalınlık,
-yuvarlaklık) yazılır. Yerel sınama yüzünden *toplerim* yalnız çoğulun kalınlığını alır: *im*,
-önündeki *e*'ye uyduğu için suçlanmaz. Uyum farkı yoksa (istisna: *saatlar*; yumuşama:
-*kitapım*) tek neden "diğer"dir. Sözleşmesi `tests/neden.csv`'dir.
+Motorun `neden(kok, etiketler, parcalar, govde = kok)` işlevi, her ek için seçilen yüzeyleri
+(*lar*, *um*) ve gövdeyi alır. Gövde kökün kendisidir ya da gövde sınırında yumuşamış hâli
+(*kitab*). Aday, gövde ile seçilen yüzeylerin art arda yazılmasıdır. Aday `olasiBicimler`
+içindeyse neden yoktur. Değilse sırayla üç şey sınanır; bulunan nedenler bu sırayla dizilir:
+
+1. **Gövde sınırı** (Fıstıkçı Şahap'ın Dükkânı): kökün son ünsüzü taş mı, jöle mi? Taş
+   seçildi, jöle olmalıydı: *yumuşama* (*kitapım*). Jöle seçildi, taş olmalıydı: tek heceli
+   kökte *inatçı* (*tobum*), çok heceli kökte *yumuşamaz* (*sepedi*).
+2. **Ek başı:** D ve C, adayda kendinden önceki sese göre beklenir (yerel): sert ünsüzden sonra
+   taş, değilse jöle. Jöle seçildi, taş olmalıydı: *sertleşme* (*kitapda*). Taş seçildi, jöle
+   olmalıydı: *yumuşak* (*evte*, *suçu*).
+3. **Ünlü uyumu:** ekler soldan sağa yerel uyumla sınanır: ekin ünlüsü, adayda kendinden önceki
+   son ünlüye göre beklenir ve seçilenle karşılaştırılır; uyuşmayan özellikler (kalınlık,
+   yuvarlaklık) yazılır. Yerel sınama yüzünden *toplerim* yalnız çoğulun kalınlığını alır:
+   *im*, önündeki *e*'ye uyduğu için suçlanmaz.
+
+Hiçbiri bulunamazsa (istisna: *saatlar*; ünlü düşmesi: *ağızım*) tek neden "diğer"dir.
+Sözleşmeleri `tests/neden.csv` (uyum) ve `tests/neden-unsuz.csv`'dir (gövde ve ek başı).
 
 Çocuğa yalnız ilk nedenin cümlesi gösterilir (`nedenCumlesi`); önce bakılan ünlü, sonra
 seçilen:
@@ -226,6 +263,46 @@ seçilen:
 
 Bakılan ünlü kökte değil de önceki bir ekteyse sona *Bukalemun en yakın ünlüye bakar.*
 eklenir (*toplarim*). "Diğer" için cümle henüz yoktur.
+
+Gövde ve ek başı nedenlerinin cümleleri; harfler ve kök görevden gelir:
+
+| Neden | Cümle |
+|-------|-------|
+| yumuşama | *p ünlüden önce jöle olur: b.* |
+| inatçı | *top inatçı: p taş kalır.* |
+| yumuşamaz | *sepet kelimesinde t taş kalır.* |
+| sertleşme | *p taş, ekin başı da taş olur: t.* |
+| yumuşak | *v jöle, ekin başı da jöle kalır: d.* Önceki ses ünlüyse: *Ünlüden sonra ekin başı jöle kalır: c.* |
+
+## Fıstıkçı Şahap'ın Dükkânı
+
+İkinci bölge: ünsüzler. Bu bölgede çocuk ünlüyü değil, sınırdaki ünsüzü seçer: taş mı, jöle
+mi ("Ünsüz karoları")? Görevler `icerik/gorevler/fistikci-sahap.csv`'dedir (sıra, kök, ekler);
+doğru karo görev dosyasına yazılmaz, motordan gelir (`sinirSecenekleri`, `neden`).
+
+- **İki tür sınır:**
+  - **Gövde sınırı (yumuşama):** kök p, ç, t ya da k ile biter, ek ünlüyle başlar. *kita_ım*:
+    p (taş) mı, b (jöle) mi? Sözlükteki kökte sözlük işaretine bağlıdır (*kitabım*, *topum*);
+    uydurma kökte iki karo da doğrudur (*pıtakı*, *pıtağı*).
+  - **Ek başı (benzeşme):** ek D ya da C ile başlar. *kitap_a*: t (taş) mı, d (jöle) mi? Her
+    kökte kurala bağlıdır: sert ünsüzden sonra taş.
+  - Görev tablosundaki her görevin tam bir sınırı vardır (test denetler).
+- **Ekran:** Bukalemun Koyu'nun kabuğu aynen: üst çubuk, sürdürme, Sözlük kartı, akşam ekranı
+  (*Dükkânda akşam oldu*). Kelime ortada bir kartta; sınır boş bir yuvadır (kesik çerçeve).
+  Ek birleşen ek görünümündedir; ek başının yuvası ekin kutusunun içindedir. Bu bölgede çocuk
+  ünlüyü seçmez. Altta tezgâh (taş solda, jöle sağda) ve dükkânın rafı.
+- **Taşıma:** sürükle-bırak, dokun-dokun (önce karo, sonra kelime) ya da klavye (Tab ve
+  Enter). Dokunma alanları en az 44 px.
+- **Doğruysa** karo yuvaya oturur, kelime dükkânın rafına dizilir. Ses değişiyorsa değişim
+  görünür: yumuşamada yuvada önce kökün taşı durur, jöleye erir (*kitap → kitabım*);
+  benzeşmede önce ekin jölesi durur, taşa döner (*-da → kitapta*). Değişim kelimenin altında da
+  yazılır. Değişmiyorsa (*topum*, *evde*) karo yalnız yerine oturur.
+- **Yanlışsa** karo yuvanın üstünde seker ve tezgâha döner. Kelimenin altında denenen biçim
+  (üstü çizili, `--cizik`) ve nedenin cümlesi görünür; ilgili iki ses vurgulanır: ünlü
+  etiketinde, ünsüz çerçevede (gövdede seçilen ünsüz ve ardındaki ünlü; ek başında önceki ses
+  ve seçilen ünsüz). Ceza, puan ve süre yok.
+- **Raf:** bu turda kurulan kelimeler, sırayla. İki sıranın yeri boşken de ayrılmıştır.
+- **Hareket azaltma** açıksa hiçbir şey hareket etmez; yalnız durum değişir.
 
 ## Ada haritası
 
@@ -252,9 +329,11 @@ kimlik, ad, akşam, görev tablosu); görev tablosu boş olan bölgenin içeriğ
 - **İleti** başlığın altında, bir balonda yazılır. Yeri boşken de ayrılmıştır: ileti gelince
   harita kaymaz, çocuğun sonraki dokunuşu yerini şaşırmaz.
 - **İşaretler:** Bukalemun Koyu'nun işareti küçük bir bukalemundur: koyun ilk görevinin
-  bukalemunu (*at* + *lar*). Öteki bölgelerin işaretlerini kendi oturumları çizecek.
+  bukalemunu (*at* + *lar*). Fıstıkçı Şahap'ın Dükkânı'nınki yan yana küçük bir taş ve bir jöle
+  karosudur, yazısız. Öteki bölgelerin işaretlerini kendi oturumları çizecek.
 - **Renkler:** deniz, kara, krem, mürekkep, soluk ve ayraç. Kalın ve ince renkleri kullanılmaz;
-  yalnız bukalemun, dilbilgisel bir figür olarak kendi rengindedir. Gölge ve degrade yok.
+  yalnız bukalemun ve karolar, dilbilgisel figürler olarak kendi renklerindedir. Gölge ve
+  degrade yok.
 - **Sığma:** harita 360×640'ta kaydırmadan sığar (320×568'de de). Çizim ve düğmeler, kalan
   alana en/boy oranı korunarak sığan bir kutudadır; düğmeler üst üste binmez.
 
@@ -330,7 +409,7 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
 ## MVP bölgeleri
 
 1. **Bukalemun Koyu** — ünlü uyumu (yukarıda).
-2. **Fıstıkçı Şahap'ın Dükkânı** — sert ünsüzler taş, yumuşaklar jöle.
+2. **Fıstıkçı Şahap'ın Dükkânı** — sert ünsüzler taş, yumuşaklar jöle (yukarıda).
    - -DA ve -CI sertleşir: *kitapta*, *balıkçı*.
    - Ünlüyle başlayan ek gelince yumuşama olur: *kitabı*, *ağacı*, *çocuğu*.
    - Tek heceli inatçılar ayrı bir ailedir: *topu*, *saçı*.

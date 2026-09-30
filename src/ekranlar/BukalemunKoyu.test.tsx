@@ -28,10 +28,10 @@ describe('BukalemunKoyu', () => {
 
   it('başlık bölge tablosundan; Harita düğmesi ve görev sırası', () => {
     expect(html).toMatch(/^<main class="koy">/)
-    expect(html).toMatch(/<h1 class="koy__baslik" tabindex="-1">Bukalemun Koyu<\/h1>/)
-    expect(html).toMatch(/<button type="button" class="koy__harita" aria-label="Harita">/)
+    expect(html).toMatch(/<h1 class="bolge-ustu__baslik" tabindex="-1">Bukalemun Koyu<\/h1>/)
+    expect(html).toMatch(/<button type="button" class="bolge-ustu__harita" aria-label="Harita">/)
     expect(html).not.toContain('Ana sayfa')
-    expect(html).toContain('<p class="koy__sira"><span class="gizli">Görev </span>1 / 10</p>')
+    expect(html).toContain('<p class="bolge-ustu__sira"><span class="gizli">Görev </span>1 / 10</p>')
   })
 
   it('ortada kök: kelime kartı, son ünlüsü etikette', () => {
@@ -80,7 +80,7 @@ describe('BukalemunKoyu', () => {
   })
 
   it('Harita verilmezse düğmesi yok', () => {
-    expect(renderToStaticMarkup(<BukalemunKoyu bolge={KOY} />)).not.toContain('koy__harita')
+    expect(renderToStaticMarkup(<BukalemunKoyu bolge={KOY} />)).not.toContain('bolge-ustu__harita')
   })
 
   it('görev yoksa akşam ekranı: başlık bölge tablosunun aksam sütunundan, bugünün kelimeleri', () => {

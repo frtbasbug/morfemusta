@@ -11,6 +11,7 @@
 
 import bolgelerMetni from '../../icerik/bolgeler.csv?raw'
 import bukalemunKoyuMetni from '../../icerik/gorevler/bukalemun-koyu.csv?raw'
+import fistikciSahapMetni from '../../icerik/gorevler/fistikci-sahap.csv?raw'
 import { csvOku } from '../motor/index.ts'
 import { gorevleriOku, type Gorev } from './gorevler.ts'
 
@@ -31,6 +32,7 @@ export interface Bolge {
  */
 export const GOREV_TABLOLARI: Readonly<Record<string, string>> = {
   'icerik/gorevler/bukalemun-koyu.csv': bukalemunKoyuMetni,
+  'icerik/gorevler/fistikci-sahap.csv': fistikciSahapMetni,
 }
 
 const BASLIKLAR = ['sira', 'kimlik', 'ad', 'aksam', 'gorevler'] as const

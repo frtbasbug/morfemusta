@@ -235,3 +235,54 @@
   white-space: nowrap;
   border: 0;
 }
+
+/* Ünsüz karosu: taş (çokgen, çatlak) ve jöle (damla, parıltı). 3 mürekkep çizgi, harf ortada
+   30px Andika. Kalın ve ince renkleri kullanılmaz. */
+.karo {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.karo__govde {
+  stroke: var(--murekkep);
+  stroke-width: var(--cizgi-karo);
+  stroke-linejoin: round;
+}
+
+.karo--tas .karo__govde {
+  fill: var(--tas);
+}
+
+.karo--jole .karo__govde {
+  fill: var(--jole);
+}
+
+.karo__catlak {
+  fill: none;
+  stroke: var(--cizik);
+  stroke-width: var(--cizgi-catlak);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.karo__parilti {
+  fill: var(--zemin);
+}
+
+.karo__harf {
+  fill: var(--murekkep);
+  font-family: var(--yazi-tipi);
+  font-size: 30px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+/* Dükkânın harita işareti: iki küçük karo yan yana. */
+.dukkan-isareti {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+}

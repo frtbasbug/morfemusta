@@ -29,10 +29,12 @@ describe('adanın bölgeleri', () => {
     ])
   })
 
-  it('yalnız Bukalemun Koyu\'nun içeriği var: görevleri kendi tablosundan', () => {
-    expect(BOLGELER.map((b) => b.gorevler.length)).toEqual([10, 0, 0, 0])
-    const metin = GOREV_TABLOLARI['icerik/gorevler/bukalemun-koyu.csv'] ?? ''
-    expect(bolgeBul('koy')?.gorevler).toEqual(gorevleriOku(metin))
+  it('koyun ve dükkânın içeriği var: görevleri kendi tablolarından', () => {
+    expect(BOLGELER.map((b) => b.gorevler.length)).toEqual([10, 10, 0, 0])
+    const koy = GOREV_TABLOLARI['icerik/gorevler/bukalemun-koyu.csv'] ?? ''
+    expect(bolgeBul('koy')?.gorevler).toEqual(gorevleriOku(koy))
+    const dukkan = GOREV_TABLOLARI['icerik/gorevler/fistikci-sahap.csv'] ?? ''
+    expect(bolgeBul('dukkan')?.gorevler).toEqual(gorevleriOku(dukkan))
   })
 
   it('her görev tablosu yoluyla bilinir, metni dosyanınkidir', () => {

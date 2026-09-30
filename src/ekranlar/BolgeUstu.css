@@ -1,0 +1,48 @@
+/* Bölge ekranının üst çubuğu: Harita düğmesi, bölgenin adı, görev sırası. Renkler yalnız
+   tema.css'teki belirteçlerden. */
+
+.bolge-ustu {
+  display: grid;
+  grid-template-columns: 2.75rem 1fr 2.75rem;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bolge-ustu__harita {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 2.5px solid var(--murekkep);
+  border-radius: 999px;
+  background: var(--zemin);
+  color: var(--murekkep);
+  cursor: pointer;
+}
+
+.bolge-ustu__harita:focus-visible {
+  outline: 3px solid var(--murekkep);
+  outline-offset: 4px;
+}
+
+.bolge-ustu__baslik {
+  margin: 0;
+  font-family: var(--yazi-tipi-baslik);
+  font-size: clamp(1.25rem, 6vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.bolge-ustu__baslik:focus {
+  outline: none;
+}
+
+.bolge-ustu__sira {
+  margin: 0;
+  justify-self: end;
+  color: var(--soluk);
+  font-weight: 700;
+  white-space: nowrap;
+}

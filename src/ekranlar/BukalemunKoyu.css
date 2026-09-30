@@ -18,48 +18,6 @@
   line-height: 1.4;
 }
 
-/* Üst çubuk: Harita düğmesi, bölgenin adı, görev sırası. */
-.koy__ust {
-  display: grid;
-  grid-template-columns: 2.75rem 1fr 2.75rem;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.koy__harita {
-  display: grid;
-  place-items: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  padding: 0;
-  border: 2.5px solid var(--murekkep);
-  border-radius: 999px;
-  background: var(--zemin);
-  color: var(--murekkep);
-  cursor: pointer;
-}
-
-.koy__baslik {
-  margin: 0;
-  font-family: var(--yazi-tipi-baslik);
-  font-size: clamp(1.25rem, 6vw, 1.6rem);
-  font-weight: 800;
-  line-height: 1.1;
-  text-align: center;
-}
-
-.koy__baslik:focus {
-  outline: none;
-}
-
-.koy__sira {
-  margin: 0;
-  justify-self: end;
-  color: var(--soluk);
-  font-weight: 700;
-  white-space: nowrap;
-}
-
 /* Deniz: kelime kartı ve altında neden ya da Sıradaki. Boyları sabittir; neden görününce
    kıyıdaki bukalemunlar yerinden oynamaz. */
 .koy__deniz {
@@ -187,7 +145,6 @@ button.kelime-karti {
   cursor: pointer;
 }
 
-.koy__harita:focus-visible,
 .koy__dugme:focus-visible,
 .kelime-karti:focus-visible {
   outline: 3px solid var(--murekkep);

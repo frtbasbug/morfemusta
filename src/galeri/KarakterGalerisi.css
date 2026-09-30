@@ -177,3 +177,29 @@
   text-decoration: line-through;
   text-decoration-thickness: 2px;
 }
+
+/* Ünsüz karoları: taş solda, jöle sağda; altlarında türü. */
+.karolar {
+  display: flex;
+  gap: 2rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.karolar__karo {
+  display: grid;
+  justify-items: center;
+  gap: 0.2rem;
+}
+
+.karolar__tur {
+  color: var(--soluk);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.karolar__isaret {
+  display: inline-block;
+  margin-top: 0.5rem;
+}

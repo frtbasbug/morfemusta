@@ -19,7 +19,8 @@ describe('KarakterGalerisi', () => {
   })
 
   it('sekiz ünlü okul çizelgesi düzeninde: kalın satırında a ı o u, ince satırında e i ö ü', () => {
-    expect(karakterAdlari.filter((ad) => !ad?.includes('bukalemun'))).toEqual([
+    const unluAdlari = karakterAdlari.filter((ad) => ad !== undefined && /^[aıoueiöü]: /.test(ad))
+    expect(unluAdlari).toEqual([
       'a: kalın, düz, geniş',
       'ı: kalın, düz, dar',
       'o: kalın, yuvarlak, geniş',
@@ -41,7 +42,7 @@ describe('KarakterGalerisi', () => {
     expect(cizelge.match(/class="unlu-karti /g)).toHaveLength(8)
   })
 
-  it('bölümler sırayla: sekiz ünlü, kök etiketi, -lAr, -(I)m, saklanan, uymayan', () => {
+  it('bölümler sırayla: sekiz ünlü, kök etiketi, -lAr, -(I)m, saklanan, uymayan, karolar', () => {
     expect(eslesmeler(html, /<h2 id="[^"]*">([^<]*)<\/h2>/g)).toEqual([
       'Sekiz ünlü',
       'Kök etiketi',
@@ -49,6 +50,7 @@ describe('KarakterGalerisi', () => {
       '-(I)m',
       'Saklanan ünlü',
       'Uymayan ek',
+      'Ünsüz karoları',
     ])
   })
 
@@ -75,6 +77,25 @@ describe('KarakterGalerisi', () => {
       'ü',
     ])
     expect(cizelge).toContain('(kalında 58:56, incede 34:56)')
+  })
+
+  it('ünsüz karoları: taş solda, jöle sağda; adları harf ve türü; harita işareti yazısız', () => {
+    expect(karakterAdlari.filter((ad) => ad?.includes(', sert') || ad?.includes(', yumuşak'))).toEqual([
+      'p, sert',
+      'b, yumuşak',
+    ])
+    const bolum = /<section[^>]*aria-labelledby="bolum-karolar">(.*?)<\/section>/.exec(html)?.[1] ?? ''
+    expect(eslesmeler(bolum, /<svg class="karo ([^"]*)" viewBox="0 0 72 72" width="72"/g)).toEqual([
+      'karo--tas',
+      'karo--jole',
+    ])
+    expect(eslesmeler(bolum, /class="karolar__tur" aria-hidden="true">([^<]*)</g)).toEqual([
+      'sert',
+      'yumuşak',
+    ])
+    const isaret = /aria-label="Dükkânın harita işareti">(.*?)<\/div>/.exec(bolum)?.[1] ?? ''
+    expect(isaret.match(/<svg class="karo /g)).toHaveLength(2)
+    expect(isaret).not.toMatch(/<text/)
   })
 
   it('sekiz bukalemun: -lAr, -(I)m, saklanan, uymayan', () => {

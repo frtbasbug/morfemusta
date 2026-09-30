@@ -3,7 +3,7 @@
 // burada seçilir, biçimler motordan (ekle) gelir. Kökler sözlüktendir; ornekler.test.ts
 // denetler. Yalnız uymayan örnek elle kurulur: motor uymayan biçim üretmez.
 
-import { ekle, type EkParcasi } from '../motor/index.ts'
+import { ekle, sinirSecenekleri, type EkParcasi, type Karo } from '../motor/index.ts'
 
 export interface GaleriOrnegi {
   readonly kok: string
@@ -75,3 +75,17 @@ export const GALERI_BOLUMLERI: readonly GaleriBolumu[] = [
     ornekler: [UYMAYAN_ORNEK],
   },
 ]
+
+/**
+ * Ünsüz karolarının örneği: kitap + POSS.1SG'nin gövde sınırı (kita_ım). Harfler motordan
+ * gelir: taş p, jöle b.
+ */
+export const GALERI_KAROLARI: readonly { readonly karo: Karo; readonly harf: string }[] = (() => {
+  const [sinir] = sinirSecenekleri('kitap', ['POSS.1SG'])
+  if (!sinir) throw new Error('kitap + POSS.1SG: sınır yok')
+  return [
+    { karo: 'taş', harf: sinir.tas },
+    { karo: 'jöle', harf: sinir.jole },
+  ]
+})()
+

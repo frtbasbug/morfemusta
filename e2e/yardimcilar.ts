@@ -49,7 +49,7 @@ export const bukalemun = (sayfa: Page, yuzey: string) =>
   sayfa.getByRole('button', { name: new RegExp(`^${yuzey} bukalemunu,`) })
 export const kart = (sayfa: Page) => sayfa.locator('button.kelime-karti')
 export const sonraki = (sayfa: Page) => sayfa.getByRole('button', { name: 'Sıradaki' })
-export const sira = (sayfa: Page) => sayfa.locator('.koy__sira')
+export const sira = (sayfa: Page) => sayfa.locator('.bolge-ustu__sira')
 export const haritaDugmesi = (sayfa: Page) => sayfa.getByRole('button', { name: 'Harita', exact: true })
 
 /** Oyunu açar ve haritadan Bukalemun Koyu'na girer. */

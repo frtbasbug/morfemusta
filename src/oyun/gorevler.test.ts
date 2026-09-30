@@ -112,7 +112,15 @@ describe('gorevleriOku', () => {
     expect(() => gorevleriOku(`${BASLIK}1,Ev,PL,\n`)).toThrow('2. satır: "Ev" kökünde alfabe dışı harf')
   })
 
+  it('renksiz sütunu isteğe bağlı: yoksa her görev renkli', () => {
+    expect(gorevleriOku('sira,kok,ekler\n1,ev,PL\n2,kitap,LOC\n')).toEqual([
+      { sira: 1, kok: 'ev', etiketler: ['PL'], renksiz: false },
+      { sira: 2, kok: 'kitap', etiketler: ['LOC'], renksiz: false },
+    ])
+  })
+
   it('başlık ve alan sayısı csvOku ile denetlenir', () => {
-    expect(() => gorevleriOku('sira,kok,ekler\n1,ev,PL\n')).toThrow('CSV başlığı')
+    expect(() => gorevleriOku('sira,kok\n1,ev\n')).toThrow('CSV başlığı')
+    expect(() => gorevleriOku('sira,kok,ekler\n1,ev,PL,\n')).toThrow('3 alan beklenirken 4')
   })
 })
