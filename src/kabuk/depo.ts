@@ -1,10 +1,11 @@
 // Cihazdaki depo: localStorage. İlerleme, kartlar ve ayarlar yalnız burada, tek anahtarda
 // durur (src/oyun/ilerleme.ts, ANAHTAR); hiçbir yere gönderilmez (CLAUDE.md, 14. kural).
 // Depoya erişilemiyorsa (çerezler engelli, gizli pencere, dolu depo) oyun bellekte sürer:
-// hata atılmaz, konsola yazılmaz.
+// hata atılmaz, konsola yazılmaz. Aynı cihazda açık pencereler (sekme, ana ekrandaki uygulama)
+// aynı kaydı paylaşır; biri ötekinin ilerlemesini ezmez (pencereKaydi).
 
-import { useCallback, useRef, useState } from 'react'
-import { ilerlemeyiKaydet, ilerlemeyiYukle, type Depo, type Ilerleme } from '../oyun/ilerleme.ts'
+import { useCallback, useEffect, useState } from 'react'
+import { ANAHTAR, pencereKaydi, type Depo, type Ilerleme } from '../oyun/ilerleme.ts'
 
 /** Tarayıcının localStorage'ı; erişim kapalıysa null. */
 export function cihazDeposu(): Depo | null {
@@ -41,23 +42,32 @@ export function kaliciligiIste(): void {
 }
 
 /**
- * Oyunun ilerlemesi: yüklenir, değiştirilir, her değişiklikte kaydedilir. Değişiklik son
- * duruma uygulanır (art arda gelen iki değişiklik birbirini ezmez).
+ * Oyunun ilerlemesi: yüklenir, değiştirilir, her değişiklikte kaydedilir. Değişiklik depodaki
+ * son kayda uygulanır: art arda gelen iki değişiklik de, aynı cihazdaki iki pencere de birbirini
+ * ezmez. Kaydı başka bir pencere değiştirince bu pencere de onu gösterir (storage olayı).
  */
 export function useIlerleme(): readonly [Ilerleme, (degisiklik: (i: Ilerleme) => Ilerleme) => void] {
-  const [depo] = useState(cihazDeposu)
-  const [ilerleme, setIlerleme] = useState(() => ilerlemeyiYukle(depo))
-  const son = useRef(ilerleme)
+  const [kayit] = useState(() => pencereKaydi(cihazDeposu()))
+  const [ilerleme, setIlerleme] = useState(kayit.ilerleme)
+
+  useEffect(() => {
+    const dinle = (olay: StorageEvent) => {
+      // key null: depo bütünüyle silindi (localStorage.clear).
+      if (olay.key !== null && olay.key !== ANAHTAR) return
+      if (kayit.tazele()) setIlerleme(kayit.ilerleme)
+    }
+    window.addEventListener('storage', dinle)
+    return () => window.removeEventListener('storage', dinle)
+  }, [kayit])
 
   const degistir = useCallback(
     (degisiklik: (i: Ilerleme) => Ilerleme) => {
-      const yeni = degisiklik(son.current)
-      if (yeni === son.current) return
-      son.current = yeni
-      setIlerleme(yeni)
-      if (ilerlemeyiKaydet(depo, yeni)) kaliciligiIste()
+      const once = kayit.ilerleme
+      const kaydedildi = kayit.degistir(degisiklik)
+      if (kayit.ilerleme !== once) setIlerleme(kayit.ilerleme)
+      if (kaydedildi) kaliciligiIste()
     },
-    [depo],
+    [kayit],
   )
 
   return [ilerleme, degistir]

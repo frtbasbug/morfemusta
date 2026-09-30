@@ -314,6 +314,11 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
   sürdürür.
 - Bozuk kayıttan yalnız geçerli parçalar alınır; gerisi baştan başlar. Depo yoksa ya da
   erişilemiyorsa oyun bellekte sürer; hata ve konsol iletisi çıkmaz.
+- Aynı cihazda açık pencereler (tarayıcıdaki sekme, ana ekrandaki uygulama) aynı kaydı paylaşır.
+  Her değişiklikte son kayıt yeniden okunur, değişiklik onun üstüne uygulanır: önce açılmış bir
+  pencere sonrakinin ilerlemesini, kartlarını ve ayarlarını ezmez. Biten görevler ve kartlar
+  birleşir; ayarda yalnız değişen alan yazılır; sıfırlama yine her şeyi siler (ayarlar kalır).
+  Bir pencerede olan öteki pencerede de hemen görünür.
 - Tarayıcı destekliyorsa ilk kayıttan sonra kalıcı depo istenir
   (`navigator.storage.persist()`): yer darlığında kayıt silinmesin.
 

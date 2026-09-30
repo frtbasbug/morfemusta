@@ -206,7 +206,9 @@ DESIGN.md  NEXT.md  CLAUDE.md
   biçimi `ilerleme.ts`'in başında yazılıdır; biçim değişirse anahtar da değişir
   (`morfemusta.v2`) ve eski kayıt taşınır. Okunan kayıt denetlenir (`ilerlemeyiCoz`): kart
   motorun kurduğu kelime olmalı. Uçtan uca testler kaydı `localStorage`'a yazarak da kurabilir
-  (anahtar `e2e/yardimcilar.ts`'te).
+  (anahtar `e2e/yardimcilar.ts`'te). Aynı cihazdaki pencereler (sekme, ana ekrandaki
+  uygulama) kaydı paylaşır: `pencereKaydi` her değişikliği depodaki son kayda uygular (bellekteki
+  kopyaya değil); `useIlerleme` başka pencerenin yazdığını `storage` olayıyla alır.
 - **Saf görsel hesaplar:** `src/gorsel/cizim.ts` ve `kilik.ts` motor gibi DOM'suz derlenir
   (`tsconfig.motor.json`) ve yalnız motorun genel kapısını içe aktarır
   (`src/gorsel/bagimsizlik.test.ts`). Ünlü tablosu motorunkidir. Saklanan ünlünün kılığı

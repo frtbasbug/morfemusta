@@ -234,6 +234,82 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
     await expect(sira(page)).toHaveText('Görev 3 / 10')
     expect(hatalar).toEqual([])
   })
+
+  test('iki sekme aynı kaydı paylaşır: görevler, kartlar ve ayar korunur; değişiklik öteki sekmeye hemen yansır', async ({
+    context,
+  }) => {
+    // B önce açılır (ör. tarayıcıdaki sekme) ve haritada bekler; A sonra açılır (ör. ana
+    // ekrandaki uygulama).
+    const b = await context.newPage()
+    const a = await context.newPage()
+    const hatalar = [hatalariTopla(a), hatalariTopla(b)]
+    await b.goto('./')
+    await expect(haritaBasligi(b)).toBeVisible()
+
+    // A iki görev bitirir. B onları storage olayıyla alır: koy üçüncü görevden açılır. B bir
+    // görev bitirir: üç görev ve kartları kalır.
+    await koyuAc(a)
+    await gorevleriOyna(a, 0, 1)
+    await bolge(b, 'Bukalemun Koyu').click()
+    await expect(sira(b)).toHaveText('Görev 3 / 10')
+    await gorevOyna(b, 2)
+    expect(await kayit(b)).toMatchObject({
+      bolgeler: { koy: { bitenler: [1, 2, 3], kaldigi: 3 } },
+      kartlar: [{ kelime: 'atlar' }, { kelime: 'evler' }, { kelime: 'kuşlar' }],
+    })
+
+    // A ayarı değiştirir; B'nin renkleri hemen değişir. B bir görev daha bitirir: ayar korunur.
+    await haritaDugmesi(a).click()
+    await gezinme(a, 'Ayarlar').click()
+    await a.getByRole('radio', { name: 'Renksiz' }).check()
+    await expect(b.locator('html')).toHaveAttribute('data-renkler', 'renksiz')
+    await sonraki(b).tap()
+    await gorevOyna(b, 3)
+    expect(await kayit(b)).toMatchObject({
+      bolgeler: { koy: { bitenler: [1, 2, 3, 4], kaldigi: 4 } },
+      ayarlar: { hareket: 'sistem', renkler: 'renksiz' },
+    })
+
+    // B'nin kartları A'nın Sözlük'üne de yansır.
+    await gezinme(a, 'Sözlük').click()
+    await expect(kartKelimeleri(a)).toHaveText(['gözler', 'kuşlar', 'evler', 'atlar'])
+    expect(hatalar.flat()).toEqual([])
+  })
+
+  test('storage olayı ulaşmasa da (ör. arka planda donmuş sekme) eski sekme ötekinin görevlerini, kartlarını ve ayarını ezmez', async ({
+    context,
+  }) => {
+    const b = await context.newPage()
+    const a = await context.newPage()
+    const hatalar = [hatalariTopla(a), hatalariTopla(b)]
+    // B'ye storage olayı ulaşmaz: eski anlık görüntüde kalır.
+    await b.addInitScript(() => {
+      window.addEventListener('storage', (olay) => olay.stopImmediatePropagation(), true)
+    })
+    await b.goto('./')
+    await expect(haritaBasligi(b)).toBeVisible()
+
+    // A iki görev bitirir ve Renksiz'i seçer. B bunları görmez.
+    await koyuAc(a)
+    await gorevleriOyna(a, 0, 1)
+    await haritaDugmesi(a).click()
+    await gezinme(a, 'Ayarlar').click()
+    await a.getByRole('radio', { name: 'Renksiz' }).check()
+    await expect(b.locator('html')).toHaveAttribute('data-renkler', 'renkli')
+    await bolge(b, 'Bukalemun Koyu').click()
+    await expect(sira(b)).toHaveText('Görev 1 / 10')
+
+    // B bir görev bitirir. Yazmadan önce son kaydı okur, değişikliği onun üstüne uygular:
+    // A'nın görevleri, kartları ve Renksiz'i kalır; B de artık Renksiz'dir.
+    await gorevOyna(b, 0)
+    expect(await kayit(b)).toMatchObject({
+      bolgeler: { koy: { bitenler: [1, 2] } },
+      kartlar: [{ kelime: 'atlar' }, { kelime: 'evler' }],
+      ayarlar: { hareket: 'sistem', renkler: 'renksiz' },
+    })
+    await expect(b.locator('html')).toHaveAttribute('data-renkler', 'renksiz')
+    expect(hatalar.flat()).toEqual([])
+  })
 })
 
 test('Renksiz ve Azalt yeniden yüklemeden sonra yerinde; renkler büyüden sonra da gri, hiçbir şey kıpırdamaz', async ({

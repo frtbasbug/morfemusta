@@ -5,7 +5,9 @@
 // Saf TypeScript'tir: DOM'a dokunmaz. Depo dışarıdan verilir: tarayıcıda localStorage
 // (src/kabuk/depo.ts), testte bellekte bir nesne. Depo yoksa, okunamıyor ya da yazılamıyorsa
 // oyun bellekte sürer: buradaki işlevler depo yüzünden hata atmaz, konsola da yazmaz. Bozuk
-// kayıttan yalnız geçerli parçalar alınır; gerisi baştan başlar.
+// kayıttan yalnız geçerli parçalar alınır; gerisi baştan başlar. Aynı cihazda açık pencereler
+// (sekme, ana ekrandaki uygulama) aynı kaydı paylaşır: değişiklik depodaki son kayda uygulanır
+// (pencereKaydi).
 //
 // Kaydın biçimi (sürüm 1):
 //   { "bolgeler": { "koy": { "bitenler": [1, 2, 3], "kaldigi": 3 } },
@@ -72,26 +74,91 @@ export const BOS_ILERLEME: Ilerleme = { bolgeler: {}, kartlar: [], ayarlar: VARS
 
 // --- Depo ---------------------------------------------------------------------------------
 
-/** Kaydı okur. Depo yoksa, okunamıyorsa ya da kayıt bozuksa baştan başlanır; hata atmaz. */
-export function ilerlemeyiYukle(depo: Depo | null, bolgeler: readonly Bolge[] = BOLGELER): Ilerleme {
-  if (!depo) return BOS_ILERLEME
+/** Kaydın metni: kayıt yoksa null; depo yoksa ya da okunamıyorsa undefined. Hata atmaz. */
+function metniOku(depo: Depo | null): string | null | undefined {
+  if (!depo) return undefined
   try {
-    const metin = depo.getItem(ANAHTAR)
-    return metin === null ? BOS_ILERLEME : ilerlemeyiCoz(JSON.parse(metin), bolgeler)
+    return depo.getItem(ANAHTAR)
   } catch {
-    // Depoya erişilemiyor ya da kayıt JSON değil: oyun baştan, bellekte.
+    // Depoya erişilemiyor: oyun bellekte sürer.
+    return undefined
+  }
+}
+
+/** Kaydın metnini çözer. Kayıt yoksa, okunamıyorsa ya da JSON değilse baştan başlanır. */
+function metniCoz(metin: string | null | undefined, bolgeler: readonly Bolge[]): Ilerleme {
+  if (metin === null || metin === undefined) return BOS_ILERLEME
+  try {
+    return ilerlemeyiCoz(JSON.parse(metin), bolgeler)
+  } catch {
+    // Kayıt JSON değil: oyun baştan.
     return BOS_ILERLEME
   }
 }
 
-/** Kaydeder. Yazılamazsa (depo yok, dolu ya da erişim yok) false döner; hata atmaz. */
-export function ilerlemeyiKaydet(depo: Depo | null, ilerleme: Ilerleme): boolean {
+/** Metni yazar. Yazılamazsa (depo yok, dolu ya da erişim yok) false döner; hata atmaz. */
+function metniYaz(depo: Depo | null, metin: string): boolean {
   if (!depo) return false
   try {
-    depo.setItem(ANAHTAR, JSON.stringify(ilerleme))
+    depo.setItem(ANAHTAR, metin)
     return true
   } catch {
     return false
+  }
+}
+
+/** Kaydı okur. Depo yoksa, okunamıyorsa ya da kayıt bozuksa baştan başlanır; hata atmaz. */
+export function ilerlemeyiYukle(depo: Depo | null, bolgeler: readonly Bolge[] = BOLGELER): Ilerleme {
+  return metniCoz(metniOku(depo), bolgeler)
+}
+
+/** Kaydeder. Yazılamazsa (depo yok, dolu ya da erişim yok) false döner; hata atmaz. */
+export function ilerlemeyiKaydet(depo: Depo | null, ilerleme: Ilerleme): boolean {
+  return metniYaz(depo, JSON.stringify(ilerleme))
+}
+
+/** Bir pencerenin (sekme ya da ana ekrandaki uygulama) ilerlemesi ve kaydı. */
+export interface PencereKaydi {
+  /** Pencerenin bildiği son ilerleme. */
+  readonly ilerleme: Ilerleme
+  /** Kaydı başka bir pencere değiştirdiyse onu alır; aldıysa true. */
+  tazele(): boolean
+  /** Değişikliği son kayda uygular ve kaydeder; değişiklik yoksa ya da yazılamazsa false. */
+  degistir(degisiklik: (ilerleme: Ilerleme) => Ilerleme): boolean
+}
+
+/**
+ * Aynı cihazda açık pencereler aynı kaydı paylaşır. Her değişiklik depodaki son kayda uygulanır:
+ * önce açılmış bir pencere, eski kopyasıyla sonrakinin ilerlemesini, kartlarını ve ayarlarını
+ * ezmez. Depodaki metin pencerenin son okuduğu ya da yazdığı metinden farklıysa kaydı başka bir
+ * pencere değiştirmiştir. Depo okunamıyor ya da yazılamıyorsa (dolu) bellekteki ilerleme sürer;
+ * depodaki eski kayıt onu geri almaz.
+ */
+export function pencereKaydi(depo: Depo | null, bolgeler: readonly Bolge[] = BOLGELER): PencereKaydi {
+  let bilinen = metniOku(depo)
+  let ilerleme = metniCoz(bilinen, bolgeler)
+  const tazele = (): boolean => {
+    const metin = metniOku(depo)
+    if (metin === undefined || metin === bilinen) return false
+    bilinen = metin
+    ilerleme = metniCoz(metin, bolgeler)
+    return true
+  }
+  return {
+    get ilerleme() {
+      return ilerleme
+    },
+    tazele,
+    degistir(degisiklik) {
+      tazele()
+      const yeni = degisiklik(ilerleme)
+      if (yeni === ilerleme) return false
+      ilerleme = yeni
+      const metin = JSON.stringify(yeni)
+      if (!metniYaz(depo, metin)) return false
+      bilinen = metin
+      return true
+    },
   }
 }
 

@@ -45,6 +45,19 @@
   - Bozuk kayıttan yalnız geçerli parçalar alınır. Kartlar motorla sınanır; `__proto__` gibi
     anahtarlar kayda karışamaz.
   - Depo yoksa ya da hata atıyorsa oyun bellekte sürer; konsol hatası çıkmaz.
+  - Aynı cihazda açık pencereler (sekme, ana ekrandaki uygulama) aynı kaydı paylaşır. Codex
+    PR'da buldu: önce açılan pencere, eski kopyasıyla sonrakinin ilerlemesini, kartlarını ve
+    ayarlarını eziyordu. Kullanıcının tarifiyle düzeldi:
+    - Her değişiklikte depodaki son kayıt yeniden okunur, değişiklik onun üstüne uygulanır,
+      sonra yazılır (`pencereKaydi`).
+    - Biten görevler ve kartlar birleşir. Ayarda yalnız değişen alan yazılır. Sıfırlama yine
+      bütün ilerlemeyi ve kartları siler.
+    - Kalınan yer birleşmez: son görevin bittiği pencere belirler (yeni tur baştan
+      başlayabilsin).
+    - Depo doluysa (yazılamıyorsa) bellekteki ilerleme sürer; depodaki eski kayıt onu geri
+      almaz.
+    - `storage` olayı dinlenir: başka sekme yazınca bu sekmenin ilerlemesi ve ayarları hemen
+      güncellenir.
   - İlk başarılı kayıttan sonra, sayfa başına bir kez `navigator.storage.persist()` istenir.
   - "Hiçbir veri cihazdan çıkmaz" CLAUDE.md'ye 14. kural olarak yazıldı.
 - **Sözlük** (`Sozluk.tsx`):
@@ -70,11 +83,11 @@
 - **Denetim sayfasının zemini** main'de koyu maviydi (`--deniz-koyu`), açık olması
   gerekirken: derlemede paylaşılan `genel.css` sayfanın kendi CSS'inden sonra yükleniyor.
   Artık kendi açık rengi geçerli (`:root:has(.denetim)`); uçtan uca test denetliyor.
-- **Testler:** 731 birim testi ve 38 uçtan uca test.
-  - Birim testlerinin dağılımı: motor 366 (değişmedi), oyun mantığı 87 (ilerleme 33, bölgeler
+- **Testler:** 741 birim testi ve 40 uçtan uca test.
+  - Birim testlerinin dağılımı: motor 366 (değişmedi), oyun mantığı 97 (ilerleme 43, bölgeler
     8), görsel dil 205 (kurallar 74), ekranlar 36, kabuk 15, galeri 11, denetim sayfası 11.
-  - İlerleme deposunun birim testleri: kaydet, yükle, bozuk veri, depo yok, kilit açma, kart
-    tekrarı, bugünün kartları; sıfırlama ve ayarlar.
+  - İlerleme deposunun birim testleri: kaydet, yükle, bozuk veri, depo yok, iki pencere, kilit
+    açma, kart tekrarı, bugünün kartları; sıfırlama ve ayarlar.
   - Uçtan uca testler (`harita.spec.ts`, `ilerleme.spec.ts`):
     - ilk açılışta yalnız koy açık;
     - 3 görev oynanır, sayfa yeniden yüklenir, 4. görevden sürer; Sözlük'te 3 kart;
@@ -83,6 +96,8 @@
     - Renksiz ve Azalt yeniden yüklemeden sonra yerinde;
     - sıfırlama;
     - localStorage hata atarken, bozuk kayıtta ve dolu depoda oyun sürer;
+    - iki sekme: görevler, kartlar ve ayar korunur; değişiklik öteki sekmeye hemen yansır;
+      `storage` olayı ulaşmayan eski sekme de ötekini ezmez;
     - geri tuşu; 360×640'ta sığma;
     - Renksiz'de kalın ve ince ek etiketlerinin enleri farklı, kökün ve ekin etiketi aynı
       ende (`ek-etiketi.spec.ts`).

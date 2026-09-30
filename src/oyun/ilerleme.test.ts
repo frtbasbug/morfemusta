@@ -15,6 +15,7 @@ import {
   ilerlemeyiSifirla,
   ilerlemeyiYukle,
   kaldigiGorev,
+  pencereKaydi,
   sozlukGruplari,
   type Depo,
   type Ilerleme,
@@ -137,6 +138,132 @@ describe('depo yok', () => {
     ilerlemeyiKaydet(HATALI_DEPO, ilerleme)
     expect(kaldigiGorev(ilerleme, KOY)).toBe(2)
     expect(ilerleme.kartlar.map((k) => k.kelime)).toEqual(['atlar', 'evler'])
+  })
+})
+
+describe('iki pencere (sekme, ana ekrandaki uygulama) aynı depoyu paylaşır', () => {
+  const gorevi = (sira: number) => KOY.gorevler[sira - 1] as Gorev
+
+  /** A ve B aynı sahte depoyu açar; B tazelemez, eski anlık görüntüde kalır. */
+  function ikiPencere() {
+    const { depo } = bellekDeposu()
+    const b = pencereKaydi(depo)
+    const a = pencereKaydi(depo)
+    return { depo, a, b }
+  }
+
+  it('A iki görev bitirir, eski anlık görüntüdeki B bir görev bitirir: üç görev ve kartları kalır', () => {
+    const { depo, a, b } = ikiPencere()
+    a.degistir((i) => oyna(i, KOY, 2))
+    expect(b.ilerleme).toEqual(BOS_ILERLEME)
+
+    // B yazmadan önce son kaydı okur; değişiklik onun üstüne uygulanır.
+    expect(b.degistir((i) => gorevBitti(i, KOY, gorevi(3), dakikaSonra(BUGUN, 5)))).toBe(true)
+    const son = ilerlemeyiYukle(depo)
+    expect(son.bolgeler).toEqual({ koy: { bitenler: [1, 2, 3], kaldigi: 3 } })
+    expect(son.kartlar.map((k) => k.kelime)).toEqual(['atlar', 'evler', 'kuşlar'])
+    expect(b.ilerleme).toEqual(son)
+  })
+
+  it('A ayarı değiştirir, eski anlık görüntüdeki B görev bitirir: ayar korunur', () => {
+    const { depo, a, b } = ikiPencere()
+    a.degistir((i) => ayarlariDegistir(i, { renkler: 'renksiz' }))
+    b.degistir((i) => gorevBitti(i, KOY, gorevi(1), BUGUN))
+    const son = ilerlemeyiYukle(depo)
+    expect(son.ayarlar).toEqual({ hareket: 'sistem', renkler: 'renksiz' })
+    expect(son.bolgeler).toEqual({ koy: { bitenler: [1], kaldigi: 1 } })
+  })
+
+  it('ayarda yalnız değişen alan yazılır: A renkleri, eski B hareketi değiştirir; ikisi de kalır', () => {
+    const { depo, a, b } = ikiPencere()
+    a.degistir((i) => ayarlariDegistir(i, { renkler: 'renksiz' }))
+    b.degistir((i) => ayarlariDegistir(i, { hareket: 'azalt' }))
+    expect(ilerlemeyiYukle(depo).ayarlar).toEqual({ hareket: 'azalt', renkler: 'renksiz' })
+  })
+
+  it("sıfırlama yine her şeyi siler: eski B sıfırlarsa A'nın görevleri ve kartları da gider", () => {
+    const { depo, a, b } = ikiPencere()
+    a.degistir((i) => ayarlariDegistir(oyna(i, KOY, 2), { renkler: 'renksiz' }))
+    b.degistir(ilerlemeyiSifirla)
+    // Ayarlar kalır (sıfırlama ayarları silmez); A'nın Renksiz'i de geri alınmaz.
+    expect(ilerlemeyiYukle(depo)).toEqual({
+      ...BOS_ILERLEME,
+      ayarlar: { hareket: 'sistem', renkler: 'renksiz' },
+    })
+    expect(a.tazele()).toBe(true)
+    expect(a.ilerleme).toEqual(b.ilerleme)
+  })
+
+  it('aynı kelimeyi iki pencere kurarsa tek kart kalır', () => {
+    const { depo } = bellekDeposu()
+    const a = pencereKaydi(depo)
+    const b = pencereKaydi(depo)
+    a.degistir((i) => gorevBitti(i, KOY, gorevi(1), BUGUN))
+    b.degistir((i) => gorevBitti(i, KOY, gorevi(1), dakikaSonra(BUGUN, 3)))
+    expect(ilerlemeyiYukle(depo).kartlar).toEqual([
+      expect.objectContaining({
+        kelime: 'atlar',
+        tarih: BUGUN.toISOString(),
+        sonKurulma: dakikaSonra(BUGUN, 3).toISOString(),
+      }),
+    ])
+  })
+
+  it('tazele: kaydı başka bir pencere değiştirdiyse alır; kendi yazdığında bir şey değişmez', () => {
+    const { depo } = bellekDeposu()
+    const a = pencereKaydi(depo)
+    const b = pencereKaydi(depo)
+    expect(a.tazele()).toBe(false)
+    b.degistir((i) => oyna(i, KOY, 1))
+    expect(b.tazele()).toBe(false)
+    expect(a.tazele()).toBe(true)
+    expect(a.ilerleme).toEqual(b.ilerleme)
+    expect(a.tazele()).toBe(false)
+  })
+
+  it('depo dolu: yazılamayan ilerleme bellekte sürer, depodaki eski kayıt onu geri almaz', () => {
+    const kayitlar = new Map<string, string>()
+    let dolu = false
+    const depo: Depo = {
+      getItem: (anahtar) => kayitlar.get(anahtar) ?? null,
+      setItem: (anahtar, deger) => {
+        if (dolu) throw new Error('QuotaExceededError')
+        kayitlar.set(anahtar, deger)
+      },
+    }
+    const pencere = pencereKaydi(depo)
+    expect(pencere.degistir((i) => gorevBitti(i, KOY, gorevi(1), BUGUN))).toBe(true)
+    dolu = true
+    expect(pencere.degistir((i) => gorevBitti(i, KOY, gorevi(2), BUGUN))).toBe(false)
+    expect(pencere.degistir((i) => gorevBitti(i, KOY, gorevi(3), BUGUN))).toBe(false)
+    expect(pencere.ilerleme.bolgeler).toEqual({ koy: { bitenler: [1, 2, 3], kaldigi: 3 } })
+    expect(ilerlemeyiYukle(depo).bolgeler).toEqual({ koy: { bitenler: [1], kaldigi: 1 } })
+  })
+
+  it('depo yok ya da hata atıyor: pencere bellekte sürer, hata dışarı çıkmaz', () => {
+    for (const depo of [null, HATALI_DEPO]) {
+      const pencere = pencereKaydi(depo)
+      expect(pencere.degistir((i) => oyna(i, KOY, 2))).toBe(false)
+      expect(pencere.tazele()).toBe(false)
+      expect(kaldigiGorev(pencere.ilerleme, KOY)).toBe(2)
+    }
+  })
+
+  it('bozuk kayıt baştan başlar; ilk değişiklik onu düzeltir', () => {
+    const { depo, kayitlar } = bellekDeposu('{bozuk')
+    const pencere = pencereKaydi(depo)
+    expect(pencere.ilerleme).toEqual(BOS_ILERLEME)
+    expect(pencere.degistir((i) => oyna(i, KOY, 1))).toBe(true)
+    expect(JSON.parse(kayitlar.get(ANAHTAR) ?? '')).toMatchObject({
+      bolgeler: { koy: { bitenler: [1], kaldigi: 1 } },
+    })
+  })
+
+  it('değişiklik yoksa yazılmaz', () => {
+    const { depo, kayitlar } = bellekDeposu()
+    const pencere = pencereKaydi(depo)
+    expect(pencere.degistir((i) => i)).toBe(false)
+    expect(kayitlar.size).toBe(0)
   })
 })
 
