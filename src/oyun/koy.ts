@@ -3,15 +3,17 @@
 // bu indirgeyiciyle değiştirir, hareketleri kendisi canlandırır.
 //
 // Her görev bir kök ve bir ya da birkaç ekten oluşur. Her ek bir adımdır: kıyıya o ekin
-// bukalemunları (kılıkları) gelir, çocuk birini köke taşır. Doğruluk motordan gelir: aday
-// (kök + önceki eklerin doğru yüzeyleri + seçilen yüzey) olasiBicimler içindeyse neden
-// yoktur. Zincirli görevde (top + PL + POSS.1SG) ilk ek tutunca gövde toplar olur, ikinci
-// adım o gövdeye yapılır.
+// bukalemunları (kılıkları) gelir, çocuk birini köke taşır. Doğruluk motordan gelir: aday,
+// motorun doğru biçimindeki gövdeye seçilen yüzeyin eklenmesidir (kitab + ım → kitabım;
+// kalemliğ + im → kalemliğim); olasiBicimler içindeyse neden yoktur. Zincirli görevde (top +
+// PL + POSS.1SG) ilk ek tutunca gövde toplar olur, ikinci adım o gövdeye yapılır.
 
 import {
   ekle,
   neden,
   nedenCumlesi,
+  olasiBicimler,
+  sinirSecenekleri,
   yuzeySecenekleri,
   type EkParcasi,
   type Neden,
@@ -80,7 +82,11 @@ export function adimiKur(gorev: Gorev, sira: number): Adim {
 /** Bir bukalemunun köke taşınması. */
 export interface Deneme {
   readonly yuzey: string
-  /** Kök, önceki eklerin yüzeyleri ve seçilen yüzey: atler, toplarim. */
+  /**
+   * Motorun doğru biçimindeki gövde ve seçilen yüzey: atler, toplarim, kitabım. Gövdeyi ek
+   * değiştirir (kitap + ım → kitab-ım; kalemlik + im → kalemliğ-im); bütün kılıklar aynı
+   * sesle başladığı için gövde her kılıkta aynıdır.
+   */
   readonly aday: string
   /** Boşsa deneme doğrudur. */
   readonly nedenler: readonly Neden[]
@@ -88,15 +94,25 @@ export interface Deneme {
   readonly cumle: string
 }
 
+/**
+ * neden'e verilecek gövde: gövde sınırında motorun seçtiği karo (kitap + ım → kitab), yoksa
+ * kök. Yumuşama yalnız ünlüyle başlayan ekten önce olur; nedenin ünlü ve ek başı konumları
+ * adaydakilerle aynı kalır. Sonraki bir ekin gövdesindeki yumuşama (kalemliğ) nedene girmez:
+ * orada neden yalnız yanlış kılıkta aranır.
+ */
+function nedeninGovdesi(kok: string, etiketler: readonly string[]): string {
+  const sinir = sinirSecenekleri(kok, etiketler).find((s) => s.yer === 'gövde')
+  const govde = ekle(kok, etiketler).parcalar[0]?.govde
+  return sinir && govde === kok.slice(0, -1) + sinir.jole ? govde : kok
+}
+
 export function denemeyiDegerlendir(gorev: Gorev, adim: Adim, yuzey: string): Deneme {
-  const yuzeyler = [...adim.oncekiYuzeyler, yuzey]
-  const nedenler = neden(gorev.kok, gorev.etiketler.slice(0, adim.sira + 1), yuzeyler)
-  return {
-    yuzey,
-    aday: gorev.kok + yuzeyler.join(''),
-    nedenler,
-    cumle: nedenCumlesi(nedenler),
-  }
+  const etiketler = gorev.etiketler.slice(0, adim.sira + 1)
+  const aday = adim.parca.govde + yuzey
+  const nedenler = olasiBicimler(gorev.kok, etiketler).includes(aday)
+    ? []
+    : neden(gorev.kok, etiketler, [...adim.oncekiYuzeyler, yuzey], nedeninGovdesi(gorev.kok, etiketler))
+  return { yuzey, aday, nedenler, cumle: nedenCumlesi(nedenler) }
 }
 
 export const dogruMu = (deneme: Deneme): boolean => deneme.nedenler.length === 0

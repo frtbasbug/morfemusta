@@ -25,6 +25,8 @@ ve biçimbilgisel farkındalığı **okumaya, yazıma ve söz varlığına** ba�
 | -sIz | eksiltir |
 | -(y)A | gönderir |
 
+Kök Bahçesi'nin büyüleri (halka, meyve, kartlar) kendi bölümündedir.
+
 **Ekler bukalemundur.** Biçim kelimeye uymazsa (*evlar*) ek sallanıp düşer.
 
 ## İlkeler
@@ -165,22 +167,26 @@ taş, yumuşak ünsüz jöle.** Bölgenin adı sert ünsüzlerin okul hatırlat�
 | `--yanak` | #FF9DB4 | yanak |
 | `--cizik` | #6B6781 | uymayan sonuç |
 | `--deniz` | #CFE8E0 | ada haritasında deniz |
-| `--kara` | #F4E6C8 | ada haritasında kara; kilitli ve hazırlanan bölgenin tabelası |
+| `--kara` | #F4E6C8 | ada haritasında kara; kilitli ve hazırlanan bölgenin tabelası; bahçenin tabelası |
 | `--tas` | #B3ADA4 | ünsüz karosu: taş (sert ünsüz) |
 | `--jole` | #BFE9CF | ünsüz karosu: jöle (yumuşak ünsüz) |
+| `--govde` | #D9B48F | Kök Bahçesi: ağacın kökü ve gövde halkaları |
+| `--yaprak` | #A8D5A2 | Kök Bahçesi: ağacın tacı |
 
 Kalın ve ince renkleri (ve zeminleri) yalnız dilbilgisel anlam taşır: süste, haritada ya da
 arayüzde kullanılmaz. Haritada bukalemun gibi dilbilgisel bir figür kendi renginde durabilir.
-Ünsüz karolarında da kullanılmazlar: onlar ünlülerin; karo taş ya da jöle rengindedir.
+Ünsüz karolarında da kullanılmazlar: onlar ünlülerin; karo taş ya da jöle rengindedir. Ağaçta
+yalnız ek yazılarında kalırlar; kök, halka ve taç gövde ve yaprak rengindedir.
 
 **Renksiz mod** (renk körlüğü denetimi): `--kalin` ve `--ince` #8E8C99'a, iki zemin,
-`--tas` ve `--jole` #E2E1E8'e döner. Sekiz ünlü o zaman da bedenlerinden, kök etiketleri de
-biçimlerinden, taş ve jöle de biçimlerinden (çokgen ve damla) ayırt edilmelidir. Ayarlar'daki Renksiz bunu bütün oyuna uygular (`html[data-renkler="renksiz"]`);
+`--tas`, `--jole`, `--govde` ve `--yaprak` #E2E1E8'e döner. Sekiz ünlü o zaman da
+bedenlerinden, kök etiketleri de biçimlerinden, taş ve jöle de biçimlerinden (çokgen ve damla),
+halka ve meyve de biçimlerinden (bant ve daire) ayırt edilmelidir. Ayarlar'daki Renksiz bunu bütün oyuna uygular (`html[data-renkler="renksiz"]`);
 büyüden sonra da gri kalır.
 
 - **Çizgi kalınlıkları:** gövde 3 · göz akı 1.5 · ibik 2.5 · kuyruk ve bacak 5 (altında
   11'lik mürekkep) · kök etiketi 2 · ünlü kartı 2.5, köşe 18 · ünsüz karosu 3, taşın çatlağı
-  2.5.
+  2.5 · ağaç (kök, halka, taç, meyve) 3.
 - **Yazı tipleri:** Andika 400 ve 700 (harfler, metin); Baloo 2 800 (başlık, logo). İkisi
   de OFL-1.1 ve pakete gömülü; dış yazı tipi sunucusu yok.
 - **Boyutlar:** ünlü harfi 30px · ek yazısı 20px kalın · kök 30px kalın · sonuç 22px kalın.
@@ -304,6 +310,74 @@ doğru karo görev dosyasına yazılmaz, motordan gelir (`sinirSecenekleri`, `ne
 - **Raf:** bu turda kurulan kelimeler, sırayla. İki sıranın yeri boşken de ayrılmıştır.
 - **Hareket azaltma** açıksa hiçbir şey hareket etmez; yalnız durum değişir.
 
+## Kök Bahçesi
+
+Üçüncü bölge: yapım ve çekim. Terimler resimdir: **yapım eki gövdeyi bir halka büyütür, çekim
+eki tepeye meyve gibi asılır; meyvenin üstüne gövde çıkmaz.** Görevler
+`icerik/gorevler/kok-bahcesi.csv`'dedir (sıra, kök, ekler); hedef, yüzeyler ve gövde kelimeleri
+görev dosyasına yazılmaz, motordan gelir (`ekle`, `ekSirasiHatasi`). Her görevde en az bir
+yapım, en çok bir çekim eki vardır ve çekim en sondadır (test denetler).
+
+- **Ek sırası** (motor, `src/motor/sira.ts`): önce yapım ekleri (kendi aralarında serbest), sonra
+  en çok bir çoğul, sonra en çok bir iyelik, en sonda en çok bir hâl eki (ACC, DAT, LOC, ABL,
+  GEN, INS). Soldan sağa ilk bozukluk döner: çekimden sonra gelen yapım eki `meyve:<ETİKET>`;
+  çekimlerin sırası ya da tekrarı bozuksa `çekim:<ETİKET>`. `ekle` ve `olasiBicimler` sırası
+  bozuk dizide hata atar. Sözleşmesi `tests/ek-sirasi.csv`'dir.
+- **Ekran:** kabuk Bukalemun Koyu'nunki aynen (üst çubuk, sürdürme, akşam ekranı: *Bahçede
+  akşam oldu*). Solda ağaç, sağında tabela (hedef kelime: *gözlükçüler*) ve kelimenin o anki
+  hâli (*göz*, *gözlük* ...); ağacın altında düşen kartlar, en altta sepet. Bu bölgede çocuk
+  ünlü ya da ünsüz seçmez: ekin kılığını motor verir.
+- **Sepet:** hedefin ekleri bukalemun olarak, motorun yüzeyleriyle (*lük, çü, ler*), sabit
+  tohumla karışık sırada; sıradaki ek hep aynı yerde durmaz (test denetler).
+- **Taşıma:** sürükle-bırak, dokun-dokun (önce ek, sonra ağaç) ya da klavye (Tab ve Enter).
+  Dokunma alanları en az 44 px.
+- **Doğruysa** (sıradaki ek): yapım eki gövdeye bir halka ekler, yeni kelime kart olarak düşer
+  (gövde kelimesi); çekim eki meyve olur, tepeye asılır, kart düşürmez.
+- **Yanlışsa** ek dala tutunamaz, sallanır ve sepete döner; cümlesi görünür. Ceza, puan ve süre
+  yok. Cümlelerde ekler ve hedef görevden gelir:
+
+| Neden | Ne zaman | Cümle |
+|-------|----------|-------|
+| meyve | çekim eki seçildi, geride yapım eki var (`ekSirasiHatasi` kurulan + seçilen + kalanlar dizisinde `meyve:` verir) | *Meyvenin üstüne gövde çıkmaz: önce çi.* |
+| önce | başka bir yapım eki seçildi | *yolculuk: önce cu, sonra luk.* |
+
+- **Büyüler** (resimsiz, kartlarla; büyü düşen kartta görünür, Sözlük'teki kartlar olağan
+  boyda):
+
+| Ek | Büyü |
+|----|------|
+| yapım eki | gövdeye bir halka; yeni kelime kart olarak düşer |
+| -CIk | küçültür: düşen kart küçüktür |
+| -lI | katar: önceki gövdenin (kökün) küçük kartı yeni kartın üstüne konur (*tat → tatlı*) |
+| -sIz | eksiltir: önceki gövdenin küçük kartı silinir, yerinde kesikli boş çerçeve kalır (*ses → sessiz*) |
+| -lIk, -CI | yalnız halka ve kart |
+| -lAr | meyve üç olur |
+| -(I)m | meyve cebe girer (Koy'daki cep) |
+
+  - Meyve gövdenin sonundaki k'yi ğ yapar: Dükkân'daki gibi taş jöleye erir, altında yazılır
+    (*kalemlik → kalemliğim*).
+- **Kartlar:** bahçede kart yalnız gövdeden düşer: Sözlük'te *çiçekçi* var, *çiçekçiler* yok.
+  Akşam ekranında bugün düşen kartlar görünür.
+- **Hareket azaltma** açıksa hiçbir şey hareket etmez; yalnız durum değişir.
+- **Sığma:** en yüksek ağaç (*gözlükçüler*: iki halka, üç meyve) 360×640'ta ve 320×568'de
+  kaydırmadan sığar.
+
+### Ağaç
+
+Ağaç koddan çizilir (`src/gorsel/agac.ts`, saf; bileşeni `Agac.tsx`). Aşağıdan yukarı:
+
+| Parça | Biçim | Renk | Üstünde |
+|-------|-------|------|---------|
+| kök | gövdenin dibi, iki yana açılan kökler (132×52) | `--govde` | kökün yazısı (`KokYazisi`, 24px) |
+| halka | üst ve alt kenarı hafifçe kavisli yatay bant (96×40); halkalar üst üste | `--govde` | ekin yazısı, birleşen ek görünümünde (20px) |
+| taç | yuvarlak (148×84) | `--yaprak` | meyveler, tacın alt ucunda |
+| meyve | sapıyla bir daire (48×54, yarıçap 21) | `--zemin` | ekin yazısı (18px) |
+
+- Çizgiler 3 mürekkep. **Kalın ve ince renkleri yalnız ek yazılarında kalır.**
+- **Biçim ayırır, renk pekiştirir:** halka bant, meyve daire; Renksiz'de de ayrılırlar.
+- **Haritadaki işaret:** küçük bir ağaç (gövde ve yuvarlak taç, 30×34), yazısız; süstür, adı
+  düğmenin yazısıdır.
+
 ## Ada haritası
 
 Açılış ekranıdır; başlığı *Morfemusta Adası*. Bölgeler `icerik/bolgeler.csv`'dedir (sıra,
@@ -330,7 +404,8 @@ kimlik, ad, akşam, görev tablosu); görev tablosu boş olan bölgenin içeriğ
   harita kaymaz, çocuğun sonraki dokunuşu yerini şaşırmaz.
 - **İşaretler:** Bukalemun Koyu'nun işareti küçük bir bukalemundur: koyun ilk görevinin
   bukalemunu (*at* + *lar*). Fıstıkçı Şahap'ın Dükkânı'nınki yan yana küçük bir taş ve bir jöle
-  karosudur, yazısız. Öteki bölgelerin işaretlerini kendi oturumları çizecek.
+  karosudur, yazısız. Kök Bahçesi'ninki küçük bir ağaçtır, yazısız. Uydurukçuklar'ınkini kendi
+  oturumu çizecek.
 - **Renkler:** deniz, kara, krem, mürekkep, soluk ve ayraç. Kalın ve ince renkleri kullanılmaz;
   yalnız bukalemun ve karolar, dilbilgisel figürler olarak kendi renklerindedir. Gölge ve
   degrade yok.
@@ -352,7 +427,8 @@ kimlik, ad, akşam, görev tablosu); görev tablosu boş olan bölgenin içeriğ
 ## Sözlük
 
 Doğru kurulan her kelime Sözlük'e kart olarak düşer: görevin kelimesi, görev bitince
-(zincirde *toplarım*; ara gövde *toplar* kart olmaz).
+(zincirde *toplarım*; ara gövde *toplar* kart olmaz). Kök Bahçesi'nde tersine, kart yalnız
+gövdeden düşer: her yapım adımının kelimesi (*çiçekçi*; *çiçekçiler* değil).
 
 - **Kart:** kelime; kök ve ekler, ekler birleşen ek görünümünde, aralarında artı
   (*top* + **lar** + **ım**); bölge; tarih (kelimenin o bölgede ilk kurulduğu gün).
@@ -415,7 +491,7 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
    - Tek heceli inatçılar ayrı bir ailedir: *topu*, *saçı*.
 3. **Kök Bahçesi** — yapım ekleri gövdeyi büyütür
    (*göz → gözlük → gözlükçü → gözlükçülük*); çekim ekleri tepeye meyve gibi asılır;
-   meyvenin üstüne gövde çıkmaz.
+   meyvenin üstüne gövde çıkmaz (yukarıda).
 4. **Uydurukçuklar** — uydurma yaratıklar (*fıngıl*, *pıtak*, *mömüş*) çoğaltılır,
    sahiplenilir, bir yere konur: *fıngıllar*, *pıtağım* ya da *pıtakım*, *mömüşte*.
 

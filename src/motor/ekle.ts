@@ -7,6 +7,7 @@
 // sonra 3. çoğul iyelik (evleri).
 // Oturum 3: ünsüz yumuşaması, ünlü düşmesi, sözlük istisnaları (ince ek, ikizleşme, su) ve
 // uydurma kelime.
+// Oturum 8: ek sırası (sira.ts). Sırası bozuk dizi (göz + PL + LIK) hata verir.
 //
 // "Ünlüyle başlayan ek", parantezli sesler çözüldükten sonra yüzeyde ünlüyle başlayan ektir:
 // -(y)I ünsüzden sonra "ı" (kitabı), ünlüden sonra "yı" (kediyi).
@@ -33,6 +34,7 @@ import {
   type Unlu,
   type YumusayanUnsuz,
 } from './ses.ts'
+import { ekSirasiHatasi } from './sira.ts'
 import { KOK_SOZLUGU, type KokGirdisi, type KokSozlugu } from './sozluk.ts'
 
 export type KopyalananOzellik = 'kalınlık' | 'yuvarlaklık'
@@ -255,6 +257,10 @@ function turet(
     }
   }
   const girdi = sozluk.get(temizKok)
+  const sira = ekSirasiHatasi(etiketler, envanter)
+  if (sira !== undefined) {
+    throw new Error(`${temizKok} + ${etiketler.join('+')}: ek sırası bozuk (${sira})`)
+  }
 
   let kelime = temizKok
   let onceki: EkTanimi | undefined

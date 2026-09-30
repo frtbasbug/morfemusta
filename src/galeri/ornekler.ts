@@ -89,3 +89,20 @@ export const GALERI_KAROLARI: readonly { readonly karo: Karo; readonly harf: str
   ]
 })()
 
+
+/**
+ * Kök Bahçesi'nin örnek ağacı: göz + LIK + AGT + PL (gözlükçüler). İki yapım eki iki halka,
+ * çoğul üç meyve. Parçalar motordan gelir.
+ */
+export const GALERI_AGACI: {
+  readonly kok: string
+  readonly bicim: string
+  readonly halkalar: readonly EkParcasi[]
+  readonly meyve: EkParcasi
+} = (() => {
+  const { bicim, parcalar } = ekle('göz', ['LIK', 'AGT', 'PL'])
+  const halkalar = parcalar.filter((p) => p.tur === 'yapım')
+  const meyve = parcalar.find((p) => p.tur === 'çekim')
+  if (!meyve) throw new Error('göz + LIK+AGT+PL: meyve yok')
+  return { kok: 'göz', bicim, halkalar, meyve }
+})()

@@ -203,3 +203,25 @@
   display: inline-block;
   margin-top: 0.5rem;
 }
+
+/* Kök Bahçesi: örnek ağaç; yanında bir halka, bir meyve ve harita işareti. */
+.agaclar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1.5rem;
+  margin-top: 0.75rem;
+}
+
+.agaclar__agac {
+  padding-top: 0.25rem;
+}
+
+.agaclar__parcalar {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

@@ -27,6 +27,7 @@ import {
 import { flushSync } from 'react-dom'
 import type { EkParcasi } from '../motor/index.ts'
 import Bukalemun from '../gorsel/Bukalemun.tsx'
+import { CEP_DIKISI, CEP_GOVDESI } from '../gorsel/cep.ts'
 import { BUKALEMUN_KUTUSU, bukalemunCizimi } from '../gorsel/cizim.ts'
 import EkYazisi from '../gorsel/EkYazisi.tsx'
 import { bukalemunKiligi } from '../gorsel/kilik.ts'
@@ -58,9 +59,6 @@ const SURUKLEME_ESIGI = 8
 const BIRAKMA_PAYI = 24
 const DURAGAN: Nokta = { x: 0, y: 0 }
 
-// Cebin önü (200×64): üst kenarı ortada hafifçe çukur; içinde kesik dikiş.
-const CEP_GOVDESI = 'M6 4Q100 16 194 4L190 46Q188 60 174 60H26Q12 60 10 46Z'
-const CEP_DIKISI = 'M16 13Q100 24 184 13L181 44Q180 51 172 51H28Q20 51 19 44Z'
 
 interface Surukleme {
   readonly yuzey: string

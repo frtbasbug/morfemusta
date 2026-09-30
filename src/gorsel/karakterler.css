@@ -286,3 +286,138 @@
   align-items: flex-end;
   gap: 2px;
 }
+
+/* Kök Bahçesi'nin ağacı (agac.ts, Agac.tsx): aşağıdan yukarı kök, halkalar, taç; tacın ucunda
+   meyve. Gövde (kök ve halkalar) --govde, taç --yaprak, meyve --zemin; çizgiler 3 mürekkep.
+   Halka yatay bir bant, meyve bir daire: Renksiz'de de biçimleri ayrılır. Kalın ve ince
+   renkleri yalnız ek yazılarındadır. */
+.agac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.agac svg {
+  display: block;
+  overflow: visible;
+}
+
+.agac__govde,
+.agac__yaprak,
+.meyve__govde {
+  stroke: var(--murekkep);
+  stroke-width: var(--cizgi-agac);
+  stroke-linejoin: round;
+}
+
+.agac__govde {
+  fill: var(--govde);
+}
+
+.agac__yaprak {
+  fill: var(--yaprak);
+}
+
+.agac__cizgi,
+.meyve__sap {
+  fill: none;
+  stroke: var(--murekkep);
+  stroke-width: var(--cizgi-agac);
+  stroke-linecap: round;
+}
+
+.meyve__govde {
+  fill: var(--zemin);
+}
+
+/* Taç halkaların üstüne biraz biner; meyveler tacın alt ucunda, içinde asılı: halkayı
+   örtmezler. */
+.agac__tac {
+  position: relative;
+  z-index: 1;
+  margin-bottom: -8px;
+}
+
+.agac__meyveler {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  display: flex;
+  gap: 0;
+  translate: -50% 0;
+}
+
+.agac__halkalar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Halka: bant ve ortasında ekin yazısı. Üst üste halkalar birbirine biner. */
+.agac__halka,
+.meyve {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.agac__halka + .agac__halka {
+  margin-top: -3px;
+}
+
+.agac__halka > svg,
+.meyve > svg {
+  grid-area: 1 / 1;
+}
+
+.agac__ek {
+  grid-area: 1 / 1;
+  font-family: var(--yazi-tipi);
+  font-size: var(--boyut-ek-yazisi);
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+/* Meyvenin yazısı dairenin ortasında (sapın altında). */
+.meyve__ek {
+  grid-area: 1 / 1;
+  padding-top: 10px;
+  font-family: var(--yazi-tipi);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+/* Kök: dip ve üstünde kökün yazısı. */
+.agac__kok {
+  position: relative;
+  display: grid;
+  place-items: center;
+  margin-top: -3px;
+}
+
+.agac__kok > svg {
+  grid-area: 1 / 1;
+}
+
+.agac__kok-yazisi {
+  grid-area: 1 / 1;
+  padding-top: 12px;
+}
+
+.agac__kok-yazisi .kok-yazisi {
+  font-size: 24px;
+}
+
+/* Kökün son ünlüsünün etiketi yazının boyunda. */
+.agac__kok-yazisi .unlu-etiketi {
+  font-size: 1em;
+}
+
+/* Bahçenin harita işareti: küçük bir ağaç. */
+.bahce-isareti {
+  display: block;
+  overflow: visible;
+}

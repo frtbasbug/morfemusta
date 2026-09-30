@@ -6,6 +6,7 @@
 
 import { useState, type ReactNode } from 'react'
 import { unluBul, type Unlu } from '../motor/index.ts'
+import Agac, { BahceIsareti, Halka, Meyve } from '../gorsel/Agac.tsx'
 import Bukalemun from '../gorsel/Bukalemun.tsx'
 import { unluGovdesi } from '../gorsel/cizim.ts'
 import KokYazisi from '../gorsel/KokYazisi.tsx'
@@ -15,7 +16,12 @@ import { karoAdi, karoTuru } from '../gorsel/karo.ts'
 import UnluEtiketi from '../gorsel/UnluEtiketi.tsx'
 import UnluKarti from '../gorsel/UnluKarti.tsx'
 import './KarakterGalerisi.css'
-import { GALERI_BOLUMLERI, GALERI_KAROLARI, type GaleriOrnegi } from './ornekler.ts'
+import {
+  GALERI_AGACI,
+  GALERI_BOLUMLERI,
+  GALERI_KAROLARI,
+  type GaleriOrnegi,
+} from './ornekler.ts'
 
 // Okul çizelgesi: satırlar kalın ve ince; üstte düz ve yuvarlak, altlarında geniş ve dar.
 const SATIRLAR = [
@@ -110,6 +116,35 @@ export default function KarakterGalerisi() {
         <p className="galeri__aciklama">Haritadaki işareti: iki küçük karo, yazısız.</p>
         <div className="karolar__isaret" role="img" aria-label="Dükkânın harita işareti">
           <DukkanIsareti />
+        </div>
+      </section>
+
+      <section className="galeri__bolum" aria-labelledby="bolum-agac">
+        <h2 id="bolum-agac">Kök Bahçesi</h2>
+        <p className="galeri__aciklama">
+          Yapım eki gövdeyi bir halka büyütür, çekim eki tepeye meyve gibi asılır; meyvenin
+          üstüne gövde çıkmaz. Kök ağacın dibinde; halka yatay bir bant, meyve bir daire.
+          Renksiz'de de biçimleri ayrılır. Kalın ve ince renkleri yalnız ek yazılarında.
+        </p>
+        <div className="agaclar">
+          <div className="agaclar__agac" role="img" aria-label={`Ağaç: ${GALERI_AGACI.bicim}`}>
+            <Agac
+              kok={GALERI_AGACI.kok}
+              halkalar={GALERI_AGACI.halkalar.map((parca) => ({ parca }))}
+              meyve={{ parca: GALERI_AGACI.meyve, sayi: 3 }}
+            />
+          </div>
+          <ul className="agaclar__parcalar">
+            <li role="img" aria-label={`Halka: ${GALERI_AGACI.halkalar[0]?.yuzey ?? ''}`}>
+              {GALERI_AGACI.halkalar[0] && <Halka parca={GALERI_AGACI.halkalar[0]} />}
+            </li>
+            <li role="img" aria-label={`Meyve: ${GALERI_AGACI.meyve.yuzey}`}>
+              <Meyve parca={GALERI_AGACI.meyve} />
+            </li>
+            <li role="img" aria-label="Bahçenin harita işareti">
+              <BahceIsareti />
+            </li>
+          </ul>
         </div>
       </section>
     </main>
