@@ -5,13 +5,15 @@
 // üç özellikten çizilir, oyun durumunu almaz.
 //
 // Oyunun bütün ekranları taranır: ada haritası, Bukalemun Koyu, Sözlük, Ayarlar, akşam ekranı,
-// kabuk ve genel stil. Biçim Denetim Sayfası geliştirici aracıdır, kendi renkleri vardır.
+// kabuk, ses (hoparlör) ve genel stil. Biçim Denetim Sayfası geliştirici aracıdır, kendi
+// renkleri vardır. Köklerin resmi (emoji, KokResmi.tsx) karakter değildir: public/emoji/'deki
+// Twemoji dosyalarıdır, adresleri tablodan gelir; kodda resim dosyası adı yazılmaz.
 // Haritada kalın ve ince renkleri de kullanılmaz: onlar yalnız dilbilgisel anlam taşır.
 
 import { describe, expect, it } from 'vitest'
 
 const stiller = import.meta.glob<string>(
-  ['./*.css', '../galeri/*.css', '../ekranlar/*.css', '../genel.css'],
+  ['./*.css', '../galeri/*.css', '../ekranlar/*.css', '../ses/*.css', '../genel.css'],
   { query: '?raw', import: 'default', eager: true },
 )
 
@@ -21,12 +23,14 @@ const kodlar = import.meta.glob<string>(
     '../galeri/*.{ts,tsx}',
     '../ekranlar/*.{ts,tsx}',
     '../kabuk/*.{ts,tsx}',
+    '../ses/*.{ts,tsx}',
     '../App.tsx',
     '../main.tsx',
     '!./*.test.{ts,tsx}',
     '!../galeri/*.test.{ts,tsx}',
     '!../ekranlar/*.test.{ts,tsx}',
     '!../kabuk/*.test.{ts,tsx}',
+    '!../ses/*.test.{ts,tsx}',
   ],
   { query: '?raw', import: 'default', eager: true },
 )
@@ -47,6 +51,7 @@ describe('yalnız belirteçlerdeki renkler', () => {
         '../ekranlar/Ayarlar.css',
         '../ekranlar/AksamEkrani.css',
         '../ekranlar/AltGezinme.css',
+        '../ses/Ses.css',
         '../genel.css',
       ]),
     )
@@ -62,6 +67,7 @@ describe('yalnız belirteçlerdeki renkler', () => {
         '../ekranlar/AdaHaritasi.tsx',
         '../ekranlar/hareket.ts',
         '../kabuk/yonlendirici.ts',
+        '../ses/Ses.tsx',
         '../App.tsx',
       ]),
     )

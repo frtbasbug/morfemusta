@@ -16,6 +16,7 @@ import {
   TAC_KUTUSU,
 } from './agac.ts'
 import EkYazisi, { type EkYuvasi } from './EkYazisi.tsx'
+import KokResmi from './KokResmi.tsx'
 import KokYazisi from './KokYazisi.tsx'
 import './karakterler.css'
 import './tema.css'
@@ -73,6 +74,7 @@ export default function Agac({
           <path className="agac__cizgi" d={AGAC_CIZIMI.kok.cizgiler} />
         </svg>
         <span className="agac__kok-yazisi">
+          <KokResmi kok={kok} sinif="agac__kok-resmi" />
           <KokYazisi kok={kok} />
         </span>
       </span>

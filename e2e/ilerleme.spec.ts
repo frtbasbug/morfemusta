@@ -107,7 +107,8 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
     await expect(page.getByText('Bugün kurduğun kelimeler:')).toBeVisible()
     await expect(page.locator('.aksam__kelimeler .sonuc-kelime__okunan')).toHaveText([...KELIMELER])
     // Tek düğme; puan, seri ve süre yok.
-    await expect(page.getByRole('button')).toHaveText(['Haritaya dön'])
+    // Tek düğme (başlığın hoparlörü dışında); yazının yanında harita simgesi.
+    await expect(page.locator('main button:not(.hoparlor)')).toHaveText(['Haritaya dön'])
     await expect(page.getByText(/puan|seri|süre|skor/i)).toHaveCount(0)
 
     await page.getByRole('button', { name: 'Haritaya dön' }).click()
@@ -173,7 +174,7 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
     expect(await kayit(page)).toEqual({
       bolgeler: {},
       kartlar: [],
-      ayarlar: { hareket: 'sistem', renkler: 'renksiz' },
+      ayarlar: { hareket: 'sistem', renkler: 'renksiz', ses: 'dokununca' },
       sifirlama: 1,
     })
   })
@@ -331,7 +332,7 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
     const bos = {
       bolgeler: {},
       kartlar: [],
-      ayarlar: { hareket: 'sistem', renkler: 'renkli' },
+      ayarlar: { hareket: 'sistem', renkler: 'renkli', ses: 'dokununca' },
       sifirlama: 1,
     }
     expect(await kayit(b)).toEqual(bos)

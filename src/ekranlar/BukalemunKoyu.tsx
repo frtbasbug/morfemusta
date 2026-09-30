@@ -8,6 +8,11 @@
 // düşer, kıyıya döner; nedeni kelimenin altında yazılır, ilgili iki ünlü etiketlenir. Ceza,
 // puan ve süre yok. Ağız hiçbir durumda değişmez (DESIGN.md, "Üç kural").
 //
+// Ses (DESIGN.md, "Ses ve resim"): sesli modda görev başlayınca kök söylenir; bir bukalemun
+// seçilince ya da sürüklenmeye başlayınca kuracağı aday kelime (atlar, atler); doğruda kurulan
+// kelime, yanlışta neden cümlesi. Dokununca'da kelimenin ve cümlenin hoparlörü çalar. Kökün
+// resmi (emoji) kelime kartında; çoğulda kart üçe çoğalınca resim de üç olur.
+//
 // Oyunun durumu src/oyun/koy.ts'teki indirgeyicidedir; bu dosya görünümü ve hareketleri yazar.
 // Hareketler Web Animations API iledir (hareket.ts); hareket azaltma açıksa hiçbiri oynamaz,
 // yalnız renk ve yazı değişir.
@@ -20,6 +25,7 @@ import {
   useEffect,
   useReducer,
   useRef,
+  useState,
   type KeyboardEvent,
   type MouseEvent,
   type PointerEvent,
@@ -31,6 +37,7 @@ import { CEP_DIKISI, CEP_GOVDESI } from '../gorsel/cep.ts'
 import { BUKALEMUN_KUTUSU, bukalemunCizimi } from '../gorsel/cizim.ts'
 import EkYazisi from '../gorsel/EkYazisi.tsx'
 import { bukalemunKiligi } from '../gorsel/kilik.ts'
+import KokResmi from '../gorsel/KokResmi.tsx'
 import KokYazisi from '../gorsel/KokYazisi.tsx'
 import KurulanKelime from '../gorsel/KurulanKelime.tsx'
 import UnluEtiketi from '../gorsel/UnluEtiketi.tsx'
@@ -50,7 +57,9 @@ import {
 } from '../oyun/koy.ts'
 import AksamEkrani from './AksamEkrani.tsx'
 import BolgeUstu from './BolgeUstu.tsx'
+import { Hoparlor, useSes, useSesliSoyleyis } from '../ses/Ses.tsx'
 import { bekle, hareketAzMi, hareketleriKes, kaydir, oynat, type Nokta } from './hareket.ts'
+import { SiradakiSimgesi } from './simgeler.tsx'
 import './BukalemunKoyu.css'
 
 /** Sürükleme sayılan en kısa yol (px); daha kısası dokunmadır. */
@@ -103,6 +112,16 @@ export default function BukalemunKoyu({
   const tiklamayiYut = useRef(false)
   const bagli = useRef(false)
   const gorulenGorev = useRef(durum.gorevYeri)
+  const { soyle } = useSes()
+
+  // Sesli mod: görev başlayınca kök söylenir; bölgeye girişte önce bölgenin adı.
+  const [acilisYeri] = useState(durum.gorevYeri)
+  useSesliSoyleyis(
+    gorev && evre !== 'kapanis'
+      ? [...(durum.gorevYeri === acilisYeri ? [bolge.ad] : []), gorev.kok]
+      : [],
+    durum.gorevYeri,
+  )
 
   useEffect(() => {
     bagli.current = true
@@ -132,7 +151,9 @@ export default function BukalemunKoyu({
   const secimde = evre === 'secim'
   const { birlesen } = durum
   const kelime = birlesen ? birlesen.govde + birlesen.yuzey : adim.govde
-  const kelimeYazisi = <KelimeYazisi govde={birlesen?.govde ?? adim.govde} ek={birlesen} />
+  const kelimeYazisi = (
+    <KelimeYazisi kok={gorev.kok} govde={birlesen?.govde ?? adim.govde} ek={birlesen} />
+  )
 
   // --- Taşıma ---------------------------------------------------------------------------
 
@@ -141,12 +162,17 @@ export default function BukalemunKoyu({
     if (!gorev || !adim || evre !== 'secim') return
     const secenek = adim.secenekler.find((s) => s.yuzey === yuzey)
     if (!secenek) return
-    const dogru = dogruMu(denemeyiDegerlendir(gorev, adim, yuzey))
+    const deneme = denemeyiDegerlendir(gorev, adim, yuzey)
     const etki = ANLAM_ETKILERI[adim.etiket]
     flushSync(() => gonder({ tur: 'dene', yuzey }))
     const oge = bukalemunlar.current.get(yuzey)
-    if (dogru) await buyu(oge, secenek, kayma, etki)
-    else await dusus(oge, kayma)
+    if (dogruMu(deneme)) await buyu(oge, secenek, kayma, etki)
+    else await dusus(oge, kayma, deneme)
+  }
+
+  /** Sesli mod: bukalemunun kuracağı aday kelime (atlar, atler). */
+  function adayiSoyle(yuzey: string) {
+    if (adim) soyle(adim.parca.govde + yuzey)
   }
 
   /** Bukalemunun kelimenin sonuna yapışacağı yer: kaymaya göre (translate). */
@@ -209,6 +235,7 @@ export default function BukalemunKoyu({
     }
     if (!bagli.current) return
     flushSync(() => gonder({ tur: 'birlesti' }))
+    if (adim) soyle(adim.bicim)
     await oynat(
       kartRef.current?.querySelector('.ek-yazisi'),
       [
@@ -323,7 +350,7 @@ export default function BukalemunKoyu({
   }
 
   /** Yanlış taşıma: bukalemun -12 derece eğilir, düşer, kıyıya döner; neden görünür. */
-  async function dusus(oge: HTMLButtonElement | undefined, kayma: Nokta) {
+  async function dusus(oge: HTMLButtonElement | undefined, kayma: Nokta, deneme: Deneme) {
     if (oge && !hareketAzMi()) {
       const hedef = await kelimeyeUc(oge, kayma)
       // Dönme noktası %45 %85 (DESIGN.md, "Uymayan ek").
@@ -349,6 +376,7 @@ export default function BukalemunKoyu({
     }
     if (!bagli.current) return
     flushSync(() => gonder({ tur: 'dustu' }))
+    soyle(deneme.cumle)
     if (!oge) return
     oge.style.transform = ''
     oge.style.transformOrigin = ''
@@ -414,6 +442,7 @@ export default function BukalemunKoyu({
       if (Math.hypot(s.kayma.x, s.kayma.y) < SURUKLEME_ESIGI) return
       s.suruklendi = true
       e.currentTarget.classList.add('kiyi__bukalemun--tasiniyor')
+      adayiSoyle(s.yuzey)
     }
     e.currentTarget.style.transform = kaydir(s.kayma)
     kartRef.current?.classList.toggle('kelime-karti--ustunde', kartinUstunde(e.clientX, e.clientY))
@@ -442,6 +471,7 @@ export default function BukalemunKoyu({
     if (yut || !secimde) return
     const secilecek = durum.secili !== yuzey
     gonder({ tur: 'sec', yuzey })
+    if (secilecek) adayiSoyle(yuzey)
     // Seçilen bukalemun kelimeye götürülmeyi bekler: odak kelime kartına geçer.
     if (secilecek) kartRef.current?.focus()
   }
@@ -471,6 +501,7 @@ export default function BukalemunKoyu({
             {kelimeYazisi}
           </div>
         ))}
+      {etkilesimli && <Hoparlor metin={kelime} sinif="hoparlor--kose" />}
       {etkilesimli ? (
         <button
           ref={kartRef}
@@ -514,6 +545,7 @@ export default function BukalemunKoyu({
               className="koy__dugme"
               onClick={() => gonder({ tur: 'sonraki' })}
             >
+              <SiradakiSimgesi />
               Sıradaki
             </button>
           )}
@@ -588,10 +620,14 @@ export default function BukalemunKoyu({
   )
 }
 
-/** Kelime kartındaki yazı: gövde (son ünlüsü etikette) ve büyüden sonra bukalemunun eki. */
-function KelimeYazisi({ govde, ek }: { govde: string; ek: EkParcasi | null }) {
+/**
+ * Kelime kartındaki yazı: kökün resmi, gövde (son ünlüsü etikette) ve büyüden sonra
+ * bukalemunun eki.
+ */
+function KelimeYazisi({ kok, govde, ek }: { kok: string; govde: string; ek: EkParcasi | null }) {
   return (
     <span className="kelime" aria-hidden="true">
+      <KokResmi kok={kok} sinif="kelime__resim" />
       <KokYazisi kok={govde} />
       {ek && <EkYazisi parca={ek} />}
     </span>
@@ -617,7 +653,12 @@ function NedenYazisi({ deneme }: { deneme: Deneme }) {
           aday
         )}
       </p>
-      {deneme.cumle && <p className="neden__cumle">{deneme.cumle}</p>}
+      {deneme.cumle && (
+        <p className="neden__cumle sesli-cumle">
+          <Hoparlor metin={deneme.cumle} />
+          <span>{deneme.cumle}</span>
+        </p>
+      )}
     </>
   )
 }

@@ -42,7 +42,7 @@ describe('Sozluk', () => {
     expect(eslesmeler(html, /<h2 id="sozluk-[a-z]+" class="sozluk__bolge">([^<]*)<\/h2>/g)).toEqual([
       'Bukalemun Koyu',
     ])
-    expect(eslesmeler(html, /<h3 class="sozluk-karti__kelime">([^<]*)<\/h3>/g)).toEqual([
+    expect(eslesmeler(html, /<h3 class="sozluk-karti__kelime">(?:<img[^>]*>)?([^<]*)<\/h3>/g)).toEqual([
       'kızım',
       'toplarım',
       'atlar',
@@ -61,9 +61,11 @@ describe('Sozluk', () => {
 
   it('kartta kelime, kök ve ekler (birleşen ek görünümüyle), bölge ve tarih', () => {
     const html = sozluk(ILERLEME)
-    const toplarim = /<article class="sozluk-karti"><h3 class="sozluk-karti__kelime">toplarım<\/h3>(.*?)<\/article>/.exec(html)?.[1]
+    const toplarim = /<article class="sozluk-karti"><h3 class="sozluk-karti__kelime">(<img[^>]*>)toplarım<\/h3>(.*?)<\/article>/.exec(html)
+    // Kökün resmi (top: ⚽) kelimenin yanında; süstür, alt yazısı boş.
+    expect(toplarim?.[1]).toMatch(/^<img class="kok-resmi sozluk-karti__resim" src="[^"]*emoji\/26bd\.svg" alt="" data-emoji="⚽"/)
     // Kökün son ünlüsü ve eklerin ünlüleri etikette: uyum etiketlerin eninden okunur.
-    expect(toplarim).toBe(
+    expect(toplarim?.[2]).toBe(
       '<p class="sozluk-karti__parcalar"><span class="sozluk-karti__kok">' +
         renderToStaticMarkup(<KokYazisi kok="top" />) +
         '</span>' +
@@ -85,7 +87,9 @@ describe('Sozluk', () => {
     const kart = /<article class="sozluk-karti sozluk-karti--uydurma">(.*?)<\/article>/.exec(html)?.[1] ?? ''
     expect(kart).toMatch(/^<span class="sozluk-karti__yaratik"><svg class="yaratik [^"]*"[^>]*aria-hidden="true">/)
     expect(kart).toContain('<span class="gizli">Uydurma kelime</span>')
+    // Uydurma kökte resim yok; yaratık var.
     expect(kart).toContain('<h3 class="sozluk-karti__kelime">pıtağım</h3>')
+    expect(kart).not.toContain('kok-resmi')
     // Kök ve ek: pıtak + ım.
     expect(eslesmeler(kart, /class="kok-yazisi__okunan">([^<]*)</g)).toEqual(['pıtak'])
     // Sözlükteki kökün kartında işaret yok.

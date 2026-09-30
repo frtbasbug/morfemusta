@@ -36,9 +36,12 @@ describe('AksamEkrani', () => {
   })
 
   it('tek düğme: Haritaya dön', () => {
-    expect([...html.matchAll(/<button[^>]*>([^<]*)<\/button>/g)].map((m) => m[1])).toEqual([
-      'Haritaya dön',
-    ])
+    // Yazının yanında harita simgesi: sesli modda düğme simgesinden tanınır.
+    expect(
+      [...html.matchAll(/<button[^>]*>(<svg class="simge"[^]*?<\/svg>)?([^<]*)<\/button>/g)].map(
+        (m) => [m[1] !== undefined, m[2]],
+      ),
+    ).toEqual([[true, 'Haritaya dön']])
   })
 
   it('puan, seri ve süre yok', () => {

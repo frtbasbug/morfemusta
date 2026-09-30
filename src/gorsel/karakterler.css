@@ -404,7 +404,15 @@
 
 .agac__kok-yazisi {
   grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
   padding-top: 12px;
+}
+
+/* Kökün resmi (emoji), kök yazısının solunda. */
+.agac__kok-resmi {
+  font-size: 22px;
 }
 
 .agac__kok-yazisi .kok-yazisi {

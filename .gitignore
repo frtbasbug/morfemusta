@@ -154,3 +154,6 @@ dev-dist
 # Python (scripts/zeyrek-denetimi.py)
 __pycache__/
 uydurma-adaylari.tsv
+
+# Piper modeli (scripts/ses-uret.py indirir)
+.piper/

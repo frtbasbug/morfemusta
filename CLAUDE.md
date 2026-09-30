@@ -13,6 +13,9 @@ Tasarım için `DESIGN.md`, güncel durum ve sıradaki hedef için `NEXT.md` oku
   (800; başlık ve logo, yalnız latin ve latin-ext alt kümeleri), pakete gömülü.
 - **Görsel dil:** B · Canlı (`DESIGN.md`, "Görsel dil"); geometri `src/gorsel/cizim.ts`'te,
   belirteçler `src/gorsel/tema.css`'te.
+- **Ses ve resim:** sesler Piper'la önceden üretilir (`tr_TR-dfki-medium`, CC BY-NC-SA 4.0; kodun
+  MIT lisansından ayrı), MP3 olarak `public/ses/`'tedir; köklerin resmi Twemoji SVG'leridir
+  (CC BY 4.0), `public/emoji/`'dedir. İkisi de pakete gömülüdür (`DESIGN.md`, "Ses ve resim").
 - **Test:** Vitest 5 (birim, `node` ortamı) ve Playwright 1.56.1 (uçtan uca, Pixel 7
   telefon profili, Chromium).
 - **Yayın:** GitHub Actions → GitHub Pages, <https://frtbasbug.github.io/morfemusta/>.
@@ -31,11 +34,15 @@ Tasarım için `DESIGN.md`, güncel durum ve sıradaki hedef için `NEXT.md` oku
 | `npm run ikonlar` | `scripts/ikon.svg`'den `public/` ikonlarını yeniden üretir |
 | `node scripts/denetim-bicimleri.mjs` | Biçim Denetim Sayfası'ndaki bütün biçimleri sekmeli metin olarak yazar |
 | `python3 scripts/zeyrek-denetimi.py` | O biçimleri zeyrek ile sınar (elle; CI'da yok, aşağıdaki nota bakın) |
+| `python3 scripts/ses-uret.py` | Sesleri Piper'la üretir: `public/ses/*.mp3` ve `src/ses/ses-listesi.json` (elle; CI'da yok, aşağıdaki nota bakın) |
+| `node scripts/ses-metinleri.mjs` | Oyunun söyleyebileceği bütün metinler, okunuşlarıyla (JSON; üreteç okur) |
+| `NODE_USE_ENV_PROXY=1 node scripts/emoji-indir.mjs` | `icerik/emoji.csv`'deki emojilerin Twemoji SVG'lerini `public/emoji/`'ye indirir |
 | `node scripts/uydurma-uret.mjs --tohum 7 --sayi 30` | Uydurma kök adayları: `uydurma-adaylari.tsv` (zeyrek gerekir; `--zeyreksiz` ile onsuz) |
 
 Biçim Denetim Sayfası: <http://localhost:5173/morfemusta/denetim.html> (yayında
 `/morfemusta/denetim.html`). Karakter Galerisi: <http://localhost:5173/morfemusta/galeri.html>
-(yayında `/morfemusta/galeri.html`). Oyun ikisine de bağlantı vermez.
+(yayında `/morfemusta/galeri.html`). Ses Denetim Sayfası: <http://localhost:5173/morfemusta/ses.html>
+(yayında `/morfemusta/ses.html`). Oyun üçüne de bağlantı vermez.
 
 Oturumu kapatmadan önce: `npm run typecheck && npm test && npm run test:e2e`.
 
@@ -44,8 +51,11 @@ Oturumu kapatmadan önce: `npm run typecheck && npm test && npm run test:e2e`.
 ```
 .github/workflows/test-ve-yayin.yml   her push ve PR'da test; main'de Pages'e yayın
 e2e/                 Playwright testleri (*.spec.ts); ortak yardımcılar yardimcilar.ts'te
-public/              ikonlar ve favicon (scripts/ikonlar.mjs üretir)
-scripts/             geliştirme araçları: ikon üretimi, denetim biçimleri, zeyrek denetimi
+public/              ikonlar ve favicon (scripts/ikonlar.mjs üretir); ses/: sesler (ses-uret.py
+                     üretir; ornek/: Ses Denetim Sayfası'nın örnekleri); emoji/: köklerin
+                     Twemoji SVG'leri (emoji-indir.mjs indirir)
+scripts/             geliştirme araçları: ikon üretimi, denetim biçimleri, zeyrek denetimi, ses
+                     üretimi, emoji indirme
 src/
   main.tsx           oyunun giriş noktası: yazı tipi, belirteçler (tema.css) ve genel stil
                      burada yüklenir
@@ -71,13 +81,19 @@ src/
   denetim/           Biçim Denetim Sayfası (denetim.html'in girişi, verisi, testleri)
   gorsel/            görsel dil: çizim geometrisi (cizim.ts), ünsüz karosu (karo.ts, Karo.tsx),
                      ağaç (agac.ts, Agac.tsx), cep (cep.ts), bukalemunun kılığı (kilik.ts),
-                     yaratık (yaratik.ts, Yaratik.tsx),
+                     yaratık (yaratik.ts, Yaratik.tsx), köklerin resmi (emoji.ts, KokResmi.tsx),
                      belirteçler (tema.css), karakter bileşenleri; testleri yanında
   galeri/            Karakter Galerisi (galeri.html'in girişi, örnekleri, testleri)
+  ses/               ses: oyunun söyleyebileceği metinler (metinler.ts: sesMetinleri), okunuş
+                     (okunus.ts: harf adları, okunuş tablosu), çalar (calar.ts: tek ses,
+                     önbellek, iOS'ta ilk dokunuş), arayüz (Ses.tsx: ayar, sesli mod, hoparlör),
+                     ses-listesi.json (metinden dosyaya; ses-uret.py yazar); testleri yanında
+  sesdenetim/        Ses Denetim Sayfası (ses.html'in girişi)
 icerik/              içerik CSV dosyaları (ekler.csv: ek envanteri; kokler.csv: kök sözlüğü;
                      bolgeler.csv: adanın bölgeleri; yasakli-diziler.csv: uydurma kökte
-                     yasak diziler; gorevler/: bölgelerin görev tabloları, bukalemun-koyu.csv,
-                     fistikci-sahap.csv, kok-bahcesi.csv ve uydurukcuklar.csv)
+                     yasak diziler; emoji.csv: köklerin emojisi; ses-okunus.csv: yanlış okunan
+                     metinlerin okunuşu; gorevler/: bölgelerin görev tabloları,
+                     bukalemun-koyu.csv, fistikci-sahap.csv, kok-bahcesi.csv ve uydurukcuklar.csv)
 tests/               altin-bicimler.csv: motorun altın tablosu; neden.csv ve neden-unsuz.csv:
                      yanlış biçimin nedenleri (motorun neden işlevinin sözleşmesi; uyum, gövde
                      ve ek başı); neden-kaynastirma.csv: kaynaştırma nedeni; ek-sirasi.csv: ek
@@ -85,6 +101,7 @@ tests/               altin-bicimler.csv: motorun altın tablosu; neden.csv ve ne
 index.html           oyun
 denetim.html         Biçim Denetim Sayfası (ayrı giriş sayfası)
 galeri.html          Karakter Galerisi (ayrı giriş sayfası)
+ses.html             Ses Denetim Sayfası (ayrı giriş sayfası)
 DESIGN.md  NEXT.md  CLAUDE.md
 ```
 
@@ -98,7 +115,10 @@ DESIGN.md  NEXT.md  CLAUDE.md
    `@vitejs/plugin-react`, `typescript`, `@types/react`, `@types/react-dom`,
    `@types/node`, `@playwright/test`. Oturum 3'te kullanıcının isteğiyle: `zeyrek`
    (Python; projenin bağımlılığı değil, yalnız `scripts/zeyrek-denetimi.py` için elle kurulur).
-   Oturum 4'te kullanıcının isteğiyle: `@fontsource/baloo-2` (OFL-1.1).
+   Oturum 4'te kullanıcının isteğiyle: `@fontsource/baloo-2` (OFL-1.1). Oturum 10'da
+   kullanıcının isteğiyle: `piper-tts` ve `lameenc` (Python; projenin bağımlılığı değil, yalnız
+   `scripts/ses-uret.py` için elle kurulur) ve Twemoji'nin grafikleri (paket değil: tablodaki
+   emojilerin SVG dosyaları `public/emoji/`'de).
 3. **Biçimbilim motoru `src/motor` altındadır ve arayüzden bağımsızdır.** Motor saf
    TypeScript'tir: React'i, DOM'u, CSS'i ya da `src/motor` dışındaki uygulama kodunu içe
    aktarmaz. Arayüz motoru kullanır, motor arayüzü bilmez. Motor Vitest ile `node`
@@ -147,6 +167,11 @@ DESIGN.md  NEXT.md  CLAUDE.md
     Testi geçirmek için kök ya da dizi değiştirilmez, silinmez, eklenmez. Üreteç
     (`scripts/uydurma-uret.mjs`) yalnız aday dosyası yazar; oyuna hiçbir kök onaysız girmez.
 
+16. **`icerik/emoji.csv` ve `icerik/ses-okunus.csv` yalnız kullanıcının onayıyla değişir.** Emoji
+    tablosu köklerin resmidir (her kökü sözlükte; `emoji.test.ts` denetler); okunuş tablosu yanlış
+    okunan metnin okunuşudur, üreteç onu kullanır. Testi geçirmek için satır değiştirilmez,
+    silinmez, eklenmez. Bir satır yanlış görünürse iş durur ve kullanıcıya sorulur.
+
 ## Adlandırma
 
 - Kod içi adlar ve yorumlar Türkçedir (`AdaHaritasi`, `yaziTipi`). Dosya ve klasör
@@ -164,11 +189,12 @@ DESIGN.md  NEXT.md  CLAUDE.md
 - **Önbellek kalıbı:** Çalışma anında ayrı dosya olarak istenen yeni bir dosya türü (ör. ses
   için `.mp3`/`.ogg`) eklenirse `vite.config.ts` içindeki `workbox.globPatterns`'a da
   eklenmeli; yoksa o dosya çevrim dışı açılmaz.
-- **Üç giriş sayfası:** `index.html` (oyun), `denetim.html` (Biçim Denetim Sayfası) ve
-  `galeri.html` (Karakter Galerisi). Derleme girişleri `vite.config.ts`'deki
+- **Dört giriş sayfası:** `index.html` (oyun), `denetim.html` (Biçim Denetim Sayfası),
+  `galeri.html` (Karakter Galerisi) ve `ses.html` (Ses Denetim Sayfası). Derleme girişleri `vite.config.ts`'deki
   `build.rolldownOptions.input`'tadır; yeni bir sayfa oraya eklenir. Her sayfa önbelleğe
   girmelidir: service worker önbellekte olmayan bir gezinmeyi `navigateFallback` ile oyunun
-  `index.html`'ine düşürür (`e2e/denetim.spec.ts` ve `e2e/galeri.spec.ts` bunu denetler).
+  `index.html`'ine düşürür (`e2e/denetim.spec.ts`, `e2e/galeri.spec.ts` ve `e2e/ses.spec.ts` bunu
+  denetler).
 - **Görsel dilin bileşenleri:** SVG'de yalnız geometri yazılır; dolgu, çizgi ve kalınlıklar
   `src/gorsel/karakterler.css`'teki sınıflardan ve `tema.css` değişkenlerinden gelir.
   Karakterlerdeki çizgi kalınlıkları birimsizdir (SVG kullanıcı birimi), karakterle
@@ -221,6 +247,42 @@ DESIGN.md  NEXT.md  CLAUDE.md
   da, de, ta, te). Sınır adımında kart çocuğun seçtiği biçimi
   saklar: ekran `onGorevBitti(gorev, undefined, kelime)`; `kartiCoz` kelimeyi
   `olasiBicimler`'de arar. Sözlük ve akşam ekranı parçaları o biçimden okur (`kurulanEkleme`).
+- **Ses (`src/ses`):** oyunun söyleyebileceği her metin `sesMetinleri()`'ndedir, bölge bölge
+  (arayüz, sonra bölgeler); ekranlar aynı işlevlerle söyler (kök, `adim.parca.govde + yuzey`,
+  `adim.bicim`, `deneme.cumle`, `sinirCumlesi`, `simdikiKelime`). Yeni bir söylenecek metin önce
+  `metinler.ts`'e girer, sonra sesi üretilir; `metinler.test.ts` her metnin
+  `ses-listesi.json`'da dosyası olduğunu ve okunuşunun güncel olduğunu denetler. Okunuş
+  (`okunus.ts`): tek harf adıyla (p → pe, ğ → yumuşak ge), ok ve tire okunmaz,
+  `icerik/ses-okunus.csv`'deki okunuş önce gelir. Çalar (`calar.ts`): tek `<audio>`, yeni çalma
+  eskisini keser; dosya fetch'le blob olarak alınır (Range isteği yok); listede olmayan metin
+  için istek gitmez; hata yutulur, konsola yazılmaz. iOS'ta ilk dokunuşta sessiz bir WAV çalınır
+  (`sesiAc`, `main.tsx`). Ayar (`ayarlar.ses`: kapali / dokununca / sesli, varsayılan dokununca)
+  `SesSaglayici` ile verilir; sağlayıcı yokken Kapalı'dır (birim testleri, galeri). Sesli modda
+  bölge ekranı girişte bölgenin adını, sonra kökü söyler (haritadaki ad girişte kesilirdi).
+- **Seslerin önbelleği:** `vite.config.ts` `ses-listesi.json`'u okur: arayüzün ve koyun sesleri
+  `additionalManifestEntries` ile ön belleğe girer (sürüm dosyanın içeriğinden); öteki
+  bölgelerinki `morfemusta-ses` önbelleğine bölgeye ilk girişte arka planda iner
+  (`bolgeSesleriniIndir`) ve service worker'ın `runtimeCaching`'i (CacheFirst) oradan verir.
+  Kalıp düzenli ifadedir, işlev değil: service worker'a metin olarak kopyalanır.
+- **Ses üretimi (`scripts/ses-uret.py`):** `pip install piper-tts lameenc`; model
+  (`tr_TR-dfki-medium`) huggingface.co'dan `.piper/`'a iner (git'e girmez); betik MODEL_CARD'da
+  lisansı (by-nc-sa/4.0) arar. Hız: Piper'ın `length_scale`'i 1.2 (biraz yavaş); örnekler 1.2 ve
+  1.0. MP3, mono, 22.05 kHz, 32 kbit/s (`lameenc`; ffmpeg gerekmez). Okunuşu, sesi ve hızı
+  değişmeyen metin yeniden üretilmez; listede olmayan dosya silinir. Ses dosyaları kodun MIT
+  lisansından ayrı, CC BY-NC-SA 4.0 ile yayımlanır (README, Hakkında).
+- **Ses Denetim Sayfası (`ses.html`):** bütün sesler bölge bölge, çal düğmesi ve Hatalı işareti.
+  İşaretler oyunun kaydından ayrı bir anahtarda (`morfemusta.ses-denetimi.v1`) ve yalnız bu
+  cihazdadır; Listeyi kopyala Hatalı metinleri satır satır panoya koyar. Üstte aynı beş cümle
+  iki hızda (`ses-listesi.json`'daki `ornekler`).
+- **Köklerin resmi:** `KokResmi` `icerik/emoji.csv`'deki kökü `public/emoji/<kod noktaları>.svg`
+  ile gösterir (Twemoji'nin adı: ZWJ yoksa FE0F atılır); süstür (`alt` boş, `data-emoji`'de
+  emoji), `loading="lazy"`: React 19 sunucu çıktısında tembel olmayan resim için `<link
+  rel="preload">` yazar, birim testlerinin beklediği çıktı değişirdi. Koy'da kelimenin içinde
+  (kart üçe çoğalınca resim de üç), Dükkân'da kartın sol üst köşesinde (320 px'te sığsın),
+  Bahçe'de ağacın kökünde, Sözlük'te kelimenin önünde. Uydurma kökte resim yok.
+- **Hoparlör:** 44 px; kelimenin hoparlörü kartın sağ üst köşesinde rozet (`hoparlor--kose`,
+  kartı kaydırmaz), cümlenin hoparlörü cümlenin solunda (`sesli-cumle`). Haritanın iletisinde
+  eksi kenar boşluğuyla: iletinin ayrılmış yeri değişmez (`harita.spec.ts`).
 - **Ek sırası:** `ekle`, `olasiBicimler` (ve onları çağıran her şey: `neden`,
   `sinirSecenekleri`) sırası bozuk dizide hata atar (`göz + PL + LIK`). Kayıttan okunan böyle
   bir kart atılır (`kartiCoz` hatayı yutar).

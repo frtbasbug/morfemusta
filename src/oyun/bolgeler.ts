@@ -84,3 +84,10 @@ export const BOLGELER: readonly Bolge[] = bolgeleriOku(bolgelerMetni)
 export function bolgeBul(kimlik: string, bolgeler: readonly Bolge[] = BOLGELER): Bolge | undefined {
   return bolgeler.find((b) => b.kimlik === kimlik)
 }
+
+/** Haritanın iletisi: kilitli bölgeye dokununca. */
+export const kilitIletisi = (onceki: Bolge | null | undefined): string =>
+  `Önce ${onceki?.ad ?? ''} bitmeli.`
+
+/** Haritanın iletisi: içeriği olmayan bölgeye dokununca. */
+export const HAZIRLANIYOR_ILETISI = 'Burası hazırlanıyor. Yakında açılacak.'

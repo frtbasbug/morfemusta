@@ -17,6 +17,8 @@ import KokBahcesi from './ekranlar/KokBahcesi.tsx'
 import Sozluk from './ekranlar/Sozluk.tsx'
 import Uydurukcuklar from './ekranlar/Uydurukcuklar.tsx'
 import { useIlerleme } from './kabuk/depo.ts'
+import { bolgeSesleriniIndir } from './ses/calar.ts'
+import { SesSaglayici } from './ses/Ses.tsx'
 import { HARITA, useRota } from './kabuk/yonlendirici.ts'
 import {
   ayarlariDegistir,
@@ -48,7 +50,7 @@ const ekraniVar = (kimlik: string): kimlik is keyof typeof BOLGE_EKRANLARI =>
 export default function App() {
   const [rota, git] = useRota()
   const [ilerleme, degistir, disSurumler] = useIlerleme()
-  const { hareket, renkler } = ilerleme.ayarlar
+  const { hareket, renkler, ses } = ilerleme.ayarlar
 
   // Ayarlar belgenin köküne yazılır; CSS (tema.css, geçişler) ve hareket.ts oradan okur.
   useLayoutEffect(() => {
@@ -74,6 +76,12 @@ export default function App() {
     if (girilemez) git(HARITA)
   }, [girilemez, git])
 
+  // Bölgenin sesleri ilk girişte arka planda iner (arayüzünkiler ve koyunkiler önbellekte hazır).
+  const girilenKimlik = girilen?.kimlik
+  useEffect(() => {
+    if (girilenKimlik && ses !== 'kapali') void bolgeSesleriniIndir(girilenKimlik)
+  }, [girilenKimlik, ses])
+
   if (girilen && ekraniVar(girilen.kimlik)) {
     const BolgeEkrani = BOLGE_EKRANLARI[girilen.kimlik]
     // Bölge ekranı en son kayıttan açılır ve dışarıdan gelen değişikliği izler; ikisi de ekranın
@@ -85,39 +93,43 @@ export default function App() {
     // Bu pencerenin kendi görevi ve ayar değişikliği ekranı kesmez.
     const { sifirlama } = ilerleme
     return (
-      <BolgeEkrani
-        key={`${girilen.kimlik}:${sifirlama}:${disSurumler[girilen.kimlik] ?? 0}`}
-        bolge={girilen}
-        baslangic={kaldigiGorev(ilerleme, girilen)}
-        bugunkuKartlar={bugununKartlari(ilerleme, girilen.kimlik, new Date())}
-        onGorevBitti={(gorev, kartEkleri?: readonly (readonly string[])[], kelime?: string) =>
-          degistir((i) =>
-            ekrandaGorevBitti(i, girilen, gorev, new Date(), sifirlama, kartEkleri, kelime),
-          )
-        }
-        onHarita={() => git(HARITA)}
-      />
+      <SesSaglayici ayar={ses}>
+        <BolgeEkrani
+          key={`${girilen.kimlik}:${sifirlama}:${disSurumler[girilen.kimlik] ?? 0}`}
+          bolge={girilen}
+          baslangic={kaldigiGorev(ilerleme, girilen)}
+          bugunkuKartlar={bugununKartlari(ilerleme, girilen.kimlik, new Date())}
+          onGorevBitti={(gorev, kartEkleri?: readonly (readonly string[])[], kelime?: string) =>
+            degistir((i) =>
+              ekrandaGorevBitti(i, girilen, gorev, new Date(), sifirlama, kartEkleri, kelime),
+            )
+          }
+          onHarita={() => git(HARITA)}
+        />
+      </SesSaglayici>
     )
   }
 
   const ekran = rota.ekran === 'sozluk' || rota.ekran === 'ayarlar' ? rota.ekran : 'harita'
   return (
-    <div className={`kabuk kabuk--${ekran}`}>
-      {ekran === 'harita' && (
-        <AdaHaritasi
-          bolgeler={haritaBolgeleri}
-          onBolge={(bolge) => git({ ekran: 'bolge', kimlik: bolge.kimlik })}
-        />
-      )}
-      {ekran === 'sozluk' && <Sozluk gruplar={sozlukGruplari(ilerleme)} />}
-      {ekran === 'ayarlar' && (
-        <Ayarlar
-          ayarlar={ilerleme.ayarlar}
-          onAyar={(degisen) => degistir((i) => ayarlariDegistir(i, degisen))}
-          onSifirla={() => degistir(ilerlemeyiSifirla)}
-        />
-      )}
-      <AltGezinme etkin={ekran} onGit={git} />
-    </div>
+    <SesSaglayici ayar={ses}>
+      <div className={`kabuk kabuk--${ekran}`}>
+        {ekran === 'harita' && (
+          <AdaHaritasi
+            bolgeler={haritaBolgeleri}
+            onBolge={(bolge) => git({ ekran: 'bolge', kimlik: bolge.kimlik })}
+          />
+        )}
+        {ekran === 'sozluk' && <Sozluk gruplar={sozlukGruplari(ilerleme)} />}
+        {ekran === 'ayarlar' && (
+          <Ayarlar
+            ayarlar={ilerleme.ayarlar}
+            onAyar={(degisen) => degistir((i) => ayarlariDegistir(i, degisen))}
+            onSifirla={() => degistir(ilerlemeyiSifirla)}
+          />
+        )}
+        <AltGezinme etkin={ekran} onGit={git} />
+      </div>
+    </SesSaglayici>
   )
 }

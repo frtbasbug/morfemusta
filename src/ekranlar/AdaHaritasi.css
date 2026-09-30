@@ -209,3 +209,9 @@
   background: var(--kara);
   color: var(--soluk);
 }
+
+/* İletinin hoparlörü: balonun boyunu yazı belirler; hoparlör balonun kenarından biraz taşar,
+   iletinin ayrılmış yeri (3.2rem) değişmez. */
+.harita__balon .hoparlor {
+  margin-block: -0.4rem;
+}

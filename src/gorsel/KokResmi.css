@@ -1,0 +1,10 @@
+/* Kökün resmi (Twemoji): yazının boyunda, satırın ortasında. */
+.kok-resmi {
+  display: inline-block;
+  flex: none;
+  width: 1.15em;
+  height: 1.15em;
+  vertical-align: -0.2em;
+  user-select: none;
+  pointer-events: none;
+}

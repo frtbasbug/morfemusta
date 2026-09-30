@@ -536,6 +536,7 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
 
 ## Ayarlar
 
+- **Ses:** *Kapalı* / *Dokununca* / *Sesli mod*; varsayılan Dokununca ("Ses ve resim").
 - **Hareket:** *Sistem gibi* (cihazın hareket azaltma ayarına uyar) / *Azalt*
   (`prefers-reduced-motion` ile aynı davranır: hiçbir şey hareket etmez).
 - **Renkler:** *Renkli* / *Renksiz* (galerideki Renksiz mod; açıkken renkler büyüden sonra
@@ -544,6 +545,8 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
   *Vazgeç* / *Sil*. Tarayıcının onay penceresi kullanılmaz; odak önce Vazgeç'tedir. Ayarlar
   silinmez.
 - Seçimler büyük, dokunması kolay radyo düğmeleridir; seçili olan dolu ve halkası kalındır.
+- **Hakkında:** kodun (MIT), seslerin (Piper, tr_TR-dfki-medium, CC BY-NC-SA 4.0), emojilerin
+  (Twemoji, CC BY 4.0) ve yazı tiplerinin (OFL-1.1) lisansı ve atfı. Bağlantı yok.
 
 ## Cihazda ilerleme
 
@@ -565,6 +568,67 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
   açıkken ilerleme sıfırlanmıştır: hiçbir şey yazılmaz, ekran baştan açılır.
 - Tarayıcı destekliyorsa ilk kayıttan sonra kalıcı depo istenir
   (`navigator.storage.persist()`): yer darlığında kayıt silinmesin.
+
+## Ses ve resim
+
+Okumayı henüz sökmemiş 1–2. sınıf çocuğu oyunu yalnız dinleyerek oynayabilmelidir ("Koleksiyon ve
+modlar"). Sesler önceden üretilir ve cihazda çalar; hiçbir şey cihazdan çıkmaz. Resim, kelimenin
+ne olduğunu okumadan gösterir.
+
+### Ses
+
+- **Ne söylenir:** oyunun söyleyebileceği her metin önceden bellidir (`sesMetinleri`, bölge
+  bölge): her görevin kökü (Bahçe'de hedefi) ve doğru biçimi; her seçeneğin kuracağı aday kelime
+  (*atlar*, *atler*; *kitapım*, *kitabım*; *zelüye*, *zelüe*); Bahçe'nin ekleri ve gövde
+  kelimeleri; her yanlış adayın neden cümlesi; *İkisi de olur* cümleleri; bölge adları, akşam
+  başlıkları ve haritanın iletileri.
+- **Okunuş:** tek harf adıyla söylenir (*p* → *pe*, *b* → *be*, *ğ* → *yumuşak ge*; ünlüler
+  kendisi): *p ünlüden önce jöle olur: b.* → *pe ünlüden önce jöle olur: be.* Ok ve tire
+  okunmaz. Yanlış okunan metnin okunuşu `icerik/ses-okunus.csv`'ye yazılır (yalnız onayla).
+- **Ses:** Piper'ın `tr_TR-dfki-medium` sesi, çocuk için biraz yavaş (1.2). Lisansı CC BY-NC-SA
+  4.0'dır; ses dosyaları kodun MIT lisansından ayrı, aynı lisansla yayımlanır. Biçim MP3, mono,
+  22.05 kHz, 32 kbit/s (iOS Safari dahil her tarayıcıda çalar).
+- **Ayar** (Ayarlar'da *Ses*):
+
+| Ayar | Ne olur |
+|------|---------|
+| Kapalı | hiçbir ses çalmaz, hoparlör görünmez |
+| Dokununca (varsayılan) | kelimenin ya da cümlenin yanındaki küçük hoparlöre dokununca çalar |
+| Sesli mod | oyun kendisi söyler (aşağıda); hoparlör yeniden dinlemek için durur |
+
+- **Sesli mod:**
+  - Görev başlayınca kök söylenir (Bahçe'de hedef); bölgeye girişte önce bölgenin adı.
+  - Bir bukalemun (Dükkân'da karo, Bahçe'de ek) seçilince ya da sürüklenmeye başlayınca kuracağı
+    aday kelime söylenir (Bahçe'de ekin kendisi): çocuk seçimini kulağıyla yapar.
+  - Doğruda kurulan kelime, yanlışta neden cümlesi söylenir. Uydurukçuklar'ın sınır adımında
+    karo seçilince kelime (*pıtakım*, *pıtağım*), oturunca kelime ve *İkisi de olur* cümlesi.
+  - Haritada kilitli ya da hazırlanan bölgeye dokununca adı ve iletisi; akşam ekranında başlık ve
+    kelimeler; Sözlük'te karta dokununca kelime.
+- **Aynı anda tek ses çalar;** yenisi eskisini keser.
+- **Düğmeler simgeden tanınır:** *Sıradaki*'de sağa ok, *Haritaya dön*'de harita; yazı yanında
+  durur. Bölge ekranındaki Harita düğmesi zaten simgedir.
+- **Hoparlör:** 44 px'lik yuvarlak düğme, mürekkep çizgili. Kelimenin hoparlörü kartın sağ üst
+  köşesinde bir rozettir (kartı kaydırmaz); cümlenin hoparlörü cümlenin solundadır.
+- **Önbellek:** arayüzün ve Bukalemun Koyu'nun sesleri önbellekte hazırdır; öteki bölgelerin
+  sesleri bölgeye ilk girişte arka planda iner. Ses yoksa ya da çalınamıyorsa oyun sessiz sürer;
+  hata ve konsol iletisi çıkmaz. iOS'ta ses ilk dokunuştan sonra açılır.
+- **Denetim:** Ses Denetim Sayfası (`ses.html`) bütün sesleri bölge bölge çalar; yanlış okunan
+  Hatalı işaretlenir (işaretler yalnız cihazda), *Listeyi kopyala* onları satır satır panoya
+  koyar. Üstte aynı beş cümle iki hızda (biraz yavaş, olağan) örnek olarak durur.
+
+### Resim
+
+- **Köklerin resmi emojidir:** `icerik/emoji.csv`'deki kökler (yalnız onayla değişir; her kökü
+  sözlükte) emojisiyle görünür. Emojiler tek bir açık lisanslı setten, Twemoji'den (CC BY 4.0;
+  atıf Hakkında'da ve README'de), SVG olarak pakete girer: yalnız tablodakiler.
+- **Nerede:** Bukalemun Koyu'nun kelime kartında, kelimenin önünde (çoğul büyüsünde kart üçe
+  çoğalınca resim de üç olur); Dükkân'ın kelime kartının sol üst köşesinde; Bahçe'de ağacın
+  kökünde, kök yazısının önünde; Sözlük kartında kelimenin önünde.
+- **Uydurma kökte emoji yok; yaratık var** (Uydurukçuklar).
+- **Resim süstür:** yazının boyundadır; ekran okuyucudan gizlidir, kelimenin adı değişmez.
+  Karakter değildir: karakterler yine yalnız koddan, üç özellikten üretilir ("Üç kural").
+- **Kalın ve ince renkleri** resimde yoktur; emojinin kendi renkleri belirteç sayılmaz, yalnız
+  resmin içindedir.
 
 ## MVP bölgeleri
 
@@ -594,6 +658,6 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
 ## Koleksiyon ve modlar
 
 - Her yeni kelime **Sözlük**'e kart olarak düşer ("Sözlük").
-- **1–2. sınıf:** okuma gerektirmeyen sesli mod.
+- **1–2. sınıf:** okuma gerektirmeyen sesli mod ("Ses ve resim").
 - **3–4. sınıf:** parçalama ve yazım.
 - **Sınıf modu:** etkileşimli tahta için.

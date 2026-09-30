@@ -1,0 +1,37 @@
+/* Hoparlör düğmesi: 44 px'lik yuvarlak, mürekkep çizgili; renkler yalnız belirteçlerden. */
+.hoparlor {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  box-sizing: border-box;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 2.5px solid var(--murekkep);
+  border-radius: 50%;
+  background: var(--zemin);
+  color: var(--murekkep);
+  cursor: pointer;
+}
+
+.hoparlor:focus-visible {
+  outline: 3px solid var(--murekkep);
+  outline-offset: 3px;
+}
+
+/* Kelimenin hoparlörü: kartın sağ üst köşesinde bir rozet; kartı kaydırmaz. */
+.hoparlor--kose {
+  position: absolute;
+  z-index: 2;
+  top: -1.1rem;
+  right: -0.4rem;
+}
+
+/* Cümlenin hoparlörü: cümlenin solunda, aynı satırda. */
+.sesli-cumle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0;
+}

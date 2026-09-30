@@ -32,6 +32,10 @@
   padding-block: 1rem 0.5rem;
 }
 
+.dukkan__kartyeri {
+  position: relative;
+}
+
 .dukkan__kart {
   display: grid;
   place-items: center;
@@ -56,6 +60,16 @@
 .dukkan__kart--ustunde {
   outline: 4px solid var(--murekkep);
   outline-offset: 4px;
+}
+
+/* Kökün resmi: kartın sol üst köşesinde (hoparlörün karşısında); kartı genişletmez, 320 px'te
+   en uzun kelime de sığar. */
+.dukkan__resim {
+  position: absolute;
+  z-index: 2;
+  top: -0.9rem;
+  left: -0.3rem;
+  font-size: 2rem;
 }
 
 .dukkan__kelime {
@@ -156,6 +170,9 @@
 }
 
 .dukkan__dugme {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   min-width: 2.75rem;
   min-height: 2.75rem;
   padding: 0 1.5rem;
