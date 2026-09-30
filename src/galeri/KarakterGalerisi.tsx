@@ -9,10 +9,13 @@ import { unluBul, type Unlu } from '../motor/index.ts'
 import Bukalemun from '../gorsel/Bukalemun.tsx'
 import { unluGovdesi } from '../gorsel/cizim.ts'
 import KokYazisi from '../gorsel/KokYazisi.tsx'
+import DukkanIsareti from '../gorsel/DukkanIsareti.tsx'
+import Karo from '../gorsel/Karo.tsx'
+import { karoAdi, karoTuru } from '../gorsel/karo.ts'
 import UnluEtiketi from '../gorsel/UnluEtiketi.tsx'
 import UnluKarti from '../gorsel/UnluKarti.tsx'
 import './KarakterGalerisi.css'
-import { GALERI_BOLUMLERI, type GaleriOrnegi } from './ornekler.ts'
+import { GALERI_BOLUMLERI, GALERI_KAROLARI, type GaleriOrnegi } from './ornekler.ts'
 
 // Okul çizelgesi: satırlar kalın ve ince; üstte düz ve yuvarlak, altlarında geniş ve dar.
 const SATIRLAR = [
@@ -86,6 +89,29 @@ export default function KarakterGalerisi() {
           </ul>
         </section>
       ))}
+
+      <section className="galeri__bolum" aria-labelledby="bolum-karolar">
+        <h2 id="bolum-karolar">Ünsüz karoları</h2>
+        <p className="galeri__aciklama">
+          Fıstıkçı Şahap'ın Dükkânı'nda sınırdaki ünsüz: sert ünsüz taş, yumuşak ünsüz jöle.
+          Taş köşeleri yontulmuş bir çokgen, üstünde bir çatlak; jöle yuvarlak bir damla, üstünde
+          bir parıltı. Renksiz'de de biçimleri ayrılır. Tezgâhta taş hep solda, jöle hep sağda.
+        </p>
+        <ul className="karolar">
+          {GALERI_KAROLARI.map(({ karo, harf }) => (
+            <li key={karo} className="karolar__karo" role="img" aria-label={karoAdi(harf, karo)}>
+              <Karo karo={karo} harf={harf} />
+              <span className="karolar__tur" aria-hidden="true">
+                {karoTuru(karo)}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <p className="galeri__aciklama">Haritadaki işareti: iki küçük karo, yazısız.</p>
+        <div className="karolar__isaret" role="img" aria-label="Dükkânın harita işareti">
+          <DukkanIsareti />
+        </div>
+      </section>
     </main>
   )
 }

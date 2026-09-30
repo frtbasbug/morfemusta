@@ -23,7 +23,6 @@ import {
   type KeyboardEvent,
   type MouseEvent,
   type PointerEvent,
-  type Ref,
 } from 'react'
 import { flushSync } from 'react-dom'
 import type { EkParcasi } from '../motor/index.ts'
@@ -49,8 +48,8 @@ import {
   type Secenek,
 } from '../oyun/koy.ts'
 import AksamEkrani from './AksamEkrani.tsx'
+import BolgeUstu from './BolgeUstu.tsx'
 import { bekle, hareketAzMi, hareketleriKes, kaydir, oynat, type Nokta } from './hareket.ts'
-import { HaritaSimgesi } from './simgeler.tsx'
 import './BukalemunKoyu.css'
 
 /** Sürükleme sayılan en kısa yol (px); daha kısası dokunmadır. */
@@ -493,7 +492,7 @@ export default function BukalemunKoyu({
 
   return (
     <main className={durum.renksiz ? 'koy renksiz' : 'koy'} onKeyDown={tusaBasildi}>
-      <Ust
+      <BolgeUstu
         ad={bolge.ad}
         gorevYeri={durum.gorevYeri}
         gorevSayisi={gorevler.length}
@@ -588,40 +587,6 @@ export default function BukalemunKoyu({
         <path className="koy__yay-yolu" />
       </svg>
     </main>
-  )
-}
-
-/** Üst çubuk: Harita düğmesi, bölgenin adı, görev sırası. */
-function Ust({
-  ad,
-  gorevYeri,
-  gorevSayisi,
-  onHarita,
-  baslikRef,
-}: {
-  ad: string
-  gorevYeri: number
-  gorevSayisi: number
-  onHarita: (() => void) | undefined
-  baslikRef?: Ref<HTMLHeadingElement>
-}) {
-  return (
-    <header className="koy__ust">
-      {onHarita ? (
-        <button type="button" className="koy__harita" aria-label="Harita" onClick={onHarita}>
-          <HaritaSimgesi />
-        </button>
-      ) : (
-        <span />
-      )}
-      <h1 className="koy__baslik" ref={baslikRef} tabIndex={-1}>
-        {ad}
-      </h1>
-      <p className="koy__sira">
-        <span className="gizli">Görev </span>
-        {gorevYeri + 1} / {gorevSayisi}
-      </p>
-    </header>
   )
 }
 

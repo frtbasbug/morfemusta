@@ -12,6 +12,7 @@ import AdaHaritasi from './ekranlar/AdaHaritasi.tsx'
 import AltGezinme from './ekranlar/AltGezinme.tsx'
 import Ayarlar from './ekranlar/Ayarlar.tsx'
 import BukalemunKoyu from './ekranlar/BukalemunKoyu.tsx'
+import FistikciSahap from './ekranlar/FistikciSahap.tsx'
 import Sozluk from './ekranlar/Sozluk.tsx'
 import { useIlerleme } from './kabuk/depo.ts'
 import { HARITA, useRota } from './kabuk/yonlendirici.ts'
@@ -26,10 +27,17 @@ import {
 } from './oyun/ilerleme.ts'
 
 /**
- * Ekranı yazılmış bölgeler. Yeni bölgenin ekranı kendi oturumunda buraya eklenir; ekranı
- * olmayan bölgeye girilmez.
+ * Ekranı yazılmış bölgeler, kimlikleriyle. Yeni bölgenin ekranı kendi oturumunda buraya
+ * eklenir; ekranı olmayan bölgeye girilmez. Bölge ekranları aynı kabuğu alır: bölge, kalınan
+ * görev, bugünün kartları, görev bitti ve haritaya dönüş.
  */
-const BOLGE_EKRANLARI = new Set(['koy'])
+const BOLGE_EKRANLARI = {
+  koy: BukalemunKoyu,
+  dukkan: FistikciSahap,
+} as const
+
+const ekraniVar = (kimlik: string): kimlik is keyof typeof BOLGE_EKRANLARI =>
+  Object.hasOwn(BOLGE_EKRANLARI, kimlik)
 
 export default function App() {
   const [rota, git] = useRota()
@@ -50,7 +58,7 @@ export default function App() {
           ({ bolge, durum }) =>
             bolge.kimlik === rota.kimlik &&
             (durum === 'acik' || durum === 'tamam') &&
-            BOLGE_EKRANLARI.has(bolge.kimlik),
+            ekraniVar(bolge.kimlik),
         )?.bolge
       : undefined
   const girilemez = rota.ekran === 'bolge' && !girilen
@@ -60,7 +68,8 @@ export default function App() {
     if (girilemez) git(HARITA)
   }, [girilemez, git])
 
-  if (girilen) {
+  if (girilen && ekraniVar(girilen.kimlik)) {
+    const BolgeEkrani = BOLGE_EKRANLARI[girilen.kimlik]
     // Bölge ekranı en son kayıttan açılır ve dışarıdan gelen değişikliği izler; ikisi de ekranın
     // anahtarındadır:
     //   - dış sürüm: başka pencere bölgenin ilerlemesini değiştirince (görev, sıfırlama) artar;
@@ -70,7 +79,7 @@ export default function App() {
     // Bu pencerenin kendi görevi ve ayar değişikliği ekranı kesmez.
     const { sifirlama } = ilerleme
     return (
-      <BukalemunKoyu
+      <BolgeEkrani
         key={`${girilen.kimlik}:${sifirlama}:${disSurumler[girilen.kimlik] ?? 0}`}
         bolge={girilen}
         baslangic={kaldigiGorev(ilerleme, girilen)}

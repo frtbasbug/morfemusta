@@ -7,6 +7,7 @@
 import { describe, expect, it } from 'vitest'
 import nedenTablosu from '../../tests/neden.csv?raw'
 import { csvOku } from './csv.ts'
+import { nedenYazimi } from './neden-yazimi.ts'
 import { ekle, neden, nedenCumlesi, olasiBicimler, yuzeySecenekleri, type Neden } from './index.ts'
 
 const satirlar = csvOku(nedenTablosu, ['kok', 'ekler', 'parcalar', 'aday', 'neden']).map(
@@ -21,10 +22,7 @@ const satirlar = csvOku(nedenTablosu, ['kok', 'ekler', 'parcalar', 'aday', 'nede
 )
 
 /** Nedenleri tablodaki yazımla verir: PL:kalınlık;POSS.1SG:kalınlık+yuvarlaklık. */
-const tablodaki = (nedenler: readonly Neden[]) =>
-  nedenler
-    .map((n) => (n.tur === 'diğer' ? 'diğer' : `${n.etiket}:${n.ozellikler.join('+')}`))
-    .join(';')
+const tablodaki = (nedenler: readonly Neden[]) => nedenler.map(nedenYazimi).join(';')
 
 const tekEk = (kok: string, etiket: string) => {
   const [parca] = ekle(kok, [etiket]).parcalar
@@ -90,10 +88,13 @@ describe('neden: ayrıntılar', () => {
     expect(nedenler[0]).toMatchObject({ etiket: 'PL', bakilan: 'o', beklenen: 'a', secilen: 'e' })
   })
 
-  it('yumuşama ve ünlü düşmesi uyum farkı değildir: diğer', () => {
-    expect(olasiBicimler('kitap', ['POSS.1SG'])).toEqual(['kitabım'])
-    expect(neden('kitap', ['POSS.1SG'], ['ım'])).toEqual([{ tur: 'diğer' }])
+  it('ünlü düşmesi uyum farkı değildir: diğer', () => {
     expect(neden('ağız', ['POSS.1SG'], ['ım'])).toEqual([{ tur: 'diğer' }])
+  })
+
+  it('gövde verilmezse kökün kendisidir: kitapım gövde sınırında yumuşama alır', () => {
+    expect(olasiBicimler('kitap', ['POSS.1SG'])).toEqual(['kitabım'])
+    expect(tablodaki(neden('kitap', ['POSS.1SG'], ['ım']))).toBe('GÖVDE:yumuşama')
   })
 
   it('misafir kelimede doğru yüzey boş liste döner: saatler', () => {

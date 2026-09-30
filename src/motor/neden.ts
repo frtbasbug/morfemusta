@@ -1,18 +1,30 @@
-// Yanlış biçimin nedeni: çocuğun köke taktığı bukalemunlar (ekin seçilen yüzeyleri) neden
-// uymuyor? Bukalemun Koyu'nda düşen bukalemunun altına yazılan cümle buradan gelir.
+// Yanlış biçimin nedeni: çocuğun kurduğu aday neden uymuyor? Bukalemun Koyu'nda düşen
+// bukalemunun, Fıstıkçı Şahap'ın Dükkânı'nda seken karonun altına yazılan cümle buradan gelir.
 //
-// Aday, kök ile seçilen yüzeylerin art arda yazılmasıdır (at + ler → atler). Aday
-// olasiBicimler içindeyse neden yoktur. Değilse ekler soldan sağa yerel uyumla sınanır: ekin
-// her ünlüsü, adayda kendinden önceki son ünlüye bakılarak beklenir (istisnasız, olağan uyum)
-// ve seçilen ünlüyle karşılaştırılır; uyuşmayan özellikler (kalınlık, yuvarlaklık) yazılır.
-// Yerel sınama yüzünden toplerim yalnız çoğulun kalınlığını alır: im, önündeki e'ye uyar.
-// Uyum farkı bulunamazsa aday başka bir yüzden yanlıştır (istisna: saatlar; yumuşama:
-// kitapım) ve tek neden "diğer"dir.
+// Aday, gövde ile seçilen yüzeylerin art arda yazılmasıdır (at + ler → atler; kitab + ım →
+// kitabım). Gövde kökün kendisidir ya da gövde sınırında yumuşamış hâli (kitab). Aday
+// olasiBicimler içindeyse neden yoktur. Değilse sırayla üç şey sınanır; bulunan nedenler bu
+// sırayla dizilir:
+//
+//   1. gövde sınırı (sinir.ts): kökün son ünsüzü taş mı, jöle mi? Taş seçildi, jöle olmalıydı:
+//      yumuşama (kitapım). Jöle seçildi, taş olmalıydı: tek heceli kökte inatçı (tobum), çok
+//      heceli kökte yumuşamaz (sepedi).
+//   2. ek başı: D ve C, adayda kendinden önceki sese göre beklenir (yerel): sert ünsüzden sonra
+//      taş, değilse jöle. Jöle seçildi, taş olmalıydı: sertleşme (kitapda). Taş seçildi, jöle
+//      olmalıydı: yumuşak (evte, suçu).
+//   3. ünlü uyumu: ekin her ünlüsü, adayda kendinden önceki son ünlüye bakılarak beklenir
+//      (istisnasız, olağan uyum) ve seçilen ünlüyle karşılaştırılır; uyuşmayan özellikler
+//      (kalınlık, yuvarlaklık) yazılır. Yerel sınama yüzünden toplerim yalnız çoğulun
+//      kalınlığını alır: im, önündeki e'ye uyar.
+//
+// Hiçbiri bulunamazsa aday başka bir yüzden yanlıştır (istisna: saatlar; ünlü düşmesi:
+// ağızım) ve tek neden "diğer"dir.
 
 import { ekle, olasiBicimler, uyum, type EkParcasi, type KopyalananOzellik } from './ekle.ts'
 import { EK_ENVANTERI, type EkEnvanteri } from './envanter.ts'
 import { sablonuCoz, type Birim, type UnluArkafonemi } from './sablon.ts'
 import { ALFABE, UNLULER, sonUnluKonumu, unluMu, type Unlu } from './ses.ts'
+import { ekBasiBeklenen, sinirSecenekleri, unsuzYuvalari, type Karo } from './sinir.ts'
 import { KOK_SOZLUGU, type KokSozlugu } from './sozluk.ts'
 
 /** Uyumla seçilen ünlünün yerel uyumla beklenenden farkı. */
@@ -36,12 +48,49 @@ export interface UyumNedeni {
   readonly secilenKonumu: number
 }
 
-/** Uyum farkı yok, aday yine de yanlış: istisna ya da yumuşama. */
+/**
+ * Gövde sınırında yanlış karo:
+ *   yumuşama   taş seçildi, jöle olmalıydı (kitapım)
+ *   inatçı     tek heceli, yumuşamayan kökte jöle seçildi (tobum)
+ *   yumuşamaz  çok heceli, yumuşamayan kökte jöle seçildi (sepedi)
+ */
+export interface GovdeNedeni {
+  readonly tur: 'gövde'
+  readonly ad: 'yumuşama' | 'inatçı' | 'yumuşamaz'
+  readonly kok: string
+  /** Kökün son ünsüzü (taş) ve yumuşak karşılığı (jöle): p / b. */
+  readonly tas: string
+  readonly jole: string
+  readonly secilen: Karo
+  /** Seçilen ünsüzün adaydaki yeri; ardındaki ses ekin ünlüsüdür. */
+  readonly secilenKonumu: number
+}
+
+/**
+ * Ek başında yanlış karo:
+ *   sertleşme  jöle seçildi, taş olmalıydı (kitapda)
+ *   yumuşak    taş seçildi, jöle olmalıydı (evte, suçu)
+ */
+export interface EkBasiNedeni {
+  readonly tur: 'ek başı'
+  readonly ad: 'sertleşme' | 'yumuşak'
+  /** Ekin etiketi: LOC, AGT. */
+  readonly etiket: string
+  /** Adayda ek başından önceki ses: bakılan (p, v, u). */
+  readonly bakilan: string
+  readonly bakilanKonumu: number
+  /** Kuralın beklediği harf (t, d, ç, c) ve seçilen harf. */
+  readonly beklenen: string
+  readonly secilen: string
+  readonly secilenKonumu: number
+}
+
+/** Hiçbir sınamada fark yok, aday yine de yanlış: istisna ya da ünlü düşmesi. */
 export interface DigerNeden {
   readonly tur: 'diğer'
 }
 
-export type Neden = UyumNedeni | DigerNeden
+export type Neden = GovdeNedeni | EkBasiNedeni | UyumNedeni | DigerNeden
 
 type UnluBirimi = Extract<Birim, { arkafonem: UnluArkafonemi }>
 
@@ -107,19 +156,37 @@ function farkliOzellikler(beklenen: Unlu, secilen: Unlu): KopyalananOzellik[] {
   return farklar
 }
 
+/** Ekin kabul edilen yüzeyleri: ünlü kılıkları, D ve C yuvalarında taş ya da jöle. */
+function kabulYuzeyleri(parca: EkParcasi): string[] {
+  let yuzeyler = yuzeySecenekleri(parca)
+  for (const { konum, tas, jole } of unsuzYuvalari(parca)) {
+    yuzeyler = yuzeyler.flatMap((y) =>
+      [tas, jole].map((harf) => y.slice(0, konum) + harf + y.slice(konum + 1)),
+    )
+  }
+  return [...new Set(yuzeyler)]
+}
+
+const heceSayisi = (kelime: string): number => [...kelime].filter((h) => unluMu(h)).length
+
 /**
- * Kök + ekler için seçilen yüzeyler (parcalar, her ek için bir yüzey: "lar", "um") neden
- * uymuyor? Aday doğruysa boş liste döner. Seçilen yüzey ekin kılıklarından biri değilse
- * (yuzeySecenekleri) hata verir.
+ * Gövde ve seçilen yüzeyler (parcalar, her ek için bir yüzey: "lar", "um") neden uymuyor?
+ * Aday doğruysa boş liste döner. Gövde kökün kendisi ya da gövde sınırında yumuşamış hâli
+ * olmalıdır (kitap, kitab); seçilen yüzey ekin kılıklarından biri olmalıdır (ünlüleri
+ * yuzeySecenekleri'nden, D ve C yuvası taş ya da jöle). Değilse hata verir.
  *
- *     neden('ev', ['PL'], ['lar'])                   // [PL: kalınlık; e'ye bakar, a seçilmiş]
- *     neden('top', ['PL', 'POSS.1SG'], ['ler', 'im']) // [PL: kalınlık]; im, e'ye uyar
- *     neden('saat', ['PL'], ['lar'])                 // [diğer]: saatler misafir kelime
+ *     neden('ev', ['PL'], ['lar'])                    // [PL: kalınlık; e'ye bakar, a seçilmiş]
+ *     neden('top', ['PL', 'POSS.1SG'], ['ler', 'im'])  // [PL: kalınlık]; im, e'ye uyar
+ *     neden('kitap', ['POSS.1SG'], ['ım'])             // [gövde: yumuşama]
+ *     neden('top', ['POSS.1SG'], ['um'], 'tob')        // [gövde: inatçı]
+ *     neden('kitap', ['LOC'], ['da'])                  // [LOC: sertleşme]
+ *     neden('saat', ['PL'], ['lar'])                  // [diğer]: saatler misafir kelime
  */
 export function neden(
   kok: string,
   etiketler: readonly string[],
   parcalar: readonly string[],
+  govde: string = kok,
   envanter: EkEnvanteri = EK_ENVANTERI,
   sozluk: KokSozlugu = KOK_SOZLUGU,
 ): Neden[] {
@@ -127,24 +194,78 @@ export function neden(
     throw new Error(`${etiketler.length} ek için ${parcalar.length} yüzey verildi`)
   }
   const temizKok = kok.normalize('NFC')
+  const temizGovde = govde.normalize('NFC')
   const secilenler = parcalar.map((parca) => parca.normalize('NFC'))
-  const aday = temizKok + secilenler.join('')
+
+  const govdeSiniri = sinirSecenekleri(temizKok, etiketler, envanter, sozluk).find(
+    (s) => s.yer === 'gövde',
+  )
+  const yumusamis = govdeSiniri ? temizKok.slice(0, -1) + govdeSiniri.jole : undefined
+  if (temizGovde !== temizKok && temizGovde !== yumusamis) {
+    const gecerli = yumusamis ? `${temizKok} ya da ${yumusamis}` : temizKok
+    throw new Error(`"${govde}", ${temizKok} + ${etiketler.join('+')} için gövde olamaz: ${gecerli}`)
+  }
+
+  const aday = temizGovde + secilenler.join('')
   if (olasiBicimler(temizKok, etiketler, envanter, sozluk).includes(aday)) return []
 
-  // Ekin yüzeyindeki ünlü yuvaları doğru biçimin parçalarından okunur: ünlü seçimi ekin
-  // ünsüzlerini değiştirmez, kılıklar yalnız bu yuvalarda ayrılır.
+  const govdeNedenleri: GovdeNedeni[] = []
+  const ekBasiNedenleri: EkBasiNedeni[] = []
+  const uyumNedenleri: UyumNedeni[] = []
+
+  // 1. Gövde sınırı.
+  if (govdeSiniri) {
+    const secilen: Karo = temizGovde === temizKok ? 'taş' : 'jöle'
+    if (!govdeSiniri.dogrular.includes(secilen)) {
+      const ad =
+        secilen === 'taş' ? 'yumuşama' : heceSayisi(temizKok) === 1 ? 'inatçı' : 'yumuşamaz'
+      govdeNedenleri.push({
+        tur: 'gövde',
+        ad,
+        kok: temizKok,
+        tas: govdeSiniri.tas,
+        jole: govdeSiniri.jole,
+        secilen,
+        secilenKonumu: temizGovde.length - 1,
+      })
+    }
+  }
+
+  // Ekin yuvaları doğru biçimin parçalarından okunur: seçim ekin öteki seslerini değiştirmez,
+  // kılıklar yalnız bu yuvalarda ayrılır.
   const { parcalar: dogruParcalar } = ekle(temizKok, etiketler, envanter, sozluk)
-  const nedenler: Neden[] = []
-  let bas = temizKok.length
+  let bas = temizGovde.length
   dogruParcalar.forEach((parca, i) => {
     const secilen = secilenler[i] ?? ''
-    const kiliklar = yuzeySecenekleri(parca)
+    const kiliklar = kabulYuzeyleri(parca)
     if (!kiliklar.includes(secilen)) {
       throw new Error(
         `"${secilen}", ${parca.etiket} ekinin (${parca.sablon}) kılıklarından biri değil: ` +
           kiliklar.join(', '),
       )
     }
+
+    // 2. Ek başı: yerel, adayda önceki sese göre.
+    for (const { konum, tas, jole } of unsuzYuvalari(parca)) {
+      const secilenKonumu = bas + konum
+      const bakilanKonumu = secilenKonumu - 1
+      const bakilan = aday[bakilanKonumu] ?? ''
+      const beklenen = ekBasiBeklenen(bakilan) === 'taş' ? tas : jole
+      const secilenHarf = secilen[konum] ?? ''
+      if (secilenHarf === beklenen) continue
+      ekBasiNedenleri.push({
+        tur: 'ek başı',
+        ad: beklenen === tas ? 'sertleşme' : 'yumuşak',
+        etiket: parca.etiket,
+        bakilan,
+        bakilanKonumu,
+        beklenen,
+        secilen: secilenHarf,
+        secilenKonumu,
+      })
+    }
+
+    // 3. Ünlü uyumu.
     for (const { konum, birim } of unluYuvalari(parca)) {
       const oncesi = aday.slice(0, bas + konum)
       const { bakilan, sonuc: beklenen } = uyum(oncesi, birim, konum, false)
@@ -153,13 +274,13 @@ export function neden(
       const ozellikler = farkliOzellikler(beklenen, secilenUnlu)
       if (ozellikler.length === 0) continue
       const bakilanKonumu = sonUnluKonumu(oncesi)
-      nedenler.push({
+      uyumNedenleri.push({
         tur: 'uyum',
         etiket: parca.etiket,
         ozellikler,
         bakilan,
         bakilanKonumu,
-        bakilanKokte: bakilanKonumu < temizKok.length,
+        bakilanKokte: bakilanKonumu < temizGovde.length,
         beklenen,
         secilen: secilenUnlu,
         secilenKonumu: bas + konum,
@@ -167,6 +288,7 @@ export function neden(
     }
     bas += secilen.length
   })
+  const nedenler: Neden[] = [...govdeNedenleri, ...ekBasiNedenleri, ...uyumNedenleri]
   return nedenler.length > 0 ? nedenler : [{ tur: 'diğer' }]
 }
 
@@ -174,18 +296,58 @@ const kalinlikAdi = (unlu: Unlu): string => (UNLULER[unlu].kalin ? 'kalın' : 'i
 const yuvarlaklikAdi = (unlu: Unlu): string => (UNLULER[unlu].yuvarlak ? 'yuvarlak' : 'düz')
 
 /**
- * Çocuğa gösterilecek cümle, yalnız ilk neden için. Önce bakılan ünlü, sonra seçilen ünlü:
+ * Çocuğa gösterilecek cümle, yalnız ilk neden için. Harfler ve kök nedenden (görevden) gelir.
+ *
+ * Ünlü uyumu, önce bakılan ünlü, sonra seçilen ünlü:
  *
  *     e ince, a kalın. Kalınlıkları uyuşmuyor.
  *     o yuvarlak, ı düz. Yuvarlaklıkları uyuşmuyor.
  *     ö ince ve yuvarlak, ı kalın ve düz. İkisi de uyuşmuyor.
  *
  * Bakılan ünlü kökte değil de önceki bir ekteyse sona "Bukalemun en yakın ünlüye bakar."
- * eklenir. Neden yoksa ya da ilk neden "diğer"se cümle boştur.
+ * eklenir.
+ *
+ * Gövde ve ek başı:
+ *
+ *     yumuşama   p ünlüden önce jöle olur: b.
+ *     inatçı     top inatçı: p taş kalır.
+ *     yumuşamaz  sepet kelimesinde t taş kalır.
+ *     sertleşme  p taş, ekin başı da taş olur: t.
+ *     yumuşak    v jöle, ekin başı da jöle kalır: d.
+ *                Ünlüden sonra ekin başı jöle kalır: c.   (önceki ses ünlüyse)
+ *
+ * Neden yoksa ya da ilk neden "diğer"se cümle boştur.
  */
 export function nedenCumlesi(nedenler: readonly Neden[]): string {
   const ilk = nedenler[0]
-  if (ilk === undefined || ilk.tur !== 'uyum') return ''
+  if (ilk === undefined) return ''
+  switch (ilk.tur) {
+    case 'diğer':
+      return ''
+    case 'gövde':
+      switch (ilk.ad) {
+        case 'yumuşama':
+          return `${ilk.tas} ünlüden önce jöle olur: ${ilk.jole}.`
+        case 'inatçı':
+          return `${ilk.kok} inatçı: ${ilk.tas} taş kalır.`
+        case 'yumuşamaz':
+          return `${ilk.kok} kelimesinde ${ilk.tas} taş kalır.`
+      }
+      break
+    case 'ek başı':
+      if (ilk.ad === 'sertleşme') {
+        return `${ilk.bakilan} taş, ekin başı da taş olur: ${ilk.beklenen}.`
+      }
+      return unluMu(ilk.bakilan)
+        ? `Ünlüden sonra ekin başı jöle kalır: ${ilk.beklenen}.`
+        : `${ilk.bakilan} jöle, ekin başı da jöle kalır: ${ilk.beklenen}.`
+    case 'uyum':
+      return uyumCumlesi(ilk)
+  }
+  return ''
+}
+
+function uyumCumlesi(ilk: UyumNedeni): string {
   const { bakilan: b, secilen: s, ozellikler } = ilk
   const kalinlik = ozellikler.includes('kalınlık')
   const yuvarlaklik = ozellikler.includes('yuvarlaklık')

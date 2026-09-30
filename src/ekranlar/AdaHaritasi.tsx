@@ -11,6 +11,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { ekle } from '../motor/index.ts'
 import Bukalemun from '../gorsel/Bukalemun.tsx'
+import DukkanIsareti from '../gorsel/DukkanIsareti.tsx'
 import type { Bolge } from '../oyun/bolgeler.ts'
 import type { BolgeDurumu, HaritaBolgesi } from '../oyun/ilerleme.ts'
 import type { Nokta } from './hareket.ts'
@@ -104,10 +105,12 @@ export function yumusakYol(noktalar: readonly Nokta[], kapali = false): string {
 const KIYI_YOLU = yumusakYol(KIYI, true)
 
 /**
- * Bölgenin haritadaki işareti. Yalnız Bukalemun Koyu'nunki çizildi: koyun ilk görevinin
- * bukalemunu, küçük ve yazısız (süs; ek yazısı bu boyda okunmaz).
+ * Bölgenin haritadaki işareti:
+ *   koy     koyun ilk görevinin bukalemunu, küçük ve yazısız (süs; ek yazısı bu boyda okunmaz)
+ *   dukkan  yan yana küçük bir taş ve bir jöle karosu, yazısız
  */
 function isaret(bolge: Bolge): ReactNode {
+  if (bolge.kimlik === 'dukkan') return <DukkanIsareti />
   if (bolge.kimlik !== 'koy') return null
   const [gorev] = bolge.gorevler
   const [etiket] = gorev?.etiketler ?? []

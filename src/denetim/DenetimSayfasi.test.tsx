@@ -18,12 +18,12 @@ describe('DenetimSayfasi', () => {
 
   it('başlığı ve sayıları gösterir', () => {
     expect(html).toMatch(/<h1[^>]*>Biçim Denetimi<\/h1>/)
-    expect(html).toContain('Sözlükteki 150 kök, sekiz ekle: motorun ürettiği 1200 biçim.')
+    expect(html).toContain('Sözlükteki 151 kök, sekiz ekle: motorun ürettiği 1208 biçim.')
   })
 
   it('sözlükteki her kök için bir satır verir', () => {
-    expect(html.match(/<tr [^>]*data-kok=/g)).toHaveLength(150)
-    expect(html.match(/<td [^>]*data-etiket=/g)).toHaveLength(1200)
+    expect(html.match(/<tr [^>]*data-kok=/g)).toHaveLength(151)
+    expect(html.match(/<td [^>]*data-etiket=/g)).toHaveLength(1208)
   })
 
   it('sütun başlıklarında sekiz etiketi şablonlarıyla verir', () => {

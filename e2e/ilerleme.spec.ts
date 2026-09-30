@@ -95,7 +95,7 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
     expect(hatalar).toEqual([])
   })
 
-  test('10 görev biter: akşam ekranında bugünün kelimeleri; haritada koy tamam, dükkân hazırlanıyor', async ({
+  test('10 görev biter: akşam ekranında bugünün kelimeleri; haritada koy tamam, dükkân açılır', async ({
     page,
   }) => {
     test.setTimeout(90_000)
@@ -113,14 +113,15 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
     await page.getByRole('button', { name: 'Haritaya dön' }).click()
     await expect(haritaBasligi(page)).toBeVisible()
     await expect(bolge(page, 'Bukalemun Koyu')).toHaveAccessibleName('Bukalemun Koyu, Tamam')
-    await expect(bolge(page, 'Dükkânı')).toHaveAccessibleName(
-      "Fıstıkçı Şahap'ın Dükkânı, Hazırlanıyor",
-    )
+    await expect(bolge(page, 'Dükkânı')).toHaveAccessibleName("Fıstıkçı Şahap'ın Dükkânı, Açık")
     await expect(bolge(page, 'Kök Bahçesi')).toHaveAccessibleName('Kök Bahçesi, Kilitli')
-    await bolge(page, 'Dükkânı').click()
-    await expect(ileti(page)).toHaveText('Burası hazırlanıyor. Yakında açılacak.')
     await bolge(page, 'Kök Bahçesi').click()
     await expect(ileti(page)).toHaveText("Önce Fıstıkçı Şahap'ın Dükkânı bitmeli.")
+    await bolge(page, 'Dükkânı').click()
+    await expect(page.getByRole('heading', { level: 1, name: "Fıstıkçı Şahap'ın Dükkânı" })).toBeVisible()
+    await expect(sira(page)).toHaveText('Görev 1 / 10')
+    await page.goBack()
+    await expect(haritaBasligi(page)).toBeVisible()
 
     // Tamam bölge yine oynanır: yeni tur baştan; koy tamam kalır.
     await page.reload()

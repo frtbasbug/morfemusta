@@ -27,10 +27,11 @@ const dugmeler = (html: string) =>
     isaret: /class="bolge__isaret" aria-hidden="true"/.test(icerik ?? ''),
   }))
 
-const KOY_BITTI = KOY.gorevler.reduce(
-  (i, g) => gorevBitti(i, KOY, g, new Date(2026, 8, 28, 10)),
-  BOS_ILERLEME,
-)
+const DUKKAN = bolgeBul('dukkan') as Bolge
+const bitir = (ilerleme: Ilerleme, bolge: Bolge) =>
+  bolge.gorevler.reduce((i, g) => gorevBitti(i, bolge, g, new Date(2026, 8, 28, 10)), ilerleme)
+const KOY_BITTI = bitir(BOS_ILERLEME, KOY)
+const DUKKAN_BITTI = bitir(KOY_BITTI, DUKKAN)
 
 describe('AdaHaritasi', () => {
   const ilk = harita(BOS_ILERLEME)
@@ -58,11 +59,20 @@ describe('AdaHaritasi', () => {
     ])
   })
 
-  it('koy bitince: koy tamam, dükkân hazırlanıyor, ötekiler kilitli', () => {
+  it('koy bitince: koy tamam, dükkân açık, ötekiler kilitli', () => {
     expect(dugmeler(harita(KOY_BITTI)).map(({ durum, yazi }) => [durum, yazi])).toEqual([
       ['tamam', 'Tamam'],
-      ['hazirlaniyor', 'Hazırlanıyor'],
+      ['acik', 'Açık'],
       ['kilitli', 'Kilitli'],
+      ['kilitli', 'Kilitli'],
+    ])
+  })
+
+  it('dükkân bitince: koy ve dükkân tamam, bahçe hazırlanıyor', () => {
+    expect(dugmeler(harita(DUKKAN_BITTI)).map(({ durum, yazi }) => [durum, yazi])).toEqual([
+      ['tamam', 'Tamam'],
+      ['tamam', 'Tamam'],
+      ['hazirlaniyor', 'Hazırlanıyor'],
       ['kilitli', 'Kilitli'],
     ])
   })
@@ -71,7 +81,7 @@ describe('AdaHaritasi', () => {
     const simgeler = (html: string) =>
       eslesmeler(html, /<span class="bolge__durum">(<svg[^>]*>.*?<\/svg>)/g)
     const [acik, kilitli] = simgeler(ilk)
-    const [tamam, hazirlaniyor] = simgeler(harita(KOY_BITTI))
+    const [tamam, , hazirlaniyor] = simgeler(harita(DUKKAN_BITTI))
     expect(new Set([acik, kilitli, tamam, hazirlaniyor]).size).toBe(4)
     for (const simge of [acik, kilitli, tamam, hazirlaniyor]) {
       expect(simge).toMatch(/^<svg class="simge" [^>]*aria-hidden="true"/)
@@ -88,8 +98,17 @@ describe('AdaHaritasi', () => {
     for (const { adi, ad, yazi } of dugmeler(harita(KOY_BITTI))) expect(adi).toBe(`${ad}, ${yazi}`)
   })
 
-  it('koyun işareti küçük, yazısız bir bukalemun (ilk görevinin); öteki bölgelerin işareti yok', () => {
-    expect(dugmeler(ilk).map((d) => d.isaret)).toEqual([true, false, false, false])
+  it('dükkânın işareti yan yana küçük bir taş ve bir jöle karosu, yazısız', () => {
+    const isaret = /data-bolge="dukkan".*?<span class="bolge__isaret" aria-hidden="true">(.*?)<\/span><span class="bolge__yazi">/.exec(ilk)?.[1]
+    expect(eslesmeler(isaret ?? '', /<svg class="karo ([^"]*)" viewBox="0 0 72 72" width="27" height="27"/g)).toEqual([
+      'karo--tas',
+      'karo--jole',
+    ])
+    expect(isaret).not.toMatch(/<text/)
+  })
+
+  it('koyun işareti küçük, yazısız bir bukalemun (ilk görevinin); bahçe ve uydurukta işaret yok', () => {
+    expect(dugmeler(ilk).map((d) => d.isaret)).toEqual([true, true, false, false])
     const isaret = /<span class="bolge__isaret" aria-hidden="true">(<svg.*?<\/svg>)<\/span>/.exec(ilk)?.[1]
     expect(isaret).toMatch(
       /^<svg class="bukalemun bukalemun--kalin" viewBox="0 0 132 82" width="55.44" height="34.44" role="img" aria-label="lar bukalemunu, a: kalın, düz, geniş">/,

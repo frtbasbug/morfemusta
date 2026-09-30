@@ -20,6 +20,11 @@
   --deniz: #CFE8E0;
   --kara: #F4E6C8;
 
+  /* Ünsüz karoları: sert ünsüz taş, yumuşak ünsüz jöle. Kalın ve ince renkleri karolarda
+     kullanılmaz: onlar ünlülerin. */
+  --tas: #B3ADA4;
+  --jole: #BFE9CF;
+
   /* Renksiz mod (renk körlüğü denetimi): kalın ve ince aynı gri olur. */
   --renksiz: #8E8C99;
   --renksiz-zemin: #E2E1E8;
@@ -33,6 +38,8 @@
   --kesik-cizgi: 4 3; /* saklanan bukalemunun dış hatları */
   --cizgi-kok-etiketi: 2px;
   --cizgi-unlu-karti: 2.5px;
+  --cizgi-karo: 3; /* ünsüz karosunun gövdesi */
+  --cizgi-catlak: 2.5; /* taşın çatlağı */
   --kose-unlu-karti: 18px;
   --golge-unlu-karti: 0 4px 0 var(--murekkep);
 
@@ -48,13 +55,15 @@
   --boyut-sonuc: 22px; /* kalın */
 }
 
-/* Renksiz mod: kalın ve ince yalnız bedenden okunur. Bu sınıfı alan öğenin içinde
-   geçerlidir. Ayarlardaki Renksiz bütün belgeye uygulanır (html[data-renkler]); büyüden
-   sonra da gri kalır. */
+/* Renksiz mod: kalın ve ince yalnız bedenden, taş ve jöle yalnız biçiminden okunur. Bu
+   sınıfı alan öğenin içinde geçerlidir. Ayarlardaki Renksiz bütün belgeye uygulanır
+   (html[data-renkler]); büyüden sonra da gri kalır. */
 .renksiz,
 :root[data-renkler='renksiz'] {
   --kalin: var(--renksiz);
   --ince: var(--renksiz);
   --kalin-zemin: var(--renksiz-zemin);
   --ince-zemin: var(--renksiz-zemin);
+  --tas: var(--renksiz-zemin);
+  --jole: var(--renksiz-zemin);
 }

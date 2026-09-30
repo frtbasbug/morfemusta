@@ -358,11 +358,11 @@ describe('bozuk veri', () => {
       '{"bolgeler": {' +
         '"koy": {"bitenler": [3, 1, 1, 11, 0, -2, 2.5, "4", null], "kaldigi": 12},' +
         '"yok": {"bitenler": [1], "kaldigi": 1},' +
-        '"dukkan": {"bitenler": [1], "kaldigi": 1},' +
+        '"bahce": {"bitenler": [1], "kaldigi": 1},' +
         '"__proto__": {"bitenler": [1], "kaldigi": 1}}}',
     )
     // koy: geçerli sıralar tekilleşir ve sıralanır; kaldigi görev sayısını aşarsa 0.
-    // yok: tabloda yok. dukkan: içeriği yok, ilerlemesi olamaz.
+    // yok: tabloda yok. bahce: içeriği yok, ilerlemesi olamaz.
     expect(ilerleme.bolgeler).toEqual({ koy: { bitenler: [1, 3], kaldigi: 0 } })
     expect(Object.getPrototypeOf(ilerleme.bolgeler)).toBe(Object.prototype)
     expect(yukle({ bolgeler: { koy: 'bitti' } }).bolgeler).toEqual({})
@@ -417,13 +417,24 @@ describe('kilit açma', () => {
     ])
   })
 
-  it('koyun bütün görevleri bitince koy tamam; dükkân açılır ama hazırlanıyor', () => {
+  it('koyun bütün görevleri bitince koy tamam; dükkân açılır', () => {
     const on = oyna(BOS_ILERLEME, KOY, 10)
     expect(bolgeBittiMi(on, KOY)).toBe(true)
     expect(durumlar(on)).toEqual([
       ['koy', 'tamam', undefined],
-      ['dukkan', 'hazirlaniyor', 'koy'],
+      ['dukkan', 'acik', 'koy'],
       ['bahce', 'kilitli', 'dukkan'],
+      ['uyduruk', 'kilitli', 'bahce'],
+    ])
+  })
+
+  it('dükkân bitince dükkân tamam; bahçe açılır ama hazırlanıyor', () => {
+    const dukkan = bolgeBul('dukkan') as Bolge
+    const ikisi = oyna(oyna(BOS_ILERLEME, KOY, 10), dukkan, 10)
+    expect(durumlar(ikisi)).toEqual([
+      ['koy', 'tamam', undefined],
+      ['dukkan', 'tamam', 'koy'],
+      ['bahce', 'hazirlaniyor', 'dukkan'],
       ['uyduruk', 'kilitli', 'bahce'],
     ])
   })

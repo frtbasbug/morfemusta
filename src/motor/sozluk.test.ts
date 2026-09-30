@@ -5,9 +5,11 @@ const BASLIK = 'kok,kategori,yumusama,unlu_dusmesi,istisna\n'
 const oku = (satirlar: string) => kokSozlugunuOku(BASLIK + satirlar)
 
 describe('kök sözlüğü (icerik/kokler.csv)', () => {
-  it('150 kökü sözlükteki sırasıyla taşır', () => {
+  it('151 kökü sözlükteki sırasıyla taşır', () => {
+    // Oturum 7'de kullanıcının onayıyla fıstık eklendi (Fıstıkçı Şahap'ın Dükkânı).
     const kokler = [...KOK_SOZLUGU.keys()]
-    expect(kokler).toHaveLength(150)
+    expect(kokler).toHaveLength(151)
+    expect(KOK_SOZLUGU.get('fıstık')).toMatchObject({ kategori: 'yiyecek', yumusama: true })
     expect(kokler.slice(0, 3)).toEqual(['kedi', 'köpek', 'kuş'])
     expect(kokler.at(-1)).toBe('kız')
   })

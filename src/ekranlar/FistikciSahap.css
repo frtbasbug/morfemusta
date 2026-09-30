@@ -1,0 +1,322 @@
+/* Fıstıkçı Şahap'ın Dükkânı. Renkler, çizgiler ve yazı tipleri yalnız tema.css'teki
+   belirteçlerden (DESIGN.md, "Üç kural"; kurallar.test.ts denetler). Degrade, bulanıklık ve
+   gölge yok. Kalın ve ince renkleri yalnız ekin kutusunda ve ünlü etiketlerinde durur; karolar
+   taş ve jöle renklerindedir. Hareketler FistikciSahap.tsx'tedir (hareket.ts); buradaki
+   geçişler yalnız hareket azaltma kapalıyken oynar. */
+
+.dukkan {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  padding-block:
+    calc(env(safe-area-inset-top) + 0.75rem) calc(env(safe-area-inset-bottom) + 0.75rem);
+  padding-inline: max(calc(env(safe-area-inset-left) + 1rem), calc((100% - 30rem) / 2))
+    max(calc(env(safe-area-inset-right) + 1rem), calc((100% - 30rem) / 2));
+  background: var(--zemin);
+  color: var(--murekkep);
+  font-family: var(--yazi-tipi);
+  line-height: 1.4;
+}
+
+/* Sahne: kelime kartı ve altında neden, değişim ya da Sıradaki. Boyları sabittir; neden
+   görününce tezgâhtaki karolar yerinden oynamaz. */
+.dukkan__sahne {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding-block: 1rem 0.5rem;
+}
+
+.dukkan__kart {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  min-width: 10rem;
+  min-height: 6.25rem;
+  padding: 0.6rem 1.1rem;
+  border: 2.5px solid var(--murekkep);
+  border-radius: var(--kose-unlu-karti);
+  background: var(--zemin);
+  color: var(--murekkep);
+  font: inherit;
+  cursor: pointer;
+}
+
+/* Bir karo seçiliyken kart onu bekler. */
+.dukkan__kart--hedef {
+  border-style: dashed;
+}
+
+/* Sürüklenen karo kartın üstünde. */
+.dukkan__kart--ustunde {
+  outline: 4px solid var(--murekkep);
+  outline-offset: 4px;
+}
+
+.dukkan__kelime {
+  font-family: var(--yazi-tipi);
+  font-size: var(--boyut-kok);
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+/* Kökün son ünlüsü etikette: yazının boyunda. */
+.dukkan__kelime .unlu-etiketi {
+  font-size: 1em;
+}
+
+/* Sınırdaki yuva: boşken kesik çerçeve; karo oturunca karonun kendisi. 2.2em (30px'lik
+   kelimede 66px); karo oranı korunarak sığar. */
+.yuva {
+  display: inline-grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 2.2em;
+  height: 2.2em;
+  margin-inline: 0.04em;
+  vertical-align: middle;
+  border: 3px dashed var(--murekkep);
+  border-radius: 0.4em;
+  background: var(--zemin);
+}
+
+.yuva--dolu {
+  border-color: transparent;
+  background: none;
+}
+
+.yuva .karo {
+  width: 100%;
+  height: 100%;
+}
+
+.dukkan__alt {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 0.75rem;
+  min-height: 7.5rem;
+}
+
+/* Neden: aday (ilgili iki ses vurgulu) ve altında cümle. Aday uymayan sonuçtur: üstü çizili
+   ve --cizik renginde. Vurgulu sesler satır içi bloktur; çizgi onlara geçmez, okunur kalırlar.
+   Ünlü etiketinde, ünsüz çerçevededir. */
+.dukkan__neden {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  text-align: center;
+}
+
+.dukkan__aday {
+  margin: 0;
+  color: var(--cizik);
+  font-size: var(--boyut-kok);
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.dukkan__aday .unlu-etiketi {
+  font-size: 1em;
+}
+
+.dukkan__ses {
+  display: inline-block;
+  min-width: 1em;
+  padding: 0 0.1em;
+  border: var(--cizgi-kok-etiketi) solid var(--murekkep);
+  border-radius: 0.2em;
+  color: var(--murekkep);
+  line-height: 1.2;
+  text-align: center;
+}
+
+.dukkan__cumle {
+  max-width: 21rem;
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.35;
+}
+
+/* Ses değişimi: kitap → kitabım, -da → kitapta. */
+.dukkan__degisim {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.dukkan__dugme {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0 1.5rem;
+  border: 2.5px solid var(--murekkep);
+  border-radius: 999px;
+  background: var(--murekkep);
+  color: var(--zemin);
+  font: inherit;
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.dukkan__dugme:focus-visible,
+.dukkan__kart:focus-visible {
+  outline: 3px solid var(--murekkep);
+  outline-offset: 4px;
+}
+
+/* Tezgâh: taş hep solda, jöle hep sağda; altlarında küçük yazı (sert / yumuşak). Tezgâhın
+   üstü mürekkep bir çizgidir. */
+.tezgah {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  margin: 0;
+  padding: 0.5rem 0 0.4rem;
+  border-bottom: 3px solid var(--murekkep);
+  list-style: none;
+}
+
+.tezgah__yer {
+  display: grid;
+}
+
+.tezgah__karo {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0.15rem;
+  min-width: 5.5rem;
+  padding: 0.25rem 0.5rem 0.2rem;
+  border: 3px dashed transparent;
+  border-radius: 16px;
+  background: none;
+  color: var(--murekkep);
+  font: inherit;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.tezgah__karo .karo {
+  pointer-events: none;
+}
+
+.tezgah__tur {
+  color: var(--soluk);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.tezgah__karo[aria-pressed='true'] {
+  border-color: var(--murekkep);
+}
+
+.tezgah__karo[aria-disabled='true'] {
+  cursor: default;
+}
+
+.tezgah__karo:focus-visible {
+  outline: 3px solid var(--murekkep);
+  outline-offset: 2px;
+}
+
+.tezgah__karo--tasiniyor,
+.tezgah__karo--etkin {
+  z-index: 5;
+  cursor: grabbing;
+}
+
+/* Yuvaya oturan karo tezgâhta yer tutar ama görünmez: karo yuvadadır. */
+.tezgah__karo--oturdu .karo {
+  visibility: hidden;
+}
+
+/* Raf: bu turda kurulan kelimeler, sırayla. İki sıra kelimenin yeri boşken de ayrılmıştır. */
+.raf {
+  display: grid;
+  align-content: end;
+  min-height: 4.75rem;
+  margin-top: 0.75rem;
+}
+
+.raf__kelimeler {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 0.3rem 0.35rem;
+  margin: 0;
+  padding: 0 0.5rem;
+  list-style: none;
+}
+
+.raf__kelime {
+  padding: 0.05rem 0.45rem;
+  border: 2px solid var(--murekkep);
+  border-radius: 0.55rem 0.55rem 0.3rem 0.3rem;
+  background: var(--zemin);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.raf__tahta {
+  height: 0.55rem;
+  border: 2.5px solid var(--murekkep);
+  border-radius: 4px;
+  background: var(--zemin);
+}
+
+/* Alçak ekranda (360×640 ve 320×568 gibi) boşluklar daralır: kart, tezgâh ve raf kaydırmadan
+   birlikte görünsün. Karolar küçülmez. */
+@media (max-height: 44rem) {
+  .dukkan {
+    padding-block:
+      calc(env(safe-area-inset-top) + 0.5rem) calc(env(safe-area-inset-bottom) + 0.5rem);
+  }
+
+  .dukkan__sahne {
+    gap: 0.5rem;
+    padding-block: 0.5rem 0.25rem;
+  }
+
+  .dukkan__alt {
+    gap: 0.5rem;
+    min-height: 6rem;
+  }
+
+  .dukkan__cumle {
+    font-size: 1.1rem;
+  }
+
+  .raf {
+    min-height: 4.25rem;
+    margin-top: 0.4rem;
+  }
+}
+
+/* Seçilen karo hafifçe kalkar; yalnız hareket azaltma kapalıyken. Kalkış translate
+   özelliğiyledir: taşıma hareketleri transform'u oynatır, geçiş onlara karışmaz. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-hareket='azalt']) .tezgah__karo {
+    transition: translate 150ms ease-out;
+  }
+
+  :root:not([data-hareket='azalt']) .tezgah__karo[aria-pressed='true'] {
+    translate: 0 -6px;
+  }
+}

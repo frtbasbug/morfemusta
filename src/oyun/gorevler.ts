@@ -6,7 +6,9 @@
 //   sira      1'den başlayıp birer artar
 //   kok       kök (Bukalemun Koyu'nda sözlükten; gorevler.test.ts denetler)
 //   ekler     Leipzig kısaltmaları, eklenme sırasıyla, + ile: PL+POSS.1SG
-//   renksiz   evet: kalın ve ince aynı gri, büyüyle renkler geri gelir; boş: renkli
+//   renksiz   evet: kalın ve ince aynı gri, büyüyle renkler geri gelir; boş: renkli.
+//             Sütun isteğe bağlıdır: Fıstıkçı Şahap'ın Dükkânı'nın tablosunda yoktur
+//             (sira,kok,ekler); yoksa her görev renklidir.
 
 import { EK_ENVANTERI, csvOku, ekle, type EkEnvanteri } from '../motor/index.ts'
 
@@ -21,10 +23,14 @@ export interface Gorev {
 }
 
 const BASLIKLAR = ['sira', 'kok', 'ekler', 'renksiz'] as const
+const RENKSIZ_SUTUNSUZ = ['sira', 'kok', 'ekler'] as const
 
 export function gorevleriOku(csvMetni: string, envanter: EkEnvanteri = EK_ENVANTERI): Gorev[] {
+  const metin = csvMetni.normalize('NFC')
+  const ilkSatir = metin.replace(/^\uFEFF/, '').split(/\r?\n/, 1)[0]
+  const basliklar = ilkSatir === RENKSIZ_SUTUNSUZ.join(',') ? RENKSIZ_SUTUNSUZ : BASLIKLAR
   const gorevler: Gorev[] = []
-  for (const { satirNo, alanlar } of csvOku(csvMetni.normalize('NFC'), BASLIKLAR)) {
+  for (const { satirNo, alanlar } of csvOku(metin, basliklar)) {
     const hata = (neden: string) => new Error(`Görev tablosu, ${satirNo}. satır: ${neden}`)
     const sira = gorevler.length + 1
     const kok = alanlar.kok ?? ''

@@ -214,9 +214,22 @@ export function olasiBicimler(
   envanter: EkEnvanteri = EK_ENVANTERI,
   sozluk: KokSozlugu = KOK_SOZLUGU,
 ): string[] {
-  const varsayilan = turet(kok, etiketler, envanter, sozluk, false).bicim
-  const yumusamis = turet(kok, etiketler, envanter, sozluk, true).bicim
-  return varsayilan === yumusamis ? [varsayilan] : [varsayilan, yumusamis]
+  return olasiEklemeler(kok, etiketler, envanter, sozluk).map((sonuc) => sonuc.bicim)
+}
+
+/**
+ * olasiBicimler'in parçalarıyla: kabul edilen her biçimin eklenişi, ilki ekle'ninki. Uydurma
+ * kökte yumuşamış biçimin parçaları da buradan okunur (pıtağı: gövde pıtağ).
+ */
+export function olasiEklemeler(
+  kok: string,
+  etiketler: readonly string[],
+  envanter: EkEnvanteri = EK_ENVANTERI,
+  sozluk: KokSozlugu = KOK_SOZLUGU,
+): EklemeSonucu[] {
+  const varsayilan = turet(kok, etiketler, envanter, sozluk, false)
+  const yumusamis = turet(kok, etiketler, envanter, sozluk, true)
+  return varsayilan.bicim === yumusamis.bicim ? [varsayilan] : [varsayilan, yumusamis]
 }
 
 /** Köke gelen ilk ekin bilmesi gerekenler; sonraki eklerde yoktur. */
@@ -328,12 +341,22 @@ function ekiEkle(
   }
 }
 
+/**
+ * Gövdenin sert son ünsüzünün yumuşak karşılığı: p→b, ç→c, t→d, k→ğ; n'den sonra k→g
+ * (renk → rengi). Son ses p, ç, t ya da k değilse undefined.
+ */
+export function yumusakKarsilik(govde: string): 'b' | 'c' | 'd' | 'ğ' | 'g' | undefined {
+  const son = sonSes(govde)
+  if (!yumusayanMi(son)) return undefined
+  return son === 'k' && govde.at(-2) === 'n' ? 'g' : YUMUSAMA[son]
+}
+
 /** Ünsüz yumuşaması: sert son ünsüz yumuşar (kitab-ı); n'den sonra k, g olur (reng-i). */
 function yumusat(govde: string): [string, GovdeOlayi] | undefined {
   const son = sonSes(govde)
-  if (!yumusayanMi(son)) return undefined
-  const nk = son === 'k' && govde.at(-2) === 'n'
-  const sonuc = nk ? 'g' : YUMUSAMA[son]
+  const sonuc = yumusakKarsilik(govde)
+  if (!yumusayanMi(son) || sonuc === undefined) return undefined
+  const nk = sonuc === 'g'
   const konum = govde.length - 1
   return [
     govde.slice(0, konum) + sonuc,

@@ -36,8 +36,8 @@ test.describe('Biçim Denetim Sayfası', () => {
     expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe(
       'rgb(244, 249, 251)',
     )
-    await expect(page.locator('tr[data-kok]')).toHaveCount(150)
-    await expect(page.locator('td[data-etiket]')).toHaveCount(1200)
+    await expect(page.locator('tr[data-kok]')).toHaveCount(151)
+    await expect(page.locator('td[data-etiket]')).toHaveCount(1208)
 
     await expect(bicim(page, 'kitap', 'ACC')).toHaveText('kitabı')
     await expect(bicim(page, 'renk', 'POSS.3SG')).toHaveText('rengi')
@@ -107,6 +107,6 @@ test.describe('Biçim Denetim Sayfası', () => {
     await page.goto(DENETIM)
 
     await expect(baslik(page)).toBeVisible()
-    await expect(page.locator('tr[data-kok]')).toHaveCount(150)
+    await expect(page.locator('tr[data-kok]')).toHaveCount(151)
   })
 })
