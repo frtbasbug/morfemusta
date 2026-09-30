@@ -225,6 +225,9 @@ export default function FistikciSahap({
     await bekle(450)
     if (!bagli.current) return
     flushSync(() => gonder({ tur: 'rafa' }))
+    // Görev bitti: kabuk hemen kaydeder. Sıradaki ve Harita artık tıklanabilir; raf hareketi
+    // süsür, kayıt onu beklemez (sayfa bu arada kapanabilir).
+    onGorevBitti?.(gorev)
     await oynat(
       rafRef.current?.lastElementChild,
       [
@@ -233,8 +236,6 @@ export default function FistikciSahap({
       ],
       { duration: 380, easing: 'cubic-bezier(.3, .7, .4, 1.3)' },
     )
-    // Görev bitti: kabuk kaydeder.
-    onGorevBitti?.(gorev)
   }
 
   /** Yanlış taşıma: karo yuvanın üstünde seker, tezgâha döner; neden görünür. */

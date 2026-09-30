@@ -57,7 +57,7 @@
   - Hareket azaltmada hiçbir hareket yok (uçtan uca test: `document.getAnimations()` boş).
 - **Harita:** dükkânın işareti yan yana küçük bir taş ve bir jöle karosu, yazısız (0.375 ölçek).
   Koy bitince dükkân açık; dükkân bitince bahçe "hazırlanıyor".
-- **Testler:** 859 birim testi ve 51 uçtan uca test.
+- **Testler:** 859 birim testi ve 52 uçtan uca test.
   - Birim: `sinir.test.ts`, `neden-unsuz.test.ts` (30 satır ve ayrıntılar),
     `dukkan.test.ts` (her görevin tam bir sınırı ve tek doğru karosu, cümleler, ses değişimi,
     indirgeyici), `FistikciSahap.test.tsx`, galeri ve harita.
@@ -66,6 +66,14 @@
     klavyeyle, fareyle ve parmakla sürükle-bırakla; hareket azaltmada *-da → kitapta*; Pixel 7,
     360×640 ve 320×568'de taşma yok, dokunma alanları en az 44 px; Renksiz; Harita düğmesi.
     `ilerleme.spec.ts`: koy bitince dükkân açılır ve girilir.
+
+### PR'dan sonra düzeltilen (inceleme bulgusu)
+
+- **Görev, raf hareketinden önce kaydedilir.** Önceden `onGorevBitti` rafın 380 ms'lik
+  hareketinden sonra çağrılıyordu; Sıradaki ve Harita o arada tıklanabilirdi. Harita'yla
+  çıkılınca çağrı yine gidiyordu (geç), ama sayfa o aralıkta kapanır ya da yenilenirse görev ve
+  kart yazılmıyordu. Artık `bitti`'ye geçer geçmez kaydedilir, hareket sonra oynar. Uçtan uca
+  test: Sıradaki DOM'a girdiği anda kayıtta 10. görev ve kartı var.
 
 ### Kullanıcının verdikleri
 
