@@ -1,9 +1,14 @@
-// Ekranların hareketleri Web Animations API ile oynatılır. Hareket azaltma
-// (prefers-reduced-motion: reduce) açıksa hiçbir hareket oynamaz: yardımcılar hemen döner,
-// ekran yalnız renk ve yazı değiştirir. Hareket, öğenin kalıcı stilini değiştirmez (fill yok);
-// kalıcı durum hareketten önce satır içi stile yazılır, hareket bitince öğe orada kalır.
+// Ekranların hareketleri Web Animations API ile oynatılır. Hareket azaltma açıksa hiçbir
+// hareket oynamaz: yardımcılar hemen döner, ekran yalnız renk ve yazı değiştirir. Hareket iki
+// yoldan azalır: cihazın ayarı (prefers-reduced-motion: reduce) ya da oyunun Ayarlar'ındaki
+// Azalt (html[data-hareket="azalt"]; CSS geçişleri de buna bakar). Hareket, öğenin kalıcı
+// stilini değiştirmez (fill yok); kalıcı durum hareketten önce satır içi stile yazılır, hareket
+// bitince öğe orada kalır.
 
 export function hareketAzMi(): boolean {
+  if (typeof document !== 'undefined' && document.documentElement.dataset.hareket === 'azalt') {
+    return true
+  }
   return (
     typeof window !== 'undefined' &&
     window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true

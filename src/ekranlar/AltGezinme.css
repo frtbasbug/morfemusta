@@ -1,0 +1,83 @@
+/* Harita, Sözlük ve Ayarlar'ın çerçevesi (App.tsx: .kabuk) ve alt gezinme. Renkler, çizgiler ve
+   yazı tipleri yalnız tema.css'teki belirteçlerden (kurallar.test.ts denetler). */
+
+.kabuk {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background: var(--zemin);
+  color: var(--murekkep);
+  font-family: var(--yazi-tipi);
+  line-height: 1.4;
+}
+
+.kabuk > main {
+  flex: 1;
+  width: 100%;
+  max-width: 30rem;
+  margin-inline: auto;
+}
+
+/* Ekranların başlığı (Sözlük, Ayarlar). */
+.ekran-basligi {
+  margin: 0;
+  font-family: var(--yazi-tipi-baslik);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.ekran-basligi:focus {
+  outline: none;
+}
+
+/* Alt gezinme: ekranın altına yapışık; içerik uzunsa da görünür kalır. */
+.alt-gezinme {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  padding:
+    0.35rem max(calc(env(safe-area-inset-right) + 0.5rem), 0.5rem)
+    calc(env(safe-area-inset-bottom) + 0.35rem) max(calc(env(safe-area-inset-left) + 0.5rem), 0.5rem);
+  border-top: var(--cizgi-unlu-karti) solid var(--murekkep);
+  background: var(--zemin);
+}
+
+.alt-gezinme__liste {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  max-width: 30rem;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+/* Her öğe en az 44 px; açık ekran dolu (renkten başka biçim de değişir) ve aria-current. */
+.alt-gezinme__oge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+  min-height: 3.25rem;
+  padding: 0.2rem 0.5rem;
+  border: var(--cizgi-unlu-karti) solid transparent;
+  border-radius: 14px;
+  color: var(--murekkep);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-decoration: none;
+}
+
+.alt-gezinme__oge[aria-current='page'] {
+  border-color: var(--murekkep);
+  background: var(--murekkep);
+  color: var(--zemin);
+}
+
+.alt-gezinme__oge:focus-visible {
+  outline: 3px solid var(--murekkep);
+  outline-offset: 2px;
+}

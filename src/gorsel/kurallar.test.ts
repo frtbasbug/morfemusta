@@ -1,16 +1,17 @@
 // DESIGN.md'deki görsel dil kurallarından denetlenebilen ikisi. (1) Karakterler yalnız
-// koddan üretilir: görsel, galeri ve oyun ekranı kodu resim dosyası kullanmaz. (3) Yalnız
+// koddan üretilir: görsel, galeri ve oyun kodu resim dosyası kullanmaz. (3) Yalnız
 // belirteçlerdeki renkler: renk değeri yalnız tema.css'te yazılır; degrade ve bulanık gölge
 // yoktur, tek gölge ünlü kartınınkidir. Ağız kuralını (2) cizim.ts'in imzası taşır: ağız yalnız
 // üç özellikten çizilir, oyun durumunu almaz.
 //
-// Oyun ekranlarından yalnız görsel dile geçmiş olanlar taranır (Bukalemun Koyu). Açılış ekranı
-// eski renkleriyle kalır; ada haritası (Oturum 6) onu da belirteçlere taşır.
+// Oyunun bütün ekranları taranır: ada haritası, Bukalemun Koyu, Sözlük, Ayarlar, akşam ekranı,
+// kabuk ve genel stil. Biçim Denetim Sayfası geliştirici aracıdır, kendi renkleri vardır.
+// Haritada kalın ve ince renkleri de kullanılmaz: onlar yalnız dilbilgisel anlam taşır.
 
 import { describe, expect, it } from 'vitest'
 
 const stiller = import.meta.glob<string>(
-  ['./*.css', '../galeri/*.css', '../ekranlar/BukalemunKoyu.css'],
+  ['./*.css', '../galeri/*.css', '../ekranlar/*.css', '../genel.css'],
   { query: '?raw', import: 'default', eager: true },
 )
 
@@ -18,10 +19,14 @@ const kodlar = import.meta.glob<string>(
   [
     './*.{ts,tsx}',
     '../galeri/*.{ts,tsx}',
-    '../ekranlar/BukalemunKoyu.tsx',
-    '../ekranlar/hareket.ts',
+    '../ekranlar/*.{ts,tsx}',
+    '../kabuk/*.{ts,tsx}',
+    '../App.tsx',
+    '../main.tsx',
     '!./*.test.{ts,tsx}',
     '!../galeri/*.test.{ts,tsx}',
+    '!../ekranlar/*.test.{ts,tsx}',
+    '!../kabuk/*.test.{ts,tsx}',
   ],
   { query: '?raw', import: 'default', eager: true },
 )
@@ -37,6 +42,12 @@ describe('yalnız belirteçlerdeki renkler', () => {
         './karakterler.css',
         '../galeri/KarakterGalerisi.css',
         '../ekranlar/BukalemunKoyu.css',
+        '../ekranlar/AdaHaritasi.css',
+        '../ekranlar/Sozluk.css',
+        '../ekranlar/Ayarlar.css',
+        '../ekranlar/AksamEkrani.css',
+        '../ekranlar/AltGezinme.css',
+        '../genel.css',
       ]),
     )
     // Vitest CSS'i boşaltırsa (vite.config.ts, test.css) bu denetimler boşa geçerdi.
@@ -45,9 +56,13 @@ describe('yalnız belirteçlerdeki renkler', () => {
       expect.arrayContaining([
         './cizim.ts',
         './Bukalemun.tsx',
+        './EkYazisi.tsx',
         '../galeri/KarakterGalerisi.tsx',
         '../ekranlar/BukalemunKoyu.tsx',
+        '../ekranlar/AdaHaritasi.tsx',
         '../ekranlar/hareket.ts',
+        '../kabuk/yonlendirici.ts',
+        '../App.tsx',
       ]),
     )
   })
@@ -73,6 +88,17 @@ describe('yalnız belirteçlerdeki renkler', () => {
     )
     expect(golgeler).toEqual(['var(--golge-unlu-karti)'])
     expect(stiller[TEMA]).toContain('--golge-unlu-karti: 0 4px 0 var(--murekkep);')
+  })
+
+  it('haritada kalın ve ince renkleri yok; deniz ve kara belirteçleri tema.css\'te', () => {
+    expect(stiller['../ekranlar/AdaHaritasi.css']).toMatch(/var\(--deniz\)/)
+    expect(stiller['../ekranlar/AdaHaritasi.css']).toMatch(/var\(--kara\)/)
+    for (const dosya of ['../ekranlar/AdaHaritasi.css', '../ekranlar/AdaHaritasi.tsx']) {
+      const metin = stiller[dosya] ?? kodlar[dosya] ?? ''
+      expect(metin.match(/--(?:kalin|ince)(?:-zemin)?\b/g) ?? [], dosya).toEqual([])
+    }
+    expect(stiller[TEMA]).toContain('--deniz: #CFE8E0;')
+    expect(stiller[TEMA]).toContain('--kara: #F4E6C8;')
   })
 })
 

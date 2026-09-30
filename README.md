@@ -9,7 +9,8 @@ yaratıklarını birleştirir; kurduğu kelime adadaki dünyayı değiştirir.
 - Geliştirme: [CLAUDE.md](CLAUDE.md) (yığın, komutlar, kurallar)
 - Durum: [NEXT.md](NEXT.md)
 
-Reklam, uygulama içi satın alma, hesap ve veri toplama yoktur.
+Reklam, uygulama içi satın alma, hesap ve veri toplama yoktur. İlerleme, Sözlük kartları ve
+ayarlar yalnız cihazda saklanır; hiçbir veri cihazdan çıkmaz.
 
 ```sh
 npm install

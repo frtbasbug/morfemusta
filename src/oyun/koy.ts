@@ -175,8 +175,13 @@ function gorevinBasi(gorevler: readonly Gorev[], gorevYeri: number): KoyDurumu {
   }
 }
 
-export function koyBaslangici(gorevler: readonly Gorev[]): KoyDurumu {
-  return gorevinBasi(gorevler, 0)
+/**
+ * Oyunun başı. Bölgeye dönen çocuk kaldığı görevden sürdürür: gorevYeri o görevin yeridir
+ * (0'dan). Görevlerde olmayan bir yer verilirse oyun baştan başlar.
+ */
+export function koyBaslangici(gorevler: readonly Gorev[], gorevYeri = 0): KoyDurumu {
+  const gecerli = Number.isInteger(gorevYeri) && gorevYeri >= 0 && gorevYeri < gorevler.length
+  return gorevinBasi(gorevler, gecerli ? gorevYeri : 0)
 }
 
 export function oynananGorev(durum: KoyDurumu): Gorev | undefined {

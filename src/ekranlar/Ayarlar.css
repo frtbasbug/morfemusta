@@ -1,0 +1,146 @@
+/* Ayarlar. Renkler, çizgiler ve yazı tipleri yalnız tema.css'teki belirteçlerden; gölge ve
+   degrade yok. Seçili seçenek renkten başka biçimle de ayrılır: dolu zemin ve kalın halka. */
+
+.ayarlar {
+  display: grid;
+  align-content: start;
+  gap: 1.5rem;
+  padding:
+    calc(env(safe-area-inset-top) + 1rem) calc(env(safe-area-inset-right) + 1rem) 1.5rem
+    calc(env(safe-area-inset-left) + 1rem);
+}
+
+.ayar {
+  display: grid;
+  gap: 0.6rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.ayar__baslik {
+  margin: 0;
+  padding: 0;
+  font-family: var(--yazi-tipi-baslik);
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.ayar__secenekler {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.ayar__secenek {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 3rem;
+  padding: 0.25rem 0.9rem;
+  border: var(--cizgi-unlu-karti) solid var(--murekkep);
+  border-radius: 999px;
+  background: var(--zemin);
+  color: var(--murekkep);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.15;
+  cursor: pointer;
+}
+
+.ayar__secenek:has(input:checked) {
+  background: var(--murekkep);
+  color: var(--zemin);
+}
+
+.ayar__secenek:has(input:focus-visible) {
+  outline: 3px solid var(--murekkep);
+  outline-offset: 3px;
+}
+
+/* Radyo düğmesi: seçilmemişte ince halka, seçilide kalın halka. */
+.ayar__secenek input {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  border: var(--cizgi-unlu-karti) solid currentcolor;
+  border-radius: 50%;
+  appearance: none;
+  background: transparent;
+  color: inherit;
+}
+
+.ayar__secenek input:checked {
+  border-width: 0.4rem;
+}
+
+.ayar__secenek input:focus-visible {
+  outline: none;
+}
+
+/* Renk seçiminin örneği: kalın a ile ince e etiketi. */
+.ayar__ornek {
+  display: flex;
+  gap: 0.5rem;
+  font-size: var(--boyut-kok);
+}
+
+.sifirlama {
+  display: grid;
+  justify-items: start;
+  gap: 0.6rem;
+}
+
+.sifirlama__soru {
+  display: grid;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.8rem 0.9rem;
+  border: var(--cizgi-unlu-karti) dashed var(--murekkep);
+  border-radius: 14px;
+}
+
+.sifirlama__uyari {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.sifirlama__dugmeler {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.ayar__dugme {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0 1.25rem;
+  border: var(--cizgi-unlu-karti) solid var(--murekkep);
+  border-radius: 999px;
+  background: var(--zemin);
+  color: var(--murekkep);
+  font: inherit;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ayar__dugme--sil {
+  background: var(--murekkep);
+  color: var(--zemin);
+}
+
+.ayar__dugme:focus-visible {
+  outline: 3px solid var(--murekkep);
+  outline-offset: 3px;
+}
+
+.sifirlama__durum {
+  min-height: 1.4em;
+  margin: 0;
+  color: var(--soluk);
+}

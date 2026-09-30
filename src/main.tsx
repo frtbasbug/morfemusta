@@ -8,6 +8,7 @@ import '@fontsource/andika/400.css'
 import '@fontsource/andika/700.css'
 import '@fontsource/baloo-2/latin-800.css'
 import '@fontsource/baloo-2/latin-ext-800.css'
+import './gorsel/tema.css'
 import './genel.css'
 import App from './App.tsx'
 

@@ -5,6 +5,8 @@
 // Ek yüzeyde ünlüsüz kalırsa (kedim) bukalemun zemine karışır: gövde, ibik, göz tümseği,
 // kuyruk ve bacaklar zemin renginde, dış hatları kesik; gözü görünür kalır, üstünde yalnız
 // "m" yazar. Saklanan ünlü söylenmez; ağzı çizilmez. Uymayan ek (evlar) eğik durur.
+// Süs olarak küçük çizilen bukalemun (haritadaki koy işareti) yazısızdır: ek yazısı o boyda
+// okunmaz.
 
 import type { EkParcasi } from '../motor/index.ts'
 import {
@@ -21,6 +23,7 @@ export default function Bukalemun({
   parca,
   uyumsuz = false,
   boyut = 1,
+  yazisiz = false,
 }: {
   /** ekle() sonucundaki ek parçası; kılık ekin yüzeydeki ilk ünlüsünden gelir. */
   readonly parca: EkParcasi
@@ -28,6 +31,8 @@ export default function Bukalemun({
   readonly uyumsuz?: boolean
   /** Ölçek: 1'de 132×82 px. Yalnız ölçekler; çizim değişmez. */
   readonly boyut?: number
+  /** Ek yazısı çizilmez: süs olarak küçük çizilen bukalemun (haritadaki işaret). */
+  readonly yazisiz?: boolean
 }) {
   const kilik = bukalemunKiligi(parca)
   const cizim = bukalemunCizimi(kilik.ozellikler)
@@ -69,9 +74,11 @@ export default function Bukalemun({
       />
       <circle className="bukalemun__bebek" cx={goz.x} cy={goz.y} r={BUKALEMUN_YARICAPLARI.bebek} />
       {!kilik.saklanan && <path className="bukalemun__agiz" d={cizim.agiz} />}
-      <text className="bukalemun__yazi" x={yazi.x} y={yazi.y} textAnchor="middle">
-        {kilik.yazi}
-      </text>
+      {!yazisiz && (
+        <text className="bukalemun__yazi" x={yazi.x} y={yazi.y} textAnchor="middle">
+          {kilik.yazi}
+        </text>
+      )}
     </svg>
   )
 }

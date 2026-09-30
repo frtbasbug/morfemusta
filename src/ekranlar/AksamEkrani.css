@@ -1,0 +1,79 @@
+/* Akşam ekranı: ortada kapanış kartı. Renkler, çizgiler ve yazı tipleri yalnız tema.css'teki
+   belirteçlerden; kart gölgesiz. */
+
+.aksam {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  padding:
+    calc(env(safe-area-inset-top) + 1rem) calc(env(safe-area-inset-right) + 1rem)
+    calc(env(safe-area-inset-bottom) + 1rem) calc(env(safe-area-inset-left) + 1rem);
+  background: var(--zemin);
+  color: var(--murekkep);
+  font-family: var(--yazi-tipi);
+  line-height: 1.4;
+}
+
+.aksam__kart {
+  display: grid;
+  justify-items: center;
+  gap: 0.9rem;
+  width: 100%;
+  max-width: 28rem;
+  padding: 1.5rem 1.25rem;
+  border: var(--cizgi-unlu-karti) solid var(--murekkep);
+  border-radius: var(--kose-unlu-karti);
+  text-align: center;
+}
+
+.aksam__hilal {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--soluk);
+}
+
+.aksam__baslik {
+  margin: 0;
+  font-family: var(--yazi-tipi-baslik);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.aksam__baslik:focus {
+  outline: none;
+}
+
+.aksam__metin {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.aksam__kelimeler {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.aksam__dugme {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0 1.5rem;
+  border: var(--cizgi-unlu-karti) solid var(--murekkep);
+  border-radius: 999px;
+  background: var(--murekkep);
+  color: var(--zemin);
+  font: inherit;
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.aksam__dugme:focus-visible {
+  outline: 3px solid var(--murekkep);
+  outline-offset: 4px;
+}

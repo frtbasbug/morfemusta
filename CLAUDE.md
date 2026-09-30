@@ -42,24 +42,31 @@ Oturumu kapatmadan önce: `npm run typecheck && npm test && npm run test:e2e`.
 
 ```
 .github/workflows/test-ve-yayin.yml   her push ve PR'da test; main'de Pages'e yayın
-e2e/                 Playwright testleri (*.spec.ts)
+e2e/                 Playwright testleri (*.spec.ts); ortak yardımcılar yardimcilar.ts'te
 public/              ikonlar ve favicon (scripts/ikonlar.mjs üretir)
 scripts/             geliştirme araçları: ikon üretimi, denetim biçimleri, zeyrek denetimi
 src/
-  main.tsx           oyunun giriş noktası: yazı tipi ve genel stil burada yüklenir
-  App.tsx            kök bileşen
-  genel.css          renk belirteçleri (CSS değişkenleri) ve genel stil
-  ekranlar/          ekran bileşenleri ve yanlarında birim testleri (*.test.tsx); hareket.ts:
-                     ekranların hareketleri (Web Animations API, hareket azaltmaya uyar)
-  oyun/              oyunun saf mantığı: görev tabloları, seçenekler, Bukalemun Koyu'nun durumu
-                     (indirgeyici); testleri yanında
+  main.tsx           oyunun giriş noktası: yazı tipi, belirteçler (tema.css) ve genel stil
+                     burada yüklenir
+  App.tsx            kök bileşen: kabuk (yönlendirme, ilerleme, ayarların uygulanması)
+  genel.css          genel stil (tema.css belirteçleriyle); .gizli yardımcı sınıfı
+  ekranlar/          ekran bileşenleri ve yanlarında birim testleri (*.test.tsx): ada haritası
+                     (AdaHaritasi), Bukalemun Koyu, Sözlük, Ayarlar, akşam ekranı, alt gezinme;
+                     hareket.ts: ekranların hareketleri (Web Animations API, hareket azaltmaya
+                     uyar); simgeler.tsx: arayüz simgeleri
+  kabuk/             hash yönlendirici (yonlendirici.ts) ve cihaz deposu (depo.ts: localStorage,
+                     kalıcı depo isteği, useIlerleme); testleri yanında
+  oyun/              oyunun saf mantığı: bölge tablosu (bolgeler.ts), görev tabloları, seçenekler,
+                     Bukalemun Koyu'nun durumu (indirgeyici), cihazdaki ilerleme (ilerleme.ts:
+                     kayıt, kilitler, Sözlük kartları); testleri yanında
   motor/             biçimbilim motoru: saf TypeScript, genel kapısı index.ts; testleri yanında
   denetim/           Biçim Denetim Sayfası (denetim.html'in girişi, verisi, testleri)
   gorsel/            görsel dil: çizim geometrisi (cizim.ts), bukalemunun kılığı (kilik.ts),
                      belirteçler (tema.css), karakter bileşenleri; testleri yanında
   galeri/            Karakter Galerisi (galeri.html'in girişi, örnekleri, testleri)
 icerik/              içerik CSV dosyaları (ekler.csv: ek envanteri; kokler.csv: kök sözlüğü;
-                     gorevler/: bölgelerin görev tabloları, ör. bukalemun-koyu.csv)
+                     bolgeler.csv: adanın bölgeleri; gorevler/: bölgelerin görev tabloları,
+                     ör. bukalemun-koyu.csv)
 tests/               altin-bicimler.csv: motorun altın tablosu; neden.csv: yanlış biçimin
                      nedenleri (motorun neden işlevinin sözleşmesi)
 index.html           oyun
@@ -107,10 +114,20 @@ DESIGN.md  NEXT.md  CLAUDE.md
     Neden tablosu `neden` işlevinin, görev tabloları oyunun sözleşmesidir: testi geçirmek için
     satır değiştirilmez, silinmez, eklenmez. Bir satır yanlış görünürse iş durur ve
     kullanıcıya sorulur. Görev tablosunda doğru biçim yazılmaz; her zaman motordan gelir.
+13. **`icerik/bolgeler.csv` de yalnız kullanıcının onayıyla değişir.** Bölge tablosu adanın
+    sözleşmesidir: sıra, kimlik, ad, akşam ekranının başlığı ve görev tablosunun yolu.
+    `gorevler` sütunu boş olan bölgenin içeriği henüz yoktur (haritada "hazırlanıyor");
+    onları Oturum 7 (Fıstıkçı Şahap'ın Dükkânı), 8 (Kök Bahçesi) ve 9 (Uydurukçuklar)
+    dolduracak. Testi geçirmek için satır değiştirilmez, silinmez, eklenmez.
+14. **Hiçbir veri cihazdan çıkmaz.** İlerleme, Sözlük kartları ve ayarlar yalnız cihazda,
+    `localStorage`'da, sürüm numaralı tek anahtarda (`morfemusta.v1`) durur. Sunucuya,
+    analitiğe, uzak günlüğe ya da başka bir cihaza gönderilmez; hesap ve eşitleme yok. Depo
+    yoksa ya da erişilemiyorsa oyun bellekte sürer. Uçtan uca testler dış isteği ve GET dışı
+    isteği denetler.
 
 ## Adlandırma
 
-- Kod içi adlar ve yorumlar Türkçedir (`AcilisEkrani`, `yaziTipi`). Dosya ve klasör
+- Kod içi adlar ve yorumlar Türkçedir (`AdaHaritasi`, `yaziTipi`). Dosya ve klasör
   adlarında yalnız ASCII kullanılır (`icerik`, `ekranlar`).
 - Dilbilim terimleri `DESIGN.md`'deki gibi kullanılır. Ekler arkafonemle yazılır:
   -lAr, -(I)m, -DA, -CI, -(y)A.
@@ -137,16 +154,26 @@ DESIGN.md  NEXT.md  CLAUDE.md
   (galeri: `src/galeri/main.tsx`). `.renksiz` sınıfının içinde kalın ve ince aynı gridir.
   Kök etiketinin (`UnluEtiketi`) en/boy oranı `cizim.ts`'teki `unluGovdesi`'nden gelir, CSS'te
   yazılmaz. Bukalemun 0.9 ölçeğin altına küçültülmez: ek yazısı ince rengin üstünde 18px'in
-  altına inerdi (galeride dar ekranda satır kırılır; `e2e/galeri.spec.ts` denetler).
+  altına inerdi (galeride dar ekranda satır kırılır; `e2e/galeri.spec.ts` denetler). Tek ayrık
+  durum haritadaki koy işaretidir (0.42, `yazisiz`: süs; DESIGN.md, "Karşıtlık").
+  Birleşen ek (`EkYazisi`) ve kurulan kelime (`KurulanKelime`) de `src/gorsel`'dedir: koy,
+  Sözlük ve akşam ekranı aynı görünümü kullanır. Ekin her ünlüsü, kökün son ünlüsü gibi
+  `UnluEtiketi`'ndedir; uyum etiketlerin eninden okunur, Renksiz'de de. Etiket kökte
+  `--boyut-kok` boyundadır; ek kutusunda, sonuç kelimesinde ve Sözlük kartında yazının
+  boyunu alır (`font-size: 1em`).
 - **Oyunun mantığı (`src/oyun`):** saf TypeScript; `tsconfig.motor.json` onu da DOM'suz
   derler, `src/oyun/bagimsizlik.test.ts` içe aktarmaları tarar (yalnız motorun genel kapısı,
-  kendi dosyaları ve `icerik/gorevler/*.csv?raw`). Doğruluk motordan gelir: aday `neden` ile
+  kendi dosyaları, `icerik/bolgeler.csv?raw` ve `icerik/gorevler/*.csv?raw`). Bölge tablosu
+  görev tablosunu yoluyla gösterir; yolların metinleri `bolgeler.ts`'teki `GOREV_TABLOLARI`'ndadır
+  (yeni görev tablosu oraya da eklenir; `bolgeler.test.ts` denetler). Doğruluk motordan gelir: aday `neden` ile
   sınanır, seçenekler (bukalemunun kılıkları) `yuzeySecenekleri`'nden. Seçeneklerin sırası
   `secenekTohumu` ile sabittir; görev tablosu değişirse sıralar da değişir (`koy.test.ts`
   yalnız özelliklerini denetler: doğru bukalemun her yere düşer).
 - **Hareketler (`src/ekranlar/hareket.ts`):** Web Animations API; `motion` kurulmadı.
   Hareket azaltma açıksa `oynat` ve `bekle` hemen döner; CSS geçişleri
-  `@media (prefers-reduced-motion: no-preference)` içindedir. Hareket kalıcı stil bırakmaz
+  `@media (prefers-reduced-motion: no-preference)` içinde ve `:root:not([data-hareket='azalt'])`
+  altındadır. Hareket iki yoldan azalır: cihazın ayarı ya da oyunun Ayarlar'ındaki Azalt
+  (`html[data-hareket="azalt"]`; `hareketAzMi` ikisine de bakar). Hareket kalıcı stil bırakmaz
   (fill yok): kalıcı durum hareketten önce satır içi stile yazılır. Seçilen bukalemunun
   kalkışı `translate` özelliğiyledir, `transform`'la değil: CSS geçişi basamaklamada
   animasyonların üstündedir; `transform`'a geçiş konsaydı taşıma hareketlerini bozardı.
@@ -157,12 +184,35 @@ DESIGN.md  NEXT.md  CLAUDE.md
 - **Playwright'ta hareket azaltma:** `test.use({ contextOptions: { reducedMotion: 'reduce' } })`.
   `reducedMotion` doğrudan `use` seçeneği değildir; tür denetimi yakalar, çalışma anında sessizce
   yok sayılır.
-- **Koyun zemini:** `:root:has(.koy)` sayfanın zeminini kreme çevirir. `genel.css`'in koyu
-  zemini, 2.625 piksel oranlı telefonda (412 px = 1081.5 cihaz pikseli) sağ kenarda ince bir
-  çizgi olarak görünüyordu.
-- **Kurallar testi oyun ekranını da tarar:** `src/gorsel/kurallar.test.ts`, Bukalemun Koyu'nun
-  stilini ve kodunu da denetler (renk yalnız belirteçlerden, gölge ve degrade yok). Açılış
-  ekranı eski renkleriyle kalır; ada haritası (Oturum 6) onu da taşır.
+- **Sayfa zemini:** `genel.css` zemini kremdir; haritada `:root:has(.kabuk--harita)` sayfanın
+  zeminini denize çevirir. Ekranın zemini sayfanınkinden farklı olursa, 2.625 piksel oranlı
+  telefonda (412 px = 1081.5 cihaz pikseli) sağ kenarda ince bir çizgi görünür.
+- **CSS yükleme sırası:** derlemede sayfalar arasında paylaşılan CSS parçası (`genel.css`),
+  sayfanın kendi CSS'inden **sonra** yüklenir. `genel.css`'i ezmesi gereken kural daha özgül
+  seçiciyle yazılır (`:root:has(.kabuk--harita)`, `:root:has(.denetim) body`); aynı özgüllükte
+  sıraya güvenilmez.
+- **Kurallar testi bütün oyunu tarar:** `src/gorsel/kurallar.test.ts`; ekranlar, kabuk,
+  `App.tsx`, `main.tsx` ve `genel.css` (renk yalnız belirteçlerden, gölge ve degrade yok).
+  Haritanın stili ve kodu kalın ve ince renklerini (zeminleriyle) hiç anmaz. Biçim Denetim
+  Sayfası geliştirici aracıdır, kendi renkleri vardır.
+- **Kabuk:** `App.tsx` yönlendirir, ilerlemeyi tutar, ayarları belgenin köküne yazar
+  (`html[data-hareket]`, `html[data-renkler]`; tema.css Renksiz'i `:root[data-renkler='renksiz']`
+  ile uygular). Yönlendirici (`src/kabuk/yonlendirici.ts`) hash'le çalışır: haritadan açılan
+  ekran `pushState`, alt gezinmedeki geçiş `replaceState`; haritaya dönüş, ekran haritadan
+  açıldıysa `history.back()` (geçmiş iki adımı aşmaz). Adres elle değişirse `hashchange`,
+  geri/ileri `popstate` ile okunur. Harita, Sözlük ve Ayarlar açılınca odak başlıklarına geçer.
+- **Cihazdaki ilerleme:** `src/oyun/ilerleme.ts` saf mantıktır, depoyu dışarıdan alır
+  (`Depo`: `getItem`, `setItem`); tarayıcıdaki bağlantı `src/kabuk/depo.ts`'tedir. Kayıt
+  biçimi `ilerleme.ts`'in başında yazılıdır; biçim değişirse anahtar da değişir
+  (`morfemusta.v2`) ve eski kayıt taşınır. Okunan kayıt denetlenir (`ilerlemeyiCoz`): kart
+  motorun kurduğu kelime olmalı. Uçtan uca testler kaydı `localStorage`'a yazarak da kurabilir
+  (anahtar `e2e/yardimcilar.ts`'te). Aynı cihazdaki pencereler (sekme, ana ekrandaki
+  uygulama) kaydı paylaşır: `pencereKaydi` her değişikliği depodaki son kayda uygular (bellekteki
+  kopyaya değil); `useIlerleme` başka pencerenin yazdığını `storage` olayıyla alır. O pencere bir
+  bölgenin ilerlemesini değiştirdiyse bölgenin dış sürümü artar (`degisenBolgeler`). Kayıtta
+  sıfırlama kimliği (`sifirlama`) de var. `App.tsx` ikisini de bölge ekranının `key`'ine koyar;
+  görev `ekrandaGorevBitti` ile yazılır: kimlik değiştiyse yazılmaz, ekran baştan açılır.
+  Çok sekmede kalan durumlar `NEXT.md`'de (Oturum 11).
 - **Saf görsel hesaplar:** `src/gorsel/cizim.ts` ve `kilik.ts` motor gibi DOM'suz derlenir
   (`tsconfig.motor.json`) ve yalnız motorun genel kapısını içe aktarır
   (`src/gorsel/bagimsizlik.test.ts`). Ünlü tablosu motorunkidir. Saklanan ünlünün kılığı
