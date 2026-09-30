@@ -162,6 +162,20 @@ export function pencereKaydi(depo: Depo | null, bolgeler: readonly Bolge[] = BOL
   }
 }
 
+/**
+ * İki ilerleme arasında ilerlemesi (biten görevler, kalınan yer) değişen bölgeler. Başka bir
+ * pencerenin yazdığı kayıt alınınca açık bölge ekranı buna bakar: bölgesi değiştiyse (görev,
+ * sıfırlama) kalınan yerden yeniden açılır; ayar ya da yalnız kart değiştiyse oyun kesilmez.
+ */
+export function degisenBolgeler(once: Ilerleme, sonra: Ilerleme): string[] {
+  const kimlikler = new Set([...Object.keys(once.bolgeler), ...Object.keys(sonra.bolgeler)])
+  return [...kimlikler].filter(
+    (kimlik) =>
+      JSON.stringify(once.bolgeler[kimlik] ?? null) !==
+      JSON.stringify(sonra.bolgeler[kimlik] ?? null),
+  )
+}
+
 const nesneMi = (x: unknown): x is Readonly<Record<string, unknown>> =>
   typeof x === 'object' && x !== null && !Array.isArray(x)
 

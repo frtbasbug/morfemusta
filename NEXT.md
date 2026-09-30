@@ -58,6 +58,12 @@
       almaz.
     - `storage` olayı dinlenir: başka sekme yazınca bu sekmenin ilerlemesi ve ayarları hemen
       güncellenir.
+  - Codex'in ikinci bulgusu: bölge ekranı açıkken başka sekme ilerlemeyi sıfırlarsa açık ekran
+    eski görevinde kalıyordu; o görev bitince kayıt `{bitenler: [5], kaldigi: 5}` olup sonraki
+    giriş altıncı görevden başlıyordu. Artık başka pencere bir bölgenin ilerlemesini değiştirince
+    (görev, sıfırlama) o bölgenin dış sürümü artar (`degisenBolgeler`) ve açık ekran kalınan
+    yerden, sıfırlamadan sonra baştan yeniden açılır. Ayar ya da yalnız kart değişikliği oyunu
+    kesmez; bu pencerenin kendi görevi de ekranı kesmez.
   - İlk başarılı kayıttan sonra, sayfa başına bir kez `navigator.storage.persist()` istenir.
   - "Hiçbir veri cihazdan çıkmaz" CLAUDE.md'ye 14. kural olarak yazıldı.
 - **Sözlük** (`Sozluk.tsx`):
@@ -83,8 +89,8 @@
 - **Denetim sayfasının zemini** main'de koyu maviydi (`--deniz-koyu`), açık olması
   gerekirken: derlemede paylaşılan `genel.css` sayfanın kendi CSS'inden sonra yükleniyor.
   Artık kendi açık rengi geçerli (`:root:has(.denetim)`); uçtan uca test denetliyor.
-- **Testler:** 741 birim testi ve 40 uçtan uca test.
-  - Birim testlerinin dağılımı: motor 366 (değişmedi), oyun mantığı 97 (ilerleme 43, bölgeler
+- **Testler:** 743 birim testi ve 41 uçtan uca test.
+  - Birim testlerinin dağılımı: motor 366 (değişmedi), oyun mantığı 99 (ilerleme 45, bölgeler
     8), görsel dil 205 (kurallar 74), ekranlar 36, kabuk 15, galeri 11, denetim sayfası 11.
   - İlerleme deposunun birim testleri: kaydet, yükle, bozuk veri, depo yok, iki pencere, kilit
     açma, kart tekrarı, bugünün kartları; sıfırlama ve ayarlar.
@@ -97,7 +103,8 @@
     - sıfırlama;
     - localStorage hata atarken, bozuk kayıtta ve dolu depoda oyun sürer;
     - iki sekme: görevler, kartlar ve ayar korunur; değişiklik öteki sekmeye hemen yansır;
-      `storage` olayı ulaşmayan eski sekme de ötekini ezmez;
+      `storage` olayı ulaşmayan eski sekme de ötekini ezmez; açık bölge ekranı öteki sekmenin
+      görevinden sonra kalınan yerden, sıfırlamasından sonra baştan açılır;
     - geri tuşu; 360×640'ta sığma;
     - Renksiz'de kalın ve ince ek etiketlerinin enleri farklı, kökün ve ekin etiketi aynı
       ende (`ek-etiketi.spec.ts`).

@@ -9,6 +9,7 @@ import {
   bolgeBittiMi,
   bolgeDurumlari,
   bugununKartlari,
+  degisenBolgeler,
   gorevBitti,
   ilerlemeyiCoz,
   ilerlemeyiKaydet,
@@ -264,6 +265,24 @@ describe('iki pencere (sekme, ana ekrandaki uygulama) aynı depoyu paylaşır', 
     const pencere = pencereKaydi(depo)
     expect(pencere.degistir((i) => i)).toBe(false)
     expect(kayitlar.size).toBe(0)
+  })
+
+  describe('değişen bölgeler (açık bölge ekranı kalınan yerden yeniden açılsın diye)', () => {
+    const iki = oyna(BOS_ILERLEME, KOY, 2)
+
+    it('başka pencere görev bitirirse ya da sıfırlarsa bölge değişmiştir', () => {
+      expect(degisenBolgeler(iki, gorevBitti(iki, KOY, gorevi(3), BUGUN))).toEqual(['koy'])
+      expect(degisenBolgeler(iki, ilerlemeyiSifirla(iki))).toEqual(['koy'])
+      expect(degisenBolgeler(BOS_ILERLEME, iki)).toEqual(['koy'])
+    })
+
+    it('ayar ya da yalnız kart değişirse bölge değişmemiştir: oyun kesilmez', () => {
+      expect(degisenBolgeler(iki, ayarlariDegistir(iki, { renkler: 'renksiz' }))).toEqual([])
+      const sonra = dakikaSonra(BUGUN, 30).toISOString()
+      const kartlar = iki.kartlar.map((k) => ({ ...k, sonKurulma: sonra }))
+      expect(degisenBolgeler(iki, { ...iki, kartlar })).toEqual([])
+      expect(degisenBolgeler(iki, iki)).toEqual([])
+    })
   })
 })
 

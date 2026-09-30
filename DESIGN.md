@@ -318,7 +318,9 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
   Her değişiklikte son kayıt yeniden okunur, değişiklik onun üstüne uygulanır: önce açılmış bir
   pencere sonrakinin ilerlemesini, kartlarını ve ayarlarını ezmez. Biten görevler ve kartlar
   birleşir; ayarda yalnız değişen alan yazılır; sıfırlama yine her şeyi siler (ayarlar kalır).
-  Bir pencerede olan öteki pencerede de hemen görünür.
+  Bir pencerede olan öteki pencerede de hemen görünür. Bölge ekranı açıkken başka pencere o
+  bölgenin ilerlemesini değiştirirse (görev, sıfırlama) ekran kalınan yerden yeniden açılır,
+  sıfırlamadan sonra baştan; ayar değişikliği oyunu kesmez.
 - Tarayıcı destekliyorsa ilk kayıttan sonra kalıcı depo istenir
   (`navigator.storage.persist()`): yer darlığında kayıt silinmesin.
 

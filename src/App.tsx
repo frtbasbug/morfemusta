@@ -33,7 +33,7 @@ const BOLGE_EKRANLARI = new Set(['koy'])
 
 export default function App() {
   const [rota, git] = useRota()
-  const [ilerleme, degistir] = useIlerleme()
+  const [ilerleme, degistir, disSurumler] = useIlerleme()
   const { hareket, renkler } = ilerleme.ayarlar
 
   // Ayarlar belgenin köküne yazılır; CSS (tema.css, geçişler) ve hareket.ts oradan okur.
@@ -61,9 +61,11 @@ export default function App() {
   }, [girilemez, git])
 
   if (girilen) {
+    // Bölgenin ilerlemesi başka bir pencerede değişirse (görev, sıfırlama) ekran kalınan yerden
+    // yeniden açılır: dış sürüm anahtara girer. Bu pencerenin kendi görevi ekranı kesmez.
     return (
       <BukalemunKoyu
-        key={girilen.kimlik}
+        key={`${girilen.kimlik}:${disSurumler[girilen.kimlik] ?? 0}`}
         bolge={girilen}
         baslangic={kaldigiGorev(ilerleme, girilen)}
         bugunkuKartlar={bugununKartlari(ilerleme, girilen.kimlik, new Date())}

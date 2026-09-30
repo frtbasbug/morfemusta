@@ -276,6 +276,37 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
     expect(hatalar.flat()).toEqual([])
   })
 
+  test('bölge ekranı açıkken öteki sekme o bölgenin ilerlemesini değiştirirse ekran kalınan yerden, sıfırlarsa baştan açılır', async ({
+    context,
+  }) => {
+    const a = await context.newPage()
+    const b = await context.newPage()
+    const hatalar = [hatalariTopla(a), hatalariTopla(b)]
+    // A koyda iki görev bitirir, üçüncüde bekler.
+    await koyuAc(a)
+    await gorevleriOyna(a, 0, 1)
+    await expect(sira(a)).toHaveText('Görev 3 / 10')
+
+    // B üçüncü görevi bitirir: A'nın ekranı kalınan yerden, dördüncü görevden açılır.
+    await koyuAc(b)
+    await expect(sira(b)).toHaveText('Görev 3 / 10')
+    await gorevOyna(b, 2)
+    await expect(sira(a)).toHaveText('Görev 4 / 10')
+
+    // B ilerlemeyi sıfırlar: A'nın ekranı baştan açılır. A'da biten görev yeni ilerlemenin ilkidir.
+    await haritaDugmesi(b).click()
+    await gezinme(b, 'Ayarlar').click()
+    await b.getByRole('button', { name: 'İlerlemeyi sıfırla' }).click()
+    await b.getByRole('button', { name: 'Sil' }).click()
+    await expect(sira(a)).toHaveText('Görev 1 / 10')
+    await gorevOyna(a, 0)
+    expect(await kayit(a)).toMatchObject({
+      bolgeler: { koy: { bitenler: [1], kaldigi: 1 } },
+      kartlar: [{ kelime: 'atlar' }],
+    })
+    expect(hatalar.flat()).toEqual([])
+  })
+
   test('storage olayı ulaşmasa da (ör. arka planda donmuş sekme) eski sekme ötekinin görevlerini, kartlarını ve ayarını ezmez', async ({
     context,
   }) => {
