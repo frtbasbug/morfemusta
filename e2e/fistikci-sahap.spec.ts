@@ -51,7 +51,7 @@ async function dukkaniAc(sayfa: Page) {
 }
 
 test.describe("Fıstıkçı Şahap'ın Dükkânı", () => {
-  test('10 görev dokun-dokun oynanır; kelimeler rafa dizilir, akşam ekranına varılır', async ({
+  test('10 görev dokun-dokun oynanır; kelimeler rafa dizilir, akşam ekranına varılır; bahçe açılır', async ({
     page,
     baseURL,
   }) => {
@@ -77,7 +77,13 @@ test.describe("Fıstıkçı Şahap'ın Dükkânı", () => {
     await expect(page.getByText(/puan|seri|süre|skor/i)).toHaveCount(0)
     await page.getByRole('button', { name: 'Haritaya dön' }).click()
     await expect(bolge(page, 'Dükkânı')).toHaveAccessibleName(`${BASLIK}, Tamam`)
-    await expect(bolge(page, 'Kök Bahçesi')).toHaveAccessibleName('Kök Bahçesi, Hazırlanıyor')
+    // Dükkân bitince bahçe açılır ve girilir.
+    await expect(bolge(page, 'Kök Bahçesi')).toHaveAccessibleName('Kök Bahçesi, Açık')
+    await bolge(page, 'Kök Bahçesi').click()
+    await expect(page.getByRole('heading', { level: 1, name: 'Kök Bahçesi' })).toBeVisible()
+    await expect(sira(page)).toHaveText('Görev 1 / 10')
+    await page.getByRole('button', { name: 'Harita', exact: true }).click()
+    await expect(haritaBasligi(page)).toBeVisible()
 
     // Dükkânın kartları Sözlük'te, kendi bölgesinin altında.
     await gezinme(page, 'Sözlük').click()

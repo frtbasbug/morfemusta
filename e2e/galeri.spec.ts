@@ -140,9 +140,11 @@ test.describe('Karakter Galerisi', () => {
   test('harf her kök etiketine sığar, incenin elipsine de', async ({ page }) => {
     await page.goto(GALERI)
     await page.evaluate(() => document.fonts.ready)
-    const etiketler = page.locator('.unlu-etiketi')
-    // Çizelgedeki sekiz etiket ve örnek satırlarındaki sekiz kök.
-    await expect(etiketler).toHaveCount(16)
+    // Kök etiketleri: ek yazısındaki etiketler (ağacın halkaları ve meyveleri) sayılmaz.
+    const etiketler = page.locator('.unlu-etiketi:not(.ek-yazisi .unlu-etiketi)')
+    // Çizelgedeki sekiz etiket, örnek satırlarındaki sekiz kök ve Kök Bahçesi'ndeki ağacın
+    // kökü (göz, 24px).
+    await expect(etiketler).toHaveCount(17)
     expect(await sigmayanHarfler(etiketler)).toEqual([])
   })
 

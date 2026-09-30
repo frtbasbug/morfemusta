@@ -42,7 +42,7 @@ describe('KarakterGalerisi', () => {
     expect(cizelge.match(/class="unlu-karti /g)).toHaveLength(8)
   })
 
-  it('bölümler sırayla: sekiz ünlü, kök etiketi, -lAr, -(I)m, saklanan, uymayan, karolar', () => {
+  it('bölümler sırayla: sekiz ünlü, kök etiketi, -lAr, -(I)m, saklanan, uymayan, karolar, bahçe', () => {
     expect(eslesmeler(html, /<h2 id="[^"]*">([^<]*)<\/h2>/g)).toEqual([
       'Sekiz ünlü',
       'Kök etiketi',
@@ -51,6 +51,7 @@ describe('KarakterGalerisi', () => {
       'Saklanan ünlü',
       'Uymayan ek',
       'Ünsüz karoları',
+      'Kök Bahçesi',
     ])
   })
 
@@ -77,6 +78,19 @@ describe('KarakterGalerisi', () => {
       'ü',
     ])
     expect(cizelge).toContain('(kalında 58:56, incede 34:56)')
+  })
+
+  it('Kök Bahçesi: ağaç (kök, iki halka, üç meyve), halka, meyve ve yazısız harita işareti', () => {
+    const bolum = /<section[^>]*aria-labelledby="bolum-agac">(.*?)<\/section>/.exec(html)?.[1] ?? ''
+    const agac = /aria-label="Ağaç: gözlükçüler">(.*?)<\/div>/.exec(bolum)?.[1] ?? ''
+    expect(agac).toMatch(/class="kok-yazisi__okunan">göz</)
+    expect(eslesmeler(agac, /class="agac__halka" data-etiket="([^"]*)"/g)).toEqual(['AGT', 'LIK'])
+    expect(agac.match(/class="meyve( meyve--kopya)?" data-etiket="PL"/g)).toHaveLength(3)
+    expect(bolum).toContain('aria-label="Halka: lük"')
+    expect(bolum).toContain('aria-label="Meyve: ler"')
+    const isaret = /aria-label="Bahçenin harita işareti">(.*?)<\/li>/.exec(bolum)?.[1] ?? ''
+    expect(isaret).toMatch(/^<svg class="bahce-isareti"/)
+    expect(isaret).not.toMatch(/<text|ek-yazisi/)
   })
 
   it('ünsüz karoları: taş solda, jöle sağda; adları harf ve türü; harita işareti yazısız', () => {
@@ -119,7 +133,8 @@ describe('KarakterGalerisi', () => {
         eslesmeler(satir ?? '', /class="(kok-yazisi|bukalemun|ornek__ok|ornek__sonuc)[ "]/g),
       ).toEqual(['kok-yazisi', 'bukalemun', 'ornek__ok', 'ornek__sonuc'])
     }
-    expect(eslesmeler(html, /class="kok-yazisi__okunan">([^<]*)</g)).toEqual([
+    // Yalnız örnek satırlarının kökleri (Kök Bahçesi'nin ağacında da kök yazısı var).
+    expect(eslesmeler(satirlar.join(''), /class="kok-yazisi__okunan">([^<]*)</g)).toEqual([
       'kuş',
       'göz',
       'kız',

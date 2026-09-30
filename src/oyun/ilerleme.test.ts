@@ -339,6 +339,7 @@ describe('bozuk veri', () => {
         { ...evler, kelime: 'evlar' }, // motorun kurmadığı biçim
         { ...evler, bolge: 'yok' }, // bilinmeyen bölge
         { ...evler, etiketler: ['PLU'] }, // bilinmeyen ek
+        { ...evler, kelime: 'evlerci', etiketler: ['PL', 'AGT'] }, // sırası bozuk: motor hata atar
         { ...evler, etiketler: [] },
         { ...evler, tarih: 'dün' },
         { ...evler, kok: 42 },
@@ -358,11 +359,11 @@ describe('bozuk veri', () => {
       '{"bolgeler": {' +
         '"koy": {"bitenler": [3, 1, 1, 11, 0, -2, 2.5, "4", null], "kaldigi": 12},' +
         '"yok": {"bitenler": [1], "kaldigi": 1},' +
-        '"bahce": {"bitenler": [1], "kaldigi": 1},' +
+        '"uyduruk": {"bitenler": [1], "kaldigi": 1},' +
         '"__proto__": {"bitenler": [1], "kaldigi": 1}}}',
     )
     // koy: geçerli sıralar tekilleşir ve sıralanır; kaldigi görev sayısını aşarsa 0.
-    // yok: tabloda yok. bahce: içeriği yok, ilerlemesi olamaz.
+    // yok: tabloda yok. uyduruk: içeriği yok, ilerlemesi olamaz.
     expect(ilerleme.bolgeler).toEqual({ koy: { bitenler: [1, 3], kaldigi: 0 } })
     expect(Object.getPrototypeOf(ilerleme.bolgeler)).toBe(Object.prototype)
     expect(yukle({ bolgeler: { koy: 'bitti' } }).bolgeler).toEqual({})
@@ -428,14 +429,26 @@ describe('kilit açma', () => {
     ])
   })
 
-  it('dükkân bitince dükkân tamam; bahçe açılır ama hazırlanıyor', () => {
+  it('dükkân bitince dükkân tamam; bahçe açılır', () => {
     const dukkan = bolgeBul('dukkan') as Bolge
     const ikisi = oyna(oyna(BOS_ILERLEME, KOY, 10), dukkan, 10)
     expect(durumlar(ikisi)).toEqual([
       ['koy', 'tamam', undefined],
       ['dukkan', 'tamam', 'koy'],
-      ['bahce', 'hazirlaniyor', 'dukkan'],
+      ['bahce', 'acik', 'dukkan'],
       ['uyduruk', 'kilitli', 'bahce'],
+    ])
+  })
+
+  it('bahçe bitince bahçe tamam; Uydurukçuklar açılır ama hazırlanıyor', () => {
+    const dukkan = bolgeBul('dukkan') as Bolge
+    const bahce = bolgeBul('bahce') as Bolge
+    const ucu = oyna(oyna(oyna(BOS_ILERLEME, KOY, 10), dukkan, 10), bahce, 10)
+    expect(durumlar(ucu)).toEqual([
+      ['koy', 'tamam', undefined],
+      ['dukkan', 'tamam', 'koy'],
+      ['bahce', 'tamam', 'dukkan'],
+      ['uyduruk', 'hazirlaniyor', 'bahce'],
     ])
   })
 
@@ -509,6 +522,24 @@ describe('kart tekrarı', () => {
     expect(bugun.kartlar).toHaveLength(10)
     const atlar = bugun.kartlar.find((k) => k.kelime === 'atlar')
     expect(atlar).toMatchObject({ tarih: DUN.toISOString(), sonKurulma: BUGUN.toISOString() })
+  })
+
+  it('kartların ekleri verilirse kartlar onlardır, sırayla (Kök Bahçesi: yalnız gövde)', () => {
+    const bahce = bolgeBul('bahce') as Bolge
+    const gozlukculer = bahce.gorevler[9] as Gorev
+    const ilerleme = gorevBitti(BOS_ILERLEME, bahce, gozlukculer, BUGUN, [['LIK'], ['LIK', 'AGT']])
+    expect(ilerleme.kartlar.map((k) => [k.kelime, k.etiketler])).toEqual([
+      ['gözlük', ['LIK']],
+      ['gözlükçü', ['LIK', 'AGT']],
+    ])
+    expect(ilerleme.bolgeler.bahce).toEqual({ bitenler: [10], kaldigi: 10 })
+    // Aynı kelime ikinci kez kart olmaz; yalnız son kurulma anı değişir.
+    const sonra = dakikaSonra(BUGUN, 5)
+    const tekrar = gorevBitti(ilerleme, bahce, gozlukculer, sonra, [['LIK'], ['LIK', 'AGT']])
+    expect(tekrar.kartlar).toHaveLength(2)
+    expect(tekrar.kartlar.map((k) => k.sonKurulma)).toEqual([sonra.toISOString(), sonra.toISOString()])
+    // Kaydedilip yüklenince kartlar kalır (motorun kurduğu kelimeler).
+    expect(ilerlemeyiCoz(JSON.parse(JSON.stringify(ilerleme))).kartlar).toEqual(ilerleme.kartlar)
   })
 
   it('aynı kelime başka bölgede kurulursa ayrı kart olur', () => {

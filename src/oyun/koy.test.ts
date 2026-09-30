@@ -4,6 +4,8 @@ import { bolgeBul } from './bolgeler.ts'
 import type { Gorev } from './gorevler.ts'
 import {
   adimiKur,
+  denemeyiDegerlendir,
+  dogruMu,
   koyBaslangici,
   koyIndirgeyici,
   oynananGorev,
@@ -94,6 +96,61 @@ describe('adimiKur', () => {
 
   it('görevde olmayan adım hata verir', () => {
     expect(() => adimiKur(gorev(1), 1)).toThrow('1. görevde 2. ek yok')
+  })
+})
+
+describe('denemeyiDegerlendir: aday motorun gövdeleriyle kurulur', () => {
+  const gorevi = (kok: string, ekler: string): Gorev => ({
+    sira: 1,
+    kok,
+    etiketler: ekler.split('+'),
+    renksiz: false,
+  })
+
+  it('kitap + POSS.1SG: ım doğrudur (kitabım, kitapım değil)', () => {
+    const g = gorevi('kitap', 'POSS.1SG')
+    const deneme = denemeyiDegerlendir(g, adimiKur(g, 0), 'ım')
+    expect(deneme).toMatchObject({ aday: 'kitabım', nedenler: [], cumle: '' })
+    expect(dogruMu(deneme)).toBe(true)
+  })
+
+  it('kitap + POSS.1SG: yanlış kılığın nedeni uyumdur, gövde değil', () => {
+    const g = gorevi('kitap', 'POSS.1SG')
+    const deneme = denemeyiDegerlendir(g, adimiKur(g, 0), 'um')
+    expect(deneme.aday).toBe('kitabum')
+    expect(deneme.nedenler).toMatchObject([
+      { tur: 'uyum', etiket: 'POSS.1SG', ozellikler: ['yuvarlaklık'], bakilan: 'a', secilen: 'u' },
+    ])
+    expect(deneme.cumle).toBe('a düz, u yuvarlak. Yuvarlaklıkları uyuşmuyor.')
+  })
+
+  it('kalem + LIK+POSS.1SG, ikinci adım: im doğrudur (kalemliğim)', () => {
+    const g = gorevi('kalem', 'LIK+POSS.1SG')
+    const adim = adimiKur(g, 1)
+    const deneme = denemeyiDegerlendir(g, adim, 'im')
+    expect(deneme).toMatchObject({ aday: 'kalemliğim', nedenler: [], cumle: '' })
+    expect(dogruMu(deneme)).toBe(true)
+    const yanlis = denemeyiDegerlendir(g, adim, 'ım')
+    expect(yanlis.aday).toBe('kalemliğım')
+    expect(yanlis.nedenler).toMatchObject([{ tur: 'uyum', ozellikler: ['kalınlık'], bakilan: 'i' }])
+  })
+
+  it('gövdesi değişmeyen görevde aday kök ve yüzeylerdir', () => {
+    const g = gorevi('top', 'PL+POSS.1SG')
+    const deneme = denemeyiDegerlendir(g, adimiKur(g, 1), 'im')
+    expect(deneme.aday).toBe('toplarim')
+    expect(deneme.cumle).toBe('a kalın, i ince. Kalınlıkları uyuşmuyor. Bukalemun en yakın ünlüye bakar.')
+  })
+
+  it('koyun her görevinde her adımda yalnız motorun yüzeyi doğrudur', () => {
+    for (const g of KOY_GOREVLERI) {
+      g.etiketler.forEach((_, sira) => {
+        const adim = adimiKur(g, sira)
+        for (const { yuzey } of adim.secenekler) {
+          expect(dogruMu(denemeyiDegerlendir(g, adim, yuzey))).toBe(yuzey === adim.parca.yuzey)
+        }
+      })
+    }
   })
 })
 

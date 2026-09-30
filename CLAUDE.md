@@ -52,6 +52,7 @@ src/
   genel.css          genel stil (tema.css belirteçleriyle); .gizli yardımcı sınıfı
   ekranlar/          ekran bileşenleri ve yanlarında birim testleri (*.test.tsx): ada haritası
                      (AdaHaritasi), Bukalemun Koyu, Fıstıkçı Şahap'ın Dükkânı (FistikciSahap),
+                     Kök Bahçesi (KokBahcesi),
                      bölge ekranlarının üst çubuğu (BolgeUstu), Sözlük, Ayarlar, akşam ekranı,
                      alt gezinme;
                      hareket.ts: ekranların hareketleri (Web Animations API, hareket azaltmaya
@@ -59,22 +60,24 @@ src/
   kabuk/             hash yönlendirici (yonlendirici.ts) ve cihaz deposu (depo.ts: localStorage,
                      kalıcı depo isteği, useIlerleme); testleri yanında
   oyun/              oyunun saf mantığı: bölge tablosu (bolgeler.ts), görev tabloları, seçenekler,
-                     Bukalemun Koyu'nun (koy.ts) ve dükkânın (dukkan.ts) durumu (indirgeyici),
+                     Bukalemun Koyu'nun (koy.ts), dükkânın (dukkan.ts) ve bahçenin (bahce.ts)
+                     durumu (indirgeyici),
                      cihazdaki ilerleme (ilerleme.ts:
                      kayıt, kilitler, Sözlük kartları); testleri yanında
   motor/             biçimbilim motoru: saf TypeScript, genel kapısı index.ts; testleri yanında;
-                     ünsüz sınırı sinir.ts'te (sinirSecenekleri)
+                     ünsüz sınırı sinir.ts'te (sinirSecenekleri), ek sırası sira.ts'te
+                     (ekSirasiHatasi)
   denetim/           Biçim Denetim Sayfası (denetim.html'in girişi, verisi, testleri)
   gorsel/            görsel dil: çizim geometrisi (cizim.ts), ünsüz karosu (karo.ts, Karo.tsx),
-                     bukalemunun kılığı (kilik.ts), belirteçler (tema.css), karakter
-                     bileşenleri; testleri yanında
+                     ağaç (agac.ts, Agac.tsx), cep (cep.ts), bukalemunun kılığı (kilik.ts),
+                     belirteçler (tema.css), karakter bileşenleri; testleri yanında
   galeri/            Karakter Galerisi (galeri.html'in girişi, örnekleri, testleri)
 icerik/              içerik CSV dosyaları (ekler.csv: ek envanteri; kokler.csv: kök sözlüğü;
                      bolgeler.csv: adanın bölgeleri; gorevler/: bölgelerin görev tabloları,
-                     bukalemun-koyu.csv ve fistikci-sahap.csv)
+                     bukalemun-koyu.csv, fistikci-sahap.csv ve kok-bahcesi.csv)
 tests/               altin-bicimler.csv: motorun altın tablosu; neden.csv ve neden-unsuz.csv:
                      yanlış biçimin nedenleri (motorun neden işlevinin sözleşmesi; uyum, gövde
-                     ve ek başı)
+                     ve ek başı); ek-sirasi.csv: ek sırası denetiminin sözleşmesi
 index.html           oyun
 denetim.html         Biçim Denetim Sayfası (ayrı giriş sayfası)
 galeri.html          Karakter Galerisi (ayrı giriş sayfası)
@@ -116,9 +119,10 @@ DESIGN.md  NEXT.md  CLAUDE.md
     üç özellikten üretilir; ağız duygu göstermez; renkler yalnız `src/gorsel/tema.css`'teki
     belirteçlerdendir. `cizim.ts`'teki sayılar ve yollar tuvaldekilerdir, kullanıcının onayı
     olmadan değişmez (`cizim.test.ts` başvuru koduyla karşılaştırır).
-12. **`tests/neden.csv`, `tests/neden-unsuz.csv` ve `icerik/gorevler/*.csv` yalnız kullanıcının
-    onayıyla değişir.**
-    Neden tablosu `neden` işlevinin, görev tabloları oyunun sözleşmesidir: testi geçirmek için
+12. **`tests/neden.csv`, `tests/neden-unsuz.csv`, `tests/ek-sirasi.csv` ve
+    `icerik/gorevler/*.csv` yalnız kullanıcının onayıyla değişir.**
+    Neden tablosu `neden` işlevinin, ek sırası tablosu `ekSirasiHatasi`'nın, görev tabloları
+    oyunun sözleşmesidir: testi geçirmek için
     satır değiştirilmez, silinmez, eklenmez. Bir satır yanlış görünürse iş durur ve
     kullanıcıya sorulur. Görev tablosunda doğru biçim yazılmaz; her zaman motordan gelir.
 13. **`icerik/bolgeler.csv` de yalnız kullanıcının onayıyla değişir.** Bölge tablosu adanın
@@ -126,7 +130,7 @@ DESIGN.md  NEXT.md  CLAUDE.md
     `gorevler` sütunu boş olan bölgenin içeriği henüz yoktur (haritada "hazırlanıyor");
     onları Oturum 7 (Fıstıkçı Şahap'ın Dükkânı), 8 (Kök Bahçesi) ve 9 (Uydurukçuklar)
     dolduracak. Testi geçirmek için satır değiştirilmez, silinmez, eklenmez. (Oturum 7'de
-    dükkânın satırı kullanıcının onayıyla doldu.)
+    dükkânın, Oturum 8'de bahçenin satırı kullanıcının onayıyla doldu.)
 14. **Hiçbir veri cihazdan çıkmaz.** İlerleme, Sözlük kartları ve ayarlar yalnız cihazda,
     `localStorage`'da, sürüm numaralı tek anahtarda (`morfemusta.v1`) durur. Sunucuya,
     analitiğe, uzak günlüğe ya da başka bir cihaza gönderilmez; hesap ve eşitleme yok. Depo
@@ -191,6 +195,16 @@ DESIGN.md  NEXT.md  CLAUDE.md
   sütunu isteğe bağlı okur. Görevin tam bir sınırı olmalı (`gorevinSiniri` hata verir). Karonun
   geometrisi `src/gorsel/karo.ts`'tedir, `cizim.ts`'e yazılmadı (oradaki sayılar tuvalinkidir).
   Bölge ekranları `App.tsx`'teki `BOLGE_EKRANLARI`'nda, aynı kabuk özellikleriyle durur.
+- **Kök Bahçesi:** hedef, sepetteki yüzeyler ve gövde kelimeleri motordan gelir
+  (`bahceGorevi`, `src/oyun/bahce.ts`); görevin en az bir yapım, en çok bir çekim eki olmalı ve
+  çekim en sonda (değilse hata). Yanlış seçimin nedeni `meyve` (motorun `ekSirasiHatasi`'ndan)
+  ya da `önce`dir. Kart yalnız gövdeden düşer: ekran `onGorevBitti(gorev, kartEkleri)` ile
+  gövde kelimelerinin eklerini verir, `gorevBitti` onları kart yapar (verilmezse kart görevin
+  kelimesidir). Ağacın geometrisi `src/gorsel/agac.ts`'te, cebinki `cep.ts`'te (saf; koy da
+  kullanır). Sepetin sırası `sepetTohumu` ile sabittir.
+- **Ek sırası:** `ekle`, `olasiBicimler` (ve onları çağıran her şey: `neden`,
+  `sinirSecenekleri`) sırası bozuk dizide hata atar (`göz + PL + LIK`). Kayıttan okunan böyle
+  bir kart atılır (`kartiCoz` hatayı yutar).
 - **Sürükle-bırak:** Pointer Events ve `setPointerCapture`; bukalemun düğmelerinde
   `touch-action: none`. Sürüklemenin sonundaki tıklama seçim sayılmaz; klavyenin tıklaması
   (`detail` 0) hiç yutulmaz. Uçtan uca testte fareyle `page.mouse`, parmakla CDP

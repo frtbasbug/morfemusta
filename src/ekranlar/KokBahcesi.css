@@ -1,0 +1,371 @@
+/* Kök Bahçesi. Renkler, çizgiler ve yazı tipleri yalnız tema.css'teki belirteçlerden
+   (DESIGN.md, "Üç kural"; kurallar.test.ts denetler). Degrade, bulanıklık ve gölge yok. Kalın
+   ve ince renkleri yalnız ek yazılarında (halkada, meyvede, kartta) ve bukalemunlarda durur;
+   ağaç --govde ve --yaprak renklerindedir. Hareketler KokBahcesi.tsx'tedir (hareket.ts);
+   buradaki geçişler yalnız hareket azaltma kapalıyken oynar. */
+
+.bahce {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  padding-block:
+    calc(env(safe-area-inset-top) + 0.75rem) calc(env(safe-area-inset-bottom) + 0.75rem);
+  padding-inline: max(calc(env(safe-area-inset-left) + 1rem), calc((100% - 30rem) / 2))
+    max(calc(env(safe-area-inset-right) + 1rem), calc((100% - 30rem) / 2));
+  background: var(--zemin);
+  color: var(--murekkep);
+  font-family: var(--yazi-tipi);
+  line-height: 1.4;
+}
+
+/* Sahne: solda ağaç, sağında tabela, kelimenin o anki hâli ve cep. Ağaç dibe oturur; iki
+   halkalık en yüksek ağacın yeri baştan ayrılmıştır, ağaç büyürken sahne kaymaz. Düşen
+   kartlar ağacın altında, bütün en boyunca bir sırada. */
+.bahce__sahne {
+  flex: 1;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: end;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 13.5rem;
+  padding-block: 0.75rem 0.25rem;
+}
+
+.bahce__agac {
+  display: grid;
+  place-items: end center;
+  padding: 0.25rem;
+  border: 3px dashed transparent;
+  border-radius: 18px;
+  background: none;
+  color: var(--murekkep);
+  font: inherit;
+  cursor: pointer;
+}
+
+/* Bir ek seçiliyken ağaç onu bekler. */
+.bahce__agac--hedef {
+  border-color: var(--murekkep);
+}
+
+/* Sürüklenen ek ağacın üstünde. */
+.bahce__agac--ustunde {
+  outline: 4px solid var(--murekkep);
+  outline-offset: 2px;
+}
+
+.bahce__agac:focus-visible {
+  outline: 3px solid var(--murekkep);
+  outline-offset: 2px;
+}
+
+.bahce__yan {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+  gap: 0.4rem;
+  min-width: 0;
+  padding-top: 0.25rem;
+}
+
+/* Tabela: hedef kelime, düz yazı. */
+.tabela {
+  margin: 0;
+  padding: 0.05rem 0.5rem;
+  border: 2.5px solid var(--murekkep);
+  border-radius: 6px;
+  background: var(--kara);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+/* Kelimenin o anki hâli: göz, gözlük, gözlükçü ... */
+.bahce__kelime {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+/* Gövdeden düşen kartlar: bu ağaçta kurulan gövde kelimeleri, sırayla, ağacın dibinde. */
+.bahce__kartlar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 0.35rem 0.4rem;
+  margin: 0;
+  padding: 0.35rem 0 0.25rem;
+  list-style: none;
+}
+
+.bahce__kart-yeri {
+  display: grid;
+  justify-items: start;
+}
+
+.bahce-karti {
+  display: inline-block;
+  padding: 0.1rem 0.45rem 0.15rem;
+  border: 2.5px solid var(--murekkep);
+  border-radius: 10px;
+  background: var(--zemin);
+}
+
+.bahce-karti .sonuc-kelime {
+  font-size: 1.25rem;
+}
+
+/* -CIk küçültür: kart küçük. Yazı 18px'in altına inmez (ince renk üstünde en küçük boy). */
+.bahce-karti--kucuk {
+  padding: 0 0.25rem 0.05rem;
+  border-width: 2px;
+  border-radius: 6px;
+}
+
+.bahce-karti--kucuk .sonuc-kelime {
+  font-size: 1.125rem;
+}
+
+/* Önceki gövdenin küçük kartı: -lI katar, yeni kartın üstüne konur; -sIz eksiltir, silinir
+   ve yerinde kesikli boş çerçeve kalır. */
+.bahce-karti__onceki {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  margin: 0 0 -0.55rem 0.6rem;
+  padding: 0 0.25rem;
+  border: 2px solid var(--murekkep);
+  border-radius: 6px;
+  background: var(--zemin);
+}
+
+.bahce-karti__onceki-yazi {
+  display: block;
+}
+
+.bahce-karti__onceki .kok-yazisi {
+  font-size: 1.125rem;
+}
+
+.bahce-karti__onceki .unlu-etiketi {
+  font-size: 1em;
+}
+
+.bahce-karti__onceki--silindi {
+  border-style: dashed;
+}
+
+.bahce-karti__onceki--silindi .bahce-karti__onceki-yazi {
+  visibility: hidden;
+}
+
+/* Meyvenin erittiği taş: son halkanın son sesi bir karo. */
+.bahce__yuva {
+  display: inline-block;
+  width: 1.4em;
+  height: 1.4em;
+  vertical-align: middle;
+}
+
+.bahce__yuva .karo {
+  width: 100%;
+  height: 100%;
+}
+
+/* Cep: -(I)m meyveyi cebe koyar. Cebin önü meyvenin altını örter. */
+.bahce__cep {
+  position: relative;
+  width: 6.5rem;
+  height: 3.75rem;
+  margin-top: auto;
+}
+
+.bahce__cep-on {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2.25rem;
+  overflow: visible;
+}
+
+.bahce__cep-govde {
+  fill: var(--zemin);
+  stroke: var(--murekkep);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.bahce__cep-dikis {
+  fill: none;
+  stroke: var(--ayrac);
+  stroke-width: 2;
+  stroke-dasharray: var(--kesik-cizgi);
+  vector-effect: non-scaling-stroke;
+}
+
+.bahce__cep-yuva {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 1.5rem;
+  translate: -50% 0;
+}
+
+.bahce__alt {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 0.5rem;
+  min-height: 4.75rem;
+}
+
+.bahce__neden {
+  display: grid;
+  justify-items: center;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.bahce__cumle {
+  max-width: 21rem;
+  margin: 0;
+  font-size: 1.2rem;
+  line-height: 1.35;
+}
+
+/* Gövdenin sonu değişti: kalemlik → kalemliğim. */
+.bahce__degisim {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.bahce__dugme {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0 1.5rem;
+  border: 2.5px solid var(--murekkep);
+  border-radius: 999px;
+  background: var(--murekkep);
+  color: var(--zemin);
+  font: inherit;
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.bahce__dugme:focus-visible {
+  outline: 3px solid var(--murekkep);
+  outline-offset: 4px;
+}
+
+/* Sepet: ekler bukalemun. Bukalemun ek yazısıyla birlikte ölçeklenir; 0.9'dan (7.425rem)
+   küçük çizilmez, ince rengin üstünde yazı 18px'in altına inmesin (tema.css). Sığmayan
+   dar ekranda satır kırılır. Sepetin ağzı mürekkep bir çizgidir. */
+.sepet {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem 0.75rem;
+  margin: 0;
+  padding: 0.5rem 0 0.4rem;
+  border-bottom: 3px solid var(--murekkep);
+  border-radius: 0 0 18px 18px;
+  list-style: none;
+}
+
+.sepet__yer {
+  display: grid;
+  width: calc(7.425rem + 6px);
+}
+
+.sepet__ek {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 3px dashed transparent;
+  border-radius: 16px;
+  background: none;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.sepet__ek .bukalemun {
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+}
+
+.sepet__ek[aria-pressed='true'] {
+  border-color: var(--murekkep);
+}
+
+.sepet__ek[aria-disabled='true'] {
+  cursor: default;
+}
+
+.sepet__ek:focus-visible {
+  outline: 3px solid var(--murekkep);
+  outline-offset: 2px;
+}
+
+.sepet__ek--tasiniyor,
+.sepet__ek--etkin {
+  z-index: 5;
+  cursor: grabbing;
+}
+
+/* Alçak ekranda (360×640 ve 320×568 gibi) boşluklar daralır: ağaç, kartlar ve sepet
+   kaydırmadan birlikte görünsün. Bukalemunlar küçülmez (en az 0.9). */
+@media (max-height: 44rem) {
+  .bahce {
+    padding-block:
+      calc(env(safe-area-inset-top) + 0.5rem) calc(env(safe-area-inset-bottom) + 0.5rem);
+  }
+
+  .bahce__sahne {
+    padding-block: 0.4rem 0;
+  }
+
+  .bahce__alt {
+    min-height: 4.25rem;
+  }
+
+  .bahce__cumle,
+  .bahce__degisim {
+    font-size: 1.1rem;
+  }
+
+  .sepet {
+    padding-block: 0.25rem;
+    row-gap: 0.2rem;
+  }
+}
+
+/* Seçilen ek hafifçe kalkar; yalnız hareket azaltma kapalıyken. Kalkış translate
+   özelliğiyledir: taşıma hareketleri transform'u oynatır, geçiş onlara karışmaz. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-hareket='azalt']) .sepet__ek {
+    transition: translate 150ms ease-out;
+  }
+
+  :root:not([data-hareket='azalt']) .sepet__ek[aria-pressed='true'] {
+    translate: 0 -6px;
+  }
+}

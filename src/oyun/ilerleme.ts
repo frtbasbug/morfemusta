@@ -289,27 +289,40 @@ const ayniKart = (a: SozlukKarti, b: SozlukKarti): boolean =>
  * Görev bitti: görev bölgenin bitenlerine girer, sıradaki görev kalınan yer olur. Kurulan
  * kelime Sözlük'e kart olarak düşer; kelimenin bu bölgeden kartı varsa yeni kart olmaz, yalnız
  * son kurulma anı değişir (akşam ekranı onu da bugün kurulanlar arasında gösterir).
+ *
+ * Kartların ekleri verilirse kartlar onlardır, sırayla: Kök Bahçesi'nde kart yalnız gövdeden
+ * düşer (çiçekçi; çiçekçiler değil). Verilmezse tek kart görevin kelimesidir.
  */
-export function gorevBitti(ilerleme: Ilerleme, bolge: Bolge, gorev: Gorev, simdi: Date): Ilerleme {
+export function gorevBitti(
+  ilerleme: Ilerleme,
+  bolge: Bolge,
+  gorev: Gorev,
+  simdi: Date,
+  kartEkleri: readonly (readonly string[])[] = [gorev.etiketler],
+): Ilerleme {
   const eski = ilerleme.bolgeler[bolge.kimlik]
   const bitenler = [...new Set([...(eski?.bitenler ?? []), gorev.sira])].sort((a, b) => a - b)
   const an = simdi.toISOString()
-  const kart: SozlukKarti = {
-    kelime: ekle(gorev.kok, gorev.etiketler).bicim,
-    kok: gorev.kok,
-    etiketler: [...gorev.etiketler],
-    bolge: bolge.kimlik,
-    tarih: an,
-    sonKurulma: an,
+  let kartlar = ilerleme.kartlar
+  for (const etiketler of kartEkleri) {
+    const kart: SozlukKarti = {
+      kelime: ekle(gorev.kok, etiketler).bicim,
+      kok: gorev.kok,
+      etiketler: [...etiketler],
+      bolge: bolge.kimlik,
+      tarih: an,
+      sonKurulma: an,
+    }
+    const onceki = kartlar.find((k) => ayniKart(k, kart))
+    kartlar = onceki
+      ? kartlar.map((k) => (k === onceki ? { ...k, sonKurulma: an } : k))
+      : [...kartlar, kart]
   }
-  const onceki = ilerleme.kartlar.find((k) => ayniKart(k, kart))
   return {
     ...ilerleme,
     // Sıra 1'den başlar ve birer artar (gorevleriOku): sıradaki görevin yeri bitenin sırasıdır.
     bolgeler: { ...ilerleme.bolgeler, [bolge.kimlik]: { bitenler, kaldigi: gorev.sira } },
-    kartlar: onceki
-      ? ilerleme.kartlar.map((k) => (k === onceki ? { ...k, sonKurulma: an } : k))
-      : [...ilerleme.kartlar, kart],
+    kartlar,
   }
 }
 
@@ -325,8 +338,11 @@ export function ekrandaGorevBitti(
   gorev: Gorev,
   simdi: Date,
   sifirlama: number,
+  kartEkleri?: readonly (readonly string[])[],
 ): Ilerleme {
-  return ilerleme.sifirlama === sifirlama ? gorevBitti(ilerleme, bolge, gorev, simdi) : ilerleme
+  return ilerleme.sifirlama === sifirlama
+    ? gorevBitti(ilerleme, bolge, gorev, simdi, kartEkleri)
+    : ilerleme
 }
 
 /** Bölgeye girilince oynanacak görevin yeri: kalınan görev; tur bittiyse baştan. */

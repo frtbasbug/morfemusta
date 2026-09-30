@@ -102,6 +102,25 @@ describe('yalnız belirteçlerdeki renkler', () => {
   })
 })
 
+describe('Kök Bahçesi: kalın ve ince renkleri yalnız ek yazılarında', () => {
+  it('ağacın ve bahçenin stili kalın ve ince renklerini anmaz; gövde ve yaprak belirteçleri tema.css\'te', () => {
+    const karakterler = stiller['./karakterler.css'] ?? ''
+    const agacKurallari = karakterler.slice(karakterler.indexOf('/* Kök Bahçesi'))
+    expect(agacKurallari).toMatch(/var\(--govde\)/)
+    expect(agacKurallari).toMatch(/var\(--yaprak\)/)
+    for (const metin of [agacKurallari, stiller['../ekranlar/KokBahcesi.css'] ?? '']) {
+      expect(metin).toMatch(/\{[^}]+\}/)
+      expect(metin.match(/--(?:kalin|ince)(?:-zemin)?\b/g) ?? []).toEqual([])
+    }
+    expect(stiller[TEMA]).toContain('--govde: #D9B48F;')
+    expect(stiller[TEMA]).toContain('--yaprak: #A8D5A2;')
+    // Renksiz'de halka ile meyve biçimle ayrılır: gövde ve yaprak da griye döner.
+    const renksiz = /\.renksiz,\s*:root\[data-renkler='renksiz'\]\s*\{([^}]*)\}/.exec(stiller[TEMA] ?? '')?.[1]
+    expect(renksiz).toContain('--govde: var(--renksiz-zemin);')
+    expect(renksiz).toContain('--yaprak: var(--renksiz-zemin);')
+  })
+})
+
 describe('karakterler yalnız koddan üretilir', () => {
   it.each(Object.entries(kodlar))('%s resim dosyası içe aktarmaz', (_dosya, metin) => {
     expect(metin.match(/['"][^'"]+\.(?:svg|png|jpe?g|gif|webp|avif)(?:\?[^'"]*)?['"]/gi) ?? []).toEqual(
