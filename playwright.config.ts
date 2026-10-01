@@ -20,6 +20,9 @@ export default defineConfig({
   use: {
     baseURL: ADRES,
     trace: 'retain-on-failure',
+    // Takılan bir eylem (dokunuş, tıklama) testin bütün süresini beklemesin: 15 saniyede
+    // nedenini yazarak düşer.
+    actionTimeout: 15_000,
   },
   projects: [
     {

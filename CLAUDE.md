@@ -494,5 +494,8 @@ DESIGN.md  NEXT.md  CLAUDE.md
 - **WebKit:** bulut oturumunda Playwright'ın indirme sunucusu kapalı olabilir; o zaman WebKit
   projesi yerelde atlanır (`playwright.config.ts` uyarı yazar), CI koşar. Sunucu açıksa
   `npx playwright install webkit && npx playwright install-deps webkit` yerelde de kurar.
-  WebKit'te `tap()` ekranın altından taşan öğeye kendi kaydırmasında takılır: önce
-  `scrollIntoView` (`e2e/pilot.spec.ts`, `haritayaDon`).
+  Playwright'ın WebKit'teki `tap()`'i (iPhone profili) eyleme hazırlıkta ara sıra takılır (CI'da
+  Haritaya dön ve bukalemunlar): dokunuş `dokun()` ile yazılır (`e2e/yardimcilar.ts`; WebKit'te
+  `click()`, Chromium'da `tap()`). `actionTimeout` 15 sn: takılan eylem testin bütün süresini
+  beklemez. Arka planda inen ses gezinmeyle kesilirse WebKit konsola hata yazar: pilot yolu
+  `pilot.html`'e geçmeden önce seslerin inmesini ve isteklerin bitmesini bekler.

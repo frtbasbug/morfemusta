@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test'
+import { expect, type Locator, type Page } from '@playwright/test'
 
 // Uçtan uca testlerin ortak yardımcıları. Oyun doğru biçimi motordan alır; burada yalnız
 // testlerin beklediği sonuçlar yazılıdır (Bukalemun Koyu'nun on görevi, sırayla).
@@ -62,8 +62,8 @@ export async function koyuAc(sayfa: Page) {
 /** Görevi (0'dan) dokun-dokun doğru oynar; Sıradaki görünene kadar bekler. */
 export async function gorevOyna(sayfa: Page, yer: number) {
   for (const yuzey of DOGRU_YUZEYLER[yer] ?? []) {
-    await bukalemun(sayfa, yuzey).tap()
-    await kart(sayfa).tap()
+    await dokun(bukalemun(sayfa, yuzey))
+    await dokun(kart(sayfa))
   }
   await expect(sonraki(sayfa)).toBeVisible()
 }
@@ -73,7 +73,7 @@ export async function gorevleriOyna(sayfa: Page, ilk: number, son: number) {
   for (let yer = ilk; yer <= son; yer++) {
     await expect(sira(sayfa)).toHaveText(`Görev ${yer + 1} / 10`)
     await gorevOyna(sayfa, yer)
-    await sonraki(sayfa).tap()
+    await dokun(sonraki(sayfa))
   }
 }
 
@@ -168,8 +168,8 @@ export const secilebilir = (oge: ReturnType<Page['locator']>) =>
 export async function dukkanGorevi(sayfa: Page, yer: number) {
   const tur = DUKKAN_KAROLARI[yer] ?? 'taş'
   await secilebilir(karo(sayfa, tur))
-  await karo(sayfa, tur).tap()
-  await dukkanKarti(sayfa).tap()
+  await dokun(karo(sayfa, tur))
+  await dokun(dukkanKarti(sayfa))
   await expect(sonraki(sayfa)).toBeVisible()
 }
 
@@ -177,8 +177,8 @@ export async function dukkanGorevi(sayfa: Page, yer: number) {
 export async function bahceGorevi(sayfa: Page, yer: number) {
   for (const yuzey of BAHCE_EKLERI[yer] ?? []) {
     await secilebilir(bukalemun(sayfa, yuzey))
-    await bukalemun(sayfa, yuzey).tap()
-    await agac(sayfa).tap()
+    await dokun(bukalemun(sayfa, yuzey))
+    await dokun(agac(sayfa))
   }
   await expect(sonraki(sayfa)).toBeVisible()
 }
@@ -188,12 +188,22 @@ export async function uydurukGorevi(sayfa: Page, yer: number) {
   const secim = UYDURUK_SECIMLERI[yer]
   if (!secim) return
   await secilebilir(bukalemun(sayfa, secim.yuzey))
-  await bukalemun(sayfa, secim.yuzey).tap()
-  await yaratik(sayfa).tap()
+  await dokun(bukalemun(sayfa, secim.yuzey))
+  await dokun(yaratik(sayfa))
   if (secim.karo) {
     await secilebilir(karo(sayfa, secim.karo))
-    await karo(sayfa, secim.karo).tap()
-    await yaratik(sayfa).tap()
+    await dokun(karo(sayfa, secim.karo))
+    await dokun(yaratik(sayfa))
   }
   await expect(sonraki(sayfa)).toBeVisible()
+}
+
+/**
+ * Dokunuş: Chromium'da tap, WebKit'te click. Playwright'ın WebKit'teki tap'i (iPhone profili)
+ * ara sıra eyleme hazırlıkta takılıyor (CI'da Haritaya dön ve bukalemunlar); sayfanın kendisi
+ * olağan kayar ve dokunulur (e2e/pilot.spec.ts).
+ */
+export async function dokun(oge: Locator): Promise<void> {
+  if (oge.page().context().browser()?.browserType().name() === 'webkit') await oge.click()
+  else await oge.tap()
 }

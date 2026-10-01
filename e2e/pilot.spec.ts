@@ -7,6 +7,7 @@ import {
   bolge,
   bukalemun,
   disIstekleriTopla,
+  dokun,
   dukkanGorevi,
   dukkanKarti,
   gezinme,
@@ -102,12 +103,61 @@ async function yeniCocuk(sayfa: Page, kod: string) {
   await expect(sayfa.locator('strong[data-cocuk]')).toHaveText(kod.toUpperCase())
 }
 
+/**
+ * Bölgelerin sesleri (ön belleğe girmeyenler) morfemusta-ses önbelleğine inene dek bekler
+ * (calar.ts, bolgeSesleriniIndir; adreste içeriğin sürümü).
+ */
+async function bolgeSesleriInsin(sayfa: Page, bolgeler: readonly string[]) {
+  const liste = JSON.parse(readFileSync('src/ses/ses-listesi.json', 'utf8')) as {
+    metinler: Record<string, { dosya: string; surum: string; bolgeler: string[] }>
+  }
+  const beklenen = [
+    ...new Set(
+      Object.values(liste.metinler)
+        .filter((k) => !k.bolgeler.includes('arayuz') && !k.bolgeler.includes('koy'))
+        .filter((k) => k.bolgeler.some((b) => bolgeler.includes(b)))
+        .map((k) => `/ses/${k.dosya}?v=${k.surum}`),
+    ),
+  ]
+  await expect
+    .poll(
+      () =>
+        sayfa.evaluate(async (adresler) => {
+          const onbellek = await caches.open('morfemusta-ses')
+          const olanlar = (await onbellek.keys()).map((istek) => istek.url)
+          return adresler.filter((a) => !olanlar.some((u) => u.endsWith(a))).length
+        }, beklenen),
+      { timeout: 60_000 },
+    )
+    .toBe(0)
+}
+
+/**
+ * Sayfanın süren isteklerini sayar; `sessiz()` hiçbiri kalmayınca ve yarım saniye yenisi
+ * başlamayınca döner (sesli modda çalınacak seslerin fetch'i de gezinmeyle kesilmesin).
+ */
+function istekSayaci(sayfa: Page) {
+  const suren = new Set<object>()
+  let son = Date.now()
+  const bitti = (istek: object) => {
+    suren.delete(istek)
+    son = Date.now()
+  }
+  sayfa.on('request', (istek) => {
+    suren.add(istek)
+    son = Date.now()
+  })
+  sayfa.on('requestfinished', bitti)
+  sayfa.on('requestfailed', bitti)
+  return {
+    sessiz: () =>
+      expect.poll(() => suren.size === 0 && Date.now() - son >= 500, { timeout: 30_000 }).toBe(true),
+  }
+}
+
 const haritayaDon = async (sayfa: Page) => {
-  const dugmesi = sayfa.getByRole('button', { name: 'Haritaya dön' })
-  // Bahçe'nin 15 kartıyla düğme iPhone 13'te ekranın altından taşar. Playwright'ın WebKit'te
-  // dokunmadan önceki kendi kaydırması o durumda takılıyor (sayfa elle kayar): önce sayfa kayar.
-  await dugmesi.evaluate((oge) => oge.scrollIntoView({ block: 'center' }))
-  await dugmesi.tap()
+  // Bahçe'nin 15 kartıyla düğme iPhone 13'te ekranın altından taşar; sayfa olağan kayar.
+  await dokun(sayfa.getByRole('button', { name: 'Haritaya dön' }))
   await expect(haritaBasligi(sayfa)).toBeVisible()
 }
 
@@ -122,6 +172,7 @@ test.describe('pilot yolu', () => {
     const hatalar = hatalariTopla(page)
     const disIstekler = disIstekleriTopla(page, baseURL)
     await sesleriSustur(page)
+    const istekler = istekSayaci(page)
 
     // Ses modu oyunun Ayarlar'ından: Sesli mod. Yeni çocuk ayarlara dokunmaz.
     await page.goto('./#/ayarlar')
@@ -136,55 +187,58 @@ test.describe('pilot yolu', () => {
     await expect(haritaBasligi(page)).toBeVisible()
 
     // Bukalemun Koyu: 1. görevde önce ler (yanlış), sonra on görev.
-    await bolge(page, 'Bukalemun Koyu').tap()
-    await bukalemun(page, 'ler').tap()
-    await kart(page).tap()
+    await dokun(bolge(page, 'Bukalemun Koyu'))
+    await dokun(bukalemun(page, 'ler'))
+    await dokun(kart(page))
     await expect(page.locator('.neden__cumle')).toBeVisible()
     await gorevleriOyna(page, 0, 9)
     await expect(page.getByRole('heading', { level: 1, name: 'Koyda akşam oldu' })).toBeVisible()
     await haritayaDon(page)
 
     // Fıstıkçı Şahap'ın Dükkânı: 1. görevde taş (yanlış: kitapım).
-    await bolge(page, 'Dükkânı').tap()
+    await dokun(bolge(page, 'Dükkânı'))
     await secilebilir(karo(page, 'taş'))
-    await karo(page, 'taş').tap()
-    await dukkanKarti(page).tap()
+    await dokun(karo(page, 'taş'))
+    await dokun(dukkanKarti(page))
     await expect(page.locator('.dukkan__cumle')).toHaveText('Ek ünlüyle başlayınca p yumuşar: b olur.')
     for (let yer = 0; yer < 10; yer++) {
       await dukkanGorevi(page, yer)
-      await sonraki(page).tap()
+      await dokun(sonraki(page))
     }
     await expect(page.getByRole('heading', { level: 1, name: 'Dükkânda akşam oldu' })).toBeVisible()
     await haritayaDon(page)
 
     // Kök Bahçesi: 1. ağaçta önce ler (meyvenin üstüne gövde çıkmaz).
-    await bolge(page, 'Kök Bahçesi').tap()
+    await dokun(bolge(page, 'Kök Bahçesi'))
     await secilebilir(bukalemun(page, 'ler'))
-    await bukalemun(page, 'ler').tap()
-    await agac(page).tap()
+    await dokun(bukalemun(page, 'ler'))
+    await dokun(agac(page))
     await expect(page.locator('.bahce__neden')).toContainText('Meyvenin üstüne gövde çıkmaz: önce çi.')
     for (let yer = 0; yer < 10; yer++) {
       await bahceGorevi(page, yer)
-      await sonraki(page).tap()
+      await dokun(sonraki(page))
     }
     await expect(page.getByRole('heading', { level: 1, name: 'Bahçede akşam oldu' })).toBeVisible()
     await haritayaDon(page)
 
     // Uydurukçuklar'ın 1. turu: 1. görevde ler (yanlış: fıngıller).
-    await bolge(page, 'Uydurukçuklar').tap()
+    await dokun(bolge(page, 'Uydurukçuklar'))
     await secilebilir(bukalemun(page, 'ler'))
-    await bukalemun(page, 'ler').tap()
-    await yaratik(page).tap()
+    await dokun(bukalemun(page, 'ler'))
+    await dokun(yaratik(page))
     await expect(page.locator('.uyduruk__neden')).toBeVisible()
     for (let yer = 0; yer < 10; yer++) {
       await uydurukGorevi(page, yer)
-      await sonraki(page).tap()
+      await dokun(sonraki(page))
     }
     await expect(
       page.getByRole('heading', { level: 1, name: 'Uydurukçuklarda akşam oldu' }),
     ).toBeVisible()
 
-    // pilot.html: çocuk başına özet.
+    // pilot.html: çocuk başına özet. Önce bölgelerin arka planda inen sesleri biter: WebKit
+    // gezinmeyle kesilen fetch'i konsola hata olarak yazar ("access control checks").
+    await bolgeSesleriInsin(page, ['dukkan', 'bahce', 'uyduruk'])
+    await istekler.sessiz()
     await page.goto(PILOT)
     await expect(pilotBasligi(page)).toBeVisible()
     await expect(page.locator('[data-gunluk-sayisi]')).toHaveText('58 deneme, 1 çocuk.')
@@ -370,11 +424,11 @@ test.describe('pilot.html', () => {
     await expect(bolge(page, 'Uydurukçuklar')).toHaveAccessibleName('Uydurukçuklar, Kilitli')
     // Ayarlar kaldı (Renksiz); kartlar silindi.
     await expect(page.locator('html')).toHaveAttribute('data-renkler', 'renksiz')
-    await gezinme(page, 'Sözlük').tap()
+    await dokun(gezinme(page, 'Sözlük'))
     await expect(page.getByText('Sözlüğün henüz boş.')).toBeVisible()
     // Koy baştan.
-    await gezinme(page, 'Harita').tap()
-    await bolge(page, 'Bukalemun Koyu').tap()
+    await dokun(gezinme(page, 'Harita'))
+    await dokun(bolge(page, 'Bukalemun Koyu'))
     await expect(page.locator('.bolge-ustu__sira')).toHaveText('Görev 1 / 10')
   })
 
@@ -383,9 +437,9 @@ test.describe('pilot.html', () => {
   }) => {
     // Kod yok: koyun ilk görevi oynanır, günlük yazılmaz.
     await page.goto('./')
-    await bolge(page, 'Bukalemun Koyu').tap()
-    await bukalemun(page, 'lar').tap()
-    await kart(page).tap()
+    await dokun(bolge(page, 'Bukalemun Koyu'))
+    await dokun(bukalemun(page, 'lar'))
+    await dokun(kart(page))
     await expect(sonraki(page)).toBeVisible()
     expect(await gunlugunSatirlari(page)).toBeNull()
 
@@ -393,9 +447,9 @@ test.describe('pilot.html', () => {
     await yeniCocuk(page, 'P03')
     await page.goto('./?sinif=1')
     await expect(page.locator('html')).toHaveAttribute('data-sinif', 'acik')
-    await bolge(page, 'Bukalemun Koyu').tap()
-    await bukalemun(page, 'ler').tap()
-    await kart(page).tap()
+    await dokun(bolge(page, 'Bukalemun Koyu'))
+    await dokun(bukalemun(page, 'ler'))
+    await dokun(kart(page))
     await expect(page.locator('.neden__cumle')).toBeVisible()
     expect(await gunlugunSatirlari(page)).toEqual({ cocuk: 'P03', satirlar: [] })
     await page.goto(PILOT)
@@ -403,20 +457,20 @@ test.describe('pilot.html', () => {
 
     // Sınıf modu kapalı: yazılır. Kod silinince kapanır, satır kalır.
     await page.goto('./?sinif=0')
-    await bolge(page, 'Bukalemun Koyu').tap()
-    await bukalemun(page, 'lar').tap()
-    await kart(page).tap()
+    await dokun(bolge(page, 'Bukalemun Koyu'))
+    await dokun(bukalemun(page, 'lar'))
+    await dokun(kart(page))
     await expect(sonraki(page)).toBeVisible()
     expect((await gunlugunSatirlari(page))?.satirlar).toHaveLength(1)
     await page.goto(PILOT)
     await dugme(page, 'Kodu sil').click()
     await expect(page.locator('.pilot__durum')).toContainText('Günlük kapalı: çocuk kodu yok.')
     await page.goto('./')
-    await bolge(page, 'Bukalemun Koyu').tap()
+    await dokun(bolge(page, 'Bukalemun Koyu'))
     // Kalınan yer: 2. görev (ev); lar yanlıştır.
     await expect(page.locator('.bolge-ustu__sira')).toHaveText('Görev 2 / 10')
-    await bukalemun(page, 'lar').tap()
-    await kart(page).tap()
+    await dokun(bukalemun(page, 'lar'))
+    await dokun(kart(page))
     await expect(page.locator('.neden__cumle')).toBeVisible()
     expect(await gunlugunSatirlari(page)).toMatchObject({ cocuk: null, satirlar: [{ cocuk: 'P03' }] })
   })
@@ -483,9 +537,9 @@ test.describe('pilot.html', () => {
     })
     await yeniCocuk(page, 'P05')
     await page.goto('./')
-    await bolge(page, 'Bukalemun Koyu').tap()
-    await bukalemun(page, 'lar').tap()
-    await kart(page).tap()
+    await dokun(bolge(page, 'Bukalemun Koyu'))
+    await dokun(bukalemun(page, 'lar'))
+    await dokun(kart(page))
     await expect(sonraki(page)).toBeVisible()
     await page.goto(PILOT)
     await dugme(page, 'Kopyala').click()
@@ -511,11 +565,11 @@ test.describe('pilot.html', () => {
     }, GUNLUK)
     const hatalar = hatalariTopla(page)
     await page.goto('./')
-    await bolge(page, 'Bukalemun Koyu').tap()
-    await bukalemun(page, 'lar').tap()
-    await kart(page).tap()
+    await dokun(bolge(page, 'Bukalemun Koyu'))
+    await dokun(bukalemun(page, 'lar'))
+    await dokun(kart(page))
     await expect(sonraki(page)).toBeVisible()
-    await sonraki(page).tap()
+    await dokun(sonraki(page))
     await expect(page.locator('.bolge-ustu__sira')).toHaveText('Görev 2 / 10')
     expect(await page.evaluate((a) => localStorage.getItem(a), DURMA)).not.toBeNull()
     expect(await gunlugunSatirlari(page)).toEqual({ cocuk: 'P06', satirlar: [] })
