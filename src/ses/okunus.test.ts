@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import tablo from '../../icerik/ses-okunus.csv?raw'
-import { HARF_ADLARI, OKUNUS_TABLOSU, okunus, okunusTablosunuOku } from './okunus.ts'
+import {
+  HARF_ADLARI,
+  OKUNUS_TABLOSU,
+  SOZCUK_TABLOSU,
+  okunus,
+  okunusTablosunuOku,
+  sozcukOkunuslari,
+  sozcukTablosunuOku,
+} from './okunus.ts'
 
 describe('okunuş: tek harf adıyla söylenir', () => {
   it.each([
@@ -52,5 +60,26 @@ describe('okunuş: tek harf adıyla söylenir', () => {
     expect(OKUNUS_TABLOSU).toBeInstanceOf(Map)
     expect(() => okunusTablosunuOku('metin,okunus\nat,\n')).toThrow('2. satır')
     expect(() => okunusTablosunuOku('metin,okunus\nat,at\nat,et\n')).toThrow('3. satır')
+  })
+})
+
+describe('sözcük tablosu (icerik/ses-sozcuk.csv): sözcüğün IPA okunuşu', () => {
+  it('onaylı ilk satır: Bukalemun, bukaleˈmun', () => {
+    expect(SOZCUK_TABLOSU).toEqual([{ sozcuk: 'Bukalemun', ipa: 'bukaleˈmun' }])
+  })
+
+  it('yalnız bütün sözcük eşleşir; büyük-küçük harf tablodaki gibi', () => {
+    const bukalemun = [{ sozcuk: 'Bukalemun', ipa: 'bukaleˈmun' }]
+    expect(sozcukOkunuslari('Bukalemun Koyu')).toEqual(bukalemun)
+    expect(sozcukOkunuslari('Önce Bukalemun Koyu bitmeli.')).toEqual(bukalemun)
+    expect(sozcukOkunuslari('Bukalemunlar geldi')).toEqual([])
+    expect(sozcukOkunuslari('bukalemun')).toEqual([])
+    expect(sozcukOkunuslari('Kök Bahçesi')).toEqual([])
+  })
+
+  it('boş alan, iki kez yazılan ya da birden çok sözcük hata verir', () => {
+    expect(() => sozcukTablosunuOku('sozcuk,ipa\nat,\n')).toThrow('2. satır')
+    expect(() => sozcukTablosunuOku('sozcuk,ipa\nat,at\nat,et\n')).toThrow('3. satır')
+    expect(() => sozcukTablosunuOku('sozcuk,ipa\nKök Bahçesi,x\n')).toThrow('tek sözcük')
   })
 })

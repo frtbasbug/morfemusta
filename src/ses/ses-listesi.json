@@ -30,12 +30,18 @@
   "Bukalemun Koyu": {
    "dosya": "c998a683afbe.mp3",
    "okunus": "Bukalemun Koyu",
+   "sozcukler": [
+    {
+     "sozcuk": "Bukalemun",
+     "ipa": "bukaleˈmun"
+    }
+   ],
    "hiz": 0.9,
    "bolgeler": [
     "arayuz"
    ],
-   "boyut": 5280,
-   "surum": "7b2a85e523ba"
+   "boyut": 5184,
+   "surum": "9a07717c265f"
   },
   "Burası hazırlanıyor. Yakında açılacak.": {
    "dosya": "b6f8c47ace24.mp3",
@@ -220,12 +226,18 @@
   "a düz, u yuvarlak. Yuvarlaklıkları uyuşmuyor. Bukalemun en yakın ünlüye bakar.": {
    "dosya": "d95e127bf3de.mp3",
    "okunus": "a düz, u yuvarlak. Yuvarlaklıkları uyuşmuyor. Bukalemun en yakın ünlüye bakar.",
+   "sozcukler": [
+    {
+     "sozcuk": "Bukalemun",
+     "ipa": "bukaleˈmun"
+    }
+   ],
    "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 26880,
-   "surum": "c278c47385ed"
+   "boyut": 27072,
+   "surum": "f65df17a3e19"
   },
   "a kalın ve düz, ü ince ve yuvarlak. İkisi de uyuşmuyor.": {
    "dosya": "a750071fbbd2.mp3",
@@ -240,12 +252,18 @@
   "a kalın ve düz, ü ince ve yuvarlak. İkisi de uyuşmuyor. Bukalemun en yakın ünlüye bakar.": {
    "dosya": "42aecbe7fcf1.mp3",
    "okunus": "a kalın ve düz, ü ince ve yuvarlak. İkisi de uyuşmuyor. Bukalemun en yakın ünlüye bakar.",
+   "sozcukler": [
+    {
+     "sozcuk": "Bukalemun",
+     "ipa": "bukaleˈmun"
+    }
+   ],
    "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 27840,
-   "surum": "7ecd851222a6"
+   "boyut": 28896,
+   "surum": "b0b45498e27b"
   },
   "a kalın, e ince. Kalınlıkları uyuşmuyor.": {
    "dosya": "4739a4f7f5bb.mp3",
@@ -271,12 +289,18 @@
   "a kalın, i ince. Kalınlıkları uyuşmuyor. Bukalemun en yakın ünlüye bakar.": {
    "dosya": "fb7ba39702ba.mp3",
    "okunus": "a kalın, i ince. Kalınlıkları uyuşmuyor. Bukalemun en yakın ünlüye bakar.",
+   "sozcukler": [
+    {
+     "sozcuk": "Bukalemun",
+     "ipa": "bukaleˈmun"
+    }
+   ],
    "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 24384,
-   "surum": "4c5a97e7e536"
+   "boyut": 24000,
+   "surum": "a128e1a71e56"
   },
   "at": {
    "dosya": "27e90dfa57c3.mp3",
@@ -6091,12 +6115,18 @@
   "Önce Bukalemun Koyu bitmeli.": {
    "dosya": "051978b3eef5.mp3",
    "okunus": "Önce Bukalemun Koyu bitmeli.",
+   "sozcukler": [
+    {
+     "sozcuk": "Bukalemun",
+     "ipa": "bukaleˈmun"
+    }
+   ],
    "hiz": 0.9,
    "bolgeler": [
     "arayuz"
    ],
    "boyut": 8256,
-   "surum": "710c4c1fed4a"
+   "surum": "489f4fe08469"
   },
   "Önce Fıstıkçı Şahap'ın Dükkânı bitmeli.": {
    "dosya": "a61149fcc9b2.mp3",
@@ -6931,8 +6961,14 @@
    "ad": "yavas",
    "metin": "Bukalemun Koyu",
    "okunus": "Bukalemun Koyu",
+   "sozcukler": [
+    {
+     "sozcuk": "Bukalemun",
+     "ipa": "bukaleˈmun"
+    }
+   ],
    "dosya": "ornek/yavas-1.mp3",
-   "surum": "7b2a85e523ba"
+   "surum": "a1a3f38ca8b7"
   },
   {
    "hiz": 0.9,
@@ -6971,8 +7007,14 @@
    "ad": "olagan",
    "metin": "Bukalemun Koyu",
    "okunus": "Bukalemun Koyu",
+   "sozcukler": [
+    {
+     "sozcuk": "Bukalemun",
+     "ipa": "bukaleˈmun"
+    }
+   ],
    "dosya": "ornek/olagan-1.mp3",
-   "surum": "2d6097a4b283"
+   "surum": "b9d3855c633a"
   },
   {
    "hiz": 1.0,
