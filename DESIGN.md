@@ -592,7 +592,8 @@ ne olduğunu okumadan gösterir.
 - **Ses:** Sesler yapay zekâyla, Google Cloud Text-to-Speech'in Chirp 3: HD Callirrhoe sesiyle
   önceden üretildi; çocuk için biraz yavaş (0.9). Kodun MIT lisansı ses dosyalarını kapsamaz.
   Gemini sesleri kullanılmaz (Gemini API'nin şartları 18 yaş altına yönelik uygulamalarda
-  kullanımı yasaklıyor). Bütün sesler aynı yükseklikte, baştaki ve sondaki sessizlik kırpılmış.
+  kullanımı yasaklıyor). Bütün sesler aynı yükseklikte, baştaki ve sondaki sessizlik kırpılmış; iç duraklama en çok
+  yarım saniye (çocuk beklemesin).
   Biçim MP3, mono, 24 kHz, 32 kbit/s (iOS Safari dahil her tarayıcıda çalar).
 - **Ayar** (Ayarlar'da *Ses*):
 

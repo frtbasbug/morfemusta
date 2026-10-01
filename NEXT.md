@@ -75,6 +75,26 @@ kalanlar aşağıda.
   başlığından okunur, beklenen hız değilse betik durur. Sesler yeniden üretildi. Birim testi
   her MP3'ün başlığını okur (eski 22.05 kHz'lik dosyayla kırmızı olduğu denendi).
 
+### Birleşmeden sonra düzeltilen (kullanıcının incelemesi: uzun iç sessizlik)
+
+- **Sorun:** yaklaşık 20 seste iç sessizlik 0.8–1.9 sn'ydi; çoğu uyum cümleleri (*Kalınlıkları
+  uyuşmuyor.*, 11'i Koy'da), *pe sert, ekin başı da sert olur: te.* de öyle.
+- **Üreteç:** kırpmadan sonra PCM üzerinde 0.5 sn'den uzun her iç sessizlik 0.5 sn'ye iner
+  (ortası atılır; sesin sönüşü ve başlayışı kalır). Sessizlik: 10 ms'lik pencerenin RMS'i
+  sesin tepesinin 35 dB altı. Baştaki ve sondaki sessizliğin kırpılması da artık bu göreli
+  eşikle (önceden sabit genlik 300); denetim aynı ölçüyle bakar.
+- **Denetim:** baştaki ya da sondaki sessizlik 0.3 sn'yi, iç sessizlik 0.6 sn'yi geçerse ses
+  yeniden istenir, yine olmazsa üreteç hata verir (dosya yazılmaz, çıkış kodu 1).
+- **Yalnız kurala uymayanlar yeniden üretildi** (`--yeniden DOSYA`): mevcut MP3'ler ffmpeg'le
+  çözülüp aynı ölçüyle tarandı (geçici betik; ffmpeg üretecin bağımlılığı değil). 57 dosya:
+  49'unda iç sessizlik 0.5 sn'den uzundu (0.52–1.88), 8 tek kelimede baştaki sessizlik
+  0.38–0.77 sn'ydi (*datipüm*, *çevicim*, *cik* ...). 55'i oyunun sesi, 2'si örnek (*yavas-2*,
+  *yavas-4*). Öteki 643 dosya bayt bayt aynı kaldı (SHA-1 ile denetlendi). Google'a 2 117
+  karakter gönderildi. Toplam 690 ses 3.09 MB; ön bellekte 573 KB; örnekler 102 KB.
+- **Sonra yeniden ölçüldü:** baştaki ve sondaki sessizlik her dosyada en çok 0.13 sn; iç
+  sessizlik en çok 0.60 sn (MP3'ten çözülünce 15 dosyada 0.51–0.60: kodlamanın payı, denetimin
+  0.6 sınırı içinde).
+
 ### Oturumda seçilen küçük ayrıntılar (kullanıcıya ayrıca sorulmadı)
 
 - **Kısa parçada boş ses:** Chirp *pe*, *lik* gibi tek heceli parçalarda ara sıra sessiz ses
