@@ -101,6 +101,24 @@ kalanlar aşağıda.
   sessizlik en çok 0.60 sn (MP3'ten çözülünce 15 dosyada 0.51–0.60: kodlamanın payı, denetimin
   0.6 sınırı içinde).
 
+### Birleşmeden sonra eklenen (kullanıcının isteği: sözcük okunuşu)
+
+- **Sorun:** Chirp *Bukalemun*'daki ilk a'yı uzatıyordu (*Bukaaalemun*).
+- **Sözcük tablosu** (`icerik/ses-sozcuk.csv`, `sozcuk,ipa`; yalnız kullanıcının onayıyla
+  değişir, CLAUDE.md 16. kural). İlk satır (onaylı): *Bukalemun*, `bukaleˈmun`. Tablodaki sözcük
+  okunuşta bütün sözcük olarak geçiyorsa (`sozcukOkunuslari`, `src/ses/okunus.ts`; büyük-küçük
+  harf tablodaki gibi, *Bukalemunlar*'da eşleşmez) Cloud Text-to-Speech'e
+  `input.customPronunciations` (`PHONETIC_ENCODING_IPA`) ile gider. Google alanı Chirp 3: HD'de
+  kabul etti (deneme isteği HTTP 200).
+- **Sesin kimliği:** `ses-listesi.json`'daki kayda `sozcukler` yazılır (yalnız sözcük geçiyorsa);
+  üreteç onu da karşılaştırır, birim testi listeyi tabloyla eşler. Tablo değişince yalnız o
+  sözcüğü içeren sesler yeniden üretilir.
+- **Değişen sesler (7):** Bukalemun geçen 5 metin (*Bukalemun Koyu*, *Önce Bukalemun Koyu
+  bitmeli.*, *Bukalemun en yakın ünlüye bakar.* ile biten üç uyum cümlesi) ve ses.html'deki
+  *Bukalemun Koyu* örneği iki hızda (`ornek/yavas-1`, `ornek/olagan-1`). Sessizlik denetiminden
+  geçtiler. Öteki 693 dosya bayt bayt aynı (SHA-1). Google'a 309 karakter gönderildi. İkinci
+  çalıştırma hiçbir şey üretmedi.
+
 ### Oturumda seçilen küçük ayrıntılar (kullanıcıya ayrıca sorulmadı)
 
 - **Kısa parçada boş ses:** Chirp *pe*, *lik* gibi tek heceli parçalarda ara sıra sessiz ses

@@ -92,7 +92,8 @@ src/
 icerik/              içerik CSV dosyaları (ekler.csv: ek envanteri; kokler.csv: kök sözlüğü;
                      bolgeler.csv: adanın bölgeleri; yasakli-diziler.csv: uydurma kökte
                      yasak diziler; emoji.csv: köklerin emojisi; ses-okunus.csv: yanlış okunan
-                     metinlerin okunuşu; gorevler/: bölgelerin görev tabloları,
+                     metinlerin okunuşu; ses-sozcuk.csv: yanlış okunan sözcüklerin IPA
+                     okunuşu; gorevler/: bölgelerin görev tabloları,
                      bukalemun-koyu.csv, fistikci-sahap.csv, kok-bahcesi.csv ve uydurukcuklar.csv)
 tests/               altin-bicimler.csv: motorun altın tablosu; neden.csv ve neden-unsuz.csv:
                      yanlış biçimin nedenleri (motorun neden işlevinin sözleşmesi; uyum, gövde
@@ -168,9 +169,11 @@ DESIGN.md  NEXT.md  CLAUDE.md
     Testi geçirmek için kök ya da dizi değiştirilmez, silinmez, eklenmez. Üreteç
     (`scripts/uydurma-uret.mjs`) yalnız aday dosyası yazar; oyuna hiçbir kök onaysız girmez.
 
-16. **`icerik/emoji.csv` ve `icerik/ses-okunus.csv` yalnız kullanıcının onayıyla değişir.** Emoji
-    tablosu köklerin resmidir (her kökü sözlükte; `emoji.test.ts` denetler); okunuş tablosu yanlış
-    okunan metnin okunuşudur, üreteç onu kullanır. Testi geçirmek için satır değiştirilmez,
+16. **`icerik/emoji.csv`, `icerik/ses-okunus.csv` ve `icerik/ses-sozcuk.csv` yalnız kullanıcının
+    onayıyla değişir.** Emoji tablosu köklerin resmidir (her kökü sözlükte; `emoji.test.ts`
+    denetler); okunuş tablosu yanlış okunan metnin okunuşudur, üreteç onu kullanır; sözcük tablosu
+    yanlış okunan sözcüğün IPA okunuşudur (`sozcuk,ipa`), üreteç onu geçtiği her metinde
+    Cloud Text-to-Speech'e `customPronunciations` olarak verir. Testi geçirmek için satır değiştirilmez,
     silinmez, eklenmez. Bir satır yanlış görünürse iş durur ve kullanıcıya sorulur.
 
 ## Adlandırma
@@ -254,7 +257,9 @@ DESIGN.md  NEXT.md  CLAUDE.md
   `metinler.ts`'e girer, sonra sesi üretilir; `metinler.test.ts` her metnin
   `ses-listesi.json`'da dosyası olduğunu ve okunuşunun güncel olduğunu denetler. Okunuş
   (`okunus.ts`): tek harf adıyla (p → pe, ğ → yumuşak ge), ok ve tire okunmaz,
-  `icerik/ses-okunus.csv`'deki okunuş önce gelir. Çalar (`calar.ts`): tek `<audio>`, yeni çalma
+  `icerik/ses-okunus.csv`'deki okunuş önce gelir. Sözcük okunuşu (`sozcukOkunuslari`):
+  `icerik/ses-sozcuk.csv`'deki sözcük okunuşta bütün sözcük olarak geçiyorsa (büyük-küçük harf
+  tablodaki gibi) IPA'sı listeye (`sozcukler`) ve isteğe girer. Çalar (`calar.ts`): tek `<audio>`, yeni çalma
   eskisini keser; dosya fetch'le blob olarak alınır (Range isteği yok); listede olmayan metin
   için istek gitmez; hata yutulur, konsola yazılmaz. iOS'ta ilk dokunuşta sessiz bir WAV çalınır
   (`sesiAc`, `main.tsx`). Ayar (`ayarlar.ses`: kapali / dokununca / sesli, varsayılan dokununca)
@@ -287,8 +292,9 @@ DESIGN.md  NEXT.md  CLAUDE.md
   ses dosyalarını yeniden üretir: Chirp her üretimde biraz farklı okur, onaylanmış sesler
   değişmesin. Listede olmayan bayat ses varsa hiç istek gitmeden durur. Boş, aşırı kısa ya da uzun ses yeniden istenir (Chirp kısa parçada, *pe*, *lik*, ara sıra boş ses verir;
   sonraki denemede sona nokta eklenir); yine olmazsa sonda listelenir. 429 ve 5xx'te beklenip
-  yeniden denenir. Okunuşu, sesi ve hızı değişmeyen metin yeniden üretilmez (`--hepsi` hepsini
-  üretir); listede olmayan dosya silinir. Betik CI'a girmez.
+  yeniden denenir. Okunuşu, sözcüklerinin IPA'sı, sesi ve hızı değişmeyen metin yeniden üretilmez
+  (`--hepsi` hepsini üretir; sözcük tablosu değişince yalnız o sözcüğü içeren sesler yeniden
+  üretilir); listede olmayan dosya silinir. Betik CI'a girmez.
 - **API anahtarı:** yalnız `GOOGLE_TTS_KEY` ortam değişkeninde durur ve `X-Goog-Api-Key`
   başlığıyla gider; depoya, kayda (günlük, çıktı) ve PR'a hiç girmez. **Her commit'ten önce
   `git grep -n "AI[z]a"` boş dönmeli.** Google'a yalnız oyunun kendi metinleri gider; oyun

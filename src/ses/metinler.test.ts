@@ -4,7 +4,7 @@ import { bahceGorevi } from '../oyun/bahce.ts'
 import { sinirCumlesi, uydurukSiniri } from '../oyun/uyduruk.ts'
 import liste from './ses-listesi.json'
 import { BUGUN_KURULANLAR, sesMetinleri } from './metinler.ts'
-import { okunus } from './okunus.ts'
+import { okunus, sozcukOkunuslari } from './okunus.ts'
 
 const gruplar = sesMetinleri()
 const grup = (kimlik: string) => gruplar.find((g) => g.kimlik === kimlik)?.metinler ?? []
@@ -43,7 +43,14 @@ function mp3Ornekleme(adres: string): number {
 
 const kayitlar = liste.metinler as Record<
   string,
-  { dosya: string; okunus: string; bolgeler: string[]; hiz: number; surum: string }
+  {
+    dosya: string
+    okunus: string
+    sozcukler?: { sozcuk: string; ipa: string }[]
+    bolgeler: string[]
+    hiz: number
+    surum: string
+  }
 >
 
 describe('sesMetinleri: oyunun söyleyebileceği her metin, bölge bölge', () => {
@@ -123,6 +130,8 @@ describe('ses-listesi.json: her metnin sesi var', () => {
     expect(dosyaAdlari).toContain(kayit?.dosya)
     // Okunuş değiştiyse (okunuş tablosu, harf adları) ses yeniden üretilmeli.
     expect(kayit?.okunus).toBe(okunus(metin))
+    // Sözcük tablosu sesin kimliğidir: okunuşta geçen sözcüklerin IPA'sı listedekiyle aynı.
+    expect(kayit?.sozcukler ?? []).toEqual(sozcukOkunuslari(okunus(metin)))
   })
 
   it('listedeki her dosya public/ses/ altında; artık dosya yok', () => {
@@ -150,6 +159,23 @@ describe('ses-listesi.json: her metnin sesi var', () => {
     expect([...hizlar]).toEqual([24000])
   })
 
+  it('sözcük tablosu: Bukalemun geçen 5 metinde ve iki örnekte IPA okunuşuyla (bukaleˈmun)', () => {
+    const bukalemunlu = Object.entries(kayitlar).filter(([, k]) => k.sozcukler?.length)
+    expect(bukalemunlu.map(([m]) => m).sort()).toEqual(
+      Object.keys(kayitlar)
+        .filter((m) => /\bBukalemun\b/u.test(m))
+        .sort(),
+    )
+    expect(bukalemunlu).toHaveLength(5)
+    for (const [, k] of bukalemunlu) {
+      expect(k.sozcukler).toEqual([{ sozcuk: 'Bukalemun', ipa: 'bukaleˈmun' }])
+    }
+    expect(liste.ornekler.filter((o) => 'sozcukler' in o).map((o) => o.dosya)).toEqual([
+      'ornek/yavas-1.mp3',
+      'ornek/olagan-1.mp3',
+    ])
+  })
+
   it('okunuş tablosunun iki satırı kullanılıyor: Şahap\'ın → Şahabın', () => {
     expect(kayitlar["Fıstıkçı Şahap'ın Dükkânı"]?.okunus).toBe('Fıstıkçı Şahabın Dükkânı')
     expect(kayitlar["Önce Fıstıkçı Şahap'ın Dükkânı bitmeli."]?.okunus).toBe(
@@ -158,7 +184,14 @@ describe('ses-listesi.json: her metnin sesi var', () => {
   })
 
   it('örnekler: aynı beş cümle iki hızda (0.9 ve 1.0), dosyaları ve sürümleriyle', () => {
-    const ornekler = liste.ornekler
+    const ornekler = liste.ornekler as {
+      hiz: number
+      metin: string
+      okunus: string
+      sozcukler?: { sozcuk: string; ipa: string }[]
+      dosya: string
+      surum: string
+    }[]
     expect(ornekler).toHaveLength(10)
     expect(ornekler.filter((o) => o.hiz === 0.9).map((o) => o.metin)).toEqual(
       ornekler.filter((o) => o.hiz === 1.0).map((o) => o.metin),
@@ -168,6 +201,7 @@ describe('ses-listesi.json: her metnin sesi var', () => {
       expect(ornekDosyalari).toContain(ornek.dosya)
       expect(ornek.surum).toMatch(/^[0-9a-f]{12}$/)
       expect(ornek.okunus).toBe(okunus(ornek.metin))
+      expect(ornek.sozcukler ?? []).toEqual(sozcukOkunuslari(okunus(ornek.metin)))
     }
   })
 })

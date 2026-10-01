@@ -588,7 +588,9 @@ ne olduğunu okumadan gösterir.
   kendisi): *Ek ünlüyle başlayınca p yumuşar: b olur.* → *Ek ünlüyle başlayınca pe yumuşar: be
   olur.* Ok ve tire okunmaz. Yanlış okunan metnin okunuşu `icerik/ses-okunus.csv`'ye yazılır
   (yalnız onayla). Özel adda yazım korunur, söyleyiş yumuşar: *Fıstıkçı Şahap'ın Dükkânı* →
-  *Fıstıkçı Şahabın Dükkânı*.
+  *Fıstıkçı Şahabın Dükkânı*. Yanlış okunan bir sözcüğün IPA okunuşu da
+  `icerik/ses-sozcuk.csv`'ye yazılır (yalnız onayla): *Bukalemun* → /bukaleˈmun/ (Chirp ilk
+  a'yı uzatıyordu: *Bukaaalemun*).
 - **Ses:** Sesler yapay zekâyla, Google Cloud Text-to-Speech'in Chirp 3: HD Callirrhoe sesiyle
   önceden üretildi; çocuk için biraz yavaş (0.9). Kodun MIT lisansı ses dosyalarını kapsamaz.
   Gemini sesleri kullanılmaz (Gemini API'nin şartları 18 yaş altına yönelik uygulamalarda

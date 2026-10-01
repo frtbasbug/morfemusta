@@ -114,12 +114,29 @@ def anahtar():
     return deger
 
 
-def istek(okunus, hiz):
+def girdi(okunus, sozcukler):
+    """İsteğin input alanı: metin ve (varsa) sözcüklerin IPA okunuşu (customPronunciations)."""
+    alan = {'text': okunus}
+    if sozcukler:
+        alan['customPronunciations'] = {
+            'pronunciations': [
+                {
+                    'phrase': s['sozcuk'],
+                    'phoneticEncoding': 'PHONETIC_ENCODING_IPA',
+                    'pronunciation': s['ipa'],
+                }
+                for s in sozcukler
+            ]
+        }
+    return alan
+
+
+def istek(okunus, hiz, sozcukler=()):
     """Tek bir sentez isteği: WAV (LINEAR16) baytları. 429 ve 5xx'te bekleyip yeniden dener."""
     global gonderilen_karakter
     govde = json.dumps(
         {
-            'input': {'text': okunus},
+            'input': girdi(okunus, sozcukler),
             'voice': {'languageCode': DIL, 'name': SES},
             'audioConfig': {
                 'audioEncoding': 'LINEAR16',
@@ -318,7 +335,7 @@ def _ters(ornekler):
     return kopya.tobytes()
 
 
-def uret(okunus, hiz):
+def uret(okunus, hiz, sozcukler=()):
     """MP3 baytları ve sorun (yoksa None). Aşırı kısa, uzun ya da boş ses yeniden istenir."""
     en_az, en_cok = beklenen_sure(okunus, hiz)
     sorun = None
@@ -328,7 +345,7 @@ def uret(okunus, hiz):
         # Chirp kısa parçada (pe, lik) ara sıra boş ses verir; sonraki denemelerde sona nokta
         # eklenir (söyleyiş değişmez, yalnız cümle kapanır).
         gonderilen = okunus if deneme == 0 or okunus[-1] in '.!?:' else okunus + '.'
-        islenmis = isle(wav_ornekleri(istek(gonderilen, hiz)))
+        islenmis = isle(wav_ornekleri(istek(gonderilen, hiz, sozcukler)))
         if islenmis is None:
             sorun = 'boş'
             continue
@@ -382,26 +399,30 @@ def main():
     SES_DIZINI.mkdir(parents=True, exist_ok=True)
     ORNEK_DIZINI.mkdir(parents=True, exist_ok=True)
     okunuslar = {m['metin']: m['okunus'] for m in metinler}
+    sozcuk_haritasi = {m['metin']: m.get('sozcukler', []) for m in metinler}
 
-    # İşler: (yol, okunuş, hız, etiket). Değişmeyenler atlanır. --yeniden verilince yalnız
+    # İşler: (yol, okunuş, hız, etiket, sözcükler). Değişmeyenler atlanır: sesin kimliği okunuş,
+    # ses, hız ve okunuşta geçen sözcüklerin IPA'sıdır (icerik/ses-sozcuk.csv). --yeniden verilince yalnız
     # listedekiler üretilir; listede olmayan bayat ses varsa hiç istek gitmeden durulur.
     isler = []
     bayatlar = []
     for kayit in metinler:
         metin, okunus = kayit['metin'], kayit['okunus']
+        sozcukler = kayit.get('sozcukler', [])
         yol = SES_DIZINI / f'{ozet(metin)}.mp3'
         onceki = eski_metinler.get(metin)
         ayni = (
             not secenekler.hepsi
             and onceki is not None
             and onceki.get('okunus') == okunus
+            and onceki.get('sozcukler', []) == sozcukler
             and onceki.get('hiz') == YAVAS
             and yol.exists()
         )
         if yeniden and not ayni and yol.name not in yeniden:
             bayatlar.append(f'{yol.name}\t{metin}')
         elif not ayni or yol.name in yeniden:
-            isler.append((yol, okunus, YAVAS, metin))
+            isler.append((yol, okunus, YAVAS, metin, sozcukler))
     ornek_kayitlari = []
     for hiz, ad in ((YAVAS, 'yavas'), (OLAGAN, 'olagan')):
         for n, cumle in enumerate(ORNEK_CUMLELER, 1):
@@ -413,13 +434,16 @@ def main():
                 and onceki is not None
                 and onceki.get('metin') == cumle
                 and onceki.get('okunus') == okunuslar[cumle]
+                and onceki.get('sozcukler', []) == sozcuk_haritasi[cumle]
                 and onceki.get('hiz') == hiz
                 and yol.exists()
             )
             if yeniden and not ayni and dosya not in yeniden:
                 bayatlar.append(f'{dosya}\t{cumle} ({hiz})')
             elif not ayni or dosya in yeniden:
-                isler.append((yol, okunuslar[cumle], hiz, f'{cumle} ({hiz})'))
+                isler.append(
+                    (yol, okunuslar[cumle], hiz, f'{cumle} ({hiz})', sozcuk_haritasi[cumle])
+                )
             ornek_kayitlari.append((hiz, ad, cumle, dosya, yol))
 
     if bayatlar:
@@ -436,9 +460,9 @@ def main():
 
     def is_yap(is_):
         nonlocal bitti
-        yol, okunus, hiz, etiket = is_
+        yol, okunus, hiz, etiket, sozcukler = is_
         try:
-            veri, sorun = uret(okunus, hiz)
+            veri, sorun = uret(okunus, hiz, sozcukler)
         except SessizlikHatasi as hata:
             with kilit:
                 hatalar.append((etiket, str(hata)))
@@ -471,6 +495,8 @@ def main():
         liste[metin] = {
             'dosya': dosya,
             'okunus': kayit['okunus'],
+            # Yalnız sözcük tablosundan bir sözcük geçiyorsa yazılır.
+            **({'sozcukler': kayit['sozcukler']} if kayit.get('sozcukler') else {}),
             'hiz': YAVAS,
             'bolgeler': kayit['bolgeler'],
             'boyut': len(veri),
@@ -491,6 +517,7 @@ def main():
                 'ad': ad,
                 'metin': cumle,
                 'okunus': okunuslar[cumle],
+                **({'sozcukler': sozcuk_haritasi[cumle]} if sozcuk_haritasi[cumle] else {}),
                 'dosya': dosya,
                 'surum': hashlib.sha1(veri).hexdigest()[:12],
             }
