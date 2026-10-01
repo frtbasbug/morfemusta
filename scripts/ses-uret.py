@@ -210,10 +210,27 @@ def mp3(ornekler):
     kodlayici = lameenc.Encoder()
     kodlayici.set_bit_rate(BIT_HIZI)
     kodlayici.set_in_sample_rate(ORNEKLEME)
+    # Çıkış hızı açıkça verilir: verilmezse LAME 32 kbit/s'de 22.05 kHz'e indirir.
+    kodlayici.set_out_sample_rate(ORNEKLEME)
     kodlayici.set_channels(1)
     kodlayici.set_quality(2)
     pcm = ornekler.tobytes() if sys.byteorder == 'little' else _ters(ornekler)
     return bytes(kodlayici.encode(pcm) + kodlayici.flush())
+
+
+MP3_HIZLARI = {3: (44100, 48000, 32000), 2: (22050, 24000, 16000), 0: (11025, 12000, 8000)}
+
+
+def mp3_ornekleme(veri):
+    """MP3'ün ilk çerçeve başlığındaki örnekleme hızı (Hz)."""
+    i = 0
+    if veri[:3] == b'ID3':
+        i = 10 + ((veri[6] << 21) | (veri[7] << 14) | (veri[8] << 7) | veri[9])
+    while i + 3 < len(veri) and not (veri[i] == 0xFF and veri[i + 1] & 0xE0 == 0xE0):
+        i += 1
+    if i + 3 >= len(veri):
+        raise ValueError('MP3 çerçevesi yok')
+    return MP3_HIZLARI[(veri[i + 1] >> 3) & 3][(veri[i + 2] >> 2) & 3]
 
 
 def _ters(ornekler):
@@ -344,6 +361,14 @@ def main():
             }
         )
 
+    # Biçim dosyalardan okunur: kodlayıcı hızı değiştirirse liste yalan söylemez.
+    hizlar = {
+        mp3_ornekleme((SES_DIZINI / dosya).read_bytes())
+        for dosya in [k['dosya'] for k in liste.values()] + [o['dosya'] for o in ornekler]
+    }
+    if hizlar != {ORNEKLEME}:
+        sys.exit(f'MP3 örnekleme hızı beklenen değil: {sorted(hizlar)} (beklenen {ORNEKLEME})')
+
     kullanilan = {k['dosya'] for k in liste.values()}
     for eski_dosya in SES_DIZINI.glob('*.mp3'):
         if eski_dosya.name not in kullanilan:
@@ -354,7 +379,7 @@ def main():
             {
                 'ses': SES,
                 'saglayici': SAGLAYICI,
-                'bicim': f'MP3, mono, {ORNEKLEME} Hz, {BIT_HIZI} kbit/s',
+                'bicim': f'MP3, mono, {hizlar.pop()} Hz, {BIT_HIZI} kbit/s',
                 'hizlar': {'yavas': YAVAS, 'olagan': OLAGAN},
                 'metinler': dict(sorted(liste.items())),
                 'ornekler': ornekler,

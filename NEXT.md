@@ -44,10 +44,10 @@ kalanlar aşağıda.
   kısmın RMS'i -20 dBFS (tepe en çok -1 dBFS) → MP3, mono, 24 kHz, 32 kbit/s (`lameenc`). Boş,
   aşırı kısa ya da uzun ses yeniden istenir (en çok 4 kez), yine olmazsa sonda listelenir; 429 ve
   5xx'te üstel bekleme. Dört istek aynı anda. Piper, model indirme ve `.piper/` kalktı.
-- **Bütün sesler yeniden üretildi:** 690 ses, 3.23 MB (Koy 575 KB, Dükkân 201 KB, Bahçe 291 KB,
-  Uydurukçuklar 2.34 MB, arayüz 68 KB); ön belleğe giren (arayüz ve Koy) 75 ses, 643 KB.
-  Örnekler 10 dosya, 112 KB. Google'a 8 411 karakter gönderildi (700 metin; yeniden denemeler
-  dahil). Şüpheli kalan yok.
+- **Bütün sesler yeniden üretildi:** 690 ses, 3.22 MB; ön belleğe giren (arayüz ve Koy) 75 ses,
+  629 KB. Örnekler 10 dosya, 109 KB. Google'a iki üretimde toplam 16 821 karakter gönderildi
+  (8 411 + 8 410; 700'er metin, yeniden denemeler dahil; ikincisi Codex düzeltmesinden sonra).
+  Şüpheli kalan yok.
 - **Örnekler** (`ses.html`): aynı beş cümle (jöle cümlesinin yerine yeni yumuşama cümlesi)
   Callirrhoe'yle 0.9 (oyunun hızı) ve 1.0 (olağan). Adreslerinde sürüm var (`?v=`): yeniden
   üretilen örnek eski önbellekten gelmez.
@@ -57,7 +57,7 @@ kalanlar aşağıda.
 - **Önbellek:** değişiklik gerekmedi. Ön bellekteki seslerin `revision`'ı içeriğin sürümü (yeni
   sesler kendiliğinden iner); öteki bölgelerinki `?v=<sürüm>` ile, eski sürümler bölgeye girişte
   silinir.
-- **Testler:** 2026 birim testi ve 88 uçtan uca test (hepsi yeşil; tür denetimi temiz).
+- **Testler:** 2027 birim testi ve 88 uçtan uca test (hepsi yeşil; tür denetimi temiz).
   - Birim: yeni cümleler (`neden-unsuz`, `dukkan`, `uyduruk`, `okunus`); `ses-listesi.json`'da ses,
     sağlayıcı, hız (0.9), biçim (24 kHz), her kaydın sürümü, dfki izi yok; okunuş tablosunun iki
     satırı kullanılıyor; örnekler (iki hız, dosya, sürüm); Hakkında'da *Chirp 3: HD* ve
@@ -66,6 +66,14 @@ kalanlar aşağıda.
     Uydurukçuklar'da *mömüş* + *de* → *ş sert, ekin başı da sert olur: t.*; *zolku* + *ta* →
     *Ünlüden sonra ekin başı yumuşak kalır: d.*; ses.html'de örneğin adresi sürümlü, eski
     sürümün işareti görünmez.
+
+### PR'dan sonra düzeltilen (Codex'in bulgusu, doğrulandı)
+
+- **MP3'ler 24 kHz değil 22.05 kHz'ti:** `set_in_sample_rate` yalnız girişi söylüyor; LAME
+  32 kbit/s'de çıkışı kendisi 22.05 kHz'e indiriyordu, listede yazan biçim yanlıştı (700
+  dosyanın başlığı okunarak doğrulandı). Artık `set_out_sample_rate(24000)`; `bicim` dosyaların
+  başlığından okunur, beklenen hız değilse betik durur. Sesler yeniden üretildi. Birim testi
+  her MP3'ün başlığını okur (eski 22.05 kHz'lik dosyayla kırmızı olduğu denendi).
 
 ### Oturumda seçilen küçük ayrıntılar (kullanıcıya ayrıca sorulmadı)
 

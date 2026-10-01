@@ -15,6 +15,32 @@ const dosyaAdlari = Object.keys(sesDosyalari).map((yol) => yol.split('/').at(-1)
 const ornekDosyalari = Object.keys(
   import.meta.glob('../../public/ses/ornek/*.mp3', { query: '?url', eager: true }),
 ).map((yol) => `ornek/${yol.split('/').at(-1) ?? ''}`)
+// Dosyaların kendisi (data: adresi, base64): MP3 başlığı okunur.
+const mp3Verileri = import.meta.glob<string>(['../../public/ses/*.mp3', '../../public/ses/ornek/*.mp3'], {
+  query: '?inline',
+  import: 'default',
+  eager: true,
+})
+
+/** MP3'ün ilk çerçeve başlığındaki örnekleme hızı (MPEG-1, 2 ve 2.5). */
+function mp3Ornekleme(adres: string): number {
+  const ikili = atob(adres.slice(adres.indexOf(',') + 1))
+  const bayt = (i: number) => ikili.charCodeAt(i)
+  let i = 0
+  if (ikili.startsWith('ID3')) {
+    i = 10 + ((bayt(6) << 21) | (bayt(7) << 14) | (bayt(8) << 7) | bayt(9))
+  }
+  while (i + 3 < ikili.length && !(bayt(i) === 0xff && (bayt(i + 1) & 0xe0) === 0xe0)) i++
+  const surum = (bayt(i + 1) >> 3) & 3
+  const sira = (bayt(i + 2) >> 2) & 3
+  const tablo: Record<number, number[]> = {
+    3: [44100, 48000, 32000],
+    2: [22050, 24000, 16000],
+    0: [11025, 12000, 8000],
+  }
+  return tablo[surum]?.[sira] ?? 0
+}
+
 const kayitlar = liste.metinler as Record<
   string,
   { dosya: string; okunus: string; bolgeler: string[]; hiz: number; surum: string }
@@ -116,6 +142,12 @@ describe('ses-listesi.json: her metnin sesi var', () => {
       expect(kayit.hiz).toBe(0.9)
       expect(kayit.surum).toMatch(/^[0-9a-f]{12}$/)
     }
+  })
+
+  it('MP3 başlıklarında örnekleme hızı 24 kHz (listedeki biçimle aynı)', () => {
+    const hizlar = new Set(Object.values(mp3Verileri).map(mp3Ornekleme))
+    expect(Object.keys(mp3Verileri)).toHaveLength(dosyaAdlari.length + ornekDosyalari.length)
+    expect([...hizlar]).toEqual([24000])
   })
 
   it('okunuş tablosunun iki satırı kullanılıyor: Şahap\'ın → Şahabın', () => {
