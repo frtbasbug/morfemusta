@@ -91,6 +91,12 @@ kalanlar aşağıda.
   0.38–0.77 sn'ydi (*datipüm*, *çevicim*, *cik* ...). 55'i oyunun sesi, 2'si örnek (*yavas-2*,
   *yavas-4*). Öteki 643 dosya bayt bayt aynı kaldı (SHA-1 ile denetlendi). Google'a 2 117
   karakter gönderildi. Toplam 690 ses 3.09 MB; ön bellekte 573 KB; örnekler 102 KB.
+- **Codex'in iki bulgusu (doğrulandı, düzeltildi; sahte üreteçle geçici dizinde sınandı):**
+  - `--yeniden` listede olmayan bayat sesleri de üretiyordu ("ötekiler değişmez" tutmuyordu).
+    Artık öyle bir ses varsa hiç istek gitmeden durur, listesini yazar.
+  - Denetimi geçemeyen bayat ses (ör. okunuşu değişmiş) listeye yeni okunuşla, eski dosyanın
+    sürümüyle yazılıyordu; sonraki çalıştırma onu güncel sayıp hiç üretmezdi. Artık listede
+    eski kaydı kalır (eski kaydı yoksa listeye girmez), sonraki çalıştırma yeniden dener.
 - **Sonra yeniden ölçüldü:** baştaki ve sondaki sessizlik her dosyada en çok 0.13 sn; iç
   sessizlik en çok 0.60 sn (MP3'ten çözülünce 15 dosyada 0.51–0.60: kodlamanın payı, denetimin
   0.6 sınırı içinde).

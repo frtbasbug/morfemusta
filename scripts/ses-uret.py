@@ -360,7 +360,8 @@ def main():
         '--yeniden',
         metavar='DOSYA',
         help='yalnız bu dosyadaki ses dosyalarını yeniden üret (satır satır: abc123.mp3, '
-        'ornek/yavas-2.mp3); ötekiler değişmez',
+        'ornek/yavas-2.mp3); ötekiler değişmez. Listede olmayan bayat ses varsa hiç istek '
+        'gitmeden durur',
     )
     secenekler = ayrac.parse_args()
     anahtar()
@@ -382,8 +383,10 @@ def main():
     ORNEK_DIZINI.mkdir(parents=True, exist_ok=True)
     okunuslar = {m['metin']: m['okunus'] for m in metinler}
 
-    # İşler: (yol, okunuş, hız, etiket). Değişmeyenler atlanır.
+    # İşler: (yol, okunuş, hız, etiket). Değişmeyenler atlanır. --yeniden verilince yalnız
+    # listedekiler üretilir; listede olmayan bayat ses varsa hiç istek gitmeden durulur.
     isler = []
+    bayatlar = []
     for kayit in metinler:
         metin, okunus = kayit['metin'], kayit['okunus']
         yol = SES_DIZINI / f'{ozet(metin)}.mp3'
@@ -395,7 +398,9 @@ def main():
             and onceki.get('hiz') == YAVAS
             and yol.exists()
         )
-        if not ayni or yol.name in yeniden:
+        if yeniden and not ayni and yol.name not in yeniden:
+            bayatlar.append(f'{yol.name}\t{metin}')
+        elif not ayni or yol.name in yeniden:
             isler.append((yol, okunus, YAVAS, metin))
     ornek_kayitlari = []
     for hiz, ad in ((YAVAS, 'yavas'), (OLAGAN, 'olagan')):
@@ -411,12 +416,22 @@ def main():
                 and onceki.get('hiz') == hiz
                 and yol.exists()
             )
-            if not ayni or dosya in yeniden:
+            if yeniden and not ayni and dosya not in yeniden:
+                bayatlar.append(f'{dosya}\t{cumle} ({hiz})')
+            elif not ayni or dosya in yeniden:
                 isler.append((yol, okunuslar[cumle], hiz, f'{cumle} ({hiz})'))
             ornek_kayitlari.append((hiz, ad, cumle, dosya, yol))
 
+    if bayatlar:
+        sys.exit(
+            '--yeniden ile durdu: listede olmayan bu sesler de güncel değil (okunuş, ses ya da '
+            'hız değişti ya da dosya yok). Önce --yeniden olmadan çalıştırın ya da listeye '
+            'ekleyin:\n  ' + '\n  '.join(bayatlar)
+        )
+
     sorunlular = []
     hatalar = []
+    basarisiz = set()  # denetimi geçemeyen işlerin yolu: listede eski kaydı kalır
     bitti = 0
 
     def is_yap(is_):
@@ -427,6 +442,7 @@ def main():
         except SessizlikHatasi as hata:
             with kilit:
                 hatalar.append((etiket, str(hata)))
+                basarisiz.add(yol)
             return
         yol.write_bytes(veri)
         with kilit:
@@ -443,6 +459,13 @@ def main():
     for kayit in metinler:
         metin = kayit['metin']
         dosya = f'{ozet(metin)}.mp3'
+        if SES_DIZINI / dosya in basarisiz:
+            # Denetimi geçemeyen ses: eski kaydı (eski okunuşu, sürümü) kalır, sonraki
+            # çalıştırmada yine bayat sayılır. Eski kaydı yoksa listeye girmez.
+            if metin in eski_metinler:
+                liste[metin] = eski_metinler[metin]
+                toplam += eski_metinler[metin].get('boyut', 0)
+            continue
         veri = (SES_DIZINI / dosya).read_bytes()
         toplam += len(veri)
         liste[metin] = {
@@ -456,6 +479,10 @@ def main():
     ornekler = []
     ornek_toplami = 0
     for hiz, ad, cumle, dosya, yol in ornek_kayitlari:
+        if yol in basarisiz:
+            if dosya in eski_ornekler:
+                ornekler.append(eski_ornekler[dosya])
+            continue
         veri = yol.read_bytes()
         ornek_toplami += len(veri)
         ornekler.append(
