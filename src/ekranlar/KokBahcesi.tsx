@@ -58,6 +58,7 @@ import { Hoparlor, useSes, useSesliSoyleyis } from '../ses/Ses.tsx'
 import AksamEkrani from './AksamEkrani.tsx'
 import BolgeUstu from './BolgeUstu.tsx'
 import { bekle, hareketAzMi, hareketleriKes, kaydir, oynat, type Nokta } from './hareket.ts'
+import { parlat } from './parilti.ts'
 import { SiradakiSimgesi } from './simgeler.tsx'
 import './KokBahcesi.css'
 
@@ -112,12 +113,13 @@ export default function KokBahcesi({
   const kartlarRef = useRef<HTMLUListElement>(null)
   const cepRef = useRef<HTMLDivElement>(null)
   const sonrakiRef = useRef<HTMLButtonElement>(null)
+  const kelimeRef = useRef<HTMLParagraphElement>(null)
   const bukalemunlar = useRef(new Map<number, HTMLButtonElement>())
   const surukleme = useRef<Surukleme | null>(null)
   const tiklamayiYut = useRef(false)
   const bagli = useRef(false)
   const gorulenGorev = useRef(durum.gorevYeri)
-  const { soyle } = useSes()
+  const { soyle, sonuc, buyu: buyuSesi } = useSes()
 
   // Sesli mod: ağaç başlayınca hedef söylenir; bölgeye girişte önce bölgenin adı.
   const [acilisYeri] = useState(durum.gorevYeri)
@@ -229,12 +231,16 @@ export default function KokBahcesi({
       if (buyu === 'eksiltir' && hareketli) setSilinen(parca.sira)
       gonder({ tur: 'tutundu' })
     })
-    soyle(simdikiKelime(bahce, kurulan + 1))
+    // Doğru: efekt, ardından (sesli modda) yeni kelime; kelimenin çevresinde parıltı.
+    sonuc('dogru', simdikiKelime(bahce, kurulan + 1))
+    parlat(kelimeRef.current)
     if (oge) {
       oge.style.transform = ''
       oge.style.opacity = ''
     }
 
+    // Büyü: halka, meyvenin çoğalması ya da cebe girmesi.
+    if (parca.tur === 'yapım' || buyu === 'çoğaltır' || buyu === 'cebe koyar') buyuSesi()
     if (parca.tur === 'yapım') await halkaBuyut(buyu)
     else await meyveAs(buyu)
     if (eriyecek) await erit()
@@ -392,7 +398,7 @@ export default function KokBahcesi({
     }
     if (!bagli.current) return
     flushSync(() => gonder({ tur: 'dondu' }))
-    soyle(cumle)
+    sonuc('yanlis', cumle)
     if (oge) oge.style.transform = ''
   }
 
@@ -558,7 +564,7 @@ export default function KokBahcesi({
             {bahce.hedef}
           </p>
           <Hoparlor metin={bahce.hedef} />
-          <p className="bahce__kelime" aria-hidden="true">
+          <p className="bahce__kelime" ref={kelimeRef} aria-hidden="true">
             {eriyor && degisim ? degisim.once : simdiki}
           </p>
           {cepli && (

@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cihaz Denetimi · Morfemusta</title>
+    <meta
+      name="description"
+      content="Bu tarayıcının sürümü, ekranı ve Morfemusta'nın dayandığı özellikler."
+    />
+    <!-- Oyundan yalnız eski tarayıcı uyarısıyla bağlantı alan denetim sayfası; arama motorlarına
+         kapalı. En eski cihazda da çalışsın diye modülsüz, yalnız ES5 ve satır içi stil: yazı
+         tipi, paket ve dış sunucu yok. Hiçbir veri cihazdan çıkmaz; Kopyala yalnız panoya koyar. -->
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <style>
+      html {
+        background: #fff6e9;
+        color: #1e1b3a;
+        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.45;
+      }
+      body {
+        max-width: 40rem;
+        margin: 0 auto;
+        padding: 1rem;
+      }
+      h1 {
+        margin: 0 0 0.5rem;
+        font-size: 1.6rem;
+      }
+      h2 {
+        margin: 1.25rem 0 0.4rem;
+        font-size: 1.15rem;
+      }
+      dl,
+      ul {
+        margin: 0;
+        padding: 0;
+      }
+      .ozellikler li {
+        display: block;
+        padding: 0.3rem 0;
+        border-bottom: 1px solid #8c87a8;
+        list-style: none;
+      }
+      .isaret {
+        display: inline-block;
+        width: 1.6rem;
+        font-weight: bold;
+      }
+      .yok {
+        color: #6b6781;
+      }
+      dt {
+        font-weight: bold;
+      }
+      dd {
+        margin: 0 0 0.5rem;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+      }
+      button {
+        min-height: 2.75rem;
+        margin-top: 1rem;
+        padding: 0 1.25rem;
+        border: 2px solid #1e1b3a;
+        border-radius: 999px;
+        background: #1e1b3a;
+        color: #fff6e9;
+        font: inherit;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      #ozet {
+        width: 100%;
+        min-height: 8rem;
+        margin-top: 0.5rem;
+        font: inherit;
+        font-size: 0.85rem;
+      }
+      #durum {
+        min-height: 1.5em;
+      }
+      a {
+        color: #1e1b3a;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Cihaz Denetimi</h1>
+    <p>
+      Bu sayfa tarayıcının sürümünü, ekranını ve Morfemusta'nın dayandığı özellikleri gösterir.
+      Hiçbir şey gönderilmez.
+    </p>
+    <noscript><p>Denetim için JavaScript açık olmalı.</p></noscript>
+
+    <h2>Tarayıcı ve ekran</h2>
+    <dl>
+      <dt>Tarayıcı</dt>
+      <dd id="tarayici">…</dd>
+      <dt>İşletim sistemi</dt>
+      <dd id="sistem">…</dd>
+      <dt>Ekran</dt>
+      <dd id="ekran">…</dd>
+      <dt>Kullanıcı ajanı</dt>
+      <dd id="ajan">…</dd>
+    </dl>
+
+    <h2>Oyunun dayandığı özellikler</h2>
+    <ul class="ozellikler" id="ozellikler"></ul>
+
+    <button type="button" id="kopyala">Kopyala</button>
+    <p id="durum" role="status"></p>
+    <label for="ozet">Özet (panoya giden metin):</label>
+    <textarea id="ozet" readonly></textarea>
+
+    <p><a href="./">Oyuna dön</a></p>
+
+    <script>
+      // Yalnız ES5: var, function; ok işlevi, şablon metni ve Promise kullanılmaz.
+      ;(function () {
+        var ajan = navigator.userAgent || ''
+
+        function bul(desen) {
+          var m = desen.exec(ajan)
+          return m ? m[1] : null
+        }
+
+        function tarayici() {
+          var adlar = [
+            ['Samsung Internet', /SamsungBrowser\/([\d.]+)/],
+            ['Edge', /Edg(?:e|A|iOS)?\/([\d.]+)/],
+            ['Opera', /(?:OPR|OPiOS)\/([\d.]+)/],
+            ['Firefox', /(?:Firefox|FxiOS)\/([\d.]+)/],
+            ['Chrome', /(?:Chrome|CriOS)\/([\d.]+)/],
+            ['Safari', /Version\/([\d.]+).*Safari\//],
+            ['Internet Explorer', /(?:MSIE |rv:)([\d.]+).*(?:Trident|\))/],
+          ]
+          for (var i = 0; i < adlar.length; i++) {
+            var surum = bul(adlar[i][1])
+            if (surum) return adlar[i][0] + ' ' + surum
+          }
+          return 'bilinmiyor'
+        }
+
+        function sistem() {
+          var android = bul(/Android ([\d.]+)/)
+          if (android) return 'Android ' + android
+          var ios = bul(/OS (\d+[_\d]*) like Mac OS X/)
+          if (ios) return (/iPad/.test(ajan) ? 'iPadOS ' : 'iOS ') + ios.replace(/_/g, '.')
+          if (/Macintosh/.test(ajan) && navigator.maxTouchPoints > 1) return 'iPadOS (masaüstü kipi)'
+          if (/CrOS/.test(ajan)) return 'ChromeOS'
+          var windows = bul(/Windows NT ([\d.]+)/)
+          if (windows) return 'Windows NT ' + windows
+          var mac = bul(/Mac OS X ([\d_.]+)/)
+          if (mac) return 'macOS ' + mac.replace(/_/g, '.')
+          if (/Linux/.test(ajan)) return 'Linux'
+          return 'bilinmiyor'
+        }
+
+        function ekran() {
+          var s = window.screen || {}
+          var oran = window.devicePixelRatio || 1
+          return (
+            s.width + '×' + s.height + ' (pencere ' + window.innerWidth + '×' + window.innerHeight +
+            ', piksel oranı ' + Math.round(oran * 1000) / 1000 + ')'
+          )
+        }
+
+        function cssDestekler(ozellik, deger) {
+          try {
+            return !!(window.CSS && CSS.supports && CSS.supports(ozellik, deger))
+          } catch (e) {
+            return false
+          }
+        }
+
+        function depoVar() {
+          try {
+            var anahtar = 'morfemusta.cihaz-denetimi'
+            window.localStorage.setItem(anahtar, '1')
+            window.localStorage.removeItem(anahtar)
+            return true
+          } catch (e) {
+            return false
+          }
+        }
+
+        function sahipMi() {
+          try {
+            return !!(window.CSS && CSS.supports && CSS.supports('selector(:has(a))'))
+          } catch (e) {
+            return false
+          }
+        }
+
+        var ozellikler = [
+          ['Service worker (çevrim dışı)', 'serviceWorker' in navigator],
+          ['localStorage (ilerleme)', depoVar()],
+          ['Web Audio (efektler)', !!(window.AudioContext || window.webkitAudioContext)],
+          ['Pointer Events (sürükle-bırak)', !!window.PointerEvent],
+          ['dvh birimi', cssDestekler('height', '100dvh')],
+          ['Kap sorgusu birimleri (cqw, cqh)', cssDestekler('width', '1cqw')],
+          ['ES modülleri', 'noModule' in document.createElement('script')],
+          [':has() seçicisi', sahipMi()],
+          ['Web Animations (hareketler)', typeof document.documentElement.animate === 'function'],
+        ]
+
+        var satirlar = [
+          'Morfemusta · cihaz denetimi',
+          'Tarayıcı: ' + tarayici(),
+          'İşletim sistemi: ' + sistem(),
+          'Ekran: ' + ekran(),
+        ]
+
+        document.getElementById('tarayici').textContent = tarayici()
+        document.getElementById('sistem').textContent = sistem()
+        document.getElementById('ekran').textContent = ekran()
+        document.getElementById('ajan').textContent = ajan
+
+        var liste = document.getElementById('ozellikler')
+        for (var i = 0; i < ozellikler.length; i++) {
+          var ad = ozellikler[i][0]
+          var var_ = ozellikler[i][1]
+          var li = document.createElement('li')
+          var isaret = document.createElement('span')
+          isaret.className = 'isaret'
+          isaret.textContent = var_ ? '✓' : '✗'
+          isaret.setAttribute('aria-hidden', 'true')
+          var yazi = document.createElement('span')
+          yazi.textContent = ad + (var_ ? '' : ' (yok)')
+          if (!var_) li.className = 'yok'
+          li.appendChild(isaret)
+          li.appendChild(yazi)
+          li.setAttribute('aria-label', ad + ': ' + (var_ ? 'var' : 'yok'))
+          liste.appendChild(li)
+          satirlar.push(ad + ': ' + (var_ ? '✓' : '✗'))
+        }
+        satirlar.push('Kullanıcı ajanı: ' + ajan)
+        var ozet = satirlar.join('\n')
+        var alan = document.getElementById('ozet')
+        alan.value = ozet
+
+        var durum = document.getElementById('durum')
+        function eskiYolla() {
+          alan.focus()
+          alan.select()
+          var oldu = false
+          try {
+            oldu = document.execCommand('copy')
+          } catch (e) {
+            oldu = false
+          }
+          durum.textContent = oldu
+            ? 'Panoya kopyalandı.'
+            : 'Kopyalanamadı: aşağıdaki metni seçip kopyalayın.'
+        }
+        document.getElementById('kopyala').onclick = function () {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(ozet).then(function () {
+              durum.textContent = 'Panoya kopyalandı.'
+            }, eskiYolla)
+          } else {
+            eskiYolla()
+          }
+        }
+      })()
+    </script>
+  </body>
+</html>

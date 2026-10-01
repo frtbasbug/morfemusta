@@ -228,6 +228,8 @@
 }
 
 .tezgah__karo .karo {
+  width: calc(72 * var(--birim));
+  height: calc(72 * var(--birim));
   pointer-events: none;
 }
 

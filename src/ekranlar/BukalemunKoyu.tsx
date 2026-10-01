@@ -9,9 +9,11 @@
 // puan ve süre yok. Ağız hiçbir durumda değişmez (DESIGN.md, "Üç kural").
 //
 // Ses (DESIGN.md, "Ses ve resim"): sesli modda görev başlayınca kök söylenir; bir bukalemun
-// seçilince ya da sürüklenmeye başlayınca kuracağı aday kelime (atlar, atler); doğruda kurulan
-// kelime, yanlışta neden cümlesi. Dokununca'da kelimenin ve cümlenin hoparlörü çalar. Kökün
-// resmi (emoji) kelime kartında; çoğulda kart üçe çoğalınca resim de üç olur.
+// seçilince ya da sürüklenmeye başlayınca kuracağı aday kelime (atlar, atler); doğruda efekt ve
+// hemen ardından kurulan kelime, yanlışta efekt ve neden cümlesi. Dokununca'da yalnız efektler;
+// kelimenin ve cümlenin hoparlörü çalar. Büyüde (çoğalma, cep) parıltı sesi. Doğruda kelimenin
+// çevresinde yıldızcıklar parlar (parilti.ts). Kökün resmi (emoji) kelime kartında; çoğulda kart
+// üçe çoğalınca resim de üç olur.
 //
 // Oyunun durumu src/oyun/koy.ts'teki indirgeyicidedir; bu dosya görünümü ve hareketleri yazar.
 // Hareketler Web Animations API iledir (hareket.ts); hareket azaltma açıksa hiçbiri oynamaz,
@@ -59,6 +61,7 @@ import AksamEkrani from './AksamEkrani.tsx'
 import BolgeUstu from './BolgeUstu.tsx'
 import { Hoparlor, useSes, useSesliSoyleyis } from '../ses/Ses.tsx'
 import { bekle, hareketAzMi, hareketleriKes, kaydir, oynat, type Nokta } from './hareket.ts'
+import { parlat } from './parilti.ts'
 import { SiradakiSimgesi } from './simgeler.tsx'
 import './BukalemunKoyu.css'
 
@@ -112,7 +115,7 @@ export default function BukalemunKoyu({
   const tiklamayiYut = useRef(false)
   const bagli = useRef(false)
   const gorulenGorev = useRef(durum.gorevYeri)
-  const { soyle } = useSes()
+  const { soyle, sonuc, buyu: buyuSesi } = useSes()
 
   // Sesli mod: görev başlayınca kök söylenir; bölgeye girişte önce bölgenin adı.
   const [acilisYeri] = useState(durum.gorevYeri)
@@ -235,7 +238,9 @@ export default function BukalemunKoyu({
     }
     if (!bagli.current) return
     flushSync(() => gonder({ tur: 'birlesti' }))
-    if (adim) soyle(adim.bicim)
+    // Doğru: efekt, ardından (sesli modda) kurulan kelime; kelimenin çevresinde parıltı.
+    if (adim) sonuc('dogru', adim.bicim)
+    parlat(kartRef.current?.querySelector('.kelime'))
     await oynat(
       kartRef.current?.querySelector('.ek-yazisi'),
       [
@@ -247,6 +252,7 @@ export default function BukalemunKoyu({
     )
     await bekle(200)
     if (!bagli.current) return
+    if (etki) buyuSesi()
     if (etki === 'cebe girer') {
       await cebeKoy()
     } else {
@@ -376,7 +382,7 @@ export default function BukalemunKoyu({
     }
     if (!bagli.current) return
     flushSync(() => gonder({ tur: 'dustu' }))
-    soyle(deneme.cumle)
+    sonuc('yanlis', deneme.cumle)
     if (!oge) return
     oge.style.transform = ''
     oge.style.transformOrigin = ''

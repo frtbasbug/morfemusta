@@ -7,17 +7,19 @@ Tasarım için `DESIGN.md`, güncel durum ve sıradaki hedef için `NEXT.md` oku
 ## Yığın
 
 - **Vite 8 + React 19 + TypeScript 7** (strict). Node 22 (`.nvmrc`).
-- **PWA:** vite-plugin-pwa (`generateSW`, `autoUpdate`). Derlemedeki her şey (yazı tipleri
-  dahil) önceden önbelleğe alınır; site bir kez açıldıktan sonra çevrim dışı çalışır.
+- **PWA:** vite-plugin-pwa (`generateSW`). Derlemedeki her şey (yazı tipleri dahil) önceden
+  önbelleğe alınır; site bir kez açıldıktan sonra çevrim dışı çalışır. Yeni sürüm açık sayfayı
+  yenilemez, sonraki açılışta devreye girer.
 - **Yazı tipleri:** @fontsource/andika (400 ve 700; harfler ve metin) ve @fontsource/baloo-2
-  (800; başlık ve logo, yalnız latin ve latin-ext alt kümeleri), pakete gömülü.
+  (800; başlık ve logo), ikisi de yalnız latin ve latin-ext alt kümeleriyle, pakete gömülü.
 - **Görsel dil:** B · Canlı (`DESIGN.md`, "Görsel dil"); geometri `src/gorsel/cizim.ts`'te,
   belirteçler `src/gorsel/tema.css`'te.
 - **Ses ve resim:** sesler yapay zekâyla, Google Cloud Text-to-Speech'in Chirp 3: HD Callirrhoe
   sesiyle önceden üretilir (kodun MIT lisansı ses dosyalarını kapsamaz), MP3 olarak `public/ses/`'tedir; köklerin resmi Twemoji SVG'leridir
   (CC BY 4.0), `public/emoji/`'dedir. İkisi de pakete gömülüdür (`DESIGN.md`, "Ses ve resim").
+  Efektler (doğru, yanlış, büyü) dosya değildir: tarayıcıda Web Audio ile üretilir.
 - **Test:** Vitest 5 (birim, `node` ortamı) ve Playwright 1.56.1 (uçtan uca, Pixel 7
-  telefon profili, Chromium).
+  telefon profili, Chromium); erişilebilirlik taraması @axe-core/playwright ile.
 - **Yayın:** GitHub Actions → GitHub Pages, <https://frtbasbug.github.io/morfemusta/>.
   Vite `base` ayarı `/morfemusta/`.
 
@@ -42,7 +44,9 @@ Tasarım için `DESIGN.md`, güncel durum ve sıradaki hedef için `NEXT.md` oku
 Biçim Denetim Sayfası: <http://localhost:5173/morfemusta/denetim.html> (yayında
 `/morfemusta/denetim.html`). Karakter Galerisi: <http://localhost:5173/morfemusta/galeri.html>
 (yayında `/morfemusta/galeri.html`). Ses Denetim Sayfası: <http://localhost:5173/morfemusta/ses.html>
-(yayında `/morfemusta/ses.html`). Oyun üçüne de bağlantı vermez.
+(yayında `/morfemusta/ses.html`). Cihaz Denetimi: <http://localhost:5173/morfemusta/cihaz.html>
+(yayında `/morfemusta/cihaz.html`). Oyun ilk üçüne bağlantı vermez; Cihaz Denetimi'ne yalnız eski
+tarayıcı uyarısından bağlanır. Sınıf modu adresle de açılır: `?sinif=1` (kapatır: `?sinif=0`).
 
 Oturumu kapatmadan önce: `npm run typecheck && npm test && npm run test:e2e`.
 
@@ -52,8 +56,7 @@ Oturumu kapatmadan önce: `npm run typecheck && npm test && npm run test:e2e`.
 .github/workflows/test-ve-yayin.yml   her push ve PR'da test; main'de Pages'e yayın
 e2e/                 Playwright testleri (*.spec.ts); ortak yardımcılar yardimcilar.ts'te
 public/              ikonlar ve favicon (scripts/ikonlar.mjs üretir); ses/: sesler (ses-uret.py
-                     üretir; ornek/: Ses Denetim Sayfası'nın örnekleri); emoji/: köklerin
-                     Twemoji SVG'leri (emoji-indir.mjs indirir)
+                     üretir); emoji/: köklerin Twemoji SVG'leri (emoji-indir.mjs indirir)
 scripts/             geliştirme araçları: ikon üretimi, denetim biçimleri, zeyrek denetimi, ses
                      üretimi, emoji indirme
 src/
@@ -65,11 +68,14 @@ src/
                      (AdaHaritasi), Bukalemun Koyu, Fıstıkçı Şahap'ın Dükkânı (FistikciSahap),
                      Kök Bahçesi (KokBahcesi), Uydurukçuklar (Uydurukcuklar),
                      bölge ekranlarının üst çubuğu (BolgeUstu), Sözlük, Ayarlar, akşam ekranı,
-                     alt gezinme;
+                     alt gezinme, sınıf modunun işareti ve bağlamı (SinifIsareti);
+                     Sinif.css: sınıf modunun görünümü (geniş yatay ekran);
                      hareket.ts: ekranların hareketleri (Web Animations API, hareket azaltmaya
-                     uyar); simgeler.tsx: arayüz simgeleri
-  kabuk/             hash yönlendirici (yonlendirici.ts) ve cihaz deposu (depo.ts: localStorage,
-                     kalıcı depo isteği, useIlerleme); testleri yanında
+                     uyar); parilti.ts: doğrunun parıltısı; simgeler.tsx: arayüz simgeleri
+  kabuk/             hash yönlendirici (yonlendirici.ts), cihaz deposu (depo.ts: localStorage,
+                     kalıcı depo isteği, useIlerleme), adresteki sınıf modu (sinif.ts), ana
+                     ekran ipucu (ipucu.ts); testleri yanında (es5.test.ts: eski tarayıcı
+                     betiklerinin ES5 denetimi)
   oyun/              oyunun saf mantığı: bölge tablosu (bolgeler.ts), görev tabloları (turlarıyla),
                      seçenekler, Bukalemun Koyu'nun (koy.ts), dükkânın (dukkan.ts), bahçenin
                      (bahce.ts) ve Uydurukçuklar'ın (uyduruk.ts) durumu (indirgeyici),
@@ -86,8 +92,9 @@ src/
   galeri/            Karakter Galerisi (galeri.html'in girişi, örnekleri, testleri)
   ses/               ses: oyunun söyleyebileceği metinler (metinler.ts: sesMetinleri), okunuş
                      (okunus.ts: harf adları, okunuş tablosu), çalar (calar.ts: tek ses,
-                     önbellek, iOS'ta ilk dokunuş), arayüz (Ses.tsx: ayar, sesli mod, hoparlör),
-                     ses-listesi.json (metinden dosyaya; ses-uret.py yazar); testleri yanında
+                     önbellek, iOS'ta ilk dokunuş), efektler (efekt.ts: Web Audio, notalar),
+                     arayüz (Ses.tsx: ayar, sesli mod, sonucun sesi, hoparlör), ses-listesi.json
+                     (metinden dosyaya; ses-uret.py yazar); testleri yanında
   sesdenetim/        Ses Denetim Sayfası (ses.html'in girişi)
 icerik/              içerik CSV dosyaları (ekler.csv: ek envanteri; kokler.csv: kök sözlüğü;
                      bolgeler.csv: adanın bölgeleri; yasakli-diziler.csv: uydurma kökte
@@ -103,6 +110,7 @@ index.html           oyun
 denetim.html         Biçim Denetim Sayfası (ayrı giriş sayfası)
 galeri.html          Karakter Galerisi (ayrı giriş sayfası)
 ses.html             Ses Denetim Sayfası (ayrı giriş sayfası)
+cihaz.html           Cihaz Denetimi (ayrı giriş sayfası; modülsüz, ES5, satır içi)
 DESIGN.md  NEXT.md  CLAUDE.md
 ```
 
@@ -120,7 +128,9 @@ DESIGN.md  NEXT.md  CLAUDE.md
    kullanıcının isteğiyle: `lameenc` (Python; projenin bağımlılığı değil, yalnız
    `scripts/ses-uret.py` için elle kurulur) ve Twemoji'nin grafikleri (paket değil: tablodaki
    emojilerin SVG dosyaları `public/emoji/`'de). Oturum 10b'de `piper-tts` kalktı: sesler Google
-   Cloud Text-to-Speech'in REST arayüzüyle üretilir (kitaplık yok, yalnız `urllib`).
+   Cloud Text-to-Speech'in REST arayüzüyle üretilir (kitaplık yok, yalnız `urllib`). Oturum 11'de
+   kullanıcının isteğiyle: `@axe-core/playwright` (MPL-2.0; geliştirme bağımlılığı, yalnız
+   erişilebilirlik testleri için; `axe-core`'u getirir).
 3. **Biçimbilim motoru `src/motor` altındadır ve arayüzden bağımsızdır.** Motor saf
    TypeScript'tir: React'i, DOM'u, CSS'i ya da `src/motor` dışındaki uygulama kodunu içe
    aktarmaz. Arayüz motoru kullanır, motor arayüzü bilmez. Motor Vitest ile `node`
@@ -193,12 +203,21 @@ DESIGN.md  NEXT.md  CLAUDE.md
 - **Önbellek kalıbı:** Çalışma anında ayrı dosya olarak istenen yeni bir dosya türü (ör. ses
   için `.mp3`/`.ogg`) eklenirse `vite.config.ts` içindeki `workbox.globPatterns`'a da
   eklenmeli; yoksa o dosya çevrim dışı açılmaz.
-- **Dört giriş sayfası:** `index.html` (oyun), `denetim.html` (Biçim Denetim Sayfası),
-  `galeri.html` (Karakter Galerisi) ve `ses.html` (Ses Denetim Sayfası). Derleme girişleri `vite.config.ts`'deki
+- **Beş giriş sayfası:** `index.html` (oyun), `denetim.html` (Biçim Denetim Sayfası),
+  `galeri.html` (Karakter Galerisi), `ses.html` (Ses Denetim Sayfası) ve `cihaz.html` (Cihaz
+  Denetimi). Derleme girişleri `vite.config.ts`'deki
   `build.rolldownOptions.input`'tadır; yeni bir sayfa oraya eklenir. Her sayfa önbelleğe
   girmelidir: service worker önbellekte olmayan bir gezinmeyi `navigateFallback` ile oyunun
-  `index.html`'ine düşürür (`e2e/denetim.spec.ts`, `e2e/galeri.spec.ts` ve `e2e/ses.spec.ts` bunu
-  denetler).
+  `index.html`'ine düşürür (`e2e/denetim.spec.ts`, `e2e/galeri.spec.ts`, `e2e/ses.spec.ts` ve
+  `e2e/cihaz.spec.ts` bunu denetler).
+- **Eski tarayıcı:** `cihaz.html` modülsüzdür: tek, satır içi, ES5 betik ve satır içi stil (yazı
+  tipi, paket, belirteç yok; renkleri tema.css'tekilerin değerleri, kurallar testi taramaz).
+  `index.html`'deki eski tarayıcı uyarısı (`#eski-tarayici`, `role="alert"`, `hidden`) da ES5
+  satır içi betiktir: `noModule` yoksa hemen, varsa `load`'da oyun açılmamışsa
+  (`html[data-acildi]` yok; `main.tsx` render'dan önce yazar) görünür. İkisinin ES5 olduğunu
+  `src/kabuk/es5.test.ts` Vite'ın ayrıştırıcısıyla (`parseAst`, ESTree) denetler: ok işlevi,
+  şablon metni, let/const, çağrıda sondaki virgül... TypeScript 7'nin JS derleyici arayüzü
+  yok; ayrıştırma için `ts.createSourceFile` kullanılamaz.
 - **Görsel dilin bileşenleri:** SVG'de yalnız geometri yazılır; dolgu, çizgi ve kalınlıklar
   `src/gorsel/karakterler.css`'teki sınıflardan ve `tema.css` değişkenlerinden gelir.
   Karakterlerdeki çizgi kalınlıkları birimsizdir (SVG kullanıcı birimi), karakterle
@@ -265,6 +284,19 @@ DESIGN.md  NEXT.md  CLAUDE.md
   (`sesiAc`, `main.tsx`). Ayar (`ayarlar.ses`: kapali / dokununca / sesli, varsayılan dokununca)
   `SesSaglayici` ile verilir; sağlayıcı yokken Kapalı'dır (birim testleri, galeri). Sesli modda
   bölge ekranı girişte bölgenin adını, sonra kökü söyler (haritadaki ad girişte kesilirdi).
+- **Efektler (`src/ses/efekt.ts`):** notalar saf veridir (`EFEKTLER`: doğru, yanlış, büyü);
+  tarayıcı onları osilatör ve kazançla çalar (`efektCal`), birim testleri aynı tabloyu örnekler
+  (`ornekle`: süre, yükseklik, yükseklik sınırı). Kapalı'da `efektlereIzinVer(false)`
+  (`SesSaglayici`): AudioContext hiç kurulmaz. iOS'ta Web Audio ilk dokunuşla açılır
+  (`efektleriAc`, `sesiAc`'ın dinleyicisi). Ekranlar sonucu `useSes().sonuc(tur, metin)` ile
+  bildirir (`sonucPlani`): efekt, sesli modda ardından metin `cal(metinler, gecikme)` ile
+  (gecikme efektin süresi; o arada yeni çalma ya da `sus` gelirse söylenmez). Büyü
+  `useSes().buyu()`. Efekt `<audio>`'ya dokunmaz: çalan konuşma kesilmez. Uçtan uca testler
+  `OscillatorNode.prototype.start`'ı sarar (`e2e/efekt.spec.ts`).
+- **Parıltı (`src/ekranlar/parilti.ts`):** `parlat(oge)` kelimenin kutusunun çevresinde altı
+  yıldızcık çizer: `document.body`'ye eklenen sabit (`position: fixed`), `aria-hidden` bir kap,
+  Web Animations, bitince kalkar. Renkleri `--parilti-1` ve `--parilti-2` (tema.css; Renksiz'de
+  gri). `hareketAzMi()` ise hiç çizmez.
 - **Seslerin önbelleği:** `vite.config.ts` `ses-listesi.json`'u okur: arayüzün ve koyun sesleri
   `additionalManifestEntries` ile ön belleğe girer (sürüm dosyanın içeriğinden); öteki
   bölgelerinki `morfemusta-ses` önbelleğine bölgeye ilk girişte arka planda iner
@@ -273,7 +305,12 @@ DESIGN.md  NEXT.md  CLAUDE.md
   seslerin adresinde içeriğin sürümü var (`?v=<sürüm>`, `kayitAdresi`): ses yeniden üretilince
   adres değişir, eski sürümler bölge indirilirken silinir. Ön bellektekilerin adresi yalın kalır
   (Workbox `v`'yi yok saymaz; sorgu eklenirse ön bellekle eşleşmez). Ekran değişince `App.tsx`
-  çalan sesi susturur (`useLayoutEffect`: yeni ekranın söyleyişinden önce).
+  çalan sesi susturur (`useLayoutEffect`: yeni ekranın söyleyişinden önce). Oyunun paketine
+  listenin yalnız gereken alanları girer: `ses-listesi.json?oyun`, metinden `[özet, sürüm,
+  ...bölgeler]` (`vite.config.ts`'deki `sesListesiOyun` eklentisi; sanal modül, `enforce:
+  'pre'`: yoksa Vite'ın JSON eklentisi `.json?oyun`'u önce yakalar). Türü
+  `src/ses/ses-listesi-oyun.d.ts`'de. Ses Denetim Sayfası listenin tamamını alır (okunuş
+  orada).
 - **Ses (karar, Oturum 10b):** Google Cloud Text-to-Speech'in Chirp 3: HD sesi,
   `tr-TR-Chirp3-HD-Callirrhoe`. dfki sesi (Piper) bırakıldı: vurgusu ve duraklamaları kötü,
   lisansı kuşkulu. **Gemini sesleri kullanılmaz:** Gemini API'nin şartları 18 yaş altına yönelik
@@ -282,7 +319,7 @@ DESIGN.md  NEXT.md  CLAUDE.md
   Google Cloud Text-to-Speech'in Chirp 3: HD Callirrhoe sesiyle önceden üretildi. Kodun MIT
   lisansı ses dosyalarını kapsamaz.
 - **Ses üretimi (`scripts/ses-uret.py`):** `pip install lameenc`; REST, `v1/text:synthesize`,
-  `languageCode` tr-TR, `speakingRate` 0.9 (oyun; örnekler 0.9 ve 1.0). Yanıt LINEAR16 (24 kHz):
+  `languageCode` tr-TR, `speakingRate` 0.9 (Oturum 11'de seçildi). Yanıt LINEAR16 (24 kHz):
   baştaki ve sondaki sessizlik 80 ms pay bırakılarak kırpılır, 0.5 sn'den uzun iç sessizlik
   0.5 sn'ye indirilir (sessizlik: 10 ms'lik pencerenin RMS'i sesin tepesinin 35 dB altı),
   konuşulan kısmın RMS'i -20 dBFS'ye getirilir (tepe en çok -1 dBFS), sonra MP3: mono, 24 kHz,
@@ -302,8 +339,8 @@ DESIGN.md  NEXT.md  CLAUDE.md
 - **Ses Denetim Sayfası (`ses.html`):** bütün sesler bölge bölge, çal düğmesi ve Hatalı işareti.
   İşaretler oyunun kaydından ayrı bir anahtarda (`morfemusta.ses-denetimi.v2`) ve yalnız bu
   cihazdadır; işaret sesin sürümüne bağlıdır (metin → `surum`): ses yeniden üretilince eski
-  işaret görünmez. Listeyi kopyala Hatalı metinleri satır satır panoya koyar. Üstte aynı beş
-  cümle iki hızda (`ses-listesi.json`'daki `ornekler`; adreslerinde `?v=<sürüm>` var).
+  işaret görünmez. Listeyi kopyala Hatalı metinleri satır satır panoya koyar. Hız örnekleri
+  Oturum 11'de kalktı (hız 0.9 seçildi).
 - **Köklerin resmi:** `KokResmi` `icerik/emoji.csv`'deki kökü `public/emoji/<kod noktaları>.svg`
   ile gösterir (Twemoji'nin adı: ZWJ yoksa FE0F atılır); süstür (`alt` boş, `data-emoji`'de
   emoji), `loading="lazy"`: React 19 sunucu çıktısında tembel olmayan resim için `<link
@@ -312,7 +349,8 @@ DESIGN.md  NEXT.md  CLAUDE.md
   Bahçe'de ağacın kökünde, Sözlük'te kelimenin önünde. Uydurma kökte resim yok.
 - **Hoparlör:** 44 px; kelimenin hoparlörü kartın sağ üst köşesinde rozet (`hoparlor--kose`,
   kartı kaydırmaz), cümlenin hoparlörü cümlenin solunda (`sesli-cumle`). Haritanın iletisinde
-  eksi kenar boşluğuyla: iletinin ayrılmış yeri değişmez (`harita.spec.ts`).
+  balonun içinde, sağ ucunda: hoparlörlü balonun dikey boşluğu yoktur (`:has(.hoparlor)`),
+  hoparlör balondan taşmaz, iletinin ayrılmış yeri değişmez (`harita.spec.ts`).
 - **Ek sırası:** `ekle`, `olasiBicimler` (ve onları çağıran her şey: `neden`,
   `sinirSecenekleri`) sırası bozuk dizide hata atar (`göz + PL + LIK`). Kayıttan okunan böyle
   bir kart atılır (`kartiCoz` hatayı yutar).
@@ -351,7 +389,27 @@ DESIGN.md  NEXT.md  CLAUDE.md
   bölgenin ilerlemesini değiştirdiyse bölgenin dış sürümü artar (`degisenBolgeler`). Kayıtta
   sıfırlama kimliği (`sifirlama`) de var. `App.tsx` ikisini de bölge ekranının `key`'ine koyar;
   görev `ekrandaGorevBitti` ile yazılır: kimlik değiştiyse yazılmaz, ekran baştan açılır.
-  Çok sekmede kalan durumlar `NEXT.md`'de (Oturum 11).
+  `storage` olayı ulaşmayan pencere kaydı `visibilitychange` (görünür olunca) ve `pageshow`'da
+  yeniden okur (`tazele`), olay gibi işler. Çok sekmede kalan durumlar `NEXT.md`'de (Oturum 6'nın
+  planı; Oturum 11'in açık kalanları).
+- **Sınıf modu:** `ayarlar.sinif` (kapali / acik). Kayıt `oyunKaydi(depo)`'dan gelir
+  (`ilerleme.ts`): sınıf modu kapalıyken `pencereKaydi` gibidir; açıkken ilerleme, kartlar ve
+  sıfırlama kimliği bellekteki ayrı bir kopyadadır (o açılış boyunca), yalnız ayarlar ve
+  kapatılan ipuçları depoya yazılır. Kapanınca cihazın kaydı görünür. `bolgeDurumlari` sınıf
+  modunda kilit vermez. Adresteki `?sinif=1` / `?sinif=0` (`src/kabuk/sinif.ts`) `depo.ts`'in
+  `kaydiKur`'unda ayara yazılır ve `replaceState` ile adresten kalkar (hash kalır). `App.tsx`
+  `html[data-sinif]` yazar, bölge ekranının `key`'ine sınıf modunu da koyar, `SinifSaglayici`
+  ile ekranlara verir (`useSinifModu`; işaret `SinifIsareti`). Görünüm `src/ekranlar/Sinif.css`'te,
+  yalnız `(min-width: 1024px) and (orientation: landscape)`'te: kökün yazı boyu
+  `max(16px, min(1.4584vw, 2.5926vh))` (1920×1080'de 28 px); piksel boylu çizimler
+  (karakterler.css'teki ağaç, karo, harita işaretleri) `calc(N * var(--birim))` ile yazılır:
+  `--birim` olağanda 1px, sınıf modunda 0.0625rem. `e2e/sinif.spec.ts` 1920×1080 ve 1366×768'de
+  taşmayı, en küçük yazıyı (28 px) ve dokunma hedefini (64 px) ölçer.
+- **Ana ekran ipucu (`src/kabuk/ipucu.ts`):** iOS Safari (iPhone, iPad; Mac gibi görünen iPad
+  dokunma noktasıyla ayrılır; Chrome, Firefox ve uygulama içi tarayıcılar hariç), ana ekrandan
+  açılmamışsa (`navigator.standalone`, `display-mode: standalone`), ipucu kapatılmamışsa ve
+  sınıf modu kapalıysa haritanın altında. Kapatılan ipucu kayıtta `kapananIpuclari`'dadır
+  (sıfırlamada kalır). Uçtan uca testte iPhone kullanıcı ajanıyla sınanır.
 - **Saf görsel hesaplar:** `src/gorsel/cizim.ts`, `karo.ts`, `kilik.ts` ve `yaratik.ts` motor gibi DOM'suz derlenir
   (`tsconfig.motor.json`) ve yalnız motorun genel kapısını içe aktarır
   (`src/gorsel/bagimsizlik.test.ts`). Ünlü tablosu motorunkidir. Saklanan ünlünün kılığı
@@ -374,9 +432,18 @@ DESIGN.md  NEXT.md  CLAUDE.md
 - **Motorun bağımsızlığı iki yoldan denetlenir:** `src/motor/bagimsizlik.test.ts` içe
   aktarmaları tarar (yalnız `./*.ts` ve `../../icerik/*.csv?raw` izinli);
   `tsconfig.motor.json` motoru `lib: ["ES2023"]` ile, DOM ve Node türleri olmadan derler.
-- **Güncelleme:** vite-plugin-pwa 1.x, `autoUpdate` modunda `clientsClaim` ve
-  `skipWaiting` ayarlarını kendiliğinden eklemiyor; bu yüzden `vite.config.ts`'de açıkça
-  yazılı. Yeni sürüm sessizce devreye girer.
+- **Güncelleme:** `registerType: 'prompt'` (`registerSW.js` yalnız kaydeder; sayfa yenilenmez,
+  soru sorulmaz) ve `skipWaiting` yok: yeni service worker bekler, açık sayfa eski sürümle ve
+  eski önbellekle sürer; oyunun bütün pencereleri kapanınca, sonraki açılışta yeni sürüm
+  devreye girer. `clientsClaim` açık: ilk kurulumda sayfa hemen denetlenir, ilk açılıştan sonra
+  çevrim dışı da açılır. `e2e/cevrimdisi.spec.ts` yeni sürümü `sw.js?surum=yeni` kaydıyla
+  taklit eder.
+- **Yazı tipi alt kümeleri:** Andika da Baloo 2 gibi alt küme dosyalarıyla içe aktarılır
+  (`@fontsource/andika/latin-400.css`, `latin-ext-400.css`, `latin-700.css`,
+  `latin-ext-700.css`; her sayfanın girişinde). Kiril, Yunanca ve Vietnamca önbelleğe girmez.
+- **Erişilebilirlik:** `e2e/erisilebilirlik.spec.ts` axe-core'la tarar (harita, dört bölge,
+  yanlış ve doğru deneme, Sözlük, Ayarlar, akşam ekranı; Renkli, Renksiz ve sınıf modunda;
+  ipuçlu harita; dört geliştirici sayfası). Ciddi ya da kritik bulgu kalmaz.
 - **Playwright 1.56.1'e sabittir.** Bulut oturum ortamındaki hazır Chromium
   (`/opt/pw-browsers`, chromium-1194) bu sürümle eşleşir. Yükseltmede bu ortamda tarayıcı
   indirilemeyebilir; o durumda uçtan uca testler yalnız GitHub Actions'ta koşar.

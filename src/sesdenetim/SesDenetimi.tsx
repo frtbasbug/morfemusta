@@ -3,37 +3,25 @@
 // yalnız bu cihazda, localStorage'da (ISARET_ANAHTARI) saklanır; hiçbir yere gönderilmez.
 // İşaret sesin sürümüne bağlıdır (metin → sürüm): ses yeniden üretilince eski işaret görünmez.
 // Listeyi kopyala, Hatalı işaretli metinleri satır satır panoya koyar: yanlış okunanların
-// okunuşu icerik/ses-okunus.csv'ye yazılır (kullanıcının onayıyla).
-//
-// Üstte aynı beş cümle iki hızda örnek olarak durur (ses-listesi.json'daki ornekler): biraz
-// yavaş (oyunun hızı) ve olağan. Geliştirici aracıdır; oyun bu sayfaya bağlantı vermez.
+// okunuşu icerik/ses-okunus.csv'ye yazılır (kullanıcının onayıyla). Geliştirici aracıdır; oyun
+// bu sayfaya bağlantı vermez.
 
 import { useEffect, useMemo, useState } from 'react'
 import liste from '../ses/ses-listesi.json'
-import { SESLER, cal, dosyaCal } from '../ses/calar.ts'
+import { SESLER, cal } from '../ses/calar.ts'
 import { sesMetinleri } from '../ses/metinler.ts'
 import { HoparlorSimgesi } from '../ekranlar/simgeler.tsx'
 import './SesDenetimi.css'
+
+/** Sesin okunuşu: listenin tamamından (oyunun paketinde okunuş yok). */
+const okunusu = (metin: string): string | undefined =>
+  (liste.metinler as Record<string, { okunus: string } | undefined>)[metin]?.okunus
 
 /** İşaretlerin anahtarı: oyunun kaydından (morfemusta.v1) ayrı. v1 sürümsüzdü, okunmaz. */
 export const ISARET_ANAHTARI = 'morfemusta.ses-denetimi.v2'
 
 /** Hatalı işaretleri: metin → işaretlendiğinde sesin sürümü. Sırası işaretleme sırasıdır. */
 type Isaretler = Readonly<Record<string, string>>
-
-interface Ornek {
-  readonly hiz: number
-  readonly ad: string
-  readonly metin: string
-  readonly dosya: string
-  readonly surum: string
-}
-
-const ORNEKLER = liste.ornekler as readonly Ornek[]
-const HIZ_ADLARI: Readonly<Record<string, string>> = {
-  yavas: 'Biraz yavaş (oyunun hızı)',
-  olagan: 'Olağan',
-}
 
 /** Yalnız sesin bugünkü sürümüne konan işaretler okunur; eskileri atılır. */
 function isaretleriOku(): Isaretler {
@@ -106,38 +94,9 @@ export default function SesDenetimi() {
     <main className="ses-denetimi">
       <h1>Ses Denetimi</h1>
       <p className="ses-denetimi__ozet">
-        {toplam} metin; {sesli} sesi var. Ses: {liste.ses} ({liste.saglayici}). {liste.bicim}
+        {toplam} metin; {sesli} sesi var. Ses: {liste.ses} ({liste.saglayici}), hız {liste.hiz}.{' '}
+        {liste.bicim}
       </p>
-
-      <section aria-labelledby="ornekler-baslik">
-        <h2 id="ornekler-baslik">Örnekler: aynı beş cümle iki hızda</h2>
-        {ORNEKLER.length === 0 ? (
-          <p>Örnek yok: sesler henüz üretilmedi (scripts/ses-uret.py).</p>
-        ) : (
-          Object.keys(HIZ_ADLARI).map((ad) => (
-            <div key={ad} className="ses-denetimi__hiz">
-              <h3>
-                {HIZ_ADLARI[ad]} ({ORNEKLER.find((o) => o.ad === ad)?.hiz})
-              </h3>
-              <ul>
-                {ORNEKLER.filter((o) => o.ad === ad).map((ornek) => (
-                  <li key={ornek.dosya}>
-                    <button
-                      type="button"
-                      className="ses-denetimi__cal"
-                      aria-label={`Çal: ${ornek.metin} (${HIZ_ADLARI[ad]})`}
-                      onClick={() => void dosyaCal(ornek.dosya, ornek.metin, ornek.surum)}
-                    >
-                      <HoparlorSimgesi />
-                    </button>
-                    <span>{ornek.metin}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))
-        )}
-      </section>
 
       <div className="ses-denetimi__arac">
         <button type="button" onClick={() => void kopyala()}>
@@ -169,8 +128,8 @@ export default function SesDenetimi() {
                   </button>
                   <span className="ses-denetimi__metin">
                     {metin}
-                    {kayit && kayit.okunus !== metin && (
-                      <small className="ses-denetimi__okunus">okunuş: {kayit.okunus}</small>
+                    {kayit && okunusu(metin) !== metin && (
+                      <small className="ses-denetimi__okunus">okunuş: {okunusu(metin)}</small>
                     )}
                     {!kayit && <small className="ses-denetimi__okunus">ses yok</small>}
                   </span>

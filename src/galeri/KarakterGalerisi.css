@@ -193,6 +193,11 @@
   gap: 0.2rem;
 }
 
+/* Listenin öğesi liste öğesi kalır; resim adını içindeki öğe taşır (role="img"). */
+.galeri__parca {
+  display: block;
+}
+
 .karolar__tur {
   color: var(--soluk);
   font-size: 0.95rem;

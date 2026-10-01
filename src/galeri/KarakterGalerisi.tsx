@@ -107,10 +107,12 @@ export default function KarakterGalerisi() {
         </p>
         <ul className="karolar">
           {GALERI_KAROLARI.map(({ karo, harf }) => (
-            <li key={karo} className="karolar__karo" role="img" aria-label={karoAdi(harf, karo)}>
-              <Karo karo={karo} harf={harf} />
-              <span className="karolar__tur" aria-hidden="true">
-                {karoTuru(karo)}
+            <li key={karo}>
+              <span className="karolar__karo" role="img" aria-label={karoAdi(harf, karo)}>
+                <Karo karo={karo} harf={harf} />
+                <span className="karolar__tur" aria-hidden="true">
+                  {karoTuru(karo)}
+                </span>
               </span>
             </li>
           ))}
@@ -137,14 +139,24 @@ export default function KarakterGalerisi() {
             />
           </div>
           <ul className="agaclar__parcalar">
-            <li role="img" aria-label={`Halka: ${GALERI_AGACI.halkalar[0]?.yuzey ?? ''}`}>
-              {GALERI_AGACI.halkalar[0] && <Halka parca={GALERI_AGACI.halkalar[0]} />}
+            <li>
+              <span
+                className="galeri__parca"
+                role="img"
+                aria-label={`Halka: ${GALERI_AGACI.halkalar[0]?.yuzey ?? ''}`}
+              >
+                {GALERI_AGACI.halkalar[0] && <Halka parca={GALERI_AGACI.halkalar[0]} />}
+              </span>
             </li>
-            <li role="img" aria-label={`Meyve: ${GALERI_AGACI.meyve.yuzey}`}>
-              <Meyve parca={GALERI_AGACI.meyve} />
+            <li>
+              <span className="galeri__parca" role="img" aria-label={`Meyve: ${GALERI_AGACI.meyve.yuzey}`}>
+                <Meyve parca={GALERI_AGACI.meyve} />
+              </span>
             </li>
-            <li role="img" aria-label="Bahçenin harita işareti">
-              <BahceIsareti />
+            <li>
+              <span className="galeri__parca" role="img" aria-label="Bahçenin harita işareti">
+                <BahceIsareti />
+              </span>
             </li>
           </ul>
         </div>
@@ -167,12 +179,16 @@ export default function KarakterGalerisi() {
           ))}
         </ul>
         <ul className="yaratiklar__parcalar">
-          <li role="img" aria-label="Büyünün yıldızı">
-            <Yildiz boyut={1.4} />
+          <li>
+            <span className="galeri__parca" role="img" aria-label="Büyünün yıldızı">
+              <Yildiz boyut={1.4} />
+            </span>
           </li>
           {GALERI_YARATIKLARI[0] && (
-            <li role="img" aria-label="Uydurukçuklar'ın harita işareti">
-              <UydurukIsareti kok={GALERI_YARATIKLARI[0]} />
+            <li>
+              <span className="galeri__parca" role="img" aria-label="Uydurukçuklar'ın harita işareti">
+                <UydurukIsareti kok={GALERI_YARATIKLARI[0]} />
+              </span>
             </li>
           )}
         </ul>

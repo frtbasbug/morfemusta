@@ -1,0 +1,121 @@
+/* Sınıf modu (etkileşimli tahta; DESIGN.md, "Koleksiyon ve modlar"): geniş yatay ekranda görünüm
+   büyür. Yalnız html[data-sinif='acik'] ve geniş yatay ekranda (en az 1024 px, yatay) geçerlidir;
+   telefonda sınıf modu oyunun olağan görünümündedir.
+
+   Kökün yazı boyu ekranla ölçeklenir: 1920×1080'de 28px (en küçük yazı 1rem), 1366×768'de
+   yaklaşık 20px; 16:9 ekranda düzen aynı oranda küçülür, kaydırma çıkmaz. Dokunma alanları en az
+   2.75rem (1920×1080'de 77px). Piksel boylu çizimler (ağaç, karo, harita işaretleri) --birim ile,
+   sözcük boyları rem'le büyür. Bölge ekranlarında içerik 60rem'lik sütundadır; seçenekler tek
+   sıradadır. Renkler yalnız tema.css'teki belirteçlerden. */
+
+@media (min-width: 1024px) and (orientation: landscape) {
+  :root[data-sinif='acik'] {
+    font-size: max(16px, min(1.4584vw, 2.5926vh));
+    --birim: 0.0625rem;
+    --boyut-unlu-harfi: 1.875rem;
+    --boyut-kok: 1.875rem;
+    --boyut-sonuc: 1.375rem;
+    --cizgi-kok-etiketi: calc(2 * var(--birim));
+    --cizgi-unlu-karti: calc(2.5 * var(--birim));
+  }
+
+  /* Simgeler yazıyla birlikte büyür (olağanda 24px = 1.5rem); kendi boyu olan simge onunla
+     (özgüllüğü sıfır). */
+  :where(:root[data-sinif='acik'] .simge) {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  /* Haritanın tabelaları: işaret de yazı da büyüdü, en uzun ad (Uydurukçuklar) sığsın. */
+  :root[data-sinif='acik'] .harita__yer {
+    max-width: 12.5rem;
+  }
+
+  /* En küçük yazı 1rem. */
+  :root[data-sinif='acik']
+    :is(
+      .bolge__durum,
+      .harita__balon,
+      .alt-gezinme__oge,
+      .hakkinda,
+      .tezgah__tur,
+      .uyduruk__karo-turu,
+      .raf__kelime,
+      .sozluk-karti__kunye
+    ) {
+    font-size: 1rem;
+  }
+
+  /* Bölge ekranları: içerik 60rem'lik sütunda (olağanda 30rem); neden cümlesi tek satırda. */
+  :root[data-sinif='acik'] :is(.koy, .dukkan, .bahce, .uyduruk) {
+    padding-inline: max(calc(env(safe-area-inset-left) + 1rem), calc((100% - 60rem) / 2))
+      max(calc(env(safe-area-inset-right) + 1rem), calc((100% - 60rem) / 2));
+  }
+
+  :root[data-sinif='acik']
+    :is(.neden__cumle, .dukkan__cumle, .bahce__cumle, .uyduruk__cumle) {
+    max-width: 40rem;
+  }
+
+  /* Kıyı: bukalemunlar tek sırada. */
+  :root[data-sinif='acik'] :is(.kiyi, .uyduruk__kiyi) {
+    grid-template-columns: none;
+    grid-auto-columns: calc(8.25rem + 6px);
+    grid-auto-flow: column;
+    column-gap: 1.5rem;
+  }
+
+  /* Sözlük: bölgeler yan yana sütunlarda; tek bölgenin kartları sütun sütun dizilir. */
+  :root[data-sinif='acik'] .kabuk > main {
+    max-width: 66rem;
+  }
+
+  :root[data-sinif='acik'] .kabuk--harita > main {
+    max-width: none;
+  }
+
+  :root[data-sinif='acik'] .sozluk {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    column-gap: 1.5rem;
+  }
+
+  :root[data-sinif='acik'] :is(.sozluk > h1, .sozluk__bos) {
+    flex-basis: 100%;
+  }
+
+  :root[data-sinif='acik'] .sozluk__grup {
+    flex: var(--kart-sayisi, 1) 1 13rem;
+    min-width: 0;
+  }
+
+  :root[data-sinif='acik'] .sozluk__kartlar {
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  }
+
+  :root[data-sinif='acik'] .sozluk-karti__kelime {
+    font-size: 1.4rem;
+  }
+
+  /* Bahçe: ağaç ve yanındaki tabela ortada. */
+  :root[data-sinif='acik'] .bahce__sahne {
+    grid-template-columns: auto auto;
+    column-gap: 3rem;
+  }
+
+  /* Ayarlar: iki sütun. */
+  :root[data-sinif='acik'] .ayarlar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 2.5rem;
+  }
+
+  :root[data-sinif='acik'] :is(.ayarlar > h1, .hakkinda) {
+    grid-column: 1 / -1;
+  }
+
+  /* Akşam ekranı: kart geniş. */
+  :root[data-sinif='acik'] .aksam__kart {
+    max-width: 52rem;
+  }
+}

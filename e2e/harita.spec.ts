@@ -117,13 +117,28 @@ test.describe('ada haritası', () => {
       expect(await kucukDokunmaAlanlari(page), etiket).toEqual([])
     }
 
-    // Kilitli bölgenin iletisi (iki satır) gelince de harita kaymaz, sığar.
-    await page.setViewportSize({ width: 360, height: 640 })
-    const once = await bolge(page, 'Bukalemun Koyu').boundingBox()
-    await bolge(page, 'Kök Bahçesi').click()
-    await expect(ileti(page)).not.toBeEmpty()
-    expect(await bolge(page, 'Bukalemun Koyu').boundingBox()).toEqual(once)
-    expect(await dikeyTasma(page)).toBeLessThanOrEqual(0)
+    // Kilitli bölgenin iletisi (iki satır) gelince de harita kaymaz, sığar. İletinin hoparlörü
+    // balonun içindedir, taşmaz.
+    for (const [en, boy] of [
+      [360, 640],
+      [412, 839],
+    ] as const) {
+      await page.setViewportSize({ width: en, height: boy })
+      await page.reload()
+      const once = await bolge(page, 'Bukalemun Koyu').boundingBox()
+      await bolge(page, 'Kök Bahçesi').click()
+      await expect(ileti(page)).not.toBeEmpty()
+      expect(await bolge(page, 'Bukalemun Koyu').boundingBox()).toEqual(once)
+      expect(await dikeyTasma(page)).toBeLessThanOrEqual(0)
+      const balon = await page.locator('.harita__balon').boundingBox()
+      const hoparlor = await page.locator('.harita__balon .hoparlor').boundingBox()
+      expect(hoparlor && balon, `${en}×${boy}`).toBeTruthy()
+      if (!hoparlor || !balon) continue
+      expect(hoparlor.y).toBeGreaterThanOrEqual(balon.y)
+      expect(hoparlor.y + hoparlor.height).toBeLessThanOrEqual(balon.y + balon.height)
+      expect(hoparlor.x + hoparlor.width).toBeLessThanOrEqual(balon.x + balon.width)
+      expect(Math.min(hoparlor.width, hoparlor.height)).toBeGreaterThanOrEqual(44)
+    }
   })
 })
 

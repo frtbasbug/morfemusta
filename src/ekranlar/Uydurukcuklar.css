@@ -109,6 +109,12 @@
   line-height: 0;
 }
 
+/* Yıldız 1.1 ölçekli (31 px); birim sınıf modunda büyür. */
+.uyduruk__yildiz .yildiz {
+  width: calc(30.8 * var(--birim));
+  height: auto;
+}
+
 .uyduruk__yildiz--ustte {
   top: -0.9rem;
   left: 50%;
@@ -346,6 +352,8 @@
 }
 
 .uyduruk__karo .karo {
+  width: calc(72 * var(--birim));
+  height: calc(72 * var(--birim));
   pointer-events: none;
 }
 

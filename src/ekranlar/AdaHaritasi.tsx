@@ -7,6 +7,10 @@
 // altında nedeni yazılır. Kalın ve ince renkleri haritada kullanılmaz: onlar yalnız dilbilgisel
 // anlam taşır. Her bölgenin işareti süstür, yazısızdır: koyda bukalemun, dükkânda taş ve jöle,
 // bahçede ağaç, Uydurukçuklar'da yaratık.
+//
+// iOS Safari'de, ana ekrana eklenmemişse haritanın altında bir kez küçük bir ipucu durur
+// (src/kabuk/ipucu.ts): "İlerlemen silinmesin: Paylaş → Ana Ekrana Ekle." Kapatılınca bir daha
+// çıkmaz.
 
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { ekle } from '../motor/index.ts'
@@ -19,7 +23,13 @@ import type { BolgeDurumu, HaritaBolgesi } from '../oyun/ilerleme.ts'
 import { cal } from '../ses/calar.ts'
 import { Hoparlor, useSes } from '../ses/Ses.tsx'
 import type { Nokta } from './hareket.ts'
-import { AcikSimgesi, KilitSimgesi, KumSaatiSimgesi, TamamSimgesi } from './simgeler.tsx'
+import {
+  AcikSimgesi,
+  KapatSimgesi,
+  KilitSimgesi,
+  KumSaatiSimgesi,
+  TamamSimgesi,
+} from './simgeler.tsx'
 import './AdaHaritasi.css'
 
 /** Çizimin kutusu (viewBox). Düğmeler aynı kutuda, yüzde konumlarla durur. */
@@ -133,11 +143,16 @@ function isaret(bolge: Bolge): ReactNode {
 export default function AdaHaritasi({
   bolgeler,
   onBolge,
+  ipucu,
+  onIpucuKapat,
 }: {
   /** Bölgeler ve durumları, tablodaki sırayla (bolgeDurumlari). */
   readonly bolgeler: readonly HaritaBolgesi[]
   /** Açık ya da tamam bir bölgeye dokunuldu. */
   readonly onBolge: (bolge: Bolge) => void
+  /** Bir kez gösterilen ipucu (ana ekran); yoksa verilmez. */
+  readonly ipucu?: string
+  readonly onIpucuKapat?: () => void
 }) {
   const [ileti, setIleti] = useState<{ metin: string; durum: BolgeDurumu } | null>(null)
   const baslikRef = useRef<HTMLHeadingElement>(null)
@@ -252,6 +267,22 @@ export default function AdaHaritasi({
           </ol>
         </div>
       </div>
+
+      {ipucu && (
+        <p className="harita__ipucu" role="note">
+          <span>{ipucu}</span>
+          {onIpucuKapat && (
+            <button
+              type="button"
+              className="harita__ipucu-kapat"
+              aria-label="İpucunu kapat"
+              onClick={onIpucuKapat}
+            >
+              <KapatSimgesi />
+            </button>
+          )}
+        </p>
+      )}
     </main>
   )
 }

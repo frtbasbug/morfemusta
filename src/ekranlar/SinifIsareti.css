@@ -1,0 +1,30 @@
+/* Sınıf modunun işareti: küçük bir hap; kesik çerçeve, ilerlemenin kaydedilmediğini anımsatır.
+   Renkler yalnız tema.css'teki belirteçlerden. */
+.sinif-isareti {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0.1rem 0.6rem 0.15rem 0.45rem;
+  border: var(--cizgi-unlu-karti) dashed var(--murekkep);
+  border-radius: 999px;
+  background: var(--zemin);
+  color: var(--murekkep);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.sinif-isareti .simge {
+  width: 1.15em;
+  height: 1.15em;
+}
+
+/* Harita, Sözlük, Ayarlar ve akşam ekranında sağ üst köşede. */
+.sinif-isareti--kose {
+  position: absolute;
+  z-index: 20;
+  top: calc(env(safe-area-inset-top) + 0.6rem);
+  right: calc(env(safe-area-inset-right) + 0.75rem);
+}

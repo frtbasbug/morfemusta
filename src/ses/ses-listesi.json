@@ -2,10 +2,7 @@
  "ses": "tr-TR-Chirp3-HD-Callirrhoe",
  "saglayici": "Google Cloud Text-to-Speech, Chirp 3: HD",
  "bicim": "MP3, mono, 24000 Hz, 32 kbit/s",
- "hizlar": {
-  "yavas": 0.9,
-  "olagan": 1.0
- },
+ "hiz": 0.9,
  "metinler": {
   "Bahçede akşam oldu": {
    "dosya": "3d61362f5845.mp3",
@@ -6954,99 +6951,5 @@
    "boyut": 3936,
    "surum": "11e25c7233d1"
   }
- },
- "ornekler": [
-  {
-   "hiz": 0.9,
-   "ad": "yavas",
-   "metin": "Bukalemun Koyu",
-   "okunus": "Bukalemun Koyu",
-   "sozcukler": [
-    {
-     "sozcuk": "Bukalemun",
-     "ipa": "bukaleˈmun"
-    }
-   ],
-   "dosya": "ornek/yavas-1.mp3",
-   "surum": "a1a3f38ca8b7"
-  },
-  {
-   "hiz": 0.9,
-   "ad": "yavas",
-   "metin": "e ince, a kalın. Kalınlıkları uyuşmuyor.",
-   "okunus": "e ince, a kalın. Kalınlıkları uyuşmuyor.",
-   "dosya": "ornek/yavas-2.mp3",
-   "surum": "837b87150a62"
-  },
-  {
-   "hiz": 0.9,
-   "ad": "yavas",
-   "metin": "Ek ünlüyle başlayınca p yumuşar: b olur.",
-   "okunus": "Ek ünlüyle başlayınca pe yumuşar: be olur.",
-   "dosya": "ornek/yavas-3.mp3",
-   "surum": "f4233153beec"
-  },
-  {
-   "hiz": 0.9,
-   "ad": "yavas",
-   "metin": "İkisi de olur: pıtakım, pıtağım.",
-   "okunus": "İkisi de olur: pıtakım, pıtağım.",
-   "dosya": "ornek/yavas-4.mp3",
-   "surum": "32ceef4cf2b5"
-  },
-  {
-   "hiz": 0.9,
-   "ad": "yavas",
-   "metin": "Meyvenin üstüne gövde çıkmaz: önce çi.",
-   "okunus": "Meyvenin üstüne gövde çıkmaz: önce çi.",
-   "dosya": "ornek/yavas-5.mp3",
-   "surum": "edc362966b6b"
-  },
-  {
-   "hiz": 1.0,
-   "ad": "olagan",
-   "metin": "Bukalemun Koyu",
-   "okunus": "Bukalemun Koyu",
-   "sozcukler": [
-    {
-     "sozcuk": "Bukalemun",
-     "ipa": "bukaleˈmun"
-    }
-   ],
-   "dosya": "ornek/olagan-1.mp3",
-   "surum": "b9d3855c633a"
-  },
-  {
-   "hiz": 1.0,
-   "ad": "olagan",
-   "metin": "e ince, a kalın. Kalınlıkları uyuşmuyor.",
-   "okunus": "e ince, a kalın. Kalınlıkları uyuşmuyor.",
-   "dosya": "ornek/olagan-2.mp3",
-   "surum": "c7011743eb5e"
-  },
-  {
-   "hiz": 1.0,
-   "ad": "olagan",
-   "metin": "Ek ünlüyle başlayınca p yumuşar: b olur.",
-   "okunus": "Ek ünlüyle başlayınca pe yumuşar: be olur.",
-   "dosya": "ornek/olagan-3.mp3",
-   "surum": "f163b783574e"
-  },
-  {
-   "hiz": 1.0,
-   "ad": "olagan",
-   "metin": "İkisi de olur: pıtakım, pıtağım.",
-   "okunus": "İkisi de olur: pıtakım, pıtağım.",
-   "dosya": "ornek/olagan-4.mp3",
-   "surum": "d67b4475d7b8"
-  },
-  {
-   "hiz": 1.0,
-   "ad": "olagan",
-   "metin": "Meyvenin üstüne gövde çıkmaz: önce çi.",
-   "okunus": "Meyvenin üstüne gövde çıkmaz: önce çi.",
-   "dosya": "ornek/olagan-5.mp3",
-   "surum": "e550e40c904f"
-  }
- ]
+ }
 }

@@ -1,0 +1,26 @@
+/* Doğrunun parıltısı (parilti.ts): kelimenin çevresinde yıldızcıklar. Süstür; renkleri
+   belirteçlerden (Renksiz'de gri), çizgisi mürekkep. Gölge ve degrade yok. */
+.parilti {
+  position: fixed;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.parilti__yildiz {
+  position: absolute;
+  width: 1.4rem;
+  height: 1.4rem;
+  overflow: visible;
+  opacity: 0;
+  stroke: var(--murekkep);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.parilti__yildiz--1 {
+  fill: var(--parilti-1);
+}
+
+.parilti__yildiz--2 {
+  fill: var(--parilti-2);
+}

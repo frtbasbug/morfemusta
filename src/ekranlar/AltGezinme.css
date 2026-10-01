@@ -2,6 +2,7 @@
    yazı tipleri yalnız tema.css'teki belirteçlerden (kurallar.test.ts denetler). */
 
 .kabuk {
+  position: relative;
   display: flex;
   flex-direction: column;
   min-height: 100dvh;

@@ -174,7 +174,8 @@ taş, yumuşak ünsüz jöle.** Bölgenin adı sert ünsüzlerin okul hatırlat�
 | `--yaprak` | #A8D5A2 | Kök Bahçesi: ağacın tacı |
 
 `--yanak` Uydurukçuklar'ın yıldızında da kullanılır; `--zemin` yaratığın boynuzunda ve
-beneğinde.
+beneğinde. Doğrunun parıltısının yıldızcıkları `--parilti-1` (yanak) ve `--parilti-2` (kara)
+renklerindedir ("Ses ve resim", "Efektler"); yeni renk değildirler.
 
 Kalın ve ince renkleri (ve zeminleri) yalnız dilbilgisel anlam taşır: süste, haritada ya da
 arayüzde kullanılmaz. Haritada bukalemun gibi dilbilgisel bir figür kendi renginde durabilir.
@@ -182,7 +183,8 @@ arayüzde kullanılmaz. Haritada bukalemun gibi dilbilgisel bir figür kendi ren
 yalnız ek yazılarında kalırlar; kök, halka ve taç gövde ve yaprak rengindedir.
 
 **Renksiz mod** (renk körlüğü denetimi): `--kalin` ve `--ince` #8E8C99'a, iki zemin,
-`--tas`, `--jole`, `--govde` ve `--yaprak` #E2E1E8'e döner. Sekiz ünlü o zaman da
+`--tas`, `--jole`, `--govde` ve `--yaprak` #E2E1E8'e döner; parıltının yıldızcıkları da bu iki
+gridedir. Sekiz ünlü o zaman da
 bedenlerinden, kök etiketleri de biçimlerinden, taş ve jöle de biçimlerinden (çokgen ve damla),
 halka ve meyve de biçimlerinden (bant ve daire) ayırt edilmelidir. Ayarlar'daki Renksiz bunu bütün oyuna uygular (`html[data-renkler="renksiz"]`);
 büyüden sonra da gri kalır.
@@ -418,9 +420,10 @@ vardır (test denetler).
   akşam oldu*); bölgeye sonraki girişte bir sonraki tur gelir, 10. turdan sonra 1. tura
   dönülür. Tur kayıttadır: kalınan yer bütün tablodaki yerdir (10: 2. turun başı). Bölge ilk
   tur bitince tamam sayılır.
-- **Kabuk** öteki bölgelerinki aynen: üst çubuk (sıra turdaki: *3 / 10*), sürdürme, akşam
-  ekranı. Taşıma sürükle-bırak, dokun-dokun (önce bukalemun ya da karo, sonra yaratık) ya da
-  klavye (Tab ve Enter). Dokunma alanları en az 44 px.
+- **Kabuk** öteki bölgelerinki aynen: üst çubuk (tur ve turdaki sıra: *2. tur · 3 / 10*; dar
+  ekranda tur sıranın üstünde), sürdürme, akşam ekranı. Taşıma sürükle-bırak, dokun-dokun
+  (önce bukalemun ya da karo, sonra yaratık) ya da klavye (Tab ve Enter). Dokunma alanları en
+  az 44 px.
 - **Hareket azaltma** açıksa hiçbir şey hareket etmez; yıldız, kopyalar ve cep hemen yerinde.
 - **Sığma:** en kalabalık görev (dört bukalemun ve cep) 360×640'ta ve 320×568'de kaydırmadan
   sığar; alçak ekranda yaratık küçülür.
@@ -518,7 +521,8 @@ gövdeden düşer: her yapım adımının kelimesi (*çiçekçi*; *çiçekçiler
 - **Tekrar:** aynı kelime aynı bölgeden ikinci kez kart olmaz; başka bölgede kurulursa ayrı
   karttır.
 - **Ekran:** kartlar bölgelere göre gruplu, bölge tablosunun sırasıyla; her grupta en yeni
-  kart önde.
+  kart önde. Kartın kök ve ek satırı kırılmaz: bir sütuna sığmayan kart (360–412 px'te *topum*,
+  *toplarım*) iki sütun genişliğinde durur.
 - **Boşsa:** *Sözlüğün henüz boş. Bir kelime kurunca kartı buraya gelir.*
 - Kartta kelime, kök ve ek etiketleri saklıdır; ekler her açılışta motordan gelir. Kelime
   motorun kabul ettiği biçimlerden biridir: uydurma kökte çocuğun seçtiği (*pıtağım* ya da
@@ -542,9 +546,13 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
   (`prefers-reduced-motion` ile aynı davranır: hiçbir şey hareket etmez).
 - **Renkler:** *Renkli* / *Renksiz* (galerideki Renksiz mod; açıkken renkler büyüden sonra
   da gri kalır). Yanında kalın *a* ile ince *e* etiketi örnek olarak durur.
+- **Sınıf modu:** *Kapalı* / *Açık*; altında *Etkileşimli tahta için: bütün bölgeler açık,
+  ilerleme kaydedilmez.* Adreste `?sinif=1` de açar, `?sinif=0` kapatır ("Koleksiyon ve
+  modlar").
 - **İlerlemeyi sıfırla:** uygulamanın içinde iki adım: *Bütün ilerleme ve kartlar silinecek.*
-  *Vazgeç* / *Sil*. Tarayıcının onay penceresi kullanılmaz; odak önce Vazgeç'tedir. Ayarlar
-  silinmez.
+  *Vazgeç* / *Sil*. Tarayıcının onay penceresi kullanılmaz; odak önce Vazgeç'tedir. Ayarlar ve
+  kapatılan ipuçları silinmez. Sınıf modunda yalnız o açılışınkiler silinir: *Sınıf modunun
+  ilerlemesi ve kartları silinecek.*
 - Seçimler büyük, dokunması kolay radyo düğmeleridir; seçili olan dolu ve halkası kalındır.
 - **Hakkında:** kodun (MIT), seslerin (Google Cloud Text-to-Speech, Chirp 3: HD Callirrhoe; MIT
   ses dosyalarını kapsamaz), emojilerin
@@ -564,12 +572,39 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
   birleşir; ayarda yalnız değişen alan yazılır; sıfırlama yine her şeyi siler (ayarlar kalır).
   Bir pencerede olan öteki pencerede de hemen görünür. Bölge ekranı açıkken başka pencere o
   bölgenin ilerlemesini değiştirirse (görev, sıfırlama) ekran kalınan yerden yeniden açılır,
-  sıfırlamadan sonra baştan; ayar değişikliği oyunu kesmez.
+  sıfırlamadan sonra baştan; ayar değişikliği oyunu kesmez. Tarayıcının depo olayı ulaşmazsa
+  (arka planda donmuş sekme, geri tuşuyla önbellekten dönen sayfa) kayıt pencere görünür olunca
+  (`visibilitychange`) ve sayfa yeniden gösterilince (`pageshow`) yeniden okunur; aynı yoldan
+  işlenir.
+- **Sınıf modunda** ilerleme, kartlar ve kalınan yer kayda yazılmaz ("Koleksiyon ve modlar");
+  ayarlar ve kapatılan ipuçları yine yazılır. Sınıf modu kapanınca cihazın kaydı olduğu gibi
+  görünür.
+- **Ana ekran ipucu:** iOS'ta Safari, ana ekrana eklenmemiş sitenin deposunu yedi gün
+  etkileşim olmazsa silebilir; ana ekrandaki web uygulaması bundan muaftır. Bu yüzden iPhone ve
+  iPad Safari'de, oyun ana ekrandan açılmamışsa haritanın altında bir kez küçük bir ipucu
+  görünür: *İlerlemen silinmesin: Paylaş → Ana Ekrana Ekle.* Yanında kapatma düğmesi (×,
+  *İpucunu kapat*). Kapatılınca kayda yazılır, bir daha çıkmaz; sıfırlamada da kalır. Başka
+  tarayıcıda, ana ekrandan açılınca ve sınıf modunda görünmez.
 - Sıfırlama geri alınmaz. Kayıtta bir sıfırlama kimliği var; her sıfırlamada artar. Bölge
   ekranı açılırken kimliği alır, görev bitince yazmadan önce karşılaştırır. Farklıysa ekran
   açıkken ilerleme sıfırlanmıştır: hiçbir şey yazılmaz, ekran baştan açılır.
 - Tarayıcı destekliyorsa ilk kayıttan sonra kalıcı depo istenir
   (`navigator.storage.persist()`): yer darlığında kayıt silinmesin.
+- **Çevrim dışı:** oyun bir kez açıldıktan sonra uçak modunda da açılır ve oynanır (yazı
+  tipleri, resimler, arayüzün ve koyun sesleri önbellekte). Öteki bölgelerin sesleri bölgeye
+  ilk girişte iner; bir kez girilmiş bölgenin sesleri çevrim dışı da çalar.
+- **Güncelleme:** yeni sürüm açık sayfayı yenilemez, bozmaz: o açılış eski sürümle sürer; yeni
+  sürüm bir sonraki açılışta devreye girer. Oyun güncellemeyi sormaz, haber vermez.
+- **Eski tarayıcı:** oyunu çalıştıramayan tarayıcıda (modül betiği yok ya da betik hata verdi)
+  beyaz ekran yerine kısa bir uyarı görünür: *Bu tarayıcı Morfemusta için çok eski.* Altında
+  Cihaz Denetimi sayfasına bağlantı (*Cihazı denetle*). Uyarı modülsüz, eski sözdizimiyle
+  (ES5) yazılır; oyun açılınca hiç görünmez.
+- **Cihaz Denetimi** (`cihaz.html`, oyundan yalnız bu uyarıyla bağlantı alır): tarayıcı ve
+  sürümü, işletim sistemi, ekran boyu, oyunun dayandığı özellikler (service worker,
+  `localStorage`, Web Audio, Pointer Events, `dvh`, kap sorgusu birimleri, ES modülleri,
+  `:has()`, Web Animations), her biri ✓ ya da ✗. *Kopyala* özeti panoya koyar; hiçbir şey
+  gönderilmez. Sayfa modülsüz ve ES5'tir: en eski cihazda da açılır. Derlemenin hedefi en eski
+  cihazdaki sonuca göre seçilecek.
 
 ## Ses ve resim
 
@@ -601,9 +636,9 @@ ne olduğunu okumadan gösterir.
 
 | Ayar | Ne olur |
 |------|---------|
-| Kapalı | hiçbir ses çalmaz, hoparlör görünmez |
-| Dokununca (varsayılan) | kelimenin ya da cümlenin yanındaki küçük hoparlöre dokununca çalar |
-| Sesli mod | oyun kendisi söyler (aşağıda); hoparlör yeniden dinlemek için durur |
+| Kapalı | hiçbir ses ve efekt çalmaz, hoparlör görünmez |
+| Dokununca (varsayılan) | kelimenin ya da cümlenin yanındaki küçük hoparlöre dokununca çalar; doğruda, yanlışta ve büyüde kısa efektler ("Efektler") |
+| Sesli mod | oyun kendisi söyler (aşağıda); sonuçta önce efekt, hemen ardından kelime ya da cümle; hoparlör yeniden dinlemek için durur |
 
 - **Sesli mod:**
   - Görev başlayınca kök söylenir (Bahçe'de hedef); bölgeye girişte önce bölgenin adı.
@@ -619,11 +654,35 @@ ne olduğunu okumadan gösterir.
 - **Hoparlör:** 44 px'lik yuvarlak düğme, mürekkep çizgili. Kelimenin hoparlörü kartın sağ üst
   köşesinde bir rozettir (kartı kaydırmaz); cümlenin hoparlörü cümlenin solundadır.
 - **Önbellek:** arayüzün ve Bukalemun Koyu'nun sesleri önbellekte hazırdır; öteki bölgelerin
-  sesleri bölgeye ilk girişte arka planda iner. Ses yoksa ya da çalınamıyorsa oyun sessiz sürer;
-  hata ve konsol iletisi çıkmaz. iOS'ta ses ilk dokunuştan sonra açılır.
+  sesleri bölgeye ilk girişte arka planda iner, sonra çevrim dışı da çalar. Ses yoksa ya da
+  çalınamıyorsa oyun sessiz sürer; hata ve konsol iletisi çıkmaz. iOS'ta ses ilk dokunuştan
+  sonra açılır.
 - **Denetim:** Ses Denetim Sayfası (`ses.html`) bütün sesleri bölge bölge çalar; yanlış okunan
   Hatalı işaretlenir (işaretler yalnız cihazda), *Listeyi kopyala* onları satır satır panoya
-  koyar. Üstte aynı beş cümle iki hızda (biraz yavaş, olağan) örnek olarak durur.
+  koyar. Hız 0.9'da kaldı (Oturum 11); hız örnekleri kalktı.
+
+### Efektler
+
+Kısa ses efektleri kodla, tarayıcıda (Web Audio) üretilir: ses dosyası ve lisansı yoktur,
+hiçbir şey cihazdan çıkmaz.
+
+| Efekt | Ne zaman | Ses |
+|-------|----------|-----|
+| doğru | doğru sonuç (bukalemun kelimeye birleşti, karo yuvaya oturdu, ek ağaca tutundu) | kısa, yükselen iki nota (G5 → C6), 320 ms |
+| yanlış | yanlış sonuç (bukalemun düştü, karo sekti, ek döndü) | yumuşak, alçak bir ses (A3), 260 ms; cezalandırıcı değil |
+| büyü | çoğalma, cebe girme, halka, yıldız | kısa bir parıltı (C6 E6 G6 C7 arpeji), 335 ms |
+
+- Her efekt 400 ms'den kısadır ve konuşmadan kısıktır (en yüksek 50 ms'si konuşmanın düzeyinin
+  yarısının altında).
+- **Ayar:** Kapalı'da hiçbir efekt çalmaz, Web Audio hiç açılmaz. Dokununca'da yalnız efektler
+  çalar (konuşma hoparlörle). Sesli modda sonuçta önce efekt, efekt biter bitmez kurulan kelime
+  ya da neden cümlesi söylenir; bu arada ekran değişirse söylenmez.
+- **Efekt konuşmayı kesmez:** ayrı çıkıştan çalar; çalan ses sürer. iOS'ta Web Audio da ilk
+  dokunuşla açılır.
+- **Parıltı:** doğruda kelimenin çevresinde küçük bir parıltı: altı yıldızcık sırayla belirip
+  söner (600 ms'den kısa). Renkleri belirteçlerden (`--parilti-1` yanak, `--parilti-2` kara),
+  çizgisi mürekkep; Renksiz'de gri. Süstür: ekran okuyucudan gizli, dokunuşu engellemez, ekranın
+  düzenine karışmaz. Hareket azaltmada (cihazın ayarı ya da oyunun *Azalt*'ı) hiç çizilmez.
 
 ### Resim
 
@@ -669,4 +728,32 @@ ne olduğunu okumadan gösterir.
 - Her yeni kelime **Sözlük**'e kart olarak düşer ("Sözlük").
 - **1–2. sınıf:** okuma gerektirmeyen sesli mod ("Ses ve resim").
 - **3–4. sınıf:** parçalama ve yazım.
-- **Sınıf modu:** etkileşimli tahta için.
+- **Sınıf modu:** etkileşimli tahta için (aşağıda).
+
+### Sınıf modu
+
+Öğretmen oyunu sınıfın etkileşimli tahtasında açar; çocuklar sırayla oynar. Tahtada kimin
+ilerlemesi olduğu belli değildir, bu yüzden hiçbir şey kaydedilmez.
+
+- **Açma ve kapama:** Ayarlar'da *Sınıf modu: Kapalı / Açık*. Adreste `?sinif=1` açar,
+  `?sinif=0` kapatır (öğretmenin yer imi); seçim ayarlara yazılır, parametre adresten kalkar.
+- **Bütün bölgeler açıktır;** kilit yok. İçeriği henüz olmayan bölge yine *hazırlanıyor*
+  görünür.
+- **Kayıt yok:** ilerleme, kartlar ve kalınan yer kayda yazılmaz, yalnız o açılış boyunca
+  bellekte durur. Sayfa yenilenince ya da yeniden açılınca her şey baştan. Her bölge ilk
+  görevinden (Uydurukçuklar ilk turundan) başlar; Sözlük yalnız o açılışın kartlarını, akşam
+  ekranı o açılışın kelimelerini gösterir. Ayarlar (ses, hareket, renkler) yine kaydedilir.
+- **Kapanınca** cihazın kendi ilerlemesi, kartları ve kalınan yeri olduğu gibi geri gelir;
+  sınıf modu aynı açılışta yeniden açılırsa o açılışın belleği sürer. Sıfırlama sınıf modunda
+  yalnız o açılışın belleğini siler.
+- **İşaret:** bölge ekranının üst çubuğunda, haritada, Sözlük'te, Ayarlar'da ve akşam ekranında
+  sağ üstte küçük bir *Sınıf* işareti (tahta simgesi, kesik çerçeve). Ekran okuyucu *Sınıf modu:
+  ilerleme kaydedilmiyor.* okur. Ana ekran ipucu sınıf modunda görünmez.
+- **Görünüm:** geniş yatay ekran (en az 1024 px, yatay) için. Kökün yazı boyu ekranla
+  ölçeklenir: 1920×1080'de 28 px; en küçük yazı 1 rem (28 px), dokunma hedefleri en az
+  2.75 rem (77 px; en az 64 px olmalı). Harita, dört bölge, Sözlük ve akşam ekranı 1920×1080'de
+  ve 1366×768'de kaydırmadan sığar. Bölge ekranlarında içerik 60 rem'lik sütunda, bukalemunlar
+  tek sırada; Sözlük'te bölgeler yan yana, kart sayısıyla orantılı genişlikte. Piksel boylu
+  çizimler (ağaç, karo, harita işaretleri) yazıyla aynı oranda büyür. Telefonda ve dikey ekranda
+  sınıf modu oyunun olağan görünümündedir.
+- Sınırlar: çok kartlı Sözlük (bir açılışta onlarca kelime) ve Ayarlar kayabilir.

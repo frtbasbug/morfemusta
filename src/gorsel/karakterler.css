@@ -280,11 +280,16 @@
   dominant-baseline: central;
 }
 
-/* Dükkânın harita işareti: iki küçük karo yan yana. */
+/* Dükkânın harita işareti: iki küçük karo yan yana (27 px). */
 .dukkan-isareti {
   display: flex;
   align-items: flex-end;
-  gap: 2px;
+  gap: calc(2 * var(--birim));
+}
+
+.dukkan-isareti .karo {
+  width: calc(27 * var(--birim));
+  height: calc(27 * var(--birim));
 }
 
 /* Kök Bahçesi'nin ağacı (agac.ts, Agac.tsx): aşağıdan yukarı kök, halkalar, taç; tacın ucunda
@@ -335,13 +340,34 @@
 .agac__tac {
   position: relative;
   z-index: 1;
-  margin-bottom: -8px;
+  margin-bottom: calc(-8 * var(--birim));
+}
+
+/* Parçaların boyu çizimin kutusudur (agac.ts); birim olağanda 1px, sınıf modunda büyür. */
+.agac__tac > svg {
+  width: calc(148 * var(--birim));
+  height: calc(84 * var(--birim));
+}
+
+.agac__halka > svg {
+  width: calc(96 * var(--birim));
+  height: calc(40 * var(--birim));
+}
+
+.meyve > svg {
+  width: calc(48 * var(--birim));
+  height: calc(54 * var(--birim));
+}
+
+.agac__kok > svg {
+  width: calc(132 * var(--birim));
+  height: calc(52 * var(--birim));
 }
 
 .agac__meyveler {
   position: absolute;
   left: 50%;
-  bottom: 6px;
+  bottom: calc(6 * var(--birim));
   display: flex;
   gap: 0;
   translate: -50% 0;
@@ -362,7 +388,7 @@
 }
 
 .agac__halka + .agac__halka {
-  margin-top: -3px;
+  margin-top: calc(-3 * var(--birim));
 }
 
 .agac__halka > svg,
@@ -373,7 +399,7 @@
 .agac__ek {
   grid-area: 1 / 1;
   font-family: var(--yazi-tipi);
-  font-size: var(--boyut-ek-yazisi);
+  font-size: calc(20 * var(--birim)); /* --boyut-ek-yazisi */
   font-weight: 700;
   line-height: 1.4;
   white-space: nowrap;
@@ -382,9 +408,9 @@
 /* Meyvenin yazısı dairenin ortasında (sapın altında). */
 .meyve__ek {
   grid-area: 1 / 1;
-  padding-top: 10px;
+  padding-top: calc(10 * var(--birim));
   font-family: var(--yazi-tipi);
-  font-size: 18px;
+  font-size: calc(18 * var(--birim));
   font-weight: 700;
   line-height: 1.4;
   white-space: nowrap;
@@ -395,7 +421,7 @@
   position: relative;
   display: grid;
   place-items: center;
-  margin-top: -3px;
+  margin-top: calc(-3 * var(--birim));
 }
 
 .agac__kok > svg {
@@ -406,17 +432,17 @@
   grid-area: 1 / 1;
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  padding-top: 12px;
+  gap: calc(3 * var(--birim));
+  padding-top: calc(12 * var(--birim));
 }
 
 /* Kökün resmi (emoji), kök yazısının solunda. */
 .agac__kok-resmi {
-  font-size: 22px;
+  font-size: calc(22 * var(--birim));
 }
 
 .agac__kok-yazisi .kok-yazisi {
-  font-size: 24px;
+  font-size: calc(24 * var(--birim));
 }
 
 /* Kökün son ünlüsünün etiketi yazının boyunda. */
@@ -427,6 +453,8 @@
 /* Bahçenin harita işareti: küçük bir ağaç. */
 .bahce-isareti {
   display: block;
+  width: calc(30 * var(--birim));
+  height: calc(34 * var(--birim));
   overflow: visible;
 }
 
@@ -464,4 +492,6 @@
 
 .uyduruk-isareti .yaratik {
   display: block;
+  width: calc(30.24 * var(--birim));
+  height: auto;
 }

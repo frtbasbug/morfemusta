@@ -60,6 +60,7 @@ import { Hoparlor, useSes, useSesliSoyleyis } from '../ses/Ses.tsx'
 import AksamEkrani from './AksamEkrani.tsx'
 import BolgeUstu from './BolgeUstu.tsx'
 import { bekle, hareketAzMi, hareketleriKes, kaydir, oynat, type Nokta } from './hareket.ts'
+import { parlat } from './parilti.ts'
 import { SiradakiSimgesi } from './simgeler.tsx'
 import './Uydurukcuklar.css'
 
@@ -123,7 +124,7 @@ export default function Uydurukcuklar({
   const tiklamayiYut = useRef(false)
   const bagli = useRef(false)
   const gorulenGorev = useRef(durum.gorevYeri)
-  const { soyle } = useSes()
+  const { soyle, sonuc, buyu: buyuSesi } = useSes()
 
   // Sesli mod: görev başlayınca yaratığın adı (kök) söylenir; bölgeye girişte önce bölgenin
   // adı.
@@ -239,8 +240,10 @@ export default function Uydurukcuklar({
     }
     if (!bagli.current || !gorev) return
     flushSync(() => gonder({ tur: 'birlesti' }))
-    // Sınır adımı yoksa kelime kuruldu; varsa kelimeyi çocuğun seçeceği karo kurar.
-    if (!sinir && adim) soyle(adim.bicim)
+    // Doğru: efekt ve parıltı. Sınır adımı yoksa kelime kuruldu, ardından söylenir; varsa
+    // kelimeyi çocuğun seçeceği karo kurar.
+    sonuc('dogru', !sinir && adim ? adim.bicim : [])
+    parlat(hedefRef.current?.querySelector('.uyduruk__ad'))
     if (oge) {
       oge.style.transform = ''
       oge.style.opacity = ''
@@ -338,7 +341,7 @@ export default function Uydurukcuklar({
     }
     if (!bagli.current) return
     flushSync(() => gonder({ tur: 'dustu' }))
-    soyle(cumle)
+    sonuc('yanlis', cumle)
     if (!oge) return
     oge.style.transform = ''
     oge.style.transformOrigin = ''
@@ -378,7 +381,9 @@ export default function Uydurukcuklar({
     if (!bagli.current) return
     const eriyecek = karo !== sinir.asil
     flushSync(() => setYuvadaki(eriyecek ? sinir.asil : karo))
-    soyle([kurulanBicim(gorev, sinir, karo).bicim, sinirCumlesi(gorev)])
+    // İki karo da doğru: efekt ve parıltı, ardından (sesli modda) kelime ve İkisi de olur.
+    sonuc('dogru', [kurulanBicim(gorev, sinir, karo).bicim, sinirCumlesi(gorev)])
+    parlat(hedefRef.current?.querySelector('.uyduruk__ad'))
     if (oge) oge.style.transform = ''
     const yuva = yuvaRef.current
     if (eriyecek) {
@@ -421,6 +426,7 @@ export default function Uydurukcuklar({
   async function buyuyuOynat(karo: KaroTuru | null) {
     if (!gorev || !adim) return
     const tur = UYDURUK_BUYULERI[adim.etiket]
+    if (tur) buyuSesi()
     if (tur === 'cebe girer') await cebeKoy()
     else {
       flushSync(() => gonder({ tur: 'etki' }))
@@ -695,6 +701,7 @@ export default function Uydurukcuklar({
         ad={bolge.ad}
         gorevYeri={durum.gorevYeri}
         gorevSayisi={durum.gorevler.length}
+        tur={gorev.tur}
         onHarita={onHarita}
         baslikRef={baslikRef}
       />

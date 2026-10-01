@@ -102,7 +102,7 @@ test.describe('Kök Bahçesi', () => {
     await expect(bolge(page, 'Uydurukçuklar')).toHaveAccessibleName('Uydurukçuklar, Açık')
     await bolge(page, 'Uydurukçuklar').click()
     await expect(page.getByRole('heading', { level: 1, name: 'Uydurukçuklar' })).toBeVisible()
-    await expect(sira(page)).toHaveText('Görev 1 / 10')
+    await expect(sira(page)).toHaveText('1. tur · Görev 1 / 10')
     await page.getByRole('button', { name: 'Harita', exact: true }).click()
     await expect(haritaBasligi(page)).toBeVisible()
 

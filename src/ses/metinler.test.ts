@@ -12,11 +12,12 @@ const hepsi = [...new Set(gruplar.flatMap((g) => g.metinler))]
 
 const sesDosyalari = import.meta.glob('../../public/ses/*.mp3', { query: '?url', eager: true })
 const dosyaAdlari = Object.keys(sesDosyalari).map((yol) => yol.split('/').at(-1) ?? '')
-const ornekDosyalari = Object.keys(
-  import.meta.glob('../../public/ses/ornek/*.mp3', { query: '?url', eager: true }),
-).map((yol) => `ornek/${yol.split('/').at(-1) ?? ''}`)
+// Ses Denetim Sayfası'nın hız örnekleri kalktı (Oturum 11: hız 0.9 seçildi).
+const altDizindekiler = Object.keys(
+  import.meta.glob('../../public/ses/*/**', { query: '?url', eager: true }),
+)
 // Dosyaların kendisi (data: adresi, base64): MP3 başlığı okunur.
-const mp3Verileri = import.meta.glob<string>(['../../public/ses/*.mp3', '../../public/ses/ornek/*.mp3'], {
+const mp3Verileri = import.meta.glob<string>('../../public/ses/*.mp3', {
   query: '?inline',
   import: 'default',
   eager: true,
@@ -144,7 +145,7 @@ describe('ses-listesi.json: her metnin sesi var', () => {
     expect(liste.ses).toBe('tr-TR-Chirp3-HD-Callirrhoe')
     expect(liste.saglayici).toBe('Google Cloud Text-to-Speech, Chirp 3: HD')
     expect(liste.bicim).toBe('MP3, mono, 24000 Hz, 32 kbit/s')
-    expect(liste.hizlar).toEqual({ yavas: 0.9, olagan: 1.0 })
+    expect(liste.hiz).toBe(0.9)
     expect(JSON.stringify(liste)).not.toMatch(/dfki|piper|BY-NC-SA/i)
     for (const kayit of Object.values(kayitlar)) {
       expect(kayit.dosya).toMatch(/^[0-9a-f]{12}\.mp3$/)
@@ -155,11 +156,11 @@ describe('ses-listesi.json: her metnin sesi var', () => {
 
   it('MP3 başlıklarında örnekleme hızı 24 kHz (listedeki biçimle aynı)', () => {
     const hizlar = new Set(Object.values(mp3Verileri).map(mp3Ornekleme))
-    expect(Object.keys(mp3Verileri)).toHaveLength(dosyaAdlari.length + ornekDosyalari.length)
+    expect(Object.keys(mp3Verileri)).toHaveLength(dosyaAdlari.length)
     expect([...hizlar]).toEqual([24000])
   })
 
-  it('sözcük tablosu: Bukalemun geçen 5 metinde ve iki örnekte IPA okunuşuyla (bukaleˈmun)', () => {
+  it('sözcük tablosu: Bukalemun geçen 5 metinde IPA okunuşuyla (bukaleˈmun)', () => {
     const bukalemunlu = Object.entries(kayitlar).filter(([, k]) => k.sozcukler?.length)
     expect(bukalemunlu.map(([m]) => m).sort()).toEqual(
       Object.keys(kayitlar)
@@ -170,10 +171,6 @@ describe('ses-listesi.json: her metnin sesi var', () => {
     for (const [, k] of bukalemunlu) {
       expect(k.sozcukler).toEqual([{ sozcuk: 'Bukalemun', ipa: 'bukaleˈmun' }])
     }
-    expect(liste.ornekler.filter((o) => 'sozcukler' in o).map((o) => o.dosya)).toEqual([
-      'ornek/yavas-1.mp3',
-      'ornek/olagan-1.mp3',
-    ])
   })
 
   it('okunuş tablosunun iki satırı kullanılıyor: Şahap\'ın → Şahabın', () => {
@@ -183,25 +180,8 @@ describe('ses-listesi.json: her metnin sesi var', () => {
     )
   })
 
-  it('örnekler: aynı beş cümle iki hızda (0.9 ve 1.0), dosyaları ve sürümleriyle', () => {
-    const ornekler = liste.ornekler as {
-      hiz: number
-      metin: string
-      okunus: string
-      sozcukler?: { sozcuk: string; ipa: string }[]
-      dosya: string
-      surum: string
-    }[]
-    expect(ornekler).toHaveLength(10)
-    expect(ornekler.filter((o) => o.hiz === 0.9).map((o) => o.metin)).toEqual(
-      ornekler.filter((o) => o.hiz === 1.0).map((o) => o.metin),
-    )
-    expect(ornekler.map((o) => o.metin)).toContain('Ek ünlüyle başlayınca p yumuşar: b olur.')
-    for (const ornek of ornekler) {
-      expect(ornekDosyalari).toContain(ornek.dosya)
-      expect(ornek.surum).toMatch(/^[0-9a-f]{12}$/)
-      expect(ornek.okunus).toBe(okunus(ornek.metin))
-      expect(ornek.sozcukler ?? []).toEqual(sozcukOkunuslari(okunus(ornek.metin)))
-    }
+  it('hız seçildi: örnekler yok (ne listede ne public/ses/ altında)', () => {
+    expect(Object.keys(liste)).toEqual(['ses', 'saglayici', 'bicim', 'hiz', 'metinler'])
+    expect(altDizindekiler).toEqual([])
   })
 })

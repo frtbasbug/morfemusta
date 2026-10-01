@@ -10,6 +10,7 @@ import KurulanKelime from '../gorsel/KurulanKelime.tsx'
 import type { SozlukKarti } from '../oyun/ilerleme.ts'
 import { BUGUN_KURULANLAR } from '../ses/metinler.ts'
 import { Hoparlor, useSesliSoyleyis } from '../ses/Ses.tsx'
+import SinifIsareti from './SinifIsareti.tsx'
 import { HaritaSimgesi, HilalSimgesi } from './simgeler.tsx'
 import './AksamEkrani.css'
 
@@ -38,6 +39,7 @@ export default function AksamEkrani({
 
   return (
     <main className="aksam" aria-labelledby="aksam-baslik">
+      <SinifIsareti kose />
       <section className="aksam__kart">
         <HilalSimgesi sinif="aksam__hilal" />
         <div className="aksam__baslik-satiri">

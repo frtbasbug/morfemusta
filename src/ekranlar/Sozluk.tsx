@@ -6,8 +6,12 @@
 // biçimdir (pıtağım ya da pıtakım); parçaları o biçimden okunur. Kökün resmi (emoji) kelimenin
 // yanında; uydurma kökte resim yok, köşede yaratık var. Sesli modda karta dokununca kelime
 // söylenir; Dokununca'da kartın hoparlörü çalar.
+//
+// Kök ve ek satırı kırılmaz: parçaları bir sütuna sığmayan kart (dar ekranda toplarım, topum)
+// iki sütun genişliğinde durur (genisKartlar). Ölçü yerleşimden sonra alınır; ekran dönünce
+// yeniden alınır.
 
-import { Fragment, useEffect, useRef } from 'react'
+import { Fragment, useEffect, useLayoutEffect, useRef, type CSSProperties } from 'react'
 import { KOK_SOZLUGU } from '../motor/index.ts'
 import EkYazisi from '../gorsel/EkYazisi.tsx'
 import KokResmi from '../gorsel/KokResmi.tsx'
@@ -27,15 +31,55 @@ function gunYazisi(an: Date): string {
   return `${an.getFullYear()}-${iki(an.getMonth() + 1)}-${iki(an.getDate())}`
 }
 
+/**
+ * Parçaları bir sütuna sığmayan kartları iki sütuna açar (data-genis). Liste en az iki sütunsa
+ * geçerlidir; tek sütunda kart zaten bütün endedir. Parçalar bölünmez öğelerdir (kök, artı,
+ * ek): doğal enleri toplanır, sütunun içine sığıp sığmadığına bakılır.
+ */
+function genisKartlar(liste: HTMLElement): void {
+  const sutunlar = getComputedStyle(liste).gridTemplateColumns.split(' ').map(parseFloat)
+  const sutun = sutunlar[0] ?? 0
+  for (const yer of liste.children) {
+    if (!(yer instanceof HTMLElement)) continue
+    const kart = yer.firstElementChild
+    const parcalar = kart?.querySelector<HTMLElement>('.sozluk-karti__parcalar')
+    if (!(kart instanceof HTMLElement) || !parcalar) continue
+    const aralik = parseFloat(getComputedStyle(parcalar).columnGap) || 0
+    const ogeler = [...parcalar.children]
+    const dogal =
+      ogeler.reduce((toplam, oge) => toplam + oge.getBoundingClientRect().width, 0) +
+      aralik * Math.max(0, ogeler.length - 1)
+    const kenar = kart.offsetWidth - parcalar.clientWidth
+    const genis = sutunlar.length > 1 && dogal + kenar > sutun + 0.5
+    if (genis) yer.dataset.genis = ''
+    else delete yer.dataset.genis
+  }
+}
+
 export default function Sozluk({ gruplar }: { readonly gruplar: readonly SozlukGrubu[] }) {
   const baslikRef = useRef<HTMLHeadingElement>(null)
+  const anaRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     baslikRef.current?.focus()
   }, [])
 
+  // Kartların eni: yerleşimden sonra ve ekranın boyu değişince (döndürme, yazı tipi yüklenince).
+  useLayoutEffect(() => {
+    const ana = anaRef.current
+    if (!ana) return
+    const olc = () => {
+      for (const liste of ana.querySelectorAll<HTMLElement>('.sozluk__kartlar')) genisKartlar(liste)
+    }
+    olc()
+    const gozlemci = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(olc)
+    gozlemci?.observe(ana)
+    void document.fonts?.ready.then(olc)
+    return () => gozlemci?.disconnect()
+  }, [gruplar])
+
   return (
-    <main className="sozluk" aria-labelledby="sozluk-baslik">
+    <main className="sozluk" aria-labelledby="sozluk-baslik" ref={anaRef}>
       <h1 id="sozluk-baslik" className="ekran-basligi" ref={baslikRef} tabIndex={-1}>
         Sözlük
       </h1>
@@ -47,6 +91,8 @@ export default function Sozluk({ gruplar }: { readonly gruplar: readonly SozlukG
             key={bolge.kimlik}
             className="sozluk__grup"
             aria-labelledby={`sozluk-${bolge.kimlik}`}
+            // Sınıf modunda gruplar yan yana durur, kart sayısıyla orantılı genişlikte (Sinif.css).
+            style={{ '--kart-sayisi': kartlar.length } as CSSProperties}
           >
             <h2 id={`sozluk-${bolge.kimlik}`} className="sozluk__bolge">
               {bolge.ad}

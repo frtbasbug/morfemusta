@@ -13,7 +13,10 @@ describe('Uydurukcuklar', () => {
   it('başlık bölge tablosundan; Harita düğmesi ve turdaki görev sırası', () => {
     expect(html).toMatch(/^<main class="uyduruk">/)
     expect(html).toContain('<h1 class="bolge-ustu__baslik" tabindex="-1">Uydurukçuklar</h1>')
-    expect(html).toContain('<p class="bolge-ustu__sira"><span class="gizli">Görev </span>1 / 10</p>')
+    // Turlu bölge: sıranın önünde tur (dar ekranda tur üstte, ayraç gizli).
+    expect(html).toContain(
+      '<p class="bolge-ustu__sira"><span class="bolge-ustu__tur">1. tur<span class="bolge-ustu__ayrac"> · </span></span><span class="gizli">Görev </span>1 / 10</p>',
+    )
   })
 
   it('yaratık büyük boy, adı altında (son ünlüsü etikette); hedefin adı kök', () => {
