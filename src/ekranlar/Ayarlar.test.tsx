@@ -18,27 +18,31 @@ const secenekler = (html: string) =>
   ].map(([, ad, secili, deger, yazi]) => [ad, deger, secili !== undefined, yazi])
 
 describe('Ayarlar', () => {
-  it('başlık; Hareket ve Renkler birer seçim grubu', () => {
+  it('başlık; Ses, Hareket ve Renkler birer seçim grubu', () => {
     const html = ayarlar()
     expect(html).toMatch(/<h1 id="ayarlar-baslik" class="ekran-basligi" tabindex="-1">Ayarlar<\/h1>/)
     expect(eslesmeler(html, /<legend class="ayar__baslik">([^<]*)<\/legend>/g)).toEqual([
+      'Ses',
       'Hareket',
       'Renkler',
     ])
   })
 
-  it('Hareket: Sistem gibi / Azalt; Renkler: Renkli / Renksiz; seçili olan ayardan', () => {
+  it('Ses: Kapalı / Dokununca / Sesli mod (varsayılan Dokununca); Hareket; Renkler', () => {
     expect(secenekler(ayarlar())).toEqual([
+      ['ses', 'kapali', false, 'Kapalı'],
+      ['ses', 'dokununca', true, 'Dokununca'],
+      ['ses', 'sesli', false, 'Sesli mod'],
       ['hareket', 'sistem', true, 'Sistem gibi'],
       ['hareket', 'azalt', false, 'Azalt'],
       ['renkler', 'renkli', true, 'Renkli'],
       ['renkler', 'renksiz', false, 'Renksiz'],
     ])
     expect(
-      secenekler(ayarlar({ hareket: 'azalt', renkler: 'renksiz' })).map(([, deger, secili]) =>
-        secili ? deger : null,
+      secenekler(ayarlar({ hareket: 'azalt', renkler: 'renksiz', ses: 'sesli' })).map(
+        ([, deger, secili]) => (secili ? deger : null),
       ),
-    ).toEqual([null, 'azalt', null, 'renksiz'])
+    ).toEqual([null, null, 'sesli', null, 'azalt', null, 'renksiz'])
   })
 
   it('sıfırlama önce yalnız bir düğmedir; soru uygulamanın içinde, confirm yok', () => {
@@ -51,5 +55,15 @@ describe('Ayarlar', () => {
     expect(kaynak).toMatch(/>\s*Vazgeç\s*</)
     expect(kaynak).toMatch(/>\s*Sil\s*</)
     expect(kaynak).not.toMatch(/\b(?:window\.)?confirm\(/)
+  })
+
+  it('Hakkında: kodun, seslerin ve emojilerin lisansı', () => {
+    const html = ayarlar()
+    expect(html).toContain('>Hakkında</h2>')
+    expect(html).toContain('MIT')
+    expect(html).toContain('tr_TR-dfki-medium')
+    expect(html).toContain('CC BY-NC-SA 4.0')
+    expect(html).toContain('Twemoji')
+    expect(html).toContain('CC BY 4.0')
   })
 })

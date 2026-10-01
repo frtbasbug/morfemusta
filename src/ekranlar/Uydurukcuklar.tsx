@@ -56,9 +56,11 @@ import {
   type Deneme,
   type UydurukBuyusu,
 } from '../oyun/uyduruk.ts'
+import { Hoparlor, useSes, useSesliSoyleyis } from '../ses/Ses.tsx'
 import AksamEkrani from './AksamEkrani.tsx'
 import BolgeUstu from './BolgeUstu.tsx'
 import { bekle, hareketAzMi, hareketleriKes, kaydir, oynat, type Nokta } from './hareket.ts'
+import { SiradakiSimgesi } from './simgeler.tsx'
 import './Uydurukcuklar.css'
 
 /** Sürükleme sayılan en kısa yol (px); daha kısası dokunmadır. */
@@ -121,6 +123,17 @@ export default function Uydurukcuklar({
   const tiklamayiYut = useRef(false)
   const bagli = useRef(false)
   const gorulenGorev = useRef(durum.gorevYeri)
+  const { soyle } = useSes()
+
+  // Sesli mod: görev başlayınca yaratığın adı (kök) söylenir; bölgeye girişte önce bölgenin
+  // adı.
+  const [acilisYeri] = useState(durum.gorevYeri)
+  useSesliSoyleyis(
+    gorev && evre !== 'kapanis'
+      ? [...(durum.gorevYeri === acilisYeri ? [bolge.ad] : []), gorev.kok]
+      : [],
+    durum.gorevYeri,
+  )
 
   useEffect(() => {
     bagli.current = true
@@ -162,11 +175,21 @@ export default function Uydurukcuklar({
     if (!gorev || !adim || evre !== 'secim') return
     const secenek = adim.secenekler.find((s) => s.yuzey === yuzey)
     if (!secenek) return
-    const dogru = dogruMu(denemeyiDegerlendir(gorev, adim, yuzey))
+    const deneme = denemeyiDegerlendir(gorev, adim, yuzey)
     flushSync(() => gonder({ tur: 'dene', yuzey }))
     const oge = bukalemunlar.current.get(yuzey)
-    if (dogru) await otur(oge, secenek.parca, kayma)
-    else await dusus(oge, kayma)
+    if (dogruMu(deneme)) await otur(oge, secenek.parca, kayma)
+    else await dusus(oge, kayma, deneme.cumle)
+  }
+
+  /**
+   * Sesli mod: seçilen bukalemunun (zelüye, zelüe) ya da karonun (pıtakım, pıtağım) kuracağı
+   * kelime.
+   */
+  function adayiSoyle(tasinan: Tasinan) {
+    if (!gorev || !adim) return
+    if (tasinan.tur === 'bukalemun') soyle(adim.parca.govde + tasinan.yuzey)
+    else soyle(kurulanBicim(gorev, sinir, tasinan.karo).bicim)
   }
 
   /** Bukalemunun yaratığın adının sonuna yapışacağı yer: kaymaya göre (translate). */
@@ -216,6 +239,8 @@ export default function Uydurukcuklar({
     }
     if (!bagli.current || !gorev) return
     flushSync(() => gonder({ tur: 'birlesti' }))
+    // Sınır adımı yoksa kelime kuruldu; varsa kelimeyi çocuğun seçeceği karo kurar.
+    if (!sinir && adim) soyle(adim.bicim)
     if (oge) {
       oge.style.transform = ''
       oge.style.opacity = ''
@@ -283,7 +308,7 @@ export default function Uydurukcuklar({
   }
 
   /** Yanlış bukalemun: -12 derece eğilir, düşer, kıyıya döner; neden görünür. */
-  async function dusus(oge: HTMLButtonElement | undefined, kayma: Nokta) {
+  async function dusus(oge: HTMLButtonElement | undefined, kayma: Nokta, cumle: string) {
     if (oge && !hareketAzMi()) {
       const hedef = yapismaNoktasi(oge, kayma)
       oge.style.transform = kaydir(hedef)
@@ -313,6 +338,7 @@ export default function Uydurukcuklar({
     }
     if (!bagli.current) return
     flushSync(() => gonder({ tur: 'dustu' }))
+    soyle(cumle)
     if (!oge) return
     oge.style.transform = ''
     oge.style.transformOrigin = ''
@@ -352,6 +378,7 @@ export default function Uydurukcuklar({
     if (!bagli.current) return
     const eriyecek = karo !== sinir.asil
     flushSync(() => setYuvadaki(eriyecek ? sinir.asil : karo))
+    soyle([kurulanBicim(gorev, sinir, karo).bicim, sinirCumlesi(gorev)])
     if (oge) oge.style.transform = ''
     const yuva = yuvaRef.current
     if (eriyecek) {
@@ -532,6 +559,7 @@ export default function Uydurukcuklar({
       if (Math.hypot(s.kayma.x, s.kayma.y) < SURUKLEME_ESIGI) return
       s.suruklendi = true
       e.currentTarget.classList.add('uyduruk__tasinan')
+      adayiSoyle(s.tasinan)
     }
     e.currentTarget.style.transform = kaydir(s.kayma)
     hedefRef.current?.classList.toggle(
@@ -575,6 +603,7 @@ export default function Uydurukcuklar({
     if (tiklamaYutulsunMu(e) || !secimde) return
     const secilecek = durum.secili !== yuzey
     gonder({ tur: 'sec', yuzey })
+    if (secilecek) adayiSoyle({ tur: 'bukalemun', yuzey })
     // Seçilen bukalemun yaratığa götürülmeyi bekler: odak yaratığa geçer.
     if (secilecek) hedefRef.current?.focus()
   }
@@ -583,6 +612,7 @@ export default function Uydurukcuklar({
     if (tiklamaYutulsunMu(e) || !sinirda) return
     const secilecek = durum.seciliKaro !== karo
     gonder({ tur: 'karoSec', karo })
+    if (secilecek) adayiSoyle({ tur: 'karo', karo })
     if (secilecek) hedefRef.current?.focus()
   }
 
@@ -676,25 +706,37 @@ export default function Uydurukcuklar({
 
       <section className="uyduruk__sahne" aria-label="Yaratık">
         {!cepte && (
-          <button
-            ref={hedefRef}
-            type="button"
-            className={seciliVar ? 'uyduruk__hedef uyduruk__hedef--bekliyor' : 'uyduruk__hedef'}
-            aria-label={hedefAdi}
-            aria-describedby="uyduruk-yonerge"
-            onClick={hedefeDokunuldu}
-          >
-            {yaratiklar}
-            {adYazisi}
-          </button>
+          <div className="uyduruk__hedefyeri">
+            <Hoparlor
+              metin={kurulan ? kurulan.bicim : birlesen && !tezgahta ? adim.bicim : gorev.kok}
+              sinif="hoparlor--kose"
+            />
+            <button
+              ref={hedefRef}
+              type="button"
+              className={seciliVar ? 'uyduruk__hedef uyduruk__hedef--bekliyor' : 'uyduruk__hedef'}
+              aria-label={hedefAdi}
+              aria-describedby="uyduruk-yonerge"
+              onClick={hedefeDokunuldu}
+            >
+              {yaratiklar}
+              {adYazisi}
+            </button>
+          </div>
         )}
         <div className="uyduruk__alt">
           <div className="uyduruk__neden" role="status">
             {durum.yanlis && <NedenYazisi deneme={durum.yanlis} />}
-            {tezgahta && durum.karo && <p className="uyduruk__cumle">{sinirCumlesi(gorev)}</p>}
+            {tezgahta && durum.karo && (
+              <p className="uyduruk__cumle sesli-cumle">
+                <Hoparlor metin={sinirCumlesi(gorev)} />
+                <span>{sinirCumlesi(gorev)}</span>
+              </p>
+            )}
           </div>
           {evre === 'bitti' && (
             <button ref={sonrakiRef} type="button" className="uyduruk__dugme" onClick={sonrakiGorev}>
+              <SiradakiSimgesi />
               Sıradaki
             </button>
           )}
@@ -826,7 +868,12 @@ function NedenYazisi({ deneme }: { deneme: Deneme }): ReactNode {
           )
         })}
       </p>
-      {deneme.cumle && <p className="uyduruk__cumle">{deneme.cumle}</p>}
+      {deneme.cumle && (
+        <p className="uyduruk__cumle sesli-cumle">
+          <Hoparlor metin={deneme.cumle} />
+          <span>{deneme.cumle}</span>
+        </p>
+      )}
     </>
   )
 }

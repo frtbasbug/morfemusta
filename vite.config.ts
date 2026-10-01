@@ -1,4 +1,5 @@
 /// <reference types="vitest/config" />
+import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
@@ -7,17 +8,31 @@ import { VitePWA } from 'vite-plugin-pwa'
 // GitHub Pages'te site https://<kullanıcı>.github.io/morfemusta/ altında yayımlanır.
 const TABAN = '/morfemusta/'
 
+// Sesler (scripts/ses-uret.py üretir, public/ses/): arayüzün ve Bukalemun Koyu'nun sesleri
+// önceden önbelleğe alınır; öteki bölgelerinki bölgeye ilk girişte arka planda iner
+// (src/ses/calar.ts) ve aynı önbellekten çalar. Dosyanın adı metnin özeti, sürümü içeriğinin.
+const sesListesi = JSON.parse(
+  readFileSync(new URL('src/ses/ses-listesi.json', import.meta.url), 'utf8'),
+) as { metinler: Record<string, { dosya: string; bolgeler: string[]; surum?: string }> }
+const ONCEDEN_INEN_SESLER = Object.values(sesListesi.metinler)
+  .filter(({ bolgeler }) => bolgeler.includes('arayuz') || bolgeler.includes('koy'))
+  .map(({ dosya, surum }) => ({ url: `ses/${dosya}`, revision: surum ?? null }))
+/** src/ses/calar.ts'teki SES_ONBELLEGI. */
+const SES_ONBELLEGI = 'morfemusta-ses'
+
 export default defineConfig({
   base: TABAN,
   build: {
     rolldownOptions: {
-      // Üç giriş sayfası: oyun, Biçim Denetim Sayfası ve Karakter Galerisi. Oyun öteki
-      // ikisine bağlantı vermez. Onlar da önbelleğe girer; girmeselerdi service worker oraya
-      // giden gezinmeyi oyunun index.html'ine yönlendirirdi (navigateFallback).
+      // Dört giriş sayfası: oyun, Biçim Denetim Sayfası, Karakter Galerisi ve Ses Denetim
+      // Sayfası. Oyun ötekilere bağlantı vermez. Onlar da önbelleğe girer; girmeselerdi
+      // service worker oraya giden gezinmeyi oyunun index.html'ine yönlendirirdi
+      // (navigateFallback).
       input: {
         oyun: fileURLToPath(new URL('index.html', import.meta.url)),
         denetim: fileURLToPath(new URL('denetim.html', import.meta.url)),
         galeri: fileURLToPath(new URL('galeri.html', import.meta.url)),
+        ses: fileURLToPath(new URL('ses.html', import.meta.url)),
       },
     },
   },
@@ -56,7 +71,19 @@ export default defineConfig({
       workbox: {
         // Çevrim dışı çalışma için her şey (yazı tipleri dahil) önceden önbelleğe alınır.
         // woff dosyaları alınmaz: woff2'yi desteklemeyen tarayıcı hedefte yok.
+        // Emojiler (public/emoji/*.svg) de burada. Sesler (mp3) kalıpta yok: yalnız arayüzün ve
+        // koyun sesleri listeden eklenir, ötekiler çalışma anında önbelleğe iner.
         globPatterns: ['**/*.{html,js,css,svg,png,woff2}'],
+        additionalManifestEntries: ONCEDEN_INEN_SESLER,
+        runtimeCaching: [
+          {
+            // İşlev değil düzenli ifade: kalıp service worker'a metin olarak kopyalanır.
+            // Önceden inmeyen seslerin adresinde sürüm var (?v=…, src/ses/calar.ts).
+            urlPattern: /\/morfemusta\/ses\/.+\.mp3(\?.*)?$/,
+            handler: 'CacheFirst',
+            options: { cacheName: SES_ONBELLEGI },
+          },
+        ],
         // Yeni sürüm sessizce devreye girer; çocuğa güncelleme sorusu sorulmaz.
         clientsClaim: true,
         skipWaiting: true,

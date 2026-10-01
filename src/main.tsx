@@ -11,9 +11,13 @@ import '@fontsource/baloo-2/latin-ext-800.css'
 import './gorsel/tema.css'
 import './genel.css'
 import App from './App.tsx'
+import { sesiAc } from './ses/calar.ts'
 
 const kok = document.getElementById('kok')
 if (!kok) throw new Error('#kok öğesi bulunamadı')
+
+// iOS'ta ses ancak bir dokunuşla açılır: ilk dokunuşta çalar hazırlanır.
+sesiAc()
 
 createRoot(kok).render(
   <StrictMode>

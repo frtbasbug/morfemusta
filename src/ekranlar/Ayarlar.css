@@ -144,3 +144,37 @@
   margin: 0;
   color: var(--soluk);
 }
+
+/* Üç seçenekli ayar (Ses): dar ekranda alt satıra kayar. */
+.ayar__secenekler:has(> :nth-child(3)) {
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+}
+
+/* Hakkında: lisanslar ve atıflar, küçük yazıyla. */
+.hakkinda {
+  display: grid;
+  gap: 0.6rem;
+  color: var(--soluk);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.hakkinda p {
+  margin: 0;
+}
+
+.hakkinda__liste {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0;
+}
+
+.hakkinda__liste dt {
+  color: var(--murekkep);
+  font-weight: 700;
+}
+
+.hakkinda__liste dd {
+  margin: 0 0 0.4rem;
+  overflow-wrap: anywhere;
+}

@@ -32,6 +32,10 @@
 }
 
 /* Yaratık ve adı tek bir hedeftir: bukalemun ya da karo buraya taşınır. */
+.uyduruk__hedefyeri {
+  position: relative;
+}
+
 .uyduruk__hedef {
   display: grid;
   justify-items: center;
@@ -211,6 +215,9 @@
 }
 
 .uyduruk__dugme {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   min-width: 2.75rem;
   min-height: 2.75rem;
   padding: 0 1.5rem;

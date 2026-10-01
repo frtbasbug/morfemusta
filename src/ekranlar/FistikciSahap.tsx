@@ -15,6 +15,10 @@
 // oynamaz, yalnız durum değişir. Kabuk Bukalemun Koyu'nunkiyle aynıdır: çocuk kaldığı
 // görevden sürdürür (baslangic), her görev bitince kabuk ilerlemeyi ve kartı kaydeder
 // (onGorevBitti), görevler bitince ortak akşam ekranı açılır.
+//
+// Ses (DESIGN.md, "Ses ve resim"): sesli modda görev başlayınca kök söylenir; karo seçilince ya
+// da sürüklenmeye başlayınca kuracağı kelime (kitapım, kitabım); doğruda kurulan kelime,
+// yanlışta neden cümlesi. Kökün resmi (emoji) kelime kartında.
 
 import {
   useEffect,
@@ -31,6 +35,7 @@ import { ekle, type Karo as KaroTuru, type Sinir } from '../motor/index.ts'
 import EkYazisi from '../gorsel/EkYazisi.tsx'
 import Karo from '../gorsel/Karo.tsx'
 import { karoAdi, karoTuru } from '../gorsel/karo.ts'
+import KokResmi from '../gorsel/KokResmi.tsx'
 import { EtiketliKok } from '../gorsel/KokYazisi.tsx'
 import UnluEtiketi from '../gorsel/UnluEtiketi.tsx'
 import { UNLULER } from '../gorsel/cizim.ts'
@@ -50,9 +55,11 @@ import {
   sesDegisti,
   type Deneme,
 } from '../oyun/dukkan.ts'
+import { Hoparlor, useSes, useSesliSoyleyis } from '../ses/Ses.tsx'
 import AksamEkrani from './AksamEkrani.tsx'
 import BolgeUstu from './BolgeUstu.tsx'
 import { bekle, hareketAzMi, hareketleriKes, kaydir, oynat, type Nokta } from './hareket.ts'
+import { SiradakiSimgesi } from './simgeler.tsx'
 import './FistikciSahap.css'
 
 /** Sürükleme sayılan en kısa yol (px); daha kısası dokunmadır. */
@@ -107,6 +114,16 @@ export default function FistikciSahap({
   const tiklamayiYut = useRef(false)
   const bagli = useRef(false)
   const gorulenGorev = useRef(durum.gorevYeri)
+  const { soyle } = useSes()
+
+  // Sesli mod: görev başlayınca kök söylenir; bölgeye girişte önce bölgenin adı.
+  const [acilisYeri] = useState(durum.gorevYeri)
+  useSesliSoyleyis(
+    gorev && evre !== 'kapanis'
+      ? [...(durum.gorevYeri === acilisYeri ? [bolge.ad] : []), gorev.kok]
+      : [],
+    durum.gorevYeri,
+  )
 
   useEffect(() => {
     bagli.current = true
@@ -142,11 +159,16 @@ export default function FistikciSahap({
   /** Karo yuvaya taşındı: doğruysa oturur, yanlışsa seker. */
   async function tasi(karo: KaroTuru, kayma: Nokta = DURAGAN) {
     if (!gorev || !sinir || evre !== 'secim') return
-    const dogru = dogruMu(denemeyiDegerlendir(gorev, sinir, karo))
+    const deneme = denemeyiDegerlendir(gorev, sinir, karo)
     flushSync(() => gonder({ tur: 'dene', karo }))
     const oge = karolar.current.get(karo)
-    if (dogru) await otur(oge, karo, kayma)
-    else await sek(oge, kayma)
+    if (dogruMu(deneme)) await otur(oge, karo, kayma)
+    else await sek(oge, kayma, deneme.cumle)
+  }
+
+  /** Sesli mod: karonun kuracağı kelime (kitapım, kitabım). */
+  function adayiSoyle(karo: KaroTuru) {
+    if (gorev && sinir) soyle(denemeyiDegerlendir(gorev, sinir, karo).aday)
   }
 
   /** Karonun yuvanın üstüne geleceği kayma (translate). */
@@ -183,6 +205,7 @@ export default function FistikciSahap({
       setYuvadaki(degisir ? sinir.asil : karo)
       gonder({ tur: 'oturdu' })
     })
+    soyle(denemeyiDegerlendir(gorev, sinir, karo).aday)
     if (oge) oge.style.transform = ''
     const yuva = yuvaRef.current
     if (degisir) {
@@ -213,7 +236,11 @@ export default function FistikciSahap({
               { transform: 'scale(0.92, 1.1)', offset: 0.6 },
               { transform: 'scale(1, 1)' },
             ]
-          : [{ transform: 'scale(0.8)' }, { transform: 'scale(1.08)', offset: 0.6 }, { transform: 'scale(1)' }],
+          : [
+              { transform: 'scale(0.8)' },
+              { transform: 'scale(1.08)', offset: 0.6 },
+              { transform: 'scale(1)' },
+            ],
         { duration: 360, easing: 'ease-out' },
       )
     } else {
@@ -239,7 +266,7 @@ export default function FistikciSahap({
   }
 
   /** Yanlış taşıma: karo yuvanın üstünde seker, tezgâha döner; neden görünür. */
-  async function sek(oge: HTMLButtonElement | undefined, kayma: Nokta) {
+  async function sek(oge: HTMLButtonElement | undefined, kayma: Nokta, cumle: string) {
     if (oge && !hareketAzMi()) {
       const hedef = await yuvayaUc(oge, kayma)
       const yan = (dx: number, dy = 0) => kaydir({ x: hedef.x + dx, y: hedef.y + dy })
@@ -262,6 +289,7 @@ export default function FistikciSahap({
     }
     if (!bagli.current) return
     flushSync(() => gonder({ tur: 'sekti' }))
+    soyle(cumle)
     if (oge) oge.style.transform = ''
   }
 
@@ -320,6 +348,7 @@ export default function FistikciSahap({
       if (Math.hypot(s.kayma.x, s.kayma.y) < SURUKLEME_ESIGI) return
       s.suruklendi = true
       e.currentTarget.classList.add('tezgah__karo--tasiniyor')
+      adayiSoyle(s.karo)
     }
     e.currentTarget.style.transform = kaydir(s.kayma)
     kartRef.current?.classList.toggle('dukkan__kart--ustunde', kartinUstunde(e.clientX, e.clientY))
@@ -348,6 +377,7 @@ export default function FistikciSahap({
     if (yut || !secimde) return
     const secilecek = durum.secili !== karo
     gonder({ tur: 'sec', karo })
+    if (secilecek) adayiSoyle(karo)
     // Seçilen karo yuvaya götürülmeyi bekler: odak kelime kartına geçer.
     if (secilecek) kartRef.current?.focus()
   }
@@ -379,34 +409,38 @@ export default function FistikciSahap({
         baslikRef={baslikRef}
       />
       <p id="dukkan-yonerge" className="gizli">
-        Bir karoyu kelimedeki boş yuvaya taşı: sürükle, ya da önce karoya sonra kelimeye dokun.
-        Taş sert, jöle yumuşak.
+        Bir karoyu kelimedeki boş yuvaya taşı: sürükle, ya da önce karoya sonra kelimeye dokun. Taş
+        sert, jöle yumuşak.
       </p>
 
       <section className="dukkan__sahne" aria-label="Kelime">
-        <button
-          ref={kartRef}
-          type="button"
-          className={durum.secili !== null ? 'dukkan__kart dukkan__kart--hedef' : 'dukkan__kart'}
-          aria-label={kartAdi}
-          aria-describedby="dukkan-yonerge"
-          onClick={kartaDokunuldu}
-        >
-          <KelimeYuvasi
-            sinir={sinir}
-            kok={gorev.kok}
-            etiketler={gorev.etiketler}
-            yuva={
-              <span
-                ref={yuvaRef}
-                className={yuvaIcerigi ? 'yuva yuva--dolu' : 'yuva'}
-                aria-hidden="true"
-              >
-                {yuvaIcerigi}
-              </span>
-            }
-          />
-        </button>
+        <div className="dukkan__kartyeri">
+          <KokResmi kok={gorev.kok} sinif="dukkan__resim" />
+          <Hoparlor metin={oturan ? oturan.aday : gorev.kok} sinif="hoparlor--kose" />
+          <button
+            ref={kartRef}
+            type="button"
+            className={durum.secili !== null ? 'dukkan__kart dukkan__kart--hedef' : 'dukkan__kart'}
+            aria-label={kartAdi}
+            aria-describedby="dukkan-yonerge"
+            onClick={kartaDokunuldu}
+          >
+            <KelimeYuvasi
+              sinir={sinir}
+              kok={gorev.kok}
+              etiketler={gorev.etiketler}
+              yuva={
+                <span
+                  ref={yuvaRef}
+                  className={yuvaIcerigi ? 'yuva yuva--dolu' : 'yuva'}
+                  aria-hidden="true"
+                >
+                  {yuvaIcerigi}
+                </span>
+              }
+            />
+          </button>
+        </div>
         <div className="dukkan__alt">
           <div className="dukkan__neden" role="status">
             {durum.yanlis && <NedenYazisi deneme={durum.yanlis} />}
@@ -420,6 +454,7 @@ export default function FistikciSahap({
           </div>
           {evre === 'bitti' && (
             <button ref={sonrakiRef} type="button" className="dukkan__dugme" onClick={sonrakiGorev}>
+              <SiradakiSimgesi />
               Sıradaki
             </button>
           )}
@@ -554,7 +589,12 @@ function NedenYazisi({ deneme }: { deneme: Deneme }) {
           )
         })}
       </p>
-      {deneme.cumle && <p className="dukkan__cumle">{deneme.cumle}</p>}
+      {deneme.cumle && (
+        <p className="dukkan__cumle sesli-cumle">
+          <Hoparlor metin={deneme.cumle} />
+          <span>{deneme.cumle}</span>
+        </p>
+      )}
     </>
   )
 }

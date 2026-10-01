@@ -111,7 +111,7 @@ describe('kaydet ve yükle', () => {
           sonKurulma: BUGUN.toISOString(),
         },
       ],
-      ayarlar: { hareket: 'sistem', renkler: 'renkli' },
+      ayarlar: { hareket: 'sistem', renkler: 'renkli', ses: 'dokununca' },
       sifirlama: 0,
     })
   })
@@ -120,7 +120,7 @@ describe('kaydet ve yükle', () => {
     expect(ilerlemeyiYukle(bellekDeposu().depo)).toEqual({
       bolgeler: {},
       kartlar: [],
-      ayarlar: { hareket: 'sistem', renkler: 'renkli' },
+      ayarlar: { hareket: 'sistem', renkler: 'renkli', ses: 'dokununca' },
       sifirlama: 0,
     })
   })
@@ -176,7 +176,7 @@ describe('iki pencere (sekme, ana ekrandaki uygulama) aynı depoyu paylaşır', 
     a.degistir((i) => ayarlariDegistir(i, { renkler: 'renksiz' }))
     b.degistir((i) => gorevBitti(i, KOY, gorevi(1), BUGUN))
     const son = ilerlemeyiYukle(depo)
-    expect(son.ayarlar).toEqual({ hareket: 'sistem', renkler: 'renksiz' })
+    expect(son.ayarlar).toEqual({ hareket: 'sistem', renkler: 'renksiz', ses: 'dokununca' })
     expect(son.bolgeler).toEqual({ koy: { bitenler: [1], kaldigi: 1 } })
   })
 
@@ -184,7 +184,7 @@ describe('iki pencere (sekme, ana ekrandaki uygulama) aynı depoyu paylaşır', 
     const { depo, a, b } = ikiPencere()
     a.degistir((i) => ayarlariDegistir(i, { renkler: 'renksiz' }))
     b.degistir((i) => ayarlariDegistir(i, { hareket: 'azalt' }))
-    expect(ilerlemeyiYukle(depo).ayarlar).toEqual({ hareket: 'azalt', renkler: 'renksiz' })
+    expect(ilerlemeyiYukle(depo).ayarlar).toEqual({ hareket: 'azalt', renkler: 'renksiz', ses: 'dokununca' })
   })
 
   it("sıfırlama yine her şeyi siler: eski B sıfırlarsa A'nın görevleri ve kartları da gider", () => {
@@ -194,7 +194,7 @@ describe('iki pencere (sekme, ana ekrandaki uygulama) aynı depoyu paylaşır', 
     // Ayarlar kalır (sıfırlama ayarları silmez); A'nın Renksiz'i de geri alınmaz.
     expect(ilerlemeyiYukle(depo)).toEqual({
       ...BOS_ILERLEME,
-      ayarlar: { hareket: 'sistem', renkler: 'renksiz' },
+      ayarlar: { hareket: 'sistem', renkler: 'renksiz', ses: 'dokununca' },
       sifirlama: 1,
     })
     expect(a.tazele()).toBe(true)
@@ -390,11 +390,12 @@ describe('bozuk veri', () => {
   })
 
   it('tanınmayan ayar varsayılana döner, tanınan kalır', () => {
-    expect(yukle({ ayarlar: { hareket: 'hızlı', renkler: 'renksiz' } }).ayarlar).toEqual({
-      hareket: 'sistem',
-      renkler: 'renksiz',
-    })
-    expect(yukle({ ayarlar: 'azalt' }).ayarlar).toEqual({ hareket: 'sistem', renkler: 'renkli' })
+    expect(
+      yukle({ ayarlar: { hareket: 'hızlı', renkler: 'renksiz', ses: 'yüksek' } }).ayarlar,
+    ).toEqual({ hareket: 'sistem', renkler: 'renksiz', ses: 'dokununca' })
+    expect(yukle({ ayarlar: { ses: 'sesli' } }).ayarlar.ses).toBe('sesli')
+    expect(yukle({ ayarlar: { ses: 'kapali' } }).ayarlar.ses).toBe('kapali')
+    expect(yukle({ ayarlar: 'azalt' }).ayarlar).toEqual({ hareket: 'sistem', renkler: 'renkli', ses: 'dokununca' })
   })
 
   it('son kurulma ilk tarihten önce olamaz; eksikse ilk tarih', () => {
@@ -663,9 +664,9 @@ describe('ayarlar ve sıfırlama', () => {
   it('ayarlar değişir ve kaydedilir', () => {
     const { depo } = bellekDeposu()
     const ilerleme = ayarlariDegistir(BOS_ILERLEME, { hareket: 'azalt' })
-    expect(ilerleme.ayarlar).toEqual({ hareket: 'azalt', renkler: 'renkli' })
+    expect(ilerleme.ayarlar).toEqual({ hareket: 'azalt', renkler: 'renkli', ses: 'dokununca' })
     ilerlemeyiKaydet(depo, ayarlariDegistir(ilerleme, { renkler: 'renksiz' }))
-    expect(ilerlemeyiYukle(depo).ayarlar).toEqual({ hareket: 'azalt', renkler: 'renksiz' })
+    expect(ilerlemeyiYukle(depo).ayarlar).toEqual({ hareket: 'azalt', renkler: 'renksiz', ses: 'dokununca' })
   })
 
   it('sıfırlama bütün ilerlemeyi ve kartları siler, ayarları bırakır', () => {
@@ -673,7 +674,7 @@ describe('ayarlar ve sıfırlama', () => {
     const sifir = ilerlemeyiSifirla(ilerleme)
     expect(sifir).toEqual({
       ...BOS_ILERLEME,
-      ayarlar: { hareket: 'sistem', renkler: 'renksiz' },
+      ayarlar: { hareket: 'sistem', renkler: 'renksiz', ses: 'dokununca' },
       sifirlama: 1,
     })
     // Her sıfırlamada kimlik bir artar.

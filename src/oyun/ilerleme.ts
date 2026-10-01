@@ -13,7 +13,7 @@
 //   { "bolgeler": { "koy": { "bitenler": [1, 2, 3], "kaldigi": 3 } },
 //     "kartlar": [{ "kelime": "atlar", "kok": "at", "etiketler": ["PL"], "bolge": "koy",
 //                   "tarih": "2026-09-28T09:15:00.000Z", "sonKurulma": "2026-09-28T09:15:00.000Z" }],
-//     "ayarlar": { "hareket": "sistem", "renkler": "renkli" },
+//     "ayarlar": { "hareket": "sistem", "renkler": "renkli", "ses": "dokununca" },
 //     "sifirlama": 0 }
 // sifirlama: sıfırlama kimliği, her sıfırlamada bir artar; eksikse 0 sayılır.
 // kaldigi bütün tablodaki yerdir (0'dan); turlu bölgede (Uydurukçuklar) turu da o verir: 10,
@@ -39,6 +39,11 @@ export interface Ayarlar {
   readonly hareket: 'sistem' | 'azalt'
   /** renksiz: kalın ve ince her yerde aynı gri, büyüden sonra da (galerideki Renksiz). */
   readonly renkler: 'renkli' | 'renksiz'
+  /**
+   * kapali: hiçbir ses çalmaz; dokununca: kelimenin ya da cümlenin yanındaki hoparlöre
+   * dokununca çalar; sesli: okuma gerektirmeyen sesli mod (görev, seçim ve sonuç söylenir).
+   */
+  readonly ses: 'kapali' | 'dokununca' | 'sesli'
 }
 
 export interface BolgeIlerlemesi {
@@ -79,7 +84,11 @@ export interface Ilerleme {
   readonly sifirlama: number
 }
 
-export const VARSAYILAN_AYARLAR: Ayarlar = { hareket: 'sistem', renkler: 'renkli' }
+export const VARSAYILAN_AYARLAR: Ayarlar = {
+  hareket: 'sistem',
+  renkler: 'renkli',
+  ses: 'dokununca',
+}
 
 export const BOS_ILERLEME: Ilerleme = {
   bolgeler: {},
@@ -229,6 +238,7 @@ export function ilerlemeyiCoz(ham: unknown, bolgeler: readonly Bolge[] = BOLGELE
     ayarlar: {
       hareket: ayarlar.hareket === 'azalt' ? 'azalt' : 'sistem',
       renkler: ayarlar.renkler === 'renksiz' ? 'renksiz' : 'renkli',
+      ses: ayarlar.ses === 'kapali' || ayarlar.ses === 'sesli' ? ayarlar.ses : 'dokununca',
     },
     sifirlama:
       typeof sifirlama === 'number' && Number.isSafeInteger(sifirlama) && sifirlama >= 0

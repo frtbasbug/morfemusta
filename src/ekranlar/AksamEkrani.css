@@ -32,6 +32,13 @@
   color: var(--soluk);
 }
 
+.aksam__baslik-satiri {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
 .aksam__baslik {
   margin: 0;
   font-family: var(--yazi-tipi-baslik);
@@ -60,6 +67,9 @@
 }
 
 .aksam__dugme {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   min-width: 2.75rem;
   min-height: 2.75rem;
   padding: 0 1.5rem;

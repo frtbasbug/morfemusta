@@ -253,6 +253,9 @@
 }
 
 .bahce__dugme {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   min-width: 2.75rem;
   min-height: 2.75rem;
   padding: 0 1.5rem;

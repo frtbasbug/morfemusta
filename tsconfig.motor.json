@@ -1,7 +1,8 @@
 {
   // Motor DOM'suz ve Node'suz derlenir: document, window, fetch ya da process kullanırsa
   // tür denetimi kırılır. Görsel dilin saf hesapları (src/gorsel/cizim.ts, karo.ts, agac.ts,
-  // cep.ts, kilik.ts, yaratik.ts) ve oyunun mantığı (src/oyun) da burada, motorla birlikte denetlenir.
+  // cep.ts, kilik.ts, yaratik.ts, emoji.ts), oyunun mantığı (src/oyun) ve ses metinleri
+  // (src/ses/metinler.ts, okunus.ts) da burada, motorla birlikte denetlenir.
   // Testler tsconfig.app.json ile denetlenir.
   "compilerOptions": {
     "target": "ES2022",
@@ -20,6 +21,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["src/motor", "src/gorsel/agac.ts", "src/gorsel/cep.ts", "src/gorsel/cizim.ts", "src/gorsel/karo.ts", "src/gorsel/kilik.ts", "src/gorsel/yaratik.ts", "src/oyun"],
-  "exclude": ["src/motor/**/*.test.ts", "src/oyun/**/*.test.ts"]
+  "include": ["src/motor", "src/gorsel/agac.ts", "src/gorsel/cep.ts", "src/gorsel/cizim.ts", "src/gorsel/karo.ts", "src/gorsel/kilik.ts", "src/gorsel/yaratik.ts", "src/gorsel/emoji.ts", "src/oyun", "src/ses/metinler.ts", "src/ses/okunus.ts"],
+  "exclude": ["src/motor/**/*.test.ts", "src/oyun/**/*.test.ts", "src/ses/**/*.test.ts"]
 }

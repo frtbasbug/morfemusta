@@ -14,8 +14,10 @@ import { BahceIsareti } from '../gorsel/Agac.tsx'
 import Bukalemun from '../gorsel/Bukalemun.tsx'
 import DukkanIsareti from '../gorsel/DukkanIsareti.tsx'
 import { UydurukIsareti } from '../gorsel/Yaratik.tsx'
-import type { Bolge } from '../oyun/bolgeler.ts'
+import { HAZIRLANIYOR_ILETISI, kilitIletisi, type Bolge } from '../oyun/bolgeler.ts'
 import type { BolgeDurumu, HaritaBolgesi } from '../oyun/ilerleme.ts'
+import { cal } from '../ses/calar.ts'
+import { Hoparlor, useSes } from '../ses/Ses.tsx'
 import type { Nokta } from './hareket.ts'
 import { AcikSimgesi, KilitSimgesi, KumSaatiSimgesi, TamamSimgesi } from './simgeler.tsx'
 import './AdaHaritasi.css'
@@ -139,16 +141,27 @@ export default function AdaHaritasi({
 }) {
   const [ileti, setIleti] = useState<{ metin: string; durum: BolgeDurumu } | null>(null)
   const baslikRef = useRef<HTMLHeadingElement>(null)
+  const { ayar } = useSes()
 
   useEffect(() => {
     baslikRef.current?.focus()
   }, [])
 
   function dokunuldu({ bolge, durum, onceki }: HaritaBolgesi) {
-    if (durum === 'kilitli') setIleti({ metin: `Önce ${onceki?.ad ?? ''} bitmeli.`, durum })
-    else if (durum === 'hazirlaniyor') {
-      setIleti({ metin: 'Burası hazırlanıyor. Yakında açılacak.', durum })
-    } else onBolge(bolge)
+    const metin =
+      durum === 'kilitli'
+        ? kilitIletisi(onceki)
+        : durum === 'hazirlaniyor'
+          ? HAZIRLANIYOR_ILETISI
+          : null
+    if (metin === null) {
+      // Açık bölgenin adını sesli modda bölge ekranı söyler (girişte, kökten önce).
+      onBolge(bolge)
+      return
+    }
+    setIleti({ metin, durum })
+    // Sesli mod: bölgenin adı ve iletisi.
+    if (ayar === 'sesli') void cal([bolge.ad, metin])
   }
 
   const IletiSimgesi = ileti ? DURUM_SIMGELERI[ileti.durum] : null
@@ -164,6 +177,7 @@ export default function AdaHaritasi({
           <span className="harita__balon">
             <IletiSimgesi />
             {ileti.metin}
+            <Hoparlor metin={ileti.metin} />
           </span>
         )}
       </p>

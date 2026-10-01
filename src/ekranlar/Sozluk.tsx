@@ -3,16 +3,20 @@
 // ekler (Bukalemun Koyu'ndaki birleşen ek görünümüyle: kökün son ünlüsü ve ekin ünlüsü
 // etikette, uyum etiketlerin eninden okunur), bölge ve tarih. Ekler ve biçim motordan gelir
 // (ekle); kartta kelime, kök ve ek etiketleri saklıdır. Uydurma kökte kelime çocuğun seçtiği
-// biçimdir (pıtağım ya da pıtakım); parçaları o biçimden okunur.
+// biçimdir (pıtağım ya da pıtakım); parçaları o biçimden okunur. Kökün resmi (emoji) kelimenin
+// yanında; uydurma kökte resim yok, köşede yaratık var. Sesli modda karta dokununca kelime
+// söylenir; Dokununca'da kartın hoparlörü çalar.
 
 import { Fragment, useEffect, useRef } from 'react'
 import { KOK_SOZLUGU } from '../motor/index.ts'
 import EkYazisi from '../gorsel/EkYazisi.tsx'
+import KokResmi from '../gorsel/KokResmi.tsx'
 import KokYazisi from '../gorsel/KokYazisi.tsx'
 import { kurulanEkleme } from '../gorsel/KurulanKelime.tsx'
 import Yaratik from '../gorsel/Yaratik.tsx'
 import type { Bolge } from '../oyun/bolgeler.ts'
 import type { SozlukGrubu, SozlukKarti } from '../oyun/ilerleme.ts'
+import { Hoparlor, useSes } from '../ses/Ses.tsx'
 import './Sozluk.css'
 
 const TARIH = new Intl.DateTimeFormat('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })
@@ -69,15 +73,23 @@ function Kart({ kart, bolge }: { kart: SozlukKarti; bolge: Bolge }) {
   const { parcalar } = kurulanEkleme(kart.kok, kart.etiketler, kart.kelime)
   const tarih = new Date(kart.tarih)
   const uydurma = !KOK_SOZLUGU.has(kart.kok)
+  const { soyle } = useSes()
   return (
-    <article className={uydurma ? 'sozluk-karti sozluk-karti--uydurma' : 'sozluk-karti'}>
+    <article
+      className={uydurma ? 'sozluk-karti sozluk-karti--uydurma' : 'sozluk-karti'}
+      onClick={() => soyle(kart.kelime)}
+    >
       {uydurma && (
         <span className="sozluk-karti__yaratik">
           <Yaratik kok={kart.kok} boyut={0.36} adsiz />
           <span className="gizli">Uydurma kelime</span>
         </span>
       )}
-      <h3 className="sozluk-karti__kelime">{kart.kelime}</h3>
+      <h3 className="sozluk-karti__kelime">
+        <KokResmi kok={kart.kok} sinif="sozluk-karti__resim" />
+        {kart.kelime}
+      </h3>
+      <Hoparlor metin={kart.kelime} sinif="sozluk-karti__hoparlor" />
       <p className="sozluk-karti__parcalar">
         <span className="sozluk-karti__kok">
           <KokYazisi kok={kart.kok} />

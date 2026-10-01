@@ -34,6 +34,7 @@
 }
 
 .sozluk-karti {
+  position: relative;
   display: grid;
   align-content: start;
   gap: 0.3rem;
@@ -59,6 +60,21 @@
 
 .sozluk-karti--uydurma .sozluk-karti__kelime {
   padding-right: 1.6rem;
+}
+
+/* Kelimenin hoparlörü: kartın sağ alt köşesinde; künye ona yer bırakır. */
+.sozluk-karti__hoparlor {
+  position: absolute;
+  right: 0.4rem;
+  bottom: 0.4rem;
+}
+
+.sozluk-karti:has(.sozluk-karti__hoparlor) .sozluk-karti__kunye {
+  padding-right: 2.9rem;
+}
+
+.sozluk-karti__resim {
+  margin-right: 0.25em;
 }
 
 .sozluk-karti__kelime {

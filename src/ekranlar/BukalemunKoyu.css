@@ -46,6 +46,7 @@
 
 /* Kelime kartı. Çoğulda iki kopyası arkasından iki yana açılır; üçü aynı ızgara hücresinde. */
 .kartlar {
+  position: relative;
   display: grid;
   isolation: isolate;
 }
@@ -96,6 +97,8 @@ button.kelime-karti {
 }
 
 .kelime {
+  display: inline-flex;
+  align-items: center;
   font-family: var(--yazi-tipi);
   font-size: var(--boyut-kok);
   font-weight: 700;
@@ -131,7 +134,14 @@ button.kelime-karti {
   line-height: 1.35;
 }
 
+.kelime__resim {
+  margin-right: 0.3em;
+}
+
 .koy__dugme {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   min-width: 2.75rem;
   min-height: 2.75rem;
   padding: 0 1.5rem;

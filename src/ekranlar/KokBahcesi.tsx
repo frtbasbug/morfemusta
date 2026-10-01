@@ -54,9 +54,11 @@ import {
 import type { Bolge } from '../oyun/bolgeler.ts'
 import type { Gorev } from '../oyun/gorevler.ts'
 import type { SozlukKarti } from '../oyun/ilerleme.ts'
+import { Hoparlor, useSes, useSesliSoyleyis } from '../ses/Ses.tsx'
 import AksamEkrani from './AksamEkrani.tsx'
 import BolgeUstu from './BolgeUstu.tsx'
 import { bekle, hareketAzMi, hareketleriKes, kaydir, oynat, type Nokta } from './hareket.ts'
+import { SiradakiSimgesi } from './simgeler.tsx'
 import './KokBahcesi.css'
 
 /** Sürükleme sayılan en kısa yol (px); daha kısası dokunmadır. */
@@ -115,6 +117,16 @@ export default function KokBahcesi({
   const tiklamayiYut = useRef(false)
   const bagli = useRef(false)
   const gorulenGorev = useRef(durum.gorevYeri)
+  const { soyle } = useSes()
+
+  // Sesli mod: ağaç başlayınca hedef söylenir; bölgeye girişte önce bölgenin adı.
+  const [acilisYeri] = useState(durum.gorevYeri)
+  useSesliSoyleyis(
+    durum.bahce && evre !== 'kapanis'
+      ? [...(durum.gorevYeri === acilisYeri ? [bolge.ad] : []), durum.bahce.hedef]
+      : [],
+    durum.gorevYeri,
+  )
 
   useEffect(() => {
     bagli.current = true
@@ -157,11 +169,17 @@ export default function KokBahcesi({
     if (!gorev || !bahce || evre !== 'secim') return
     const parca = bahce.parcalar[sira]
     if (!parca) return
-    const dogru = dogruMu(denemeyiDegerlendir(bahce, kurulan, sira))
+    const deneme = denemeyiDegerlendir(bahce, kurulan, sira)
     flushSync(() => gonder({ tur: 'dene', sira }))
     const oge = bukalemunlar.current.get(sira)
-    if (dogru) await tutun(oge, parca, kayma)
-    else await sallan(oge, kayma)
+    if (dogruMu(deneme)) await tutun(oge, parca, kayma)
+    else await sallan(oge, kayma, deneme.cumle)
+  }
+
+  /** Sesli mod: seçilen ek (lük, çü, ler). */
+  function ekiSoyle(sira: number) {
+    const parca = bahce?.parcalar[sira]
+    if (parca) soyle(parca.yuzey)
   }
 
   /** Bukalemunun ağaçta duracağı yer: tacın altı, gövdenin tepesi (translate). */
@@ -211,6 +229,7 @@ export default function KokBahcesi({
       if (buyu === 'eksiltir' && hareketli) setSilinen(parca.sira)
       gonder({ tur: 'tutundu' })
     })
+    soyle(simdikiKelime(bahce, kurulan + 1))
     if (oge) {
       oge.style.transform = ''
       oge.style.opacity = ''
@@ -347,10 +366,11 @@ export default function KokBahcesi({
   }
 
   /** Yanlış taşıma: ek dala tutunamaz, sallanır, sepete döner; cümle görünür. */
-  async function sallan(oge: HTMLButtonElement | undefined, kayma: Nokta) {
+  async function sallan(oge: HTMLButtonElement | undefined, kayma: Nokta, cumle: string) {
     if (oge && !hareketAzMi()) {
       const hedef = await agacaUc(oge, kayma)
-      const egik = (aci: number, dy = 0) => `${kaydir({ x: hedef.x, y: hedef.y + dy })} rotate(${aci}deg)`
+      const egik = (aci: number, dy = 0) =>
+        `${kaydir({ x: hedef.x, y: hedef.y + dy })} rotate(${aci}deg)`
       oge.style.transformOrigin = '50% 10%'
       await oynat(
         oge,
@@ -372,6 +392,7 @@ export default function KokBahcesi({
     }
     if (!bagli.current) return
     flushSync(() => gonder({ tur: 'dondu' }))
+    soyle(cumle)
     if (oge) oge.style.transform = ''
   }
 
@@ -431,6 +452,7 @@ export default function KokBahcesi({
     if (!s.suruklendi) {
       if (Math.hypot(s.kayma.x, s.kayma.y) < SURUKLEME_ESIGI) return
       s.suruklendi = true
+      ekiSoyle(s.sira)
       e.currentTarget.classList.add('sepet__ek--tasiniyor')
     }
     e.currentTarget.style.transform = kaydir(s.kayma)
@@ -460,6 +482,7 @@ export default function KokBahcesi({
     if (yut || !secimde) return
     const secilecek = durum.secili !== sira
     gonder({ tur: 'sec', sira })
+    if (secilecek) ekiSoyle(sira)
     // Seçilen ek ağaca götürülmeyi bekler: odak ağaca geçer.
     if (secilecek) agacRef.current?.focus()
   }
@@ -513,8 +536,8 @@ export default function KokBahcesi({
         baslikRef={baslikRef}
       />
       <p id="bahce-yonerge" className="gizli">
-        Sepetteki ekleri sırayla ağaca taşı: sürükle, ya da önce eke sonra ağaca dokun. Yapım
-        eki gövdeyi büyütür, çekim eki meyve olur.
+        Sepetteki ekleri sırayla ağaca taşı: sürükle, ya da önce eke sonra ağaca dokun. Yapım eki
+        gövdeyi büyütür, çekim eki meyve olur.
       </p>
 
       <section className="bahce__sahne" aria-label="Ağaç">
@@ -534,6 +557,7 @@ export default function KokBahcesi({
             <span className="gizli">Hedef: </span>
             {bahce.hedef}
           </p>
+          <Hoparlor metin={bahce.hedef} />
           <p className="bahce__kelime" aria-hidden="true">
             {eriyor && degisim ? degisim.once : simdiki}
           </p>
@@ -565,7 +589,12 @@ export default function KokBahcesi({
 
       <div className="bahce__alt">
         <div className="bahce__neden" role="status">
-          {durum.yanlis && <p className="bahce__cumle">{durum.yanlis.cumle}</p>}
+          {durum.yanlis && (
+            <p className="bahce__cumle sesli-cumle">
+              <Hoparlor metin={durum.yanlis.cumle} />
+              <span>{durum.yanlis.cumle}</span>
+            </p>
+          )}
           {degisim && !eriyor && (
             <p className="bahce__degisim">
               {degisim.once} → {degisim.sonra}
@@ -574,6 +603,7 @@ export default function KokBahcesi({
         </div>
         {evre === 'bitti' && (
           <button ref={sonrakiRef} type="button" className="bahce__dugme" onClick={sonrakiAgac}>
+            <SiradakiSimgesi />
             Sıradaki
           </button>
         )}
@@ -584,10 +614,7 @@ export default function KokBahcesi({
 
       <ul className="sepet" aria-label="Sepet">
         {sepet.map((parca) => {
-          const siniflar = [
-            'sepet__ek',
-            durum.deneme?.sira === parca.sira && 'sepet__ek--etkin',
-          ]
+          const siniflar = ['sepet__ek', durum.deneme?.sira === parca.sira && 'sepet__ek--etkin']
           return (
             <li key={`${durum.gorevYeri}:${parca.sira}`} className="sepet__yer">
               <button

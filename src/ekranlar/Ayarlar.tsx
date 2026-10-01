@@ -1,7 +1,9 @@
-// Ayarlar: Hareket (Sistem gibi / Azalt), Renkler (Renkli / Renksiz) ve ilerlemeyi sıfırlama.
+// Ayarlar: Ses (Kapalı / Dokununca / Sesli mod), Hareket (Sistem gibi / Azalt), Renkler (Renkli /
+// Renksiz), ilerlemeyi sıfırlama ve Hakkında (lisanslar ve atıflar).
 // Ayarlar cihazda saklanır; App onları belgenin köküne yazar (html[data-hareket],
 // html[data-renkler]). Azalt, prefers-reduced-motion gibi davranır. Renksiz, galerideki Renksiz
-// moddur; açıkken renkler büyüden sonra da gri kalır.
+// moddur; açıkken renkler büyüden sonra da gri kalır. Ses'in varsayılanı Dokununca'dır; Sesli
+// mod okumayı henüz sökmemiş çocuk içindir (DESIGN.md, "Ses ve resim").
 //
 // Sıfırlama uygulamanın içinde iki adımdır; tarayıcının confirm penceresi kullanılmaz. Silinen:
 // bütün ilerleme ve kartlar. Ayarlar kalır.
@@ -15,6 +17,12 @@ interface Secenek<T extends string> {
   readonly deger: T
   readonly ad: string
 }
+
+const SES: readonly Secenek<AyarDegerleri['ses']>[] = [
+  { deger: 'kapali', ad: 'Kapalı' },
+  { deger: 'dokununca', ad: 'Dokununca' },
+  { deger: 'sesli', ad: 'Sesli mod' },
+]
 
 const HAREKET: readonly Secenek<AyarDegerleri['hareket']>[] = [
   { deger: 'sistem', ad: 'Sistem gibi' },
@@ -60,6 +68,14 @@ export default function Ayarlar({
       <h1 id="ayarlar-baslik" className="ekran-basligi" ref={baslikRef} tabIndex={-1}>
         Ayarlar
       </h1>
+
+      <SecimGrubu
+        ad="ses"
+        baslik="Ses"
+        secenekler={SES}
+        secili={ayarlar.ses}
+        onSec={(ses) => onAyar({ ses })}
+      />
 
       <SecimGrubu
         ad="hareket"
@@ -131,6 +147,8 @@ export default function Ayarlar({
           {silindi ? 'İlerleme ve kartlar silindi.' : ''}
         </p>
       </section>
+
+      <Hakkinda />
     </main>
   )
 }
@@ -170,5 +188,38 @@ function SecimGrubu<T extends string>({
       </div>
       {children}
     </fieldset>
+  )
+}
+
+/**
+ * Hakkında: oyunun, seslerin, emojilerin ve yazı tiplerinin lisansları. Bağlantı yok: çocuk
+ * oyundan dışarı çıkmaz; adresler yazı olarak durur.
+ */
+function Hakkinda() {
+  return (
+    <section className="hakkinda" aria-labelledby="hakkinda-baslik">
+      <h2 id="hakkinda-baslik" className="ayar__baslik">
+        Hakkında
+      </h2>
+      <p>
+        Morfemusta, ilkokul çocukları için kâr amacı gütmeyen bir Türkçe biçimbilim oyunudur. Kodu
+        MIT lisanslıdır. Hiçbir veri cihazdan çıkmaz.
+      </p>
+      <dl className="hakkinda__liste">
+        <dt>Sesler</dt>
+        <dd>
+          Piper metinden sese aracıyla, tr_TR-dfki-medium sesiyle üretildi (rhasspy/piper-voices;
+          veri kümesi: DFKI, github.com/marytts/dfki-ot-data). Ses dosyaları kodun lisansından
+          ayrı, CC BY-NC-SA 4.0 lisansıyla yayımlanır.
+        </dd>
+        <dt>Emojiler</dt>
+        <dd>
+          Twemoji (Twitter, Inc. ve katkıcıları; github.com/jdecked/twemoji, sürüm 16.0.1).
+          Grafikler CC BY 4.0 lisanslıdır.
+        </dd>
+        <dt>Yazı tipleri</dt>
+        <dd>Andika (SIL International) ve Baloo 2 (Ek Type): SIL Open Font License 1.1.</dd>
+      </dl>
+    </section>
   )
 }

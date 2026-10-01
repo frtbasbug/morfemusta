@@ -108,7 +108,10 @@ test.describe('Bukalemun Koyu', () => {
     await expect(aksam).toBeVisible()
     await expect(aksam).toBeFocused()
     await expect(page.locator('.aksam__kelimeler li .sonuc-kelime__okunan')).toHaveText([...KELIMELER])
-    await expect(page.getByRole('button')).toHaveText(['Haritaya dön'])
+    // Tek düğme (başlığın hoparlörü dışında); yazının yanında harita simgesi: sesli modda
+    // düğme simgesinden tanınır.
+    await expect(page.locator('main button:not(.hoparlor)')).toHaveText(['Haritaya dön'])
+    await expect(page.locator('.aksam__dugme svg.simge')).toBeVisible()
 
     // Büyü hareketle anlatıldı: yay çizildi, bukalemun zıpladı.
     const kareler = (await hareketler(page)).join('\n')
