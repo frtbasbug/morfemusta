@@ -118,6 +118,13 @@ aşağıda: Oturum 11'in bölümünde (Oturum 12 için) ve önceki oturumların 
     axe taramaları, cihaz.html ve Kopyala, eski tarayıcı uyarısı (paket ayrıştırılamaz; ES
     modülü yok), Sözlük kartı, haritanın balonu.
 
+### PR'dan sonra düzeltilen (Codex'in bulgusu, doğrulandı)
+
+- **Daralan ekranda geniş Sözlük kartı kalıyordu:** iki sütunluk kart (`span 2`) tek sütunlu
+  ızgarada örtük ikinci bir sütun açar; `gridTemplateColumns` onu da saydığı için işaret hiç
+  kalkmazdı (ekran dönünce ya da pencere daralınca). Ölçmeden önce geniş işaretleri kalkıyor.
+  Uçtan uca testte 412 px'ten 300 px'e daralma eklendi (eski kodda kırmızıydı).
+
 ### Oturumda seçilen küçük ayrıntılar (kullanıcıya ayrıca sorulmadı)
 
 - **İpucu iPad'de de:** iPadOS Safari'de de aynı silme kuralı var; kendini Mac gibi tanıtan

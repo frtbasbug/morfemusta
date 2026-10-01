@@ -37,6 +37,9 @@ function gunYazisi(an: Date): string {
  * ek): doğal enleri toplanır, sütunun içine sığıp sığmadığına bakılır.
  */
 function genisKartlar(liste: HTMLElement): void {
+  // Önceki ölçümün geniş kartları önce kalkar: iki sütunluk kart tek sütunlu ızgarada örtük bir
+  // ikinci sütun açar, sütun sayısı yanlış okunurdu (ekran daralınca).
+  for (const yer of liste.children) if (yer instanceof HTMLElement) delete yer.dataset.genis
   const sutunlar = getComputedStyle(liste).gridTemplateColumns.split(' ').map(parseFloat)
   const sutun = sutunlar[0] ?? 0
   for (const yer of liste.children) {
@@ -52,7 +55,6 @@ function genisKartlar(liste: HTMLElement): void {
     const kenar = kart.offsetWidth - parcalar.clientWidth
     const genis = sutunlar.length > 1 && dogal + kenar > sutun + 0.5
     if (genis) yer.dataset.genis = ''
-    else delete yer.dataset.genis
   }
 }
 

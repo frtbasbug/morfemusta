@@ -153,4 +153,12 @@ test("Sözlük kartında kök ve ek satırı kırılmaz: 360–412 px'te topum v
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth), `${en}px`).toBeLessThanOrEqual(0)
   }
+
+  // Ekran yeniden yüklenmeden daralınca (tek sütun) geniş kart kalmaz, Sözlük taşmaz: iki
+  // sütunluk kartın açtığı örtük sütun sayılmaz.
+  await expect(page.locator('.sozluk__kartlar > [data-genis]')).not.toHaveCount(0)
+  await page.setViewportSize({ width: 300, height: 760 })
+  await expect(page.locator('.sozluk__kartlar > [data-genis]')).toHaveCount(0)
+  expect(await page.evaluate(() => getComputedStyle(document.querySelector('.sozluk__kartlar')!).gridTemplateColumns.split(' ').length)).toBe(1)
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0)
 })
