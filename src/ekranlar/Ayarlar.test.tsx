@@ -1,6 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { VARSAYILAN_AYARLAR, type Ayarlar as AyarDegerleri } from '../oyun/ilerleme.ts'
+import { SURUM_ADI, surumYazisi } from '../surum.ts'
 import Ayarlar from './Ayarlar.tsx'
 import kaynak from './Ayarlar.tsx?raw'
 
@@ -21,7 +22,7 @@ describe('Ayarlar', () => {
   it('başlık; Ses, Hareket, Renkler ve Sınıf modu birer seçim grubu', () => {
     const html = ayarlar()
     expect(html).toMatch(/<h1 id="ayarlar-baslik" class="ekran-basligi" tabindex="-1">Ayarlar<\/h1>/)
-    expect(eslesmeler(html, /<legend class="ayar__baslik">([^<]*)<\/legend>/g)).toEqual([
+    expect(eslesmeler(html, /<legend class="ayar__baslik">([^<]*)/g)).toEqual([
       'Ses',
       'Hareket',
       'Renkler',
@@ -46,6 +47,12 @@ describe('Ayarlar', () => {
         ([, deger, secili]) => (secili ? deger : null),
       ),
     ).toEqual([null, null, 'sesli', null, 'azalt', null, 'renksiz', null, 'acik'])
+  })
+
+  it('Renkler: örnek (kalın a, ince e) başlığın yanında, ekran okuyucudan gizli', () => {
+    expect(ayarlar()).toMatch(
+      /<legend class="ayar__baslik">Renkler<span class="ayar__ornek" aria-hidden="true">/,
+    )
   })
 
   it('Sınıf modu: etkileşimli tahta için; açıkken sıfırlama yalnız o açılışın ilerlemesini siler', () => {
@@ -77,5 +84,14 @@ describe('Ayarlar', () => {
     expect(html).not.toMatch(/dfki|Piper|BY-NC-SA/)
     expect(html).toContain('Twemoji')
     expect(html).toContain('CC BY 4.0')
+  })
+
+  it('Hakkında: sürümün adı, kısa commit ve tarih', () => {
+    const html = ayarlar()
+    expect(html).toContain('<dt>Sürüm</dt>')
+    expect(html).toContain(`<dd class="hakkinda__surum">${surumYazisi()}</dd>`)
+    expect(surumYazisi()).toMatch(
+      new RegExp(`^${SURUM_ADI} \\((?:[0-9a-f]{7}|bilinmiyor), \\d{4}-\\d{2}-\\d{2}\\)$`),
+    )
   })
 })

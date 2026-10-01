@@ -40,9 +40,11 @@ import KurulanKelime from '../gorsel/KurulanKelime.tsx'
 import UnluEtiketi from '../gorsel/UnluEtiketi.tsx'
 import Yaratik, { Yildiz } from '../gorsel/Yaratik.tsx'
 import '../gorsel/tema.css'
+import { useDenemeGunlugu } from '../kabuk/gunluk.tsx'
 import type { Bolge } from '../oyun/bolgeler.ts'
 import { ilgiliSesler, karoHarfi, TEZGAH } from '../oyun/dukkan.ts'
 import { turunYeri, type Gorev } from '../oyun/gorevler.ts'
+import { gorevinSonBicimi, nedenKodlari } from '../oyun/gunluk.ts'
 import type { SozlukKarti } from '../oyun/ilerleme.ts'
 import {
   UYDURUK_BUYULERI,
@@ -125,6 +127,7 @@ export default function Uydurukcuklar({
   const bagli = useRef(false)
   const gorulenGorev = useRef(durum.gorevYeri)
   const { soyle, sonuc, buyu: buyuSesi } = useSes()
+  const kaydet = useDenemeGunlugu(bolge.kimlik, gorev)
 
   // Sesli mod: görev başlayınca yaratığın adı (kök) söylenir; bölgeye girişte önce bölgenin
   // adı.
@@ -177,6 +180,14 @@ export default function Uydurukcuklar({
     const secenek = adim.secenekler.find((s) => s.yuzey === yuzey)
     if (!secenek) return
     const deneme = denemeyiDegerlendir(gorev, adim, yuzey)
+    // Pilotun günlüğü: her seçim bir satır (kod yokken ve sınıf modunda yazılmaz).
+    kaydet('ek', {
+      dogruBicim: adim.bicim,
+      secilen: yuzey,
+      aday: deneme.aday,
+      dogru: dogruMu(deneme),
+      neden: nedenKodlari(deneme.nedenler),
+    })
     flushSync(() => gonder({ tur: 'dene', yuzey }))
     const oge = bukalemunlar.current.get(yuzey)
     if (dogruMu(deneme)) await otur(oge, secenek.parca, kayma)
@@ -361,6 +372,14 @@ export default function Uydurukcuklar({
   /** Karo yuvaya taşındı: iki karo da doğrudur. Jöle seçildiyse kökün taşı erir. */
   async function karoyuTasi(karo: KaroTuru, kayma: Nokta = DURAGAN) {
     if (!gorev || !sinir || evre !== 'sinir') return
+    // Pilotun günlüğü: iki karo da doğrudur; doğru biçim ikisi (pıtakım/pıtağım).
+    kaydet('sinir', {
+      dogruBicim: gorevinSonBicimi(bolge.kimlik, gorev.kok, gorev.etiketler),
+      secilen: karoHarfi(sinir, karo),
+      aday: kurulanBicim(gorev, sinir, karo).bicim,
+      dogru: true,
+      neden: '',
+    })
     flushSync(() => gonder({ tur: 'karoDene', karo }))
     const oge = karolar.current.get(karo)
     if (oge && !hareketAzMi()) {

@@ -1,9 +1,15 @@
-import { defineConfig, devices } from '@playwright/test'
+import { existsSync } from 'node:fs'
+import { defineConfig, devices, webkit } from '@playwright/test'
 
 // Uçtan uca testler derlenmiş siteyi (vite preview) GitHub Pages'teki alt yolda sınar;
 // service worker yalnız derlemede üretildiği için geliştirme sunucusu kullanılmaz.
 const PORT = 4173
 const ADRES = `http://localhost:${PORT}/morfemusta/`
+
+// WebKit (iPhone ve iPad Safari'ye yakınlık): pilot yolu ve pilot.html (e2e/pilot.spec.ts). CI'da
+// her zaman koşar; yerelde tarayıcı kurulu değilse (bulut oturumunda indirilemeyebilir) atlanır.
+const WEBKIT_VAR = !!process.env.CI || existsSync(webkit.executablePath())
+if (!WEBKIT_VAR) console.warn('WebKit kurulu değil: webkit projesi atlandı (CI koşar).')
 
 export default defineConfig({
   testDir: 'e2e',
@@ -20,6 +26,15 @@ export default defineConfig({
       name: 'telefon',
       use: { ...devices['Pixel 7'] },
     },
+    ...(WEBKIT_VAR
+      ? [
+          {
+            name: 'webkit',
+            use: { ...devices['iPhone 13'] },
+            testMatch: /pilot\.spec\.ts$/,
+          },
+        ]
+      : []),
   ],
   webServer: {
     command: `npm run build && npm run preview -- --port ${PORT} --strictPort`,

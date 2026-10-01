@@ -9,12 +9,20 @@ yaratıklarını birleştirir; kurduğu kelime adadaki dünyayı değiştirir.
   bölgeler açıktır, ilerleme kaydedilmez; Ayarlar'dan ya da `?sinif=0` ile kapanır.
 - Cihaz Denetimi: <https://frtbasbug.github.io/morfemusta/cihaz.html> (tarayıcının sürümü ve
   oyunun dayandığı özellikler; eski cihazda oyun açılmazsa)
+- Pilot sayfası (yetişkin için): <https://frtbasbug.github.io/morfemusta/pilot.html>. Çocuk
+  kodu, deneme günlüğünün özeti ve CSV'si, yazdırılacak üç belge (gözlem formu, veli
+  bilgilendirme ve onay formu, gözlemci yönergesi).
 - Tasarım: [DESIGN.md](DESIGN.md)
 - Geliştirme: [CLAUDE.md](CLAUDE.md) (yığın, komutlar, kurallar)
 - Durum: [NEXT.md](NEXT.md)
 
 Reklam, uygulama içi satın alma, hesap ve veri toplama yoktur. İlerleme, Sözlük kartları ve
 ayarlar yalnız cihazda saklanır; hiçbir veri cihazdan çıkmaz.
+
+Pilotun deneme günlüğü de yalnız cihazda kalır: pilot sayfasında bir çocuk kodu (ad değil, P01
+gibi) girilince oyundaki seçimler o cihazda kodla kaydedilir. Hiçbir şey kendiliğinden
+gönderilmez; yetişkin günlüğü pilot sayfasından elle indirir (CSV) ya da kopyalar. Kod yokken ve
+sınıf modunda hiçbir şey kaydedilmez.
 
 ```sh
 npm install

@@ -180,6 +180,31 @@ export function denemeyiDegerlendir(bahce: BahceGorevi, kurulan: number, sira: n
 
 export const dogruMu = (deneme: Deneme): boolean => deneme.neden === null
 
+/**
+ * Seçilen parçayla kurulan kelime (deneme günlüğünde aday): ağaçtaki ekler ve seçilen ek,
+ * motorla (yol + luk → yolluk; çiçek + ler → çiçekler). Doğru seçimde sıradaki gövdedir.
+ * Motor kuramazsa (olmamalı: ağaçta yalnız yapım ekleri var) yan yana yazılır.
+ */
+export function denemeninAdayi(bahce: BahceGorevi, kurulan: number, sira: number): string {
+  const secilen = bahce.parcalar[sira]
+  if (!secilen) return simdikiKelime(bahce, kurulan)
+  const { kok, etiketler } = bahce.gorev
+  try {
+    return ekle(kok, [...etiketler.slice(0, kurulan), secilen.etiket]).bicim
+  } catch {
+    return simdikiKelime(bahce, kurulan) + secilen.yuzey
+  }
+}
+
+/**
+ * Nedenin kodu (deneme günlüğü): meyve:AGT (motorun ek sırası kodu, ekSirasiHatasi: önce gelmesi
+ * gereken yapım eki) ya da önce:AGT (sıradaki yapım eki). Doğruysa boş.
+ */
+export function nedenKodu(neden: BahceNedeni | null): string {
+  if (!neden) return ''
+  return `${neden.tur}:${neden.once.etiket}`
+}
+
 // --- Büyüler -------------------------------------------------------------------------------
 
 /**

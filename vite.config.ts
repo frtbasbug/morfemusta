@@ -1,4 +1,5 @@
 /// <reference types="vitest/config" />
+import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { defineConfig, type Plugin } from 'vite'
@@ -7,6 +8,28 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // GitHub Pages'te site https://<kullanıcı>.github.io/morfemusta/ altında yayımlanır.
 const TABAN = '/morfemusta/'
+
+/**
+ * Sürümün commit'i ve tarihi (src/surum.ts; adı orada yazılı): derlenen commit'in kısa özeti ve
+ * commit'in günü. Git yoksa (kaynak arşivinden derleme) commit "bilinmiyor", tarih bugün.
+ */
+function surumBilgisi(): { commit: string; tarih: string } {
+  try {
+    const [ozet = '', gun = ''] = execFileSync('git', ['log', '-1', '--format=%H%n%cs'], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    })
+      .trim()
+      .split('\n')
+    if (/^[0-9a-f]{40}$/.test(ozet) && /^\d{4}-\d{2}-\d{2}$/.test(gun)) {
+      return { commit: ozet.slice(0, 7), tarih: gun }
+    }
+  } catch {
+    // Git yok ya da depo değil.
+  }
+  return { commit: 'bilinmiyor', tarih: new Date().toISOString().slice(0, 10) }
+}
+const SURUM = surumBilgisi()
 
 // Sesler (scripts/ses-uret.py üretir, public/ses/): arayüzün ve Bukalemun Koyu'nun sesleri
 // önceden önbelleğe alınır; öteki bölgelerinki bölgeye ilk girişte arka planda iner
@@ -52,18 +75,30 @@ function sesListesiOyun(): Plugin {
 
 export default defineConfig({
   base: TABAN,
+  // Sürümün commit'i ve tarihi pakete girer (src/derleme.d.ts, src/surum.ts).
+  define: {
+    __SURUM_COMMIT__: JSON.stringify(SURUM.commit),
+    __SURUM_TARIHI__: JSON.stringify(SURUM.tarih),
+  },
   build: {
     rolldownOptions: {
-      // Beş giriş sayfası: oyun, Biçim Denetim Sayfası, Karakter Galerisi, Ses Denetim Sayfası
-      // ve Cihaz Denetimi. Oyun ötekilere bağlantı vermez (yalnız eski tarayıcı uyarısı
-      // cihaz.html'e). Onlar da önbelleğe girer; girmeselerdi service worker oraya giden
-      // gezinmeyi oyunun index.html'ine yönlendirirdi (navigateFallback).
+      // Giriş sayfaları: oyun, Biçim Denetim Sayfası, Karakter Galerisi, Ses Denetim Sayfası,
+      // Cihaz Denetimi, pilot sayfası ve pilotun üç yazdırılabilir belgesi. Oyun ötekilere
+      // bağlantı vermez (yalnız eski tarayıcı uyarısı cihaz.html'e; belgelere pilot.html
+      // bağlanır). Hepsi önbelleğe girer; girmeselerdi service worker oraya giden gezinmeyi
+      // oyunun index.html'ine yönlendirirdi (navigateFallback).
       input: {
         oyun: fileURLToPath(new URL('index.html', import.meta.url)),
         denetim: fileURLToPath(new URL('denetim.html', import.meta.url)),
         galeri: fileURLToPath(new URL('galeri.html', import.meta.url)),
         ses: fileURLToPath(new URL('ses.html', import.meta.url)),
         cihaz: fileURLToPath(new URL('cihaz.html', import.meta.url)),
+        pilot: fileURLToPath(new URL('pilot.html', import.meta.url)),
+        'gozlem-formu': fileURLToPath(new URL('belgeler/gozlem-formu.html', import.meta.url)),
+        'veli-onay-formu': fileURLToPath(new URL('belgeler/veli-onay-formu.html', import.meta.url)),
+        'gozlemci-yonergesi': fileURLToPath(
+          new URL('belgeler/gozlemci-yonergesi.html', import.meta.url),
+        ),
       },
     },
   },

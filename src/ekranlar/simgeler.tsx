@@ -117,6 +117,15 @@ export function SiradakiSimgesi() {
   )
 }
 
+/** Sola ok: önceki sayfa (sınıf modunda Sözlük). */
+export function OncekiSimgesi() {
+  return (
+    <Simge>
+      <path d="M19.5 12h-14M11 6.5L5.5 12l5.5 5.5" />
+    </Simge>
+  )
+}
+
 /** Yazı tahtası: sınıf modu. */
 export function SinifSimgesi() {
   return (

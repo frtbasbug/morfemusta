@@ -10,8 +10,20 @@
 // Kök ve ek satırı kırılmaz: parçaları bir sütuna sığmayan kart (dar ekranda toplarım, topum)
 // iki sütun genişliğinde durur (genisKartlar). Ölçü yerleşimden sonra alınır; ekran dönünce
 // yeniden alınır.
+//
+// Sınıf modunda (geniş yatay ekran, Sinif.css) bölgeler yan yana durur. Kartlar çoğalıp sayfa
+// kaymaya başlayınca Sözlük bölge bölge olur: üstte bölgelerin sekmeleri (kart sayılarıyla),
+// seçili bölgenin kartları ekrana sığan sayfalarda, altta Önceki / Sonraki. Tahtada kaydırma
+// yok; sayfanın boyu ölçülür (sayfaBoyu).
 
-import { Fragment, useEffect, useLayoutEffect, useRef, type CSSProperties } from 'react'
+import {
+  Fragment,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from 'react'
 import { KOK_SOZLUGU } from '../motor/index.ts'
 import EkYazisi from '../gorsel/EkYazisi.tsx'
 import KokResmi from '../gorsel/KokResmi.tsx'
@@ -21,6 +33,8 @@ import Yaratik from '../gorsel/Yaratik.tsx'
 import type { Bolge } from '../oyun/bolgeler.ts'
 import type { SozlukGrubu, SozlukKarti } from '../oyun/ilerleme.ts'
 import { Hoparlor, useSes } from '../ses/Ses.tsx'
+import { useSinifModu } from './SinifIsareti.tsx'
+import { OncekiSimgesi, SiradakiSimgesi } from './simgeler.tsx'
 import './Sozluk.css'
 
 const TARIH = new Intl.DateTimeFormat('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })
@@ -58,34 +72,86 @@ function genisKartlar(liste: HTMLElement): void {
   }
 }
 
+/** Sınıf modunun geniş görünümü: Sinif.css'teki sorgu (etkileşimli tahta). */
+const GENIS_EKRAN = '(min-width: 1024px) and (orientation: landscape)'
+
+/** Medya sorgusu tutuyor mu; değişince yeniden çizilir. Tarayıcı dışında (birim testi) false. */
+function useMedyaSorgusu(sorgu: string): boolean {
+  const [tutuyor, setTutuyor] = useState(
+    () => typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia(sorgu).matches,
+  )
+  useEffect(() => {
+    if (typeof window.matchMedia !== 'function') return
+    const sorguListesi = window.matchMedia(sorgu)
+    const degisti = () => setTutuyor(sorguListesi.matches)
+    degisti()
+    sorguListesi.addEventListener('change', degisti)
+    return () => sorguListesi.removeEventListener('change', degisti)
+  }, [sorgu])
+  return tutuyor
+}
+
+/** Sayfa kayıyor mu (içerik ekrandan uzun). */
+const sayfaKayiyor = (): boolean => {
+  const kok = document.documentElement
+  return kok.scrollHeight > kok.clientHeight + 1
+}
+
+/**
+ * Bir sayfaya sığan kart sayısı: listenin sütunları ve satır boyu (bölge bölge görünümde satırlar
+ * sabit boydadır, Sinif.css) ile listenin yüksekliğinden.
+ */
+function sayfaBoyu(liste: HTMLElement): number {
+  const stil = getComputedStyle(liste)
+  const sutun = stil.gridTemplateColumns.split(' ').filter(Boolean).length
+  const satirBoyu = parseFloat(stil.gridAutoRows)
+  const aralik = parseFloat(stil.rowGap) || 0
+  if (!(satirBoyu > 0)) return Number.POSITIVE_INFINITY
+  const satir = Math.floor((liste.clientHeight + aralik) / (satirBoyu + aralik))
+  return Math.max(1, sutun) * Math.max(1, satir)
+}
+
 export default function Sozluk({ gruplar }: { readonly gruplar: readonly SozlukGrubu[] }) {
   const baslikRef = useRef<HTMLHeadingElement>(null)
   const anaRef = useRef<HTMLElement>(null)
+  const sinif = useSinifModu()
+  const genis = useMedyaSorgusu(GENIS_EKRAN)
+  // Sınıf modunda yan yana bölgeler ekrana sığmadı: bölge bölge, sayfalı.
+  const [sigmadi, setSigmadi] = useState(false)
+  const bolumlu = sinif && genis && sigmadi && gruplar.length > 0
 
   useEffect(() => {
     baslikRef.current?.focus()
   }, [])
 
   // Kartların eni: yerleşimden sonra ve ekranın boyu değişince (döndürme, yazı tipi yüklenince).
+  // Sınıf modunun geniş görünümünde sayfa kayarsa bölge bölge görünüme geçilir.
   useLayoutEffect(() => {
     const ana = anaRef.current
-    if (!ana) return
+    if (!ana || bolumlu) return
     const olc = () => {
       for (const liste of ana.querySelectorAll<HTMLElement>('.sozluk__kartlar')) genisKartlar(liste)
+      if (sinif && genis && sayfaKayiyor()) setSigmadi(true)
     }
     olc()
     const gozlemci = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(olc)
     gozlemci?.observe(ana)
     void document.fonts?.ready.then(olc)
     return () => gozlemci?.disconnect()
-  }, [gruplar])
+  }, [gruplar, bolumlu, sinif, genis])
 
   return (
-    <main className="sozluk" aria-labelledby="sozluk-baslik" ref={anaRef}>
+    <main
+      className={bolumlu ? 'sozluk sozluk--bolumlu' : 'sozluk'}
+      aria-labelledby="sozluk-baslik"
+      ref={anaRef}
+    >
       <h1 id="sozluk-baslik" className="ekran-basligi" ref={baslikRef} tabIndex={-1}>
         Sözlük
       </h1>
-      {gruplar.length === 0 ? (
+      {bolumlu ? (
+        <BolumluSozluk gruplar={gruplar} />
+      ) : gruplar.length === 0 ? (
         <p className="sozluk__bos">Sözlüğün henüz boş. Bir kelime kurunca kartı buraya gelir.</p>
       ) : (
         gruplar.map(({ bolge, kartlar }) => (
@@ -110,6 +176,98 @@ export default function Sozluk({ gruplar }: { readonly gruplar: readonly SozlukG
         ))
       )}
     </main>
+  )
+}
+
+/**
+ * Sınıf modunda sığmayan Sözlük: bölgelerin sekmeleri (kart sayılarıyla) ve seçili bölgenin
+ * kartları sayfa sayfa. Sayfanın boyu listenin ölçüsünden (sayfaBoyu); sayfa çubuğunun yeri hep
+ * ayrılmıştır, tek sayfada düğmeler görünmez.
+ */
+function BolumluSozluk({ gruplar }: { readonly gruplar: readonly SozlukGrubu[] }) {
+  const [secili, setSecili] = useState<string | null>(null)
+  const [sayfa, setSayfa] = useState(0)
+  const [boy, setBoy] = useState(Number.POSITIVE_INFINITY)
+  const listeRef = useRef<HTMLUListElement>(null)
+  const grup = gruplar.find((g) => g.bolge.kimlik === secili) ?? gruplar[0]
+
+  useLayoutEffect(() => {
+    const liste = listeRef.current
+    if (!liste) return
+    const olc = () => setBoy(sayfaBoyu(liste))
+    olc()
+    const gozlemci = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(olc)
+    gozlemci?.observe(liste)
+    void document.fonts?.ready.then(olc)
+    return () => gozlemci?.disconnect()
+  }, [])
+
+  if (!grup) return null
+  const sayfaSayisi = Number.isFinite(boy) ? Math.max(1, Math.ceil(grup.kartlar.length / boy)) : 1
+  const gecerli = Math.min(sayfa, sayfaSayisi - 1)
+  const gorunen = Number.isFinite(boy)
+    ? grup.kartlar.slice(gecerli * boy, (gecerli + 1) * boy)
+    : grup.kartlar
+  const { bolge } = grup
+
+  return (
+    <>
+      <div className="sozluk__sekmeler" role="group" aria-label="Bölgeler">
+        {gruplar.map((g) => (
+          <button
+            key={g.bolge.kimlik}
+            type="button"
+            className="sozluk__sekme"
+            aria-pressed={g.bolge.kimlik === bolge.kimlik}
+            onClick={() => {
+              setSecili(g.bolge.kimlik)
+              setSayfa(0)
+            }}
+          >
+            {g.bolge.ad}
+            <span className="sozluk__sayi">{g.kartlar.length}</span>
+          </button>
+        ))}
+      </div>
+      <section className="sozluk__grup" aria-labelledby={`sozluk-${bolge.kimlik}`}>
+        <h2 id={`sozluk-${bolge.kimlik}`} className="gizli">
+          {bolge.ad}
+        </h2>
+        <ul className="sozluk__kartlar" ref={listeRef}>
+          {gorunen.map((kart) => (
+            <li key={kart.kelime}>
+              <Kart kart={kart} bolge={bolge} />
+            </li>
+          ))}
+        </ul>
+        <nav
+          className={sayfaSayisi > 1 ? 'sozluk__sayfalar' : 'sozluk__sayfalar sozluk__sayfalar--tek'}
+          aria-label="Sayfalar"
+        >
+          <button
+            type="button"
+            className="sozluk__sayfa-dugmesi"
+            disabled={gecerli === 0}
+            onClick={() => setSayfa(gecerli - 1)}
+          >
+            <OncekiSimgesi />
+            Önceki
+          </button>
+          <span className="sozluk__sayfa" aria-live="polite">
+            {gecerli + 1} / {sayfaSayisi}
+          </span>
+          <button
+            type="button"
+            className="sozluk__sayfa-dugmesi"
+            disabled={gecerli + 1 >= sayfaSayisi}
+            onClick={() => setSayfa(gecerli + 1)}
+          >
+            Sonraki
+            <SiradakiSimgesi />
+          </button>
+        </nav>
+      </section>
+    </>
   )
 }
 

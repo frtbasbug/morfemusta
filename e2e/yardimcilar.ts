@@ -107,3 +107,93 @@ export function disIstekleriTopla(sayfa: Page, baseURL: string | undefined): str
   })
   return istekler
 }
+
+// --- Dört bölgenin doğru seçimleri (pilot yolu ve sınıf modunun ölçüleri) ---------------------
+// Oyun doğru biçimi motordan alır; burada yalnız testlerin beklediği seçimler yazılıdır
+// (fistikci-sahap.spec.ts, kok-bahcesi.spec.ts ve uydurukcuklar.spec.ts'teki tablolarla aynı).
+
+/** Fıstıkçı Şahap'ın Dükkânı: her görevin doğru karosu, sırayla. */
+export const DUKKAN_KAROLARI = [
+  'jöle',
+  'jöle',
+  'jöle',
+  'taş',
+  'taş',
+  'taş',
+  'jöle',
+  'taş',
+  'jöle',
+  'taş',
+] as const
+
+/** Kök Bahçesi: her ağacın ekleri, doğru sırayla. */
+export const BAHCE_EKLERI = [
+  ['çi', 'ler'],
+  ['luk', 'lar'],
+  ['lı', 'cı'],
+  ['siz', 'lik'],
+  ['çık', 'lar'],
+  ['cu', 'luk'],
+  ['lik', 'im'],
+  ['cik', 'im'],
+  ['suz', 'luk'],
+  ['lük', 'çü', 'ler'],
+] as const
+
+/** Uydurukçuklar'ın 1. turu: doğru bukalemun; sınır adımı olan görevde seçilen karo. */
+export const UYDURUK_SECIMLERI: readonly { readonly yuzey: string; readonly karo?: 'taş' | 'jöle' }[] = [
+  { yuzey: 'lar' },
+  { yuzey: 'ler' },
+  { yuzey: 'um' },
+  { yuzey: 'ım', karo: 'jöle' },
+  { yuzey: 'te' },
+  { yuzey: 'da' },
+  { yuzey: 'da' },
+  { yuzey: 'ye' },
+  { yuzey: 'ya' },
+  { yuzey: 'im', karo: 'taş' },
+]
+
+export const karo = (sayfa: Page, tur: 'taş' | 'jöle') =>
+  sayfa.getByRole('button', { name: tur === 'taş' ? /^., sert$/ : /^., yumuşak$/ })
+export const dukkanKarti = (sayfa: Page) => sayfa.locator('button.dukkan__kart')
+export const agac = (sayfa: Page) => sayfa.locator('button.bahce__agac')
+export const yaratik = (sayfa: Page) => sayfa.locator('button.uyduruk__hedef')
+
+/** Ek, bukalemun ya da karo seçilebilir olana kadar bekler: önceki hareket bitti. */
+export const secilebilir = (oge: ReturnType<Page['locator']>) =>
+  expect(oge).toHaveAttribute('aria-disabled', 'false')
+
+/** Dükkân'ın görevini (0'dan) dokun-dokun doğru oynar. */
+export async function dukkanGorevi(sayfa: Page, yer: number) {
+  const tur = DUKKAN_KAROLARI[yer] ?? 'taş'
+  await secilebilir(karo(sayfa, tur))
+  await karo(sayfa, tur).tap()
+  await dukkanKarti(sayfa).tap()
+  await expect(sonraki(sayfa)).toBeVisible()
+}
+
+/** Bahçe'nin ağacını (0'dan) dokun-dokun doğru büyütür. */
+export async function bahceGorevi(sayfa: Page, yer: number) {
+  for (const yuzey of BAHCE_EKLERI[yer] ?? []) {
+    await secilebilir(bukalemun(sayfa, yuzey))
+    await bukalemun(sayfa, yuzey).tap()
+    await agac(sayfa).tap()
+  }
+  await expect(sonraki(sayfa)).toBeVisible()
+}
+
+/** Uydurukçuklar'ın 1. turundaki görevi (0'dan) dokun-dokun doğru oynar. */
+export async function uydurukGorevi(sayfa: Page, yer: number) {
+  const secim = UYDURUK_SECIMLERI[yer]
+  if (!secim) return
+  await secilebilir(bukalemun(sayfa, secim.yuzey))
+  await bukalemun(sayfa, secim.yuzey).tap()
+  await yaratik(sayfa).tap()
+  if (secim.karo) {
+    await secilebilir(karo(sayfa, secim.karo))
+    await karo(sayfa, secim.karo).tap()
+    await yaratik(sayfa).tap()
+  }
+  await expect(sonraki(sayfa)).toBeVisible()
+}

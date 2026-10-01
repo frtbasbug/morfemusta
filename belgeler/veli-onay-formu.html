@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Veli bilgilendirme ve onay formu · Morfemusta pilotu</title>
+    <meta
+      name="description"
+      content="Morfemusta pilotunun veli bilgilendirme ve onay formu."
+    />
+    <!-- Pilotun yazdırılabilir belgesi: pilot.html'den bağlantı alır, oyundan almaz; arama
+         motorlarına kapalı. A4, siyah beyaz, tek sayfa (e2e/belgeler.spec.ts ölçer).
+         Araştırmacının adı, kurumu ve iletişim bilgisi boş bırakıldı: elle doldurulur. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/src/belgeler/belge.css" />
+    <style>
+      .belge {
+        font-size: 11.5pt;
+      }
+      .bilgi h2 {
+        margin-top: 3mm;
+      }
+      .arastirmaci {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2.5mm 6mm;
+        margin: 1.5mm 0 1mm;
+      }
+      .arastirmaci .alan--tam {
+        grid-column: 1 / -1;
+      }
+      .onay {
+        margin-top: 4mm;
+      }
+      .onay h2 {
+        margin-top: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="belge">
+      <p class="ekranda">
+        Her veliye bir sayfa yazdırın (A4). Araştırmacının adı, kurumu ve iletişim bilgisi elle
+        doldurulur.
+      </p>
+      <h1>Morfemusta pilotu · Veli bilgilendirme ve onay formu</h1>
+      <p class="alt-baslik">Sayın veli, lütfen okuyup onay bölümünü doldurun.</p>
+
+      <div class="bilgi">
+        <h2>Oyun</h2>
+        <p>
+          Morfemusta, ilkokul 1–4. sınıf çocukları için hazırlanan, kâr amacı gütmeyen bir Türkçe
+          kelime oyunudur. Çocuk kelimenin köküne doğru eki taşır, kurduğu kelime ekrandaki
+          dünyayı değiştirir (ör. <i>at</i> → <i>atlar</i>). Oyunda reklam, satın alma ve hesap
+          yoktur.
+        </p>
+
+        <h2>Pilotun amacı</h2>
+        <p>
+          Bu denemenin (pilot) amacı, oyunun çocuklar için anlaşılır ve eğlenceli olup olmadığını
+          görmektir. Değerlendirilen oyundur, çocuğunuz değil: not verilmez, sınav yapılmaz.
+        </p>
+
+        <h2>Süre</h2>
+        <p>
+          Oturum 20–30 dakika sürer. Çocuğunuz oyunu bir gözlemcinin yanında, tablet ya da
+          telefonda oynar.
+        </p>
+
+        <h2>Ne kaydedilir</h2>
+        <ul>
+          <li>
+            Gözlemcinin kâğıda aldığı notlar: oyunun hangi bölümünde zorlandığı, ne kadar yardım
+            gerektiği, oyun sırasında söyledikleri.
+          </li>
+          <li>
+            Cihazda, çocuğunuzun adı yerine bir kodla (ör. P07) tutulan adsız bir deneme kaydı:
+            hangi seçimi yaptığı, seçimin doğru olup olmadığı, ne kadar sürdüğü. Kayıt cihazda
+            kalır; hiçbir yere kendiliğinden gönderilmez.
+          </li>
+          <li>Ses, fotoğraf ya da görüntü kaydı yapılmaz.</li>
+        </ul>
+
+        <h2>Gönüllülük</h2>
+        <p>
+          Katılım gönüllüdür. Onay vermemek ya da onayı geri almak hiçbir sonuç doğurmaz. Çocuğunuz
+          oyunu istediği an bırakabilir; oturum o an biter.
+        </p>
+
+        <h2>İletişim</h2>
+        <p>Sorularınız için araştırmacıya ulaşabilirsiniz:</p>
+        <div class="arastirmaci">
+          <div class="alan"><span class="etiket">Araştırmacı</span><span class="cizgi"></span></div>
+          <div class="alan"><span class="etiket">Kurumu</span><span class="cizgi"></span></div>
+          <div class="alan alan--tam">
+            <span class="etiket">İletişim (e-posta ya da telefon)</span><span class="cizgi"></span>
+          </div>
+        </div>
+      </div>
+
+      <section class="onay cerceve">
+        <h2>Onay</h2>
+        <p>
+          Yukarıdaki bilgileri okudum. Çocuğumun Morfemusta pilotuna katılmasına onay veriyorum.
+        </p>
+        <div class="imzalar">
+          <div class="imza">
+            <span class="etiket">Çocuğun adı ve soyadı</span><span class="cizgi"></span>
+          </div>
+          <div class="imza">
+            <span class="etiket">Velinin adı ve soyadı</span><span class="cizgi"></span>
+          </div>
+          <div class="imza"><span class="etiket">İmza</span><span class="cizgi"></span></div>
+          <div class="imza"><span class="etiket">Tarih</span><span class="cizgi"></span></div>
+        </div>
+        <p style="margin-top: 4mm">
+          <span class="kutu"></span><span class="etiket">Çocuğun sözlü onayı:</span> oturumdan önce
+          gözlemci oyunu anlattı; çocuk oynamak istediğini söyledi (gözlemci işaretler).
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

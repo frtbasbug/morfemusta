@@ -19,7 +19,8 @@ Tasarım için `DESIGN.md`, güncel durum ve sıradaki hedef için `NEXT.md` oku
   (CC BY 4.0), `public/emoji/`'dedir. İkisi de pakete gömülüdür (`DESIGN.md`, "Ses ve resim").
   Efektler (doğru, yanlış, büyü) dosya değildir: tarayıcıda Web Audio ile üretilir.
 - **Test:** Vitest 5 (birim, `node` ortamı) ve Playwright 1.56.1 (uçtan uca, Pixel 7
-  telefon profili, Chromium); erişilebilirlik taraması @axe-core/playwright ile.
+  telefon profili, Chromium; `e2e/pilot.spec.ts` ayrıca iPhone 13 profiliyle WebKit'te);
+  erişilebilirlik taraması @axe-core/playwright ile.
 - **Yayın:** GitHub Actions → GitHub Pages, <https://frtbasbug.github.io/morfemusta/>.
   Vite `base` ayarı `/morfemusta/`.
 
@@ -32,7 +33,7 @@ Tasarım için `DESIGN.md`, güncel durum ve sıradaki hedef için `NEXT.md` oku
 | `npm run preview` | Derlenmiş siteyi sunar: <http://localhost:4173/morfemusta/> |
 | `npm run typecheck` | Uygulama, araç kodu ve motorun tür denetimi (motor DOM'suz derlenir) |
 | `npm test` | Vitest birim testleri |
-| `npm run test:e2e` | Playwright: siteyi derler, önizler, telefon boyutunda sınar |
+| `npm run test:e2e` | Playwright: siteyi derler, önizler, telefon boyutunda sınar (pilot testleri WebKit'te de; WebKit kurulu değilse yerelde atlanır, CI koşar) |
 | `npm run ikonlar` | `scripts/ikon.svg`'den `public/` ikonlarını yeniden üretir |
 | `node scripts/denetim-bicimleri.mjs` | Biçim Denetim Sayfası'ndaki bütün biçimleri sekmeli metin olarak yazar |
 | `python3 scripts/zeyrek-denetimi.py` | O biçimleri zeyrek ile sınar (elle; CI'da yok, aşağıdaki nota bakın) |
@@ -45,8 +46,9 @@ Biçim Denetim Sayfası: <http://localhost:5173/morfemusta/denetim.html> (yayın
 `/morfemusta/denetim.html`). Karakter Galerisi: <http://localhost:5173/morfemusta/galeri.html>
 (yayında `/morfemusta/galeri.html`). Ses Denetim Sayfası: <http://localhost:5173/morfemusta/ses.html>
 (yayında `/morfemusta/ses.html`). Cihaz Denetimi: <http://localhost:5173/morfemusta/cihaz.html>
-(yayında `/morfemusta/cihaz.html`). Oyun ilk üçüne bağlantı vermez; Cihaz Denetimi'ne yalnız eski
-tarayıcı uyarısından bağlanır. Sınıf modu adresle de açılır: `?sinif=1` (kapatır: `?sinif=0`).
+(yayında `/morfemusta/cihaz.html`). Pilot sayfası: <http://localhost:5173/morfemusta/pilot.html>
+(yayında `/morfemusta/pilot.html`); üç belgesi `belgeler/*.html`. Oyun ilk üçüne ve pilot
+sayfasına bağlantı vermez; Cihaz Denetimi'ne yalnız eski tarayıcı uyarısından bağlanır. Sınıf modu adresle de açılır: `?sinif=1` (kapatır: `?sinif=0`).
 
 Oturumu kapatmadan önce: `npm run typecheck && npm test && npm run test:e2e`.
 
@@ -74,13 +76,18 @@ src/
                      uyar); parilti.ts: doğrunun parıltısı; simgeler.tsx: arayüz simgeleri
   kabuk/             hash yönlendirici (yonlendirici.ts), cihaz deposu (depo.ts: localStorage,
                      kalıcı depo isteği, useIlerleme), adresteki sınıf modu (sinif.ts), ana
-                     ekran ipucu (ipucu.ts); testleri yanında (es5.test.ts: eski tarayıcı
+                     ekran ipucu (ipucu.ts), deneme günlüğünün bağlantısı (gunluk.tsx:
+                     GunlukSaglayici, useDenemeGunlugu); testleri yanında (es5.test.ts: eski tarayıcı
                      betiklerinin ES5 denetimi)
   oyun/              oyunun saf mantığı: bölge tablosu (bolgeler.ts), görev tabloları (turlarıyla),
                      seçenekler, Bukalemun Koyu'nun (koy.ts), dükkânın (dukkan.ts), bahçenin
                      (bahce.ts) ve Uydurukçuklar'ın (uyduruk.ts) durumu (indirgeyici),
                      cihazdaki ilerleme (ilerleme.ts:
-                     kayıt, kilitler, Sözlük kartları); testleri yanında
+                     kayıt, kilitler, Sözlük kartları), pilotun deneme günlüğü (gunluk.ts:
+                     satır, yazıcı, Yeni çocuk, özet, CSV); testleri yanında
+  pilot/             pilot sayfası (pilot.html'in girişi, PilotSayfasi.tsx, testi)
+  belgeler/          belgelerin stili (belge.css: A4, siyah beyaz, gömülü Andika)
+  surum.ts           sürümün adı (pilot-1); commit ve tarih derlemede (derleme.d.ts)
   motor/             biçimbilim motoru: saf TypeScript, genel kapısı index.ts; testleri yanında;
                      ünsüz sınırı sinir.ts'te (sinirSecenekleri), ek sırası sira.ts'te
                      (ekSirasiHatasi), uydurma kök denetimi uydurma.ts'te (uydurmaDenetimi)
@@ -111,6 +118,9 @@ denetim.html         Biçim Denetim Sayfası (ayrı giriş sayfası)
 galeri.html          Karakter Galerisi (ayrı giriş sayfası)
 ses.html             Ses Denetim Sayfası (ayrı giriş sayfası)
 cihaz.html           Cihaz Denetimi (ayrı giriş sayfası; modülsüz, ES5, satır içi)
+pilot.html           pilot sayfası (ayrı giriş sayfası; yetişkin için, adresle açılır)
+belgeler/            pilotun üç yazdırılabilir belgesi (gozlem-formu.html, veli-onay-formu.html,
+                     gozlemci-yonergesi.html; ayrı giriş sayfaları)
 DESIGN.md  NEXT.md  CLAUDE.md
 ```
 
@@ -186,6 +196,12 @@ DESIGN.md  NEXT.md  CLAUDE.md
     Cloud Text-to-Speech'e `customPronunciations` olarak verir. Testi geçirmek için satır değiştirilmez,
     silinmez, eklenmez. Bir satır yanlış görünürse iş durur ve kullanıcıya sorulur.
 
+17. **Pilot sürerken main'e yalnız pilot düzeltmeleri girer** ve her biri sürüm adını artırır
+    (`src/surum.ts`: pilot-1 → pilot-1.1 → pilot-1.2). Yeni özellik pilot bitene kadar beklemeye
+    alınır (NEXT.md'ye yazılır). Pilotun deneme günlüğü yalnız cihazda kalır: hiçbir şey
+    kendiliğinden gönderilmez (6. ve 14. kural); günlüğün biçimi değişirse anahtarı da değişir
+    (`morfemusta.pilot.v2`).
+
 ## Adlandırma
 
 - Kod içi adlar ve yorumlar Türkçedir (`AdaHaritasi`, `yaziTipi`). Dosya ve klasör
@@ -203,9 +219,9 @@ DESIGN.md  NEXT.md  CLAUDE.md
 - **Önbellek kalıbı:** Çalışma anında ayrı dosya olarak istenen yeni bir dosya türü (ör. ses
   için `.mp3`/`.ogg`) eklenirse `vite.config.ts` içindeki `workbox.globPatterns`'a da
   eklenmeli; yoksa o dosya çevrim dışı açılmaz.
-- **Beş giriş sayfası:** `index.html` (oyun), `denetim.html` (Biçim Denetim Sayfası),
-  `galeri.html` (Karakter Galerisi), `ses.html` (Ses Denetim Sayfası) ve `cihaz.html` (Cihaz
-  Denetimi). Derleme girişleri `vite.config.ts`'deki
+- **Giriş sayfaları:** `index.html` (oyun), `denetim.html` (Biçim Denetim Sayfası),
+  `galeri.html` (Karakter Galerisi), `ses.html` (Ses Denetim Sayfası), `cihaz.html` (Cihaz
+  Denetimi), `pilot.html` (pilot sayfası) ve üç belge (`belgeler/*.html`). Derleme girişleri `vite.config.ts`'deki
   `build.rolldownOptions.input`'tadır; yeni bir sayfa oraya eklenir. Her sayfa önbelleğe
   girmelidir: service worker önbellekte olmayan bir gezinmeyi `navigateFallback` ile oyunun
   `index.html`'ine düşürür (`e2e/denetim.spec.ts`, `e2e/galeri.spec.ts`, `e2e/ses.spec.ts` ve
@@ -452,3 +468,28 @@ DESIGN.md  NEXT.md  CLAUDE.md
 - **Kurulabilirlik:** Başsız Chromium'da CDP `Page.getInstallabilityErrors` her durumda boş
   döner; test olarak işe yaramaz. Kurulabilirlik manifest ve service worker testleriyle
   dolaylı, gerçek telefonda doğrudan denetlenir.
+- **Sürüm (`src/surum.ts`):** adı kodda; kısa commit ve commit'in günü `vite.config.ts`'te
+  `git log`'dan okunur ve `define` ile pakete girer (`__SURUM_COMMIT__`, `__SURUM_TARIHI__`;
+  türleri `src/derleme.d.ts`). Git yoksa "bilinmiyor" ve bugün. Vitest de aynı `define`'ı okur.
+- **Deneme günlüğü (`src/oyun/gunluk.ts`):** saf; depo dışarıdan (`PilotDeposu`: getItem,
+  setItem, removeItem). Anahtar `morfemusta.pilot.v1` (`{ cocuk, satirlar }`), durma işareti
+  `morfemusta.pilot.durdu`. Yazıcı (`gunlukYazici`) her seçimde son kaydı okur, satırı ekler;
+  bilinmeyen alan ve satır atılmaz, okunamayan kayda yazılmaz. Depo dolunca bu açılışta durur ve
+  işaret yazar. Bölge ekranları seçimi `useDenemeGunlugu(bolge, gorev)`'un `kaydet(adim,
+  alanlar)`'ıyla bildirir (`src/kabuk/gunluk.tsx`; deneme sayısı ve görev başından süre
+  `denemeSayaci`'ndan). Neden kodu motorun `nedenYazimi`'ndan (genel kapıdan açıldı); Bahçe'nin
+  aday kelimesi ve kodu `bahce.ts`'te (`denemeninAdayi`, `nedenKodu`). Uydurukçuklar'ın sınır
+  adımında `dogru_bicim` iki biçimdir (`gorevinSonBicimi`, / ile); özette o seçim orana girmez.
+- **pilot.html (`src/pilot/`):** yetişkin aracı; oyunun belirteçlerini kullanır. Yeni çocuk
+  `yeniCocuk` (kod, sonra `pencereKaydi(depo).degistir(ilerlemeyiSifirla)`). CSV noktalı
+  virgüllü ve UTF-8 imli (Türkçe Excel), kopya sekmeli. Oyunun kaynakları pilot.html'e adres
+  olarak başvuramaz (`PilotSayfasi.test.tsx` tarar).
+- **Belgeler (`belgeler/*.html`, `src/belgeler/belge.css`):** betiksiz HTML girişleri; çizgiler
+  kenarlıktır (arka plan değil: tarayıcı arka planı yazdırmasa da çıkar). Tek sayfa olduğunu
+  `e2e/belgeler.spec.ts` `page.pdf` ile ölçer (yalnız Chromium).
+- **Sınıf modunda Sözlük:** yan yana bölgeler sayfayı kaydırırsa (`sayfaKayiyor`) bölge bölge
+  ve sayfalı görünüme geçer (`BolumluSozluk`; tek yönlü, ekran yeniden açılınca yan yana denenir).
+  Sayfanın boyu listenin ölçüsünden: sütun sayısı × sabit satır boyu (`grid-auto-rows`). Sayfa
+  çubuğunun yeri hep ayrılır (tek sayfada `visibility: hidden`): boy dalgalanmaz.
+- **WebKit:** bulut oturumunda Playwright'ın indirme sunucusu kapalı olabilir; o zaman WebKit
+  projesi yerelde atlanır (`playwright.config.ts` uyarı yazar), CI koşar.

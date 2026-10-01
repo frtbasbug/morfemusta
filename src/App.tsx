@@ -21,6 +21,7 @@ import SinifIsareti, { SinifSaglayici } from './ekranlar/SinifIsareti.tsx'
 import Uydurukcuklar from './ekranlar/Uydurukcuklar.tsx'
 import './ekranlar/Sinif.css'
 import { useIlerleme } from './kabuk/depo.ts'
+import { GunlukSaglayici } from './kabuk/gunluk.tsx'
 import { ANA_EKRAN_IPUCU, anaEkranIpucuGorunsunMu, buCihaz } from './kabuk/ipucu.ts'
 import { bolgeSesleriniIndir, sus } from './ses/calar.ts'
 import { SesSaglayici } from './ses/Ses.tsx'
@@ -154,11 +155,16 @@ export default function App() {
   )
 }
 
-/** Ekranların bağlamı: ses ayarı ve sınıf modu. */
+/**
+ * Ekranların bağlamı: ses ayarı, sınıf modu ve pilotun deneme günlüğü (src/kabuk/gunluk.tsx:
+ * pilot.html'de kod girilince her seçim cihazdaki günlüğe yazılır; sınıf modunda yazılmaz).
+ */
 function Baglam({ ayarlar, children }: { ayarlar: AyarDegerleri; children: ReactNode }) {
   return (
     <SesSaglayici ayar={ayarlar.ses}>
-      <SinifSaglayici acik={ayarlar.sinif === 'acik'}>{children}</SinifSaglayici>
+      <SinifSaglayici acik={ayarlar.sinif === 'acik'}>
+        <GunlukSaglayici ayarlar={ayarlar}>{children}</GunlukSaglayici>
+      </SinifSaglayici>
     </SesSaglayici>
   )
 }

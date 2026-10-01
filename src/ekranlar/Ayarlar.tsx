@@ -13,6 +13,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import UnluEtiketi from '../gorsel/UnluEtiketi.tsx'
 import type { Ayarlar as AyarDegerleri } from '../oyun/ilerleme.ts'
+import { surumYazisi } from '../surum.ts'
 import './Ayarlar.css'
 
 interface Secenek<T extends string> {
@@ -99,13 +100,15 @@ export default function Ayarlar({
         secenekler={RENKLER}
         secili={ayarlar.renkler}
         onSec={(renkler) => onAyar({ renkler })}
-      >
-        {/* Seçimin etkisi: kalın a ile ince e; Renksiz'de aynı gri, biçimlerinden ayrılır. */}
-        <span className="ayar__ornek" aria-hidden="true">
-          <UnluEtiketi unlu="a" />
-          <UnluEtiketi unlu="e" />
-        </span>
-      </SecimGrubu>
+        // Seçimin etkisi, başlığın yanında: kalın a ile ince e; Renksiz'de aynı gri, biçimlerinden
+        // ayrılır.
+        ornek={
+          <span className="ayar__ornek" aria-hidden="true">
+            <UnluEtiketi unlu="a" />
+            <UnluEtiketi unlu="e" />
+          </span>
+        }
+      />
 
       <SecimGrubu
         ad="sinif"
@@ -182,13 +185,17 @@ export default function Ayarlar({
   )
 }
 
-/** Tek seçimli ayar: büyük, dokunması kolay iki seçenek (radyo düğmeleri). */
+/**
+ * Tek seçimli ayar: büyük, dokunması kolay iki seçenek (radyo düğmeleri). Örnek verilirse
+ * başlığın yanında durur (süs; ekran okuyucudan gizli, grubun adı başlıktır).
+ */
 function SecimGrubu<T extends string>({
   ad,
   baslik,
   secenekler,
   secili,
   onSec,
+  ornek,
   children,
 }: {
   ad: string
@@ -196,11 +203,15 @@ function SecimGrubu<T extends string>({
   secenekler: readonly Secenek<T>[]
   secili: T
   onSec: (deger: T) => void
+  ornek?: ReactNode
   children?: ReactNode
 }) {
   return (
-    <fieldset className="ayar">
-      <legend className="ayar__baslik">{baslik}</legend>
+    <fieldset className={`ayar ayar--${ad}`}>
+      <legend className="ayar__baslik">
+        {baslik}
+        {ornek}
+      </legend>
       <div className="ayar__secenekler">
         {secenekler.map(({ deger, ad: yazi }) => (
           <label key={deger} className="ayar__secenek">
@@ -221,8 +232,8 @@ function SecimGrubu<T extends string>({
 }
 
 /**
- * Hakkında: oyunun, seslerin, emojilerin ve yazı tiplerinin lisansları. Bağlantı yok: çocuk
- * oyundan dışarı çıkmaz; adresler yazı olarak durur.
+ * Hakkında: sürüm (ad, kısa commit, tarih) ve oyunun, seslerin, emojilerin ve yazı tiplerinin
+ * lisansları. Bağlantı yok: çocuk oyundan dışarı çıkmaz; adresler yazı olarak durur.
  */
 function Hakkinda() {
   return (
@@ -230,24 +241,36 @@ function Hakkinda() {
       <h2 id="hakkinda-baslik" className="ayar__baslik">
         Hakkında
       </h2>
-      <p>
-        Morfemusta, ilkokul çocukları için kâr amacı gütmeyen bir Türkçe biçimbilim oyunudur. Kodu
-        MIT lisanslıdır. Hiçbir veri cihazdan çıkmaz.
-      </p>
-      <dl className="hakkinda__liste">
-        <dt>Sesler</dt>
-        <dd>
-          Sesler yapay zekâyla, Google Cloud Text-to-Speech'in Chirp 3: HD Callirrhoe sesiyle
-          önceden üretildi. Kodun MIT lisansı ses dosyalarını kapsamaz.
-        </dd>
-        <dt>Emojiler</dt>
-        <dd>
-          Twemoji (Twitter, Inc. ve katkıcıları; github.com/jdecked/twemoji, sürüm 16.0.1).
-          Grafikler CC BY 4.0 lisanslıdır.
-        </dd>
-        <dt>Yazı tipleri</dt>
-        <dd>Andika (SIL International) ve Baloo 2 (Ek Type): SIL Open Font License 1.1.</dd>
-      </dl>
+      <div className="hakkinda__metin">
+        <p>
+          Morfemusta, ilkokul çocukları için kâr amacı gütmeyen bir Türkçe biçimbilim oyunudur.
+          Kodu MIT lisanslıdır. Hiçbir veri cihazdan çıkmaz.
+        </p>
+        <dl className="hakkinda__liste">
+          <div className="hakkinda__oge">
+            <dt>Sürüm</dt>
+            <dd className="hakkinda__surum">{surumYazisi()}</dd>
+          </div>
+          <div className="hakkinda__oge">
+            <dt>Sesler</dt>
+            <dd>
+              Sesler yapay zekâyla, Google Cloud Text-to-Speech'in Chirp 3: HD Callirrhoe sesiyle
+              önceden üretildi. Kodun MIT lisansı ses dosyalarını kapsamaz.
+            </dd>
+          </div>
+          <div className="hakkinda__oge">
+            <dt>Emojiler</dt>
+            <dd>
+              Twemoji (Twitter, Inc. ve katkıcıları; github.com/jdecked/twemoji, sürüm 16.0.1).
+              Grafikler CC BY 4.0 lisanslıdır.
+            </dd>
+          </div>
+          <div className="hakkinda__oge">
+            <dt>Yazı tipleri</dt>
+            <dd>Andika (SIL International) ve Baloo 2 (Ek Type): SIL Open Font License 1.1.</dd>
+          </div>
+        </dl>
+      </div>
     </section>
   )
 }

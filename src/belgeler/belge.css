@@ -1,0 +1,264 @@
+/* Pilotun yazdırılabilir belgeleri (belgeler/*.html; DESIGN.md, "Pilot"): A4, siyah beyaz, her
+   biri tek sayfa. Yazı tipi pakete gömülü Andika'dır: belge her cihazda aynı ölçülerle dizilir,
+   tarayıcıdan yazdırılınca ya da PDF olarak kaydedilince tek sayfaya sığar
+   (e2e/belgeler.spec.ts ölçer). Oyunun belirteçleri burada kullanılmaz: kâğıt siyah beyazdır. */
+@import '@fontsource/andika/latin-400.css';
+@import '@fontsource/andika/latin-ext-400.css';
+@import '@fontsource/andika/latin-700.css';
+@import '@fontsource/andika/latin-ext-700.css';
+
+@page {
+  size: A4;
+  margin: 11mm 13mm;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  color: #000;
+  background: #fff;
+  font-family: 'Andika', sans-serif;
+  font-size: 10pt;
+  line-height: 1.32;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+body {
+  margin: 0;
+  background: #fff;
+}
+
+/* Ekranda kâğıt gibi: A4 eninde, ortada. Yazdırırken kenar boşluğunu @page verir. */
+.belge {
+  max-width: 210mm;
+  margin: 0 auto;
+  padding: 11mm 13mm;
+}
+
+@media print {
+  .belge {
+    max-width: none;
+    padding: 0;
+  }
+
+  .ekranda {
+    display: none;
+  }
+}
+
+/* Ekrandaki not: yazdırılmaz. */
+.ekranda {
+  margin: 0 0 4mm;
+  padding: 2mm 3mm;
+  border: 1px dashed #000;
+  font-size: 9pt;
+}
+
+h1 {
+  margin: 0 0 1mm;
+  font-size: 15pt;
+  line-height: 1.15;
+}
+
+h2 {
+  margin: 3.5mm 0 1.2mm;
+  font-size: 11pt;
+  line-height: 1.2;
+}
+
+p {
+  margin: 0 0 1.6mm;
+}
+
+ul,
+ol {
+  margin: 0 0 1.6mm;
+  padding-left: 5mm;
+}
+
+li {
+  margin-bottom: 0.6mm;
+}
+
+.alt-baslik {
+  margin-bottom: 2.5mm;
+  font-size: 9pt;
+}
+
+/* İşaretlenecek kutu ve yazılacak çizgi. */
+.kutu {
+  display: inline-block;
+  width: 3.6mm;
+  height: 3.6mm;
+  margin-right: 1.2mm;
+  border: 1.2px solid #000;
+  vertical-align: -0.6mm;
+}
+
+.cizgi {
+  display: inline-block;
+  flex: 1;
+  min-width: 18mm;
+  height: 1em;
+  border-bottom: 1px solid #000;
+}
+
+.secenekler {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 1mm 3.5mm;
+}
+
+/* Etiketli alan: etiket ve yazılacak çizgi. */
+.alanlar {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 2.4mm 5mm;
+  margin-bottom: 3mm;
+}
+
+.alan {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5mm;
+  white-space: nowrap;
+}
+
+.alan--2 {
+  grid-column: span 2;
+}
+
+.alan--3 {
+  grid-column: span 3;
+}
+
+.alan--4 {
+  grid-column: span 4;
+}
+
+.alan--6 {
+  grid-column: span 6;
+}
+
+.etiket {
+  font-weight: 700;
+}
+
+/* Tablolar: ince siyah çizgiler. */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+th,
+td {
+  padding: 1mm 1.2mm;
+  border: 1px solid #000;
+  text-align: left;
+  vertical-align: top;
+}
+
+thead th {
+  font-size: 8pt;
+  line-height: 1.15;
+  vertical-align: bottom;
+}
+
+/* Yazılacak kutu: çok satırlı boş alan, satır çizgili. Çizgiler kenarlıktır (arka plan değil):
+   tarayıcı arka planı yazdırmasa da çıkar. */
+.yazi-alani {
+  padding: 0 2.5mm 1.5mm;
+  border: 1px solid #000;
+}
+
+.yazi-satiri {
+  height: 7mm;
+  border-bottom: 1px solid #000;
+}
+
+.olcek {
+  display: inline-flex;
+  gap: 2mm;
+  margin-left: 2mm;
+}
+
+.olcek span {
+  display: inline-grid;
+  place-items: center;
+  width: 6mm;
+  height: 6mm;
+  border: 1.2px solid #000;
+  border-radius: 50%;
+  font-weight: 700;
+}
+
+.dip {
+  margin-top: 3mm;
+  font-size: 8pt;
+}
+
+/* Gözlemci yönergesindeki adresler: büyük harflerle (büyük punto), çerçeve içinde. */
+.adresler {
+  display: grid;
+  gap: 1.5mm;
+  margin: 2mm 0 3mm;
+  padding: 2.5mm 3mm;
+  border: 2px solid #000;
+}
+
+.adres {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 3mm;
+}
+
+.adres__ad {
+  min-width: 30mm;
+  font-weight: 700;
+}
+
+.adres__yol {
+  font-size: 17pt;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  overflow-wrap: anywhere;
+}
+
+/* Söylenecek cümle: aynen. */
+.soylenecek {
+  margin: 1mm 0 2mm;
+  padding: 2mm 3mm;
+  border-left: 3px solid #000;
+  font-size: 11pt;
+}
+
+/* İmza alanları. */
+.imzalar {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5mm 8mm;
+  margin-top: 3mm;
+}
+
+.imza {
+  display: grid;
+  gap: 1mm;
+}
+
+.imza .cizgi {
+  height: 9mm;
+}
+
+.cerceve {
+  padding: 2.5mm 3mm;
+  border: 1px solid #000;
+}
