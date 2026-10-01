@@ -103,7 +103,11 @@ async function yeniCocuk(sayfa: Page, kod: string) {
 }
 
 const haritayaDon = async (sayfa: Page) => {
-  await sayfa.getByRole('button', { name: 'Haritaya dön' }).tap()
+  const dugmesi = sayfa.getByRole('button', { name: 'Haritaya dön' })
+  // Bahçe'nin 15 kartıyla düğme iPhone 13'te ekranın altından taşar. Playwright'ın WebKit'te
+  // dokunmadan önceki kendi kaydırması o durumda takılıyor (sayfa elle kayar): önce sayfa kayar.
+  await dugmesi.evaluate((oge) => oge.scrollIntoView({ block: 'center' }))
+  await dugmesi.tap()
   await expect(haritaBasligi(sayfa)).toBeVisible()
 }
 

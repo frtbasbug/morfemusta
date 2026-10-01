@@ -492,4 +492,7 @@ DESIGN.md  NEXT.md  CLAUDE.md
   Sayfanın boyu listenin ölçüsünden: sütun sayısı × sabit satır boyu (`grid-auto-rows`). Sayfa
   çubuğunun yeri hep ayrılır (tek sayfada `visibility: hidden`): boy dalgalanmaz.
 - **WebKit:** bulut oturumunda Playwright'ın indirme sunucusu kapalı olabilir; o zaman WebKit
-  projesi yerelde atlanır (`playwright.config.ts` uyarı yazar), CI koşar.
+  projesi yerelde atlanır (`playwright.config.ts` uyarı yazar), CI koşar. Sunucu açıksa
+  `npx playwright install webkit && npx playwright install-deps webkit` yerelde de kurar.
+  WebKit'te `tap()` ekranın altından taşan öğeye kendi kaydırmasında takılır: önce
+  `scrollIntoView` (`e2e/pilot.spec.ts`, `haritayaDon`).
