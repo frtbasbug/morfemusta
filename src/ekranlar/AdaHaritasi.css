@@ -171,6 +171,11 @@
   display: block;
 }
 
+/* Koyun işareti: 0.42 ölçekli bukalemun (55 px); birim sınıf modunda büyür. */
+.bolge__isaret .bukalemun {
+  width: calc(55.44 * var(--birim));
+}
+
 .bolge__yazi {
   display: grid;
   gap: 0.1rem;
@@ -210,8 +215,45 @@
   color: var(--soluk);
 }
 
-/* İletinin hoparlörü: balonun boyunu yazı belirler; hoparlör balonun kenarından biraz taşar,
-   iletinin ayrılmış yeri (3.2rem) değişmez. */
-.harita__balon .hoparlor {
-  margin-block: -0.4rem;
+/* İletinin hoparlörü balonun içinde, sağ ucunda: hoparlörlü balonun dikey boşluğu yoktur, boyu
+   hoparlörünkü kadardır (44 px ve çerçeve); iletinin ayrılmış yeri (3.2rem) değişmez. */
+.harita__balon:has(.hoparlor) {
+  padding-block: 0;
+  padding-inline-end: 0.15rem;
+}
+
+/* Bir kez gösterilen ipucu (iOS Safari: ana ekrana ekle): haritanın altında, kapatılabilir.
+   Harita kalan alana sığar (kap sorgusu birimleri). */
+.harita__ipucu {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 24rem;
+  margin: 0.25rem auto 0;
+  padding: 0.2rem 0.25rem 0.2rem 0.85rem;
+  border: var(--cizgi-unlu-karti) dashed var(--murekkep);
+  border-radius: 1.2rem;
+  background: var(--zemin);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.harita__ipucu-kapat {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--murekkep);
+  cursor: pointer;
+}
+
+.harita__ipucu-kapat:focus-visible {
+  outline: 3px solid var(--murekkep);
+  outline-offset: 1px;
 }

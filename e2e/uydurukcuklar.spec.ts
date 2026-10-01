@@ -90,7 +90,7 @@ test.describe('Uydurukçuklar', () => {
     await uydurugaGir(page)
 
     for (const [yer, gorev] of GOREVLER.entries()) {
-      await expect(sira(page)).toHaveText(`Görev ${yer + 1} / 10`)
+      await expect(sira(page)).toHaveText(`1. tur · Görev ${yer + 1} / 10`)
       await expect(hedef(page)).toHaveAccessibleName(gorev.kok)
       await gorevOyna(page, gorev)
       await expect(page.locator('.uyduruk__sahne')).not.toContainText(/puan|skor|süre/i)
@@ -106,9 +106,9 @@ test.describe('Uydurukçuklar', () => {
     // İlk tur bitince bölge tamam.
     await expect(bolge(page, 'Uydurukçuklar')).toHaveAccessibleName('Uydurukçuklar, Tamam')
 
-    // İkinci giriş: 2. turun ilk yaratığı.
+    // İkinci giriş: 2. turun ilk yaratığı; üst çubukta tur numarası da yazar.
     await bolge(page, 'Uydurukçuklar').click()
-    await expect(sira(page)).toHaveText('Görev 1 / 10')
+    await expect(sira(page)).toHaveText('2. tur · Görev 1 / 10')
     await expect(hedef(page)).toHaveAccessibleName('pıbız')
     await page.getByRole('button', { name: 'Harita', exact: true }).click()
     await expect(haritaBasligi(page)).toBeVisible()
@@ -130,7 +130,7 @@ test.describe('Uydurukçuklar', () => {
     await gorevOyna(page, GOREVLER[0])
     await page.reload()
     await expect(baslik(page)).toBeVisible()
-    await expect(sira(page)).toHaveText('Görev 2 / 10')
+    await expect(sira(page)).toHaveText('1. tur · Görev 2 / 10')
     await expect(hedef(page)).toHaveAccessibleName('nöfel')
   })
 
@@ -148,7 +148,7 @@ test.describe('Uydurukçuklar', () => {
     // İlgili iki ses: ü ve e, yan yana iki ünlü, etiketlerinde.
     await expect(neden(page).locator('.uyduruk__aday .unlu-etiketi')).toHaveText(['ü', 'e'])
     await expect(bukalemun(page, 'e')).toHaveAttribute('aria-disabled', 'false')
-    await expect(sira(page)).toHaveText('Görev 8 / 10')
+    await expect(sira(page)).toHaveText('1. tur · Görev 8 / 10')
     await expect(page.getByText(/puan|skor|süre/i)).toHaveCount(0)
 
     await bukalemun(page, 'ye').tap()
@@ -238,7 +238,7 @@ test.describe('Uydurukçuklar', () => {
     await expect(hedef(page)).toHaveAccessibleName('fıngıllar')
     await expect(page.locator('.uyduruk__kopya')).toHaveCount(2)
     await page.keyboard.press('Enter')
-    await expect(sira(page)).toHaveText('Görev 2 / 10')
+    await expect(sira(page)).toHaveText('1. tur · Görev 2 / 10')
   })
 
   test('1. görev sürükle-bırakla oynanır (Pointer Events)', async ({ page }) => {

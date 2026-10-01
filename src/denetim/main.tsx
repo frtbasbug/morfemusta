@@ -1,8 +1,10 @@
 // Biçim Denetim Sayfası'nın giriş noktası (denetim.html). Oyundan bağlantı almaz.
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import '@fontsource/andika/400.css'
-import '@fontsource/andika/700.css'
+import '@fontsource/andika/latin-400.css'
+import '@fontsource/andika/latin-ext-400.css'
+import '@fontsource/andika/latin-700.css'
+import '@fontsource/andika/latin-ext-700.css'
 import '../gorsel/tema.css'
 import '../genel.css'
 import './denetim.css'

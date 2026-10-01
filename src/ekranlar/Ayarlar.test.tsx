@@ -18,17 +18,18 @@ const secenekler = (html: string) =>
   ].map(([, ad, secili, deger, yazi]) => [ad, deger, secili !== undefined, yazi])
 
 describe('Ayarlar', () => {
-  it('başlık; Ses, Hareket ve Renkler birer seçim grubu', () => {
+  it('başlık; Ses, Hareket, Renkler ve Sınıf modu birer seçim grubu', () => {
     const html = ayarlar()
     expect(html).toMatch(/<h1 id="ayarlar-baslik" class="ekran-basligi" tabindex="-1">Ayarlar<\/h1>/)
     expect(eslesmeler(html, /<legend class="ayar__baslik">([^<]*)<\/legend>/g)).toEqual([
       'Ses',
       'Hareket',
       'Renkler',
+      'Sınıf modu',
     ])
   })
 
-  it('Ses: Kapalı / Dokununca / Sesli mod (varsayılan Dokununca); Hareket; Renkler', () => {
+  it('Ses: Kapalı / Dokununca / Sesli mod (varsayılan Dokununca); Hareket; Renkler; Sınıf modu', () => {
     expect(secenekler(ayarlar())).toEqual([
       ['ses', 'kapali', false, 'Kapalı'],
       ['ses', 'dokununca', true, 'Dokununca'],
@@ -37,12 +38,21 @@ describe('Ayarlar', () => {
       ['hareket', 'azalt', false, 'Azalt'],
       ['renkler', 'renkli', true, 'Renkli'],
       ['renkler', 'renksiz', false, 'Renksiz'],
+      ['sinif', 'kapali', true, 'Kapalı'],
+      ['sinif', 'acik', false, 'Açık'],
     ])
     expect(
-      secenekler(ayarlar({ hareket: 'azalt', renkler: 'renksiz', ses: 'sesli' })).map(
+      secenekler(ayarlar({ hareket: 'azalt', renkler: 'renksiz', ses: 'sesli', sinif: 'acik' })).map(
         ([, deger, secili]) => (secili ? deger : null),
       ),
-    ).toEqual([null, null, 'sesli', null, 'azalt', null, 'renksiz'])
+    ).toEqual([null, null, 'sesli', null, 'azalt', null, 'renksiz', null, 'acik'])
+  })
+
+  it('Sınıf modu: etkileşimli tahta için; açıkken sıfırlama yalnız o açılışın ilerlemesini siler', () => {
+    expect(ayarlar()).toContain(
+      'Etkileşimli tahta için: bütün bölgeler açık, ilerleme kaydedilmez.',
+    )
+    expect(kaynak).toContain('Sınıf modunun ilerlemesi ve kartları silinecek.')
   })
 
   it('sıfırlama önce yalnız bir düğmedir; soru uygulamanın içinde, confirm yok', () => {

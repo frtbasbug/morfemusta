@@ -112,3 +112,53 @@ test('Renksiz: kalın ve ince ek etiketlerinin enleri farklı; kökün ve ekin e
   denetle(await kelimeEtiketleri(sozluk), 'Sözlük')
   expect(hatalar).toEqual([])
 })
+
+test("Sözlük kartında kök ve ek satırı kırılmaz: 360–412 px'te topum ve toplarım tek satır", async ({
+  page,
+}) => {
+  const kart = (kelime: string, etiketler: string[], dakika: number) => ({
+    kelime,
+    kok: 'top',
+    etiketler,
+    bolge: 'koy',
+    tarih: `2026-10-01T10:0${dakika}:00.000Z`,
+    sonKurulma: `2026-10-01T10:0${dakika}:00.000Z`,
+  })
+  await page.addInitScript(
+    ([anahtar, kayit]) => localStorage.setItem(anahtar, kayit),
+    [
+      ANAHTAR,
+      JSON.stringify({
+        kartlar: [kart('toplar', ['PL'], 1), kart('topum', ['POSS.1SG'], 2), kart('toplarım', ['PL', 'POSS.1SG'], 3)],
+      }),
+    ] as const,
+  )
+  for (const en of [360, 375, 390, 412]) {
+    await page.setViewportSize({ width: en, height: 760 })
+    await page.goto('./#/sozluk')
+    await expect(page.locator('.sozluk-karti')).toHaveCount(3)
+    await page.evaluate(() => document.fonts.ready)
+    for (const kelime of ['topum', 'toplarım']) {
+      const parcalar = page
+        .locator('.sozluk-karti')
+        .filter({ has: page.getByRole('heading', { name: kelime, exact: true }) })
+        .locator('.sozluk-karti__parcalar')
+      // Bütün parçalar (kök, artı, ekler) ilk parçanın yüksekliği içinde: tek satır.
+      const satirlar = await parcalar.evaluate((p) => {
+        const kutular = [...p.children].map((c) => c.getBoundingClientRect())
+        const ilk = kutular[0]!
+        return kutular.filter((k) => k.top + k.height / 2 > ilk.bottom || k.top + k.height / 2 < ilk.top).length
+      })
+      expect(satirlar, `${en}px: ${kelime}`).toBe(0)
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth), `${en}px`).toBeLessThanOrEqual(0)
+  }
+
+  // Ekran yeniden yüklenmeden daralınca (tek sütun) geniş kart kalmaz, Sözlük taşmaz: iki
+  // sütunluk kartın açtığı örtük sütun sayılmaz.
+  await expect(page.locator('.sozluk__kartlar > [data-genis]')).not.toHaveCount(0)
+  await page.setViewportSize({ width: 300, height: 760 })
+  await expect(page.locator('.sozluk__kartlar > [data-genis]')).toHaveCount(0)
+  expect(await page.evaluate(() => getComputedStyle(document.querySelector('.sozluk__kartlar')!).gridTemplateColumns.split(' ').length)).toBe(1)
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0)
+})

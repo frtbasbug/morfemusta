@@ -21,8 +21,7 @@ kırpılır, bütün sesler aynı yüksekliğe getirilir, sonra MP3'e çevrilir:
 uzunsa yeniden istenir; yine olmazsa sonda listelenir. 429 ve 5xx yanıtlarında beklenip
 yeniden denenir.
 
-Ses denetim sayfası (ses.html) için aynı beş cümle iki hızda da üretilir (public/ses/ornek/):
-oyunun hızı (0.9) ve olağan (1.0).
+Hız 0.9'dur (biraz yavaş; kullanıcının seçimi, Oturum 11).
 
 Kurulum ve kullanım:
 
@@ -50,7 +49,6 @@ from pathlib import Path
 
 KOK = Path(__file__).resolve().parent.parent
 SES_DIZINI = KOK / 'public' / 'ses'
-ORNEK_DIZINI = SES_DIZINI / 'ornek'
 LISTE = KOK / 'src' / 'ses' / 'ses-listesi.json'
 
 ADRES = 'https://texttospeech.googleapis.com/v1/text:synthesize'
@@ -60,7 +58,6 @@ SAGLAYICI = 'Google Cloud Text-to-Speech, Chirp 3: HD'
 
 # speakingRate: 1 olağan, küçüğü yavaş. Oyun çocuk için biraz yavaş konuşur.
 YAVAS = 0.9
-OLAGAN = 1.0
 ORNEKLEME = 24000  # Hz; Chirp 3: HD'nin LINEAR16 çıktısı
 BIT_HIZI = 32  # kbit/s
 
@@ -82,15 +79,6 @@ TEPE = 0.89 * 32767  # -1 dBFS
 DENEME = 4  # boş, aşırı kısa ya da uzun ses için toplam istek sayısı
 AG_DENEMESI = 6  # 429 ve 5xx için
 ESZAMANLI = 4
-
-# Ses denetim sayfasındaki örnekler: oyunun beş cümlesi, iki hızda.
-ORNEK_CUMLELER = [
-    'Bukalemun Koyu',
-    'e ince, a kalın. Kalınlıkları uyuşmuyor.',
-    'Ek ünlüyle başlayınca p yumuşar: b olur.',
-    'İkisi de olur: pıtakım, pıtağım.',
-    'Meyvenin üstüne gövde çıkmaz: önce çi.',
-]
 
 kilit = threading.Lock()
 gonderilen_karakter = 0
@@ -376,9 +364,8 @@ def main():
     ayrac.add_argument(
         '--yeniden',
         metavar='DOSYA',
-        help='yalnız bu dosyadaki ses dosyalarını yeniden üret (satır satır: abc123.mp3, '
-        'ornek/yavas-2.mp3); ötekiler değişmez. Listede olmayan bayat ses varsa hiç istek '
-        'gitmeden durur',
+        help='yalnız bu dosyadaki ses dosyalarını yeniden üret (satır satır: abc123.mp3); '
+        'ötekiler değişmez. Listede olmayan bayat ses varsa hiç istek gitmeden durur',
     )
     secenekler = ayrac.parse_args()
     anahtar()
@@ -393,13 +380,7 @@ def main():
     metinler = metinleri_al()
     eski = json.loads(LISTE.read_text(encoding='utf-8')) if LISTE.exists() else {}
     eski_metinler = eski.get('metinler', {}) if eski.get('ses') == SES else {}
-    eski_ornekler = {
-        o['dosya']: o for o in eski.get('ornekler', []) if eski.get('ses') == SES
-    }
     SES_DIZINI.mkdir(parents=True, exist_ok=True)
-    ORNEK_DIZINI.mkdir(parents=True, exist_ok=True)
-    okunuslar = {m['metin']: m['okunus'] for m in metinler}
-    sozcuk_haritasi = {m['metin']: m.get('sozcukler', []) for m in metinler}
 
     # İşler: (yol, okunuş, hız, etiket, sözcükler). Değişmeyenler atlanır: sesin kimliği okunuş,
     # ses, hız ve okunuşta geçen sözcüklerin IPA'sıdır (icerik/ses-sozcuk.csv). --yeniden verilince yalnız
@@ -423,28 +404,6 @@ def main():
             bayatlar.append(f'{yol.name}\t{metin}')
         elif not ayni or yol.name in yeniden:
             isler.append((yol, okunus, YAVAS, metin, sozcukler))
-    ornek_kayitlari = []
-    for hiz, ad in ((YAVAS, 'yavas'), (OLAGAN, 'olagan')):
-        for n, cumle in enumerate(ORNEK_CUMLELER, 1):
-            dosya = f'ornek/{ad}-{n}.mp3'
-            yol = SES_DIZINI / dosya
-            onceki = eski_ornekler.get(dosya)
-            ayni = (
-                not secenekler.hepsi
-                and onceki is not None
-                and onceki.get('metin') == cumle
-                and onceki.get('okunus') == okunuslar[cumle]
-                and onceki.get('sozcukler', []) == sozcuk_haritasi[cumle]
-                and onceki.get('hiz') == hiz
-                and yol.exists()
-            )
-            if yeniden and not ayni and dosya not in yeniden:
-                bayatlar.append(f'{dosya}\t{cumle} ({hiz})')
-            elif not ayni or dosya in yeniden:
-                isler.append(
-                    (yol, okunuslar[cumle], hiz, f'{cumle} ({hiz})', sozcuk_haritasi[cumle])
-                )
-            ornek_kayitlari.append((hiz, ad, cumle, dosya, yol))
 
     if bayatlar:
         sys.exit(
@@ -502,32 +461,9 @@ def main():
             'boyut': len(veri),
             'surum': hashlib.sha1(veri).hexdigest()[:12],
         }
-    ornekler = []
-    ornek_toplami = 0
-    for hiz, ad, cumle, dosya, yol in ornek_kayitlari:
-        if yol in basarisiz:
-            if dosya in eski_ornekler:
-                ornekler.append(eski_ornekler[dosya])
-            continue
-        veri = yol.read_bytes()
-        ornek_toplami += len(veri)
-        ornekler.append(
-            {
-                'hiz': hiz,
-                'ad': ad,
-                'metin': cumle,
-                'okunus': okunuslar[cumle],
-                **({'sozcukler': sozcuk_haritasi[cumle]} if sozcuk_haritasi[cumle] else {}),
-                'dosya': dosya,
-                'surum': hashlib.sha1(veri).hexdigest()[:12],
-            }
-        )
 
     # Biçim dosyalardan okunur: kodlayıcı hızı değiştirirse liste yalan söylemez.
-    hizlar = {
-        mp3_ornekleme((SES_DIZINI / dosya).read_bytes())
-        for dosya in [k['dosya'] for k in liste.values()] + [o['dosya'] for o in ornekler]
-    }
+    hizlar = {mp3_ornekleme((SES_DIZINI / k['dosya']).read_bytes()) for k in liste.values()}
     if hizlar != {ORNEKLEME}:
         sys.exit(f'MP3 örnekleme hızı beklenen değil: {sorted(hizlar)} (beklenen {ORNEKLEME})')
 
@@ -542,9 +478,8 @@ def main():
                 'ses': SES,
                 'saglayici': SAGLAYICI,
                 'bicim': f'MP3, mono, {hizlar.pop()} Hz, {BIT_HIZI} kbit/s',
-                'hizlar': {'yavas': YAVAS, 'olagan': OLAGAN},
+                'hiz': YAVAS,
                 'metinler': dict(sorted(liste.items())),
-                'ornekler': ornekler,
             },
             ensure_ascii=False,
             indent=1,
@@ -557,7 +492,7 @@ def main():
     )
     print(
         f'{len(liste)} ses, toplam {toplam / 1024 / 1024:.2f} MB '
-        f'(ön bellekte {once / 1024:.0f} KB); örnekler {ornek_toplami / 1024:.0f} KB; '
+        f'(ön bellekte {once / 1024:.0f} KB); '
         f'{len(isler)} metin üretildi, Google\'a {gonderilen_karakter} karakter gönderildi',
         file=sys.stderr,
     )

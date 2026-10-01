@@ -2,6 +2,7 @@
    belirteçlerden; kart gölgesiz. */
 
 .aksam {
+  position: relative;
   display: grid;
   place-items: center;
   min-height: 100dvh;

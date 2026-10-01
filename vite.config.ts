@@ -1,7 +1,7 @@
 /// <reference types="vitest/config" />
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
@@ -20,26 +20,60 @@ const ONCEDEN_INEN_SESLER = Object.values(sesListesi.metinler)
 /** src/ses/calar.ts'teki SES_ONBELLEGI. */
 const SES_ONBELLEGI = 'morfemusta-ses'
 
+/**
+ * Oyunun paketine ses listesinin yalnız gereken alanları girer: ses-listesi.json?oyun, metinden
+ * [dosyanın özeti, sürüm, ...bölgeler] dizisine (src/ses/calar.ts). Okunuş, boyut, hız ve sözcükler
+ * yalnız üretecin ve Ses Denetim Sayfası'nındır (o sayfa listenin tamamını alır).
+ */
+function sesListesiOyun(): Plugin {
+  // Sanal modül: Vite'ın JSON eklentisi .json?oyun'u JSON sanmasın.
+  const SANAL = '\0morfemusta:ses-listesi-oyun'
+  const yol = fileURLToPath(new URL('src/ses/ses-listesi.json', import.meta.url))
+  return {
+    name: 'morfemusta:ses-listesi-oyun',
+    enforce: 'pre',
+    resolveId(kaynak) {
+      return kaynak.endsWith('ses-listesi.json?oyun') ? SANAL : null
+    },
+    load(kimlik) {
+      if (kimlik !== SANAL) return null
+      this.addWatchFile(yol)
+      const tam = JSON.parse(readFileSync(yol, 'utf8')) as typeof sesListesi
+      const oyun = Object.fromEntries(
+        Object.entries(tam.metinler).map(([metin, { dosya, surum, bolgeler }]) => [
+          metin,
+          [dosya.replace(/\.mp3$/, ''), surum ?? '', ...bolgeler],
+        ]),
+      )
+      return `export default ${JSON.stringify(oyun)}`
+    },
+  }
+}
+
 export default defineConfig({
   base: TABAN,
   build: {
     rolldownOptions: {
-      // Dört giriş sayfası: oyun, Biçim Denetim Sayfası, Karakter Galerisi ve Ses Denetim
-      // Sayfası. Oyun ötekilere bağlantı vermez. Onlar da önbelleğe girer; girmeselerdi
-      // service worker oraya giden gezinmeyi oyunun index.html'ine yönlendirirdi
-      // (navigateFallback).
+      // Beş giriş sayfası: oyun, Biçim Denetim Sayfası, Karakter Galerisi, Ses Denetim Sayfası
+      // ve Cihaz Denetimi. Oyun ötekilere bağlantı vermez (yalnız eski tarayıcı uyarısı
+      // cihaz.html'e). Onlar da önbelleğe girer; girmeselerdi service worker oraya giden
+      // gezinmeyi oyunun index.html'ine yönlendirirdi (navigateFallback).
       input: {
         oyun: fileURLToPath(new URL('index.html', import.meta.url)),
         denetim: fileURLToPath(new URL('denetim.html', import.meta.url)),
         galeri: fileURLToPath(new URL('galeri.html', import.meta.url)),
         ses: fileURLToPath(new URL('ses.html', import.meta.url)),
+        cihaz: fileURLToPath(new URL('cihaz.html', import.meta.url)),
       },
     },
   },
   plugins: [
     react(),
+    sesListesiOyun(),
     VitePWA({
-      registerType: 'autoUpdate',
+      // registerSW.js service worker'ı yalnız kaydeder: sayfa yenilenmez, çocuğa güncelleme
+      // sorusu sorulmaz. Yeni sürüm bekler (skipWaiting yok, aşağıda).
+      registerType: 'prompt',
       injectRegister: 'script-defer',
       manifest: {
         id: TABAN,
@@ -84,9 +118,11 @@ export default defineConfig({
             options: { cacheName: SES_ONBELLEGI },
           },
         ],
-        // Yeni sürüm sessizce devreye girer; çocuğa güncelleme sorusu sorulmaz.
+        // Yeni sürüm açık sayfayı devralmaz: o açılışta eski sürüm sürer (eski önbellekle; sayfa
+        // yenilenmez, bozulmaz), yeni sürüm oyunun bütün pencereleri kapanınca, bir sonraki
+        // açılışta devreye girer. İlk kurulumda sayfa hemen denetlenir (clientsClaim): ilk
+        // açılıştan sonra çevrim dışı da açılır.
         clientsClaim: true,
-        skipWaiting: true,
       },
     }),
   ],

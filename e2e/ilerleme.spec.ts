@@ -174,7 +174,8 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
     expect(await kayit(page)).toEqual({
       bolgeler: {},
       kartlar: [],
-      ayarlar: { hareket: 'sistem', renkler: 'renksiz', ses: 'dokununca' },
+      ayarlar: { hareket: 'sistem', renkler: 'renksiz', ses: 'dokununca', sinif: 'kapali' },
+      kapananIpuclari: [],
       sifirlama: 1,
     })
   })
@@ -332,7 +333,8 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
     const bos = {
       bolgeler: {},
       kartlar: [],
-      ayarlar: { hareket: 'sistem', renkler: 'renkli', ses: 'dokununca' },
+      ayarlar: { hareket: 'sistem', renkler: 'renkli', ses: 'dokununca', sinif: 'kapali' },
+      kapananIpuclari: [],
       sifirlama: 1,
     }
     expect(await kayit(b)).toEqual(bos)
@@ -379,6 +381,90 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
     })
     await expect(b.locator('html')).toHaveAttribute('data-renkler', 'renksiz')
     expect(hatalar.flat()).toEqual([])
+  })
+
+  test('storage olayı ulaşmayan sekme görünür olunca (visibilitychange) ve önbellekten dönünce (pageshow) kaydı yeniden okur', async ({
+    context,
+  }) => {
+    const a = await context.newPage()
+    const b = await context.newPage()
+    const hatalar = [hatalariTopla(a), hatalariTopla(b)]
+    // A'ya storage olayı ulaşmaz (arka planda donmuş sekme gibi).
+    await a.addInitScript(() => {
+      window.addEventListener('storage', (olay) => olay.stopImmediatePropagation(), true)
+    })
+    await a.goto('./#/sozluk')
+    await expect(a.getByText('Sözlüğün henüz boş.', { exact: false })).toBeVisible()
+
+    // B iki görev bitirir; A görmez.
+    await koyuAc(b)
+    await gorevleriOyna(b, 0, 1)
+    await a.waitForTimeout(200)
+    await expect(kartKelimeleri(a)).toHaveCount(0)
+
+    // A görünür olur: kaydı yeniden okur, Sözlük'te iki kart.
+    await a.evaluate(() => document.dispatchEvent(new Event('visibilitychange')))
+    await expect(kartKelimeleri(a)).toHaveText(['evler', 'atlar'])
+
+    // A'da koy açık; B bir görev daha bitirir. A önbellekten dönmüş gibi (pageshow): açık bölge
+    // ekranı kalınan yerden açılır.
+    await gezinme(a, 'Harita').click()
+    await bolge(a, 'Bukalemun Koyu').click()
+    await expect(sira(a)).toHaveText('Görev 3 / 10')
+    await gorevOyna(b, 2)
+    await a.waitForTimeout(200)
+    await expect(sira(a)).toHaveText('Görev 3 / 10')
+    await a.evaluate(() =>
+      window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true })),
+    )
+    await expect(sira(a)).toHaveText('Görev 4 / 10')
+    expect(hatalar.flat()).toEqual([])
+  })
+})
+
+test.describe("iOS Safari'de ana ekran ipucu", () => {
+  test.use({
+    contextOptions: { reducedMotion: 'reduce' },
+    userAgent:
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1',
+  })
+
+  const ipucu = (sayfa: Page) => sayfa.getByRole('note').filter({ hasText: 'İlerlemen silinmesin' })
+
+  test('bir kez gösterilir: haritada küçük ipucu; kapatılınca bir daha çıkmaz', async ({ page }) => {
+    await page.goto('./')
+    await expect(ipucu(page)).toHaveText('İlerlemen silinmesin: Paylaş → Ana Ekrana Ekle.')
+    // Harita ipucuyla da kaydırmadan sığar; bölgeler ipucunun altında kalmaz.
+    await page.setViewportSize({ width: 375, height: 667 })
+    expect(await page.evaluate(() => document.documentElement.scrollHeight - innerHeight)).toBeLessThanOrEqual(0)
+    const ipucuKutusu = await ipucu(page).boundingBox()
+    const koyKutusu = await bolge(page, 'Bukalemun Koyu').boundingBox()
+    expect((koyKutusu?.y ?? 0) + (koyKutusu?.height ?? 0)).toBeLessThanOrEqual(ipucuKutusu?.y ?? 0)
+    const kapat = page.getByRole('button', { name: 'İpucunu kapat' })
+    const kapatKutusu = await kapat.boundingBox()
+    expect(Math.min(kapatKutusu?.width ?? 0, kapatKutusu?.height ?? 0)).toBeGreaterThanOrEqual(44)
+
+    await kapat.tap()
+    await expect(ipucu(page)).toHaveCount(0)
+    expect(await kayit(page)).toMatchObject({ kapananIpuclari: ['ana-ekran'] })
+    await page.reload()
+    await expect(haritaBasligi(page)).toBeVisible()
+    await expect(ipucu(page)).toHaveCount(0)
+  })
+
+  test('ana ekrandan açılınca ve sınıf modunda görünmez', async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, 'standalone', { value: true })
+    })
+    await page.goto('./')
+    await expect(haritaBasligi(page)).toBeVisible()
+    await expect(ipucu(page)).toHaveCount(0)
+  })
+
+  test('sınıf modunda görünmez', async ({ page }) => {
+    await page.goto('./?sinif=1')
+    await expect(haritaBasligi(page)).toBeVisible()
+    await expect(ipucu(page)).toHaveCount(0)
   })
 })
 

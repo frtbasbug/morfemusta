@@ -17,8 +17,9 @@
 // (onGorevBitti), görevler bitince ortak akşam ekranı açılır.
 //
 // Ses (DESIGN.md, "Ses ve resim"): sesli modda görev başlayınca kök söylenir; karo seçilince ya
-// da sürüklenmeye başlayınca kuracağı kelime (kitapım, kitabım); doğruda kurulan kelime,
-// yanlışta neden cümlesi. Kökün resmi (emoji) kelime kartında.
+// da sürüklenmeye başlayınca kuracağı kelime (kitapım, kitabım); doğruda efekt ve ardından
+// kurulan kelime, yanlışta efekt ve neden cümlesi (Dokununca'da yalnız efektler). Doğruda
+// kelimenin çevresinde yıldızcıklar parlar. Kökün resmi (emoji) kelime kartında.
 
 import {
   useEffect,
@@ -59,6 +60,7 @@ import { Hoparlor, useSes, useSesliSoyleyis } from '../ses/Ses.tsx'
 import AksamEkrani from './AksamEkrani.tsx'
 import BolgeUstu from './BolgeUstu.tsx'
 import { bekle, hareketAzMi, hareketleriKes, kaydir, oynat, type Nokta } from './hareket.ts'
+import { parlat } from './parilti.ts'
 import { SiradakiSimgesi } from './simgeler.tsx'
 import './FistikciSahap.css'
 
@@ -114,7 +116,7 @@ export default function FistikciSahap({
   const tiklamayiYut = useRef(false)
   const bagli = useRef(false)
   const gorulenGorev = useRef(durum.gorevYeri)
-  const { soyle } = useSes()
+  const { soyle, sonuc } = useSes()
 
   // Sesli mod: görev başlayınca kök söylenir; bölgeye girişte önce bölgenin adı.
   const [acilisYeri] = useState(durum.gorevYeri)
@@ -205,7 +207,9 @@ export default function FistikciSahap({
       setYuvadaki(degisir ? sinir.asil : karo)
       gonder({ tur: 'oturdu' })
     })
-    soyle(denemeyiDegerlendir(gorev, sinir, karo).aday)
+    // Doğru: efekt, ardından (sesli modda) kurulan kelime; kelimenin çevresinde parıltı.
+    sonuc('dogru', denemeyiDegerlendir(gorev, sinir, karo).aday)
+    parlat(kartRef.current?.querySelector('.dukkan__kelime'))
     if (oge) oge.style.transform = ''
     const yuva = yuvaRef.current
     if (degisir) {
@@ -289,7 +293,7 @@ export default function FistikciSahap({
     }
     if (!bagli.current) return
     flushSync(() => gonder({ tur: 'sekti' }))
-    soyle(cumle)
+    sonuc('yanlis', cumle)
     if (oge) oge.style.transform = ''
   }
 

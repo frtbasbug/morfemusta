@@ -20,11 +20,6 @@
   font-size: 1.3rem;
 }
 
-.ses-denetimi h3 {
-  margin: 0.75rem 0 0.25rem;
-  font-size: 1.05rem;
-}
-
 .ses-denetimi ul {
   display: grid;
   gap: 0.35rem;

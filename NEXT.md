@@ -1,10 +1,191 @@
 # Sıradaki
 
-**Sıradaki hedef: Oturum 11.** Kullanıcı oturumun tarifini verecek. Bekleyen planlar Oturum 6'nın
-bölümünde (iOS'ta ilerlemenin korunması, eski cihazlar, çok sekmede kalan durumlar); açık
-kalanlar aşağıda.
+**Sıradaki hedef: Oturum 12, pilot sürümü.** Kullanıcı oturumun tarifini verecek. Açık kalanlar
+aşağıda: Oturum 11'in bölümünde (Oturum 12 için) ve önceki oturumların bölümlerinde.
 
-## Son oturum: Oturum 10b — yeni ses ve sade cümleler (2026-10-01)
+## Son oturum: Oturum 11 — cila (2026-10-01)
+
+### Kullanıcının kararları
+
+- **Seslerin hızı 0.9 kalır;** sesler yeniden üretilmedi. `ses.html`'deki örnekler bölümü ve
+  örnek sesler (`public/ses/ornek/`, 10 dosya, 101 KB) kalktı. Üreteç örnek üretmez;
+  `ses-listesi.json`'da `hizlar` ve `ornekler` yerine `hiz: 0.9`. Oturum 10b'nin "Seslerin
+  hızı" maddesi kapandı.
+- **Sınıf modu ayrı bir mod:** Ayarlar'da *Sınıf modu: Kapalı / Açık*; adreste `?sinif=1` açar,
+  `?sinif=0` kapatır (yer imi).
+- **Efektler kodla üretilir** (Web Audio): dosya ve lisans yok.
+- **Erişilebilirlik @axe-core/playwright ile taranır** (kullanıcının adını verdiği kitaplık;
+  geliştirme bağımlılığı, MPL-2.0; CLAUDE.md, 2. kural).
+- **Derleme hedefi sonra:** kullanıcı en eski cihazda `cihaz.html`'i açacak; hedef ona göre
+  seçilecek.
+
+### Bitenler
+
+- **Önce denetlendi:** Oturum 10b'nin işi main'de
+  ([frtbasbug/morfemusta#14](https://github.com/frtbasbug/morfemusta/pull/14), `d8c15e1`):
+  Callirrhoe sesleri ve `icerik/ses-sozcuk.csv`.
+- **Sınıf modu:**
+  - Kayıt `oyunKaydi`'ndan (`src/oyun/ilerleme.ts`): sınıf modunda ilerleme, kartlar ve kalınan
+    yer o açılışın belleğindedir; kayda yalnız ayarlar ve kapatılan ipuçları yazılır.
+    Yenileyince baştan; kapanınca cihazın kaydı olduğu gibi döner; aynı açılışta yeniden
+    açılınca bellek sürer. Sıfırlama sınıf modunda yalnız belleği siler. Bütün bölgeler açık.
+  - `?sinif=1` / `?sinif=0` açılışta ayara yazılır, adresten kalkar, hash kalır
+    (`src/kabuk/sinif.ts`, `depo.ts`'in `kaydiKur`'u).
+  - İşaret (`SinifIsareti`): bölge ekranının üst çubuğunda; harita, Sözlük, Ayarlar ve akşam
+    ekranında sağ üstte. Görünen *Sınıf*, ekran okuyucuya *Sınıf modu: ilerleme kaydedilmiyor.*
+  - Görünüm (`src/ekranlar/Sinif.css`; yalnız en az 1024 px genişlikte yatay ekranda): kökün
+    yazı boyu ekranla ölçeklenir (1920×1080'de 28 px, 1366×768'de 19.9 px); piksel boylu
+    çizimler `--birim` ile büyür (`karakterler.css`, karo, harita işaretleri); bölge
+    ekranlarında 60 rem'lik sütun, bukalemunlar tek sırada; Sözlük'te bölgeler yan yana, kart
+    sayısıyla orantılı; Ayarlar iki sütun; akşam kartı 52 rem.
+  - Ölçüm (`e2e/sinif.spec.ts`): 1920×1080'de harita, dört bölge (başta, Koy'da yanlışta, dördünde
+    doğruda), dört bölgenin kartlarıyla Sözlük ve Koy'un akşam ekranı kaydırmasız; en küçük yazı
+    28.0 px (*Sınıf* işareti), en küçük dokunma hedefi 77 px. 1366×768'de de kaydırmasız (en
+    küçük yazı 19.9 px, hedef 55 px).
+- **Efektler** (`src/ses/efekt.ts`): doğru G5 → C6 (320 ms), yanlış A3 (260 ms, yavaş
+  yükseliş), büyü C6 E6 G6 C7 arpeji (335 ms); hepsi 400 ms'den kısa ve konuşmadan kısık (en
+  yüksek 50 ms'nin RMS'i 0.05'in, tepe 0.25'in altında; konuşma -20 dBFS = 0.1). Kapalı'da
+  AudioContext hiç kurulmaz. Dokununca'da yalnız efekt; sesli modda efekt biter bitmez kurulan
+  kelime ya da neden cümlesi (gecikme efektin süresi; o arada ekran değişirse söylenmez). Efekt
+  `<audio>`'ya dokunmaz: çalan konuşma kesilmez. Dört bölgede doğru ve yanlış; büyü çoğalma,
+  cebe girme, halka ve yıldızda.
+- **Parıltı** (`src/ekranlar/parilti.ts`): doğruda kelimenin çevresinde altı yıldızcık (her biri
+  340 ms, 0–250 ms gecikmeyle); `--parilti-1` (yanak) ve `--parilti-2` (kara), Renksiz'de gri;
+  `aria-hidden`, dokunuşu engellemez; hareket azaltmada (cihaz ya da oyunun Azalt'ı) yok. Dört
+  bölgede.
+- **Çevrim dışı ve güncelleme:** `skipWaiting` kalktı, `registerType: 'prompt'`: yeni sürüm açık
+  sayfayı devralmaz, sayfa yenilenmez; o açılış eski sürümle sürer, yeni sürüm sonraki açılışta
+  gelir. `clientsClaim` kaldı: ilk açılıştan sonra çevrim dışı da açılır. Uçtan uca: uçak
+  modunda yeniden açılış ve Koy'da bir görev (resim ve sesiyle); bir kez girilmiş Dükkân'ın
+  sesleri uçak modunda; yeni sürüm (`sw.js?surum=yeni`) bekler, açık sayfa sürer.
+- **Cihazda ilerleme:**
+  - Ana ekran ipucu (`src/kabuk/ipucu.ts`): iPhone ve iPad Safari'de, ana ekrandan
+    açılmamışsa haritanın altında *İlerlemen silinmesin: Paylaş → Ana Ekrana Ekle.* ve kapatma
+    düğmesi (44 px); kapatılınca kayda yazılır (`kapananIpuclari`), bir daha çıkmaz (sıfırlamada
+    da). Sınıf modunda ve ana ekrandan açılınca yok. 375×667'de harita yine sığar.
+  - Çok sekme: `visibilitychange` (görünür olunca) ve `pageshow`'da kayıt yeniden okunur,
+    `storage` olayı gibi işlenir (Oturum 6'nın planı).
+- **Erişilebilirlik** (`e2e/erisilebilirlik.spec.ts`, axe-core): harita, dört bölge, Koy'da
+  yanlış ve doğru, akşam ekranı, Sözlük, Ayarlar (Renkli, Renksiz ve 1920×1080'de sınıf modu);
+  ipuçlu harita; denetim.html, galeri.html, ses.html, cihaz.html. Ciddi ya da kritik bulgu yok.
+  Bulunup düzeltilen: galeride `<li role="img">` (axe *list*); rol içteki öğeye geçti.
+- **Eski cihazlar:**
+  - `cihaz.html` (beşinci giriş): tarayıcı ve sürümü, işletim sistemi, ekran (pencere, piksel
+    oranı), kullanıcı ajanı; özellikler ✓/✗: service worker, localStorage, Web Audio, Pointer
+    Events, `dvh`, kap sorgusu birimleri, ES modülleri, `:has()`, Web Animations. *Kopyala*
+    özeti panoya koyar (olmazsa `execCommand`, o da olmazsa metni seçtirir). Modülsüz, ES5,
+    satır içi; çevrim dışı da açılır.
+  - Eski tarayıcı uyarısı (`index.html`): `noModule` yoksa hemen, varsa `load`'da oyun
+    açılmamışsa *Bu tarayıcı Morfemusta için çok eski.* ve *Cihazı denetle* (cihaz.html). Beyaz
+    ekran yok. Uyarının ve cihaz.html'in ES5 olduğunu `src/kabuk/es5.test.ts` denetler.
+  - Paket: Andika yalnız latin ve latin-ext alt kümeleriyle; oyunun paketine ses listesinin
+    yalnız gereken alanları girer (`ses-listesi.json?oyun`: özet, sürüm, bölgeler).
+- **Boyutlar** (oyunun sayfası ve önbellek; önce → sonra):
+
+  | | Önce | Sonra |
+  |---|---|---|
+  | Oyunun JS'i | 424.5 KB (gzip 122.6 KB) | 376.0 KB (gzip 121.1 KB) |
+  | – ses parçası (`metinler-*.js`: ses listesi, çalar) | 109.2 KB (gzip 24.9 KB) | 53.6 KB (gzip 20.6 KB) |
+  | Oyunun CSS'i (sınıf modu eklendi) | 42.7 KB (gzip 8.2 KB) | 44.9 KB (gzip 8.7 KB) |
+  | Ön bellek (Workbox) | 139 girdi, 902.4 KiB | 134 girdi, 879.5 KiB |
+  | Ön bellek, diskteki boyutlar (sesler dahil) | 1533.3 KB | 1510.4 KB |
+  | Ön bellekteki yazı tipleri | 12 dosya, 308.5 KB | 6 dosya, 229.7 KB |
+  | `public/ses/ornek/` (ön bellekte değildi) | 10 dosya, 101 KB | yok |
+
+  Ön bellek az küçüldü: oyunun paketi ses listesinin yalnız gereken alanlarını alır, ama Ses
+  Denetim Sayfası listenin tamamını artık kendi parçasında taşır (`ses-*.js`, 3.7 KB'tan 98 KB'a;
+  önce paylaşılan parçadaydı). Ön bellekteki sesler değişmedi (75 ses, 574.1 KB).
+
+- **Küçük düzeltmeler:**
+  - Sözlük kartında kök ve ek satırı kırılmaz: bir sütuna sığmayan kart iki sütun genişliğinde
+    durur (`genisKartlar`, ölçüyle; 360, 375, 390 ve 412 px'te *topum* ve *toplarım* tek satır).
+  - Haritanın ileti balonunda hoparlör balonun içinde (360×640 ve 412×839'da sınandı).
+  - Uydurukçuklar'ın üst çubuğunda tur: *2. tur · 3 / 10* (dar ekranda tur üstte).
+- **Belgeler:** DESIGN.md (Ayarlar, Ses ve resim: Efektler, Koleksiyon ve modlar: Sınıf modu,
+  Cihazda ilerleme, Sözlük, Belirteçler), CLAUDE.md, README (sınıf modu ve Cihaz Denetimi
+  bağlantısı, efektlerin notu).
+- **Testler:** 2090 birim testi ve 116 uçtan uca test (hepsi yeşil; tür denetimi temiz).
+  - Birim: sınıf modu (kayda yazılmaz, yenileyince yok, kapanınca cihazın kaydı, ayarlar
+    yazılır, öteki pencere), `?sinif=1` / `?sinif=0` ve adresten kalkması, ana ekran ipucu (iOS
+    Safari, bir kez, sıfırlamada kalır), efektler (süre, yükselen iki nota, alçak yanlış, büyü
+    parıltısı, konuşmadan kısık, Web Audio'nun çizgesi), sonucun planı (Kapalı'da yok,
+    Dokununca'da yalnız efekt, sesli modda efekt ve metin), ES5 denetimi, ses listesinin
+    alanları ve örneklerin yokluğu.
+  - Uçtan uca: sınıf modu (dört bölgede birer görev, yenileme, kapanınca eski ilerleme,
+    `?sinif=0`; 1920×1080 ve 1366×768'de taşma, yazı ve hedef ölçüleri), efektler (Kapalı'da
+    yok, Dokununca'da notalar, sesli modda sıra ve gecikme, konuşma kesilmez), parıltı (renkler,
+    Renksiz, Azalt), çevrim dışı ve güncelleme, iOS ipucu, `visibilitychange` ve `pageshow`,
+    axe taramaları, cihaz.html ve Kopyala, eski tarayıcı uyarısı (paket ayrıştırılamaz; ES
+    modülü yok), Sözlük kartı, haritanın balonu.
+
+### PR'dan sonra düzeltilen (Codex'in bulgusu, doğrulandı)
+
+- **Daralan ekranda geniş Sözlük kartı kalıyordu:** iki sütunluk kart (`span 2`) tek sütunlu
+  ızgarada örtük ikinci bir sütun açar; `gridTemplateColumns` onu da saydığı için işaret hiç
+  kalkmazdı (ekran dönünce ya da pencere daralınca). Ölçmeden önce geniş işaretleri kalkıyor.
+  Uçtan uca testte 412 px'ten 300 px'e daralma eklendi (eski kodda kırmızıydı).
+
+### Oturumda seçilen küçük ayrıntılar (kullanıcıya ayrıca sorulmadı)
+
+- **İpucu iPad'de de:** iPadOS Safari'de de aynı silme kuralı var; kendini Mac gibi tanıtan
+  iPad dokunma noktasından tanınır. iOS'taki Chrome, Firefox ve uygulama içi tarayıcılarda
+  ipucu yok (orada Ana Ekrana Ekle Safari'deki gibi değil).
+- **İpucunun yeri:** haritanın altında, kesik çerçeveli küçük bir balon; × ile kapanır.
+- **Sınıf modunun görünümü** yalnız geniş yatay ekranda (en az 1024 px, yatay); telefonda sınıf
+  modu olağan görünümdedir (işaretiyle). Kökün yazı boyu `max(16px, min(1.4584vw, 2.5926vh))`.
+- **Sınıf modunda ayarlar kaydedilir** (ses, hareket, renkler); yalnız ilerleme, kartlar ve
+  kalınan yer kaydedilmez. Sınıf modunun kendisi de ayardır: yenileyince sürer.
+- **cihaz.html'de iki özellik daha:** `:has()` (haritanın zemini) ve Web Animations (hareketler).
+- **Eski tarayıcı uyarısı iki yoldan:** `noModule` yoksa hemen; varsa `load`'a kadar oyun
+  açılmadıysa (paket bu tarayıcıda ayrıştırılamadı ya da hata verdi). Oyun açılınca
+  `html[data-acildi]` yazılır, uyarı hiç görünmez.
+- **Efektlerin notaları** (G5 → C6; A3; C6 E6 G6 C7) ve düzeyleri (kazanç 0.1, 0.08, 0.04).
+- **Sesli modda kelime efekt bitince gelir** (320 ms; yanlışta 260 ms), üst üste binmez.
+- **Parıltı** altı yıldızcık, dört köşeli; renk sırası yanak, kara.
+- **Güncelleme sorulmaz:** çocuğa "yeni sürüm var" denmez; sonraki açılışta sessizce gelir.
+
+### Açık kalanlar
+
+Oturum 11'de eklenenler (Oturum 12 için; kullanıcıya ayrıca sorulacak):
+
+- **Derleme hedefi:** kullanıcı en eski cihazda `cihaz.html`'i açıp *Kopyala*'nın sonucunu
+  verecek. Hedef ona göre seçilir (Vite `build.target`; `dvh`, kap sorgusu birimleri ve
+  `:has()` için geri dönüşler; Oturum 6'nın planı).
+- **Ana ekrandaki uygulamada güncelleme:** yeni sürüm oyunun bütün pencereleri kapanınca gelir.
+  Telefon uygulamayı arka planda günlerce canlı tutarsa eski sürüm o kadar sürebilir. Gerçek
+  telefonda gözlenmeli; gerekirse "uzun süre arka planda kaldıysa görünür olunca yenile" gibi
+  bir kural.
+- **Güncelleme sırasında iki sürüm:** eski sürüm `ayarlar.sinif`'i ve `kapananIpuclari`'nı
+  tanımaz; eski sekme kaydı yazarken düşürür. Sınıf modu kapanır ya da ipucu bir kez daha
+  görünür (bir kez). `skipWaiting` kalktığı için eski ve yeni sürüm farklı sekmelerde daha uzun
+  birlikte açık kalabilir.
+- **Sınıf modunda çok kartlı Sözlük kayar** (bir açılışta onlarca kelime; ör. Koy 10 ve Bahçe 15
+  kart, 1920×1080'de). Ayarlar da kayar (Hakkında uzun). İkisi de ölçütün dışında; gerekirse
+  kartlar küçülür.
+- **Sınıf modu dikey tahtada ve dar pencerede** olağan görünümde (1024 px'ten dar ya da dikey).
+- **Hareket azaltmada büyünün sesi doğrunun sesiyle üst üste çalar** (bekleme yok; Koy'da
+  çoğalma ve cep). Kulakla denenmeli.
+- **iOS'ta sessiz anahtar:** Web Audio'nun efektleri sessiz anahtar açıkken susabilir, konuşma
+  (`<audio>`) çalar. Gerçek telefonda denenmeli; gerekirse `navigator.audioSession`.
+- **Efektlerin düzeyi ve tınısı** gerçek cihazda ve tahtanın hoparlöründe dinlenmeli (pilot);
+  yanlışın sesi çocuğa cezalandırıcı gelmemeli.
+- **Eski tarayıcı uyarısı** yalnız oyun hiç açılmazsa çıkar. Oyun açılır da bir özellik
+  eksikliğiyle bozuk görünürse (ör. `:has()` ya da `dvh` yok) uyarı yok; cihaz.html bunları
+  gösterir. Render'da hata (açılıştan sonra) beyaz ekran bırakabilir: gerekirse kökte bir hata
+  sınırı uyarıyı gösterir.
+- **Sözlük'ün geniş kartı ölçüyle açılır** (ResizeObserver): ilk çizimde bir an tek sütunda
+  görünebilir. Geniş kartın bıraktığı boşluğa sonraki kart yerleşir (`grid-auto-flow: dense`):
+  görünen sırada bir kart öne kayabilir (ekran okuyucunun sırası değişmez).
+- **Erişilebilirlik yalnız otomatik denetlendi** (axe, Chromium). VoiceOver ve TalkBack ile elle
+  deneme pilotta.
+- **Uçtan uca testler yalnız Chromium'da:** efektler, parıltı, sınıf modunun ölçüleri ve
+  cihaz.html Safari'de ve Firefox'ta sınanmadı.
+- **Pilotta denenecekler** (Oturum 10'un "Gerçek telefonda doğrulama" listesine ek): sınıf modu
+  gerçek bir etkileşimli tahtada (dokunma, yazı boyu, hoparlör); iPhone Safari'de ipucu ve
+  kapatılması; efektler (iOS'ta ilk dokunuştan sonra); uçak modunda açılış; yeni sürümün
+  gelişi; en eski cihazda cihaz.html.
+
+## Önceki oturum: Oturum 10b — yeni ses ve sade cümleler (2026-10-01)
 
 ### Kullanıcının kararı: yeni ses
 
@@ -133,15 +314,15 @@ kalanlar aşağıda.
 
 Oturum 10b'de eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak):
 
-- **Seslerin hızı:** kullanıcı `ses.html`'deki örneklerden seçecek (0.9 ya da 1.0). Seçince
-  `YAVAS` değişir, `--hepsi` ile yeniden üretilir.
+- ~~**Seslerin hızı:** kullanıcı `ses.html`'deki örneklerden seçecek (0.9 ya da 1.0).~~
+  Oturum 11'de kapandı: 0.9 kaldı, örnekler kalktı.
 - **Seslerin dinlenmesi:** 690 Callirrhoe sesi kulakla denetlenmedi; özellikle uydurma
   kelimeler (*fıngıl*, *zelüe*), harf adları (*pe*, *yumuşak ge*) ve tek heceli ekler (*lik*,
   *çi*). Yanlışlar `ses.html`'de işaretlenip `icerik/ses-okunus.csv`'ye (onayla) yazılır.
 - **Chirp sesi zamanla değişebilir:** Google modeli güncellerse aynı metin farklı çıkar;
   yalnız değişenler yeniden üretildiği için ses karışabilir. Gerekirse `--hepsi`.
 
-## Önceki oturum: Oturum 10 — ses ve resim (2026-09-30)
+## Daha önceki oturum: Oturum 10 — ses ve resim (2026-09-30)
 
 ### Bitenler
 
@@ -245,13 +426,12 @@ Oturum 10'da eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak):
   yerine geçen maddeler Oturum 10b'nin açık kalanlarında.
 - **İki sürüm aynı anda açıkken** eski kod `ayarlar.ses`'i tanımaz: bir ayar değiştirirse ses
   ayarı Dokununca'ya döner (bir kez).
-- **Ses listesi paketi büyütüyor:** `ses-listesi.json` (okunuş, boyut, sürüm dahil) JS paketine
-  giriyor (Oturum 10b'de 126 KB, gzip ile 21 KB). Oyun yalnız metin → dosya ve bölgeleri kullanıyor; liste
-  ikiye ayrılabilir.
+- ~~**Ses listesi paketi büyütüyor.**~~ Oturum 11'de: oyunun paketine yalnız gereken alanlar
+  girer (`ses-listesi.json?oyun`); ses parçası 109.2 KB'tan 53.6 KB'a indi.
 - **Uydurukçuklar'ın sesleri 2.2 MB (Oturum 10b'de 2.3 MB):** bölgeye ilk girişte hepsi iner (100 görev, 10 tur).
   Gerekirse tur tur indirilir.
-- **Haritanın ileti balonunda hoparlör** balonun kenarından biraz taşıyor (iletinin ayrılmış
-  yeri değişmesin diye). Telefonda göz ile bakılmalı.
+- ~~**Haritanın ileti balonunda hoparlör** balonun kenarından biraz taşıyor.~~ Oturum 11'de
+  düzeldi: hoparlör balonun içinde.
 - **Dükkân'daki değişim yazısı** (*kitap → kitabım*) söylenmiyor; yalnız kurulan kelime.
 - **Ekran okuyucuyla sesli mod:** oyunun sesi ve ekran okuyucunun sesi çakışabilir; sesli mod
   ekran okuyucu kullanmayan, okumayan çocuk içindir.
@@ -262,7 +442,7 @@ Oturum 9'da eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak):
 - **İki sürüm aynı anda açıkken** eski kod *pıtağım* kartını tanımaz ve kaydı yazarken atar
   (`kartiCoz` eski sürümde yalnız `ekle`'ninkini kabul ediyordu). Güncelleme sırasında bir kez
   olabilir.
-- **Tur numarası ekranda yok:** üst çubukta yalnız *3 / 10*. Gerekirse *2. tur* yazılır.
+- ~~**Tur numarası ekranda yok.**~~ Oturum 11'de: *2. tur · 3 / 10*.
 - **Uydurukçuklar'da parmakla sürükleme** uçtan uca sınanmadı (fareyle sınandı; Koy ve
   Dükkân'da CDP dokunmasıyla sınanıyor).
 - **Kaynaştırma nedeninde `su`:** aday kök + yüzeydir (`su` + `a` → *sua*); motorun gövdesi
@@ -293,11 +473,8 @@ Oturum 9'da eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak):
   de verir (bahçe gibi).
 - **Tema rengi haritada krem:** tarayıcının çubuğu krem, haritanın denizi yeşilimsi. Gerekirse
   ekrana göre değişir.
-- **Sözlük kartında kök + ek satırı kırılıyor (Oturum 11; kullanıcı küçük saydı):**
-  - 360 px'te Sözlük iki sütundur, kart 158 px'tir; *topum* ve *toplarım*'da ek alt satıra
-    kayıyor.
-  - 375–412 px'te yalnız *toplarım* (iki ek) kırılıyor.
-  - 320 px'te Sözlük tek sütundur; hiçbir kart kırılmıyor.
+- ~~**Sözlük kartında kök + ek satırı kırılıyor.**~~ Oturum 11'de düzeldi: sığmayan kart iki
+  sütun genişliğinde.
 - **Kılık dışı yüzey hata verir:** `neden`, ekin kılıklarından olmayan yüzeyi reddeder
   (`lır`, `lr`). Saklanan ünlüde (kedi + `im`) seçenek sunacak bir bölge gelirse ayrı bir
   neden gerekir.
@@ -347,20 +524,18 @@ Oturum 9'da eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak):
   - Denetim sayfası: <https://frtbasbug.github.io/morfemusta/denetim.html>. Karakter
     Galerisi: <https://frtbasbug.github.io/morfemusta/galeri.html>. Ses Denetim Sayfası:
     <https://frtbasbug.github.io/morfemusta/ses.html>.
-- **Yön kilidi yok:** manifest'te `orientation` yazılı değil. Telefonda dikey kilit mi,
-  sınıf modu (etkileşimli tahta) için yatay mı, karar bekliyor. Yatay telefonda harita
-  32rem'lik çerçeveyle kaydırılarak görünür.
+- **Yön kilidi yok:** manifest'te `orientation` yazılı değil. Telefonda dikey kilit mi, karar
+  bekliyor (sınıf modu Oturum 11'de geldi; tahtada tarayıcıda açılır, manifest'e bağlı değil).
+  Yatay telefonda harita 32rem'lik çerçeveyle kaydırılarak görünür.
 - **DESIGN.md künyeleri:** Aksu-Koç & Slobin (1985) ile Becker, Ketrez & Nevins (2011)
   yalnız kısa atıfla geçiyor. Tam künye, doğrulanmış kaynaktan eklenebilir.
 - **Önbellek boyutu:**
-  - Andika'nın Kiril ve Vietnamca alt kümeleri de önbelleğe giriyor (yaklaşık 80 KB). Türkçe
-    için `latin` ve `latin-ext` yeter; Baloo 2 bu yüzden yalnız onlarla yükleniyor.
-  - Andika için de alt küme dosyaları içe aktarılabilir ya da `workbox.globIgnores` ile
-    ayıklanabilir.
-  - Denetim sayfası, galeri ve ses denetim sayfası da önbelleğe giriyor; girmezlerse service
-    worker onları oyuna düşürür, çıkarılmamalı.
+  - ~~Andika'nın Kiril ve Vietnamca alt kümeleri de önbelleğe giriyor.~~ Oturum 11'de: Andika
+    da yalnız `latin` ve `latin-ext` (yazı tipleri 308.5 KB'tan 229.7 KB'a).
+  - Denetim sayfası, galeri, ses denetim sayfası ve cihaz denetimi de önbelleğe giriyor;
+    girmezlerse service worker onları oyuna düşürür, çıkarılmamalı.
 
-## Daha önceki oturum: Oturum 9 — Uydurukçuklar (2026-09-30)
+## Daha da önceki oturum: Oturum 9 — Uydurukçuklar (2026-09-30)
 
 ### Bitenler
 
@@ -463,7 +638,7 @@ Oturum 9'da eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak):
   çocuğun biçimini gösterir; kök ve ek satırı kökü (*pıtak* + *ım*) gösterir.
 - **Yay ve zıplama** Koy'dan kopyalandı (ekranlar arasında ortak modül yok, Dükkân'daki gibi).
 
-## Daha da önceki oturum: Oturum 8 — Kök Bahçesi (2026-09-30)
+## Eski oturum: Oturum 8 — Kök Bahçesi (2026-09-30)
 
 ### Bitenler
 
@@ -659,7 +834,7 @@ Oturum 8'de eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak; öncek
 - **Taşın çokgeni ve jölenin damlası** oturumda çizildi (`karo.ts`); kullanıcı isterse tuvalde
   yeniden çizilir, sayılar değişir.
 
-## Eski oturum: Oturum 6 — oyun kabuğu (2026-09-28; Oturum 11'in planları burada)
+## Eski oturum: Oturum 6 — oyun kabuğu (2026-09-28; Oturum 11'in planları burada, yapıldı)
 
 ### Bitenler
 
@@ -826,13 +1001,13 @@ Oturum 8'de eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak; öncek
 - **Süs:** Ayarlar'da Renkler'in yanında a/e örnek etiketleri; akşam ekranında hilal simgesi.
 - **Tur bitince yeni tur baştan başlar.** Tamam bölge yine oynanabilir.
 
-### Plan: iOS'ta ilerlemenin korunması (kullanıcının kararı; Oturum 11, kod bugün yok)
+### Plan: iOS'ta ilerlemenin korunması (kullanıcının kararı; Oturum 11'de yapıldı)
 
 - WebKit, ana ekrana eklenmemiş sitede yedi gün etkileşim olmazsa betiğin yazdığı depoyu
   (localStorage) siler. Ana ekrana eklenen web uygulaması bu silmeden muaftır.
 - Oturum 11'de iPhone Safari'de bir kez gösterilen küçük bir "Ana ekrana ekle" ipucu gelir.
 
-### Plan: eski cihazlar (kullanıcının kararı; Oturum 11, kod bugün yok)
+### Plan: eski cihazlar (kullanıcının kararı; Oturum 11'de cihaz.html ve uyarı; hedef bekliyor)
 
 - En düşük tarayıcı hedefi Oturum 11'de, en eski cihazda denemeden sonra kararlaştırılır.
 - Bugün derleme Vite'ın varsayılan hedefine göredir (baseline-widely-available: Safari 16.4+,
@@ -840,7 +1015,7 @@ Oturum 8'de eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak; öncek
   dayanır; hedef düşerse bunların geri dönüşleri de birlikte ele alınır (Lightning CSS, hedefin
   desteklediği özellikler için geri dönüşü derlemede siler).
 
-### Plan: çok sekmede kalan durumlar (kullanıcının kararı; Oturum 11, kod bugün yok)
+### Plan: çok sekmede kalan durumlar (kullanıcının kararı; Oturum 11'de ilk madde yapıldı)
 
 - **`storage` olayı ulaşmayan pencere** (arka planda donmuş sekme, geri tuşuyla önbellekten
   dönen sayfa): harita, Sözlük, ayarlar ve açık bölge ekranı, pencere bir sonraki kez yazana
@@ -851,7 +1026,7 @@ Oturum 8'de eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak; öncek
   - sıfırlamadan sonra böyle bir pencerede bölgeye girilirse ekran eski kimlikle açılır: ilk
     biten görev yazılmaz, ekran baştan açılır, çocuk o görevi yeniden oynar.
   - Öneri: `visibilitychange` ve `pageshow`'da kaydı yeniden okumak (`tazele`), `storage`
-    olayı gibi işlemek.
+    olayı gibi işlemek. **Oturum 11'de yapıldı;** aşağıdaki maddeler açık.
 - **Aynı bölge iki pencerede aynı anda:** bir pencerede görev bitince ötekinin açık ekranı son
   kayıttan yeniden açılır; o penceredeki yarım görev (yerleşmiş bukalemun) gider. Tek cihazda
   pek olmaz.
@@ -883,8 +1058,8 @@ Oturum 8'de eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak; öncek
    - Fıstıkçı Şahap'ın Dükkânı'nda çocuk gövdeyi de seçecek (*kitap* / *kitab*). `neden`'e bir
      gövde parçası eklenecek.
 
-## Sıradaki hedef: Oturum 11 — açık kalanlar
+## Sıradaki hedef: Oturum 12 — pilot sürümü
 
-Kapsam oturum başında kullanıcıyla belirlenir: açık kalanlar (yukarıda, Oturum 10'un
-bölümünde), Oturum 6'daki üç plan (iOS'ta ilerlemenin korunması, eski cihazlar, çok sekmede
-kalan durumlar), seslerin hızı ve dinlenmesi, gerçek telefonda doğrulama.
+Kapsam oturum başında kullanıcıyla belirlenir. Bekleyenler: derleme hedefi (en eski cihazda
+`cihaz.html`), gerçek telefonda ve etkileşimli tahtada doğrulama, seslerin dinlenmesi, açık
+kalanlar (Oturum 11'in bölümünde ve öncekilerde).

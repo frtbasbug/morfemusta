@@ -1,9 +1,11 @@
 // Seslerin çalınması: önceden üretilmiş sesler (scripts/ses-uret.py) cihazda çalar; hiçbir şey
 // cihazdan çıkmaz (CLAUDE.md, 14. kural). Metnin dosyası ses-listesi.json'dadır; listede
-// olmayan metin için istek bile gitmez, oyun sessiz sürer.
+// olmayan metin için istek bile gitmez, oyun sessiz sürer. Pakete listenin yalnız gereken
+// alanları girer (ses-listesi.json?oyun, vite.config.ts): dosya, sürüm ve bölgeler.
 //
 //   - Aynı anda tek ses çalar; yenisi eskisini keser (cal). Bir dizi (ad ve ileti) sırayla
-//     çalar; yeni bir çağrı diziyi de keser.
+//     çalar; yeni bir çağrı diziyi de keser. Gecikmeli çağrı (efektten sonra kelime) eskisini
+//     ancak çalmaya başlarken keser; gecikme içinde susulursa hiç çalmaz.
 //   - Ses dosyası fetch ile blob olarak alınır, oradan çalar: service worker'ın önbelleğinden
 //     de gelir; aralık (Range) isteği yoktur, iOS Safari'de de çalar.
 //   - iOS'ta ses ancak bir dokunuşla açılır: ilk dokunuşta aynı <audio> öğesi sessiz bir sesle
@@ -13,21 +15,23 @@
 //   - Arayüzün ve Bukalemun Koyu'nun sesleri önbellekte hazırdır (vite.config.ts); öteki
 //     bölgelerin sesleri bölgeye ilk girişte arka planda iner (bolgeSesleriniIndir).
 
-import liste from './ses-listesi.json'
+import { efektleriAc } from './efekt.ts'
+import metinler from './ses-listesi.json?oyun'
 
 export interface SesKaydi {
   readonly dosya: string
-  readonly okunus: string
   readonly bolgeler: readonly string[]
   /** Dosyanın içeriğinin özeti: ses yeniden üretilince değişir. */
   readonly surum: string
 }
 
-/** Metinden sesine: ses-listesi.json. */
-export const SESLER: Readonly<Record<string, SesKaydi>> = liste.metinler as Record<
-  string,
-  SesKaydi
->
+/** Metinden sesine: ses-listesi.json (oyunun paketindeki alanları). */
+export const SESLER: Readonly<Record<string, SesKaydi>> = Object.fromEntries(
+  Object.entries(metinler).map(([metin, [ozet, surum, ...bolgeler]]) => [
+    metin,
+    { dosya: `${ozet}.mp3`, surum, bolgeler },
+  ]),
+)
 
 /** Bölgeye ilk girişte inen seslerin önbelleği; service worker de oradan verir. */
 export const SES_ONBELLEGI = 'morfemusta-ses'
@@ -105,29 +109,31 @@ export function sus(): void {
 
 /**
  * Metni (ya da metinleri sırayla) çalar; çalan sesi keser. Sesi olmayan metin atlanır.
- * Çalma bitince (ya da kesilince) döner.
+ * Gecikme (ms) verilirse çalan ses o süre boyunca sürer, sonra kesilir: efektten sonra gelen
+ * kelime (Ses.tsx). Çalma bitince (ya da kesilince) döner.
  */
-export function cal(metinler: string | readonly string[]): Promise<void> {
+export function cal(metinler: string | readonly string[], gecikme = 0): Promise<void> {
   const sesler: { adres: string; metin: string }[] = []
   for (const metin of typeof metinler === 'string' ? [metinler] : metinler) {
     const kayit = SESLER[metin.normalize('NFC')]
     if (kayit) sesler.push({ adres: kayitAdresi(kayit), metin: metin.normalize('NFC') })
   }
-  return sirayla(sesler)
+  return sirayla(sesler, gecikme)
 }
 
-/**
- * Listede olmayan bir dosyayı çalar (Ses Denetim Sayfası'nın örnekleri: ornek/yavas-1.mp3).
- * Adı sesle değişmediği için adreste sürümü var: yeni örnek eski önbellekten gelmez.
- */
-export function dosyaCal(dosya: string, metin: string, surum: string): Promise<void> {
-  return sirayla([{ adres: `${sesAdresi(dosya)}?v=${surum}`, metin }])
-}
-
-async function sirayla(sesler: readonly { adres: string; metin: string }[]): Promise<void> {
+async function sirayla(
+  sesler: readonly { adres: string; metin: string }[],
+  gecikme: number,
+): Promise<void> {
   const kimlik = ++dizi
   const a = audio()
   if (!a) return
+  if (gecikme > 0) {
+    // Dosya bu arada iner; gecikme bitmeden susulursa (ekran değişti) hiç çalmaz.
+    for (const ses of sesler) void blobAdresi(ses.adres)
+    await new Promise((coz) => setTimeout(coz, gecikme))
+    if (kimlik !== dizi) return
+  }
   a.pause()
   for (const ses of sesler) {
     const { metin } = ses
@@ -145,7 +151,8 @@ let acildi = false
 
 /**
  * iOS'ta ses ilk dokunuştan sonra açılır: ilk dokunuşta (ya da tuşta) aynı <audio> öğesi sessiz
- * bir sesle çalınır. Oyunun girişinde bir kez çağrılır.
+ * bir sesle çalınır. Efektlerin Web Audio'su da dokunuşla açılır; askıya alınırsa (iOS'ta
+ * kesintiden sonra) sonraki dokunuş yeniden açar. Oyunun girişinde bir kez çağrılır.
  */
 export function sesiAc(): void {
   if (acildi || typeof document === 'undefined') return
@@ -160,6 +167,8 @@ export function sesiAc(): void {
   }
   document.addEventListener('pointerdown', ac, true)
   document.addEventListener('keydown', ac, true)
+  document.addEventListener('pointerdown', efektleriAc, true)
+  document.addEventListener('keydown', efektleriAc, true)
 }
 
 const indirilen = new Set<string>()

@@ -18,7 +18,42 @@
   </head>
   <body>
     <div id="kok"></div>
+    <!-- Eski tarayıcı uyarısı: oyun açılamazsa (ES modülü yok, paket ayrıştırılamadı ya da
+         yüklenemedi) beyaz ekran yerine bu çıkar. Satır içi stil: tarayıcı CSS değişkenlerini
+         bilmeyebilir. -->
+    <div
+      id="eski-tarayici"
+      role="alert"
+      hidden
+      style="max-width: 30rem; margin: 3rem auto; padding: 0 1rem; font-family: system-ui, sans-serif; font-size: 1.25rem; line-height: 1.4; text-align: center"
+    >
+      <p>Bu tarayıcı Morfemusta için çok eski.</p>
+      <p><a href="cihaz.html">Cihazı denetle</a></p>
+    </div>
     <noscript>Morfemusta Adası'na girmek için JavaScript açık olmalı.</noscript>
+    <script>
+      // Yalnız ES5: her tarayıcıda çalışır. Oyunun modülü çalışmaya başlayınca kökte
+      // data-acildi olur (src/main.tsx). ES modülü yoksa uyarı hemen; varsa sayfa yüklenince
+      // (load: modüller ondan önce çalışır) oyun başlamadıysa çıkar.
+      ;(function () {
+        function uyar() {
+          if (document.documentElement.getAttribute('data-acildi') !== null) return
+          var uyari = document.getElementById('eski-tarayici')
+          if (!uyari) return
+          uyari.removeAttribute('hidden')
+          uyari.style.display = 'block'
+        }
+        if (!('noModule' in document.createElement('script'))) {
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', uyar)
+          } else {
+            uyar()
+          }
+          return
+        }
+        window.addEventListener('load', uyar)
+      })()
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

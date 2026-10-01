@@ -283,19 +283,12 @@ test.describe('Ses Denetim Sayfası', () => {
     }
     // Her metnin çal düğmesi etkin: sesi var.
     await expect(page.locator('.ses-denetimi__liste button:disabled')).toHaveCount(0)
-    // Örnekler: aynı beş cümle iki hızda.
-    await expect(page.getByRole('button', { name: /^Çal: .*\(Biraz yavaş/ })).toHaveCount(5)
-    await expect(page.getByRole('button', { name: /^Çal: .*\(Olağan\)$/ })).toHaveCount(5)
+    // Hız seçildi (0.9): örnekler bölümü yok.
+    await expect(page.getByRole('heading', { name: /^Örnekler/ })).toHaveCount(0)
+    await expect(page.locator('.ses-denetimi__ozet')).toContainText('hız 0.9')
 
     await page.getByRole('button', { name: 'Çal: atler', exact: true }).tap()
     await expect.poll(() => calinanlar(page)).toEqual(['atler'])
-
-    // Örneğin adresinde sürümü var: yeniden üretilen örnek eski önbellekten gelmez.
-    const ornekIstegi = page.waitForRequest(/\/ses\/ornek\/yavas-3\.mp3\?v=[0-9a-f]{12}$/)
-    await page
-      .getByRole('button', { name: 'Çal: Ek ünlüyle başlayınca p yumuşar: b olur. (Biraz yavaş (oyunun hızı))' })
-      .tap()
-    await ornekIstegi
 
     const satir = (metin: string) =>
       page.locator('.ses-denetimi__liste li').filter({

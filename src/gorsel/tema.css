@@ -30,6 +30,10 @@
   --govde: #D9B48F;
   --yaprak: #A8D5A2;
 
+  /* Doğrunun parıltısı (yıldızcıklar): süs; kalın ve ince renkleri kullanılmaz. */
+  --parilti-1: var(--yanak);
+  --parilti-2: var(--kara);
+
   /* Renksiz mod (renk körlüğü denetimi): kalın ve ince aynı gri olur. */
   --renksiz: #8E8C99;
   --renksiz-zemin: #E2E1E8;
@@ -59,6 +63,10 @@
   --boyut-ek-yazisi: 20px; /* kalın */
   --boyut-kok: 30px; /* kalın */
   --boyut-sonuc: 22px; /* kalın */
+
+  /* Piksel boylu çizimlerin birimi (ağaç, karo, harita işaretleri): olağan görünümde 1px.
+     Sınıf modunda (src/ekranlar/Sinif.css) kökün yazı boyuyla büyür. */
+  --birim: 1px;
 }
 
 /* Renksiz mod: kalın ve ince yalnız bedenden; taş ve jöle, halka ve meyve yalnız biçiminden
@@ -74,4 +82,6 @@
   --jole: var(--renksiz-zemin);
   --govde: var(--renksiz-zemin);
   --yaprak: var(--renksiz-zemin);
+  --parilti-1: var(--renksiz);
+  --parilti-2: var(--renksiz-zemin);
 }

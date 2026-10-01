@@ -4,6 +4,7 @@ import type { Gorev } from './gorevler.ts'
 import {
   ANAHTAR,
   BOS_ILERLEME,
+  VARSAYILAN_AYARLAR,
   ayarlariDegistir,
   ayniGun,
   bolgeBittiMi,
@@ -16,7 +17,9 @@ import {
   ilerlemeyiKaydet,
   ilerlemeyiSifirla,
   ilerlemeyiYukle,
+  ipucunuKapat,
   kaldigiGorev,
+  oyunKaydi,
   pencereKaydi,
   sozlukGruplari,
   type Depo,
@@ -111,7 +114,8 @@ describe('kaydet ve yükle', () => {
           sonKurulma: BUGUN.toISOString(),
         },
       ],
-      ayarlar: { hareket: 'sistem', renkler: 'renkli', ses: 'dokununca' },
+      ayarlar: { hareket: 'sistem', renkler: 'renkli', ses: 'dokununca', sinif: 'kapali' },
+      kapananIpuclari: [],
       sifirlama: 0,
     })
   })
@@ -120,7 +124,8 @@ describe('kaydet ve yükle', () => {
     expect(ilerlemeyiYukle(bellekDeposu().depo)).toEqual({
       bolgeler: {},
       kartlar: [],
-      ayarlar: { hareket: 'sistem', renkler: 'renkli', ses: 'dokununca' },
+      ayarlar: { hareket: 'sistem', renkler: 'renkli', ses: 'dokununca', sinif: 'kapali' },
+      kapananIpuclari: [],
       sifirlama: 0,
     })
   })
@@ -176,7 +181,7 @@ describe('iki pencere (sekme, ana ekrandaki uygulama) aynı depoyu paylaşır', 
     a.degistir((i) => ayarlariDegistir(i, { renkler: 'renksiz' }))
     b.degistir((i) => gorevBitti(i, KOY, gorevi(1), BUGUN))
     const son = ilerlemeyiYukle(depo)
-    expect(son.ayarlar).toEqual({ hareket: 'sistem', renkler: 'renksiz', ses: 'dokununca' })
+    expect(son.ayarlar).toEqual({ ...VARSAYILAN_AYARLAR, renkler: 'renksiz' })
     expect(son.bolgeler).toEqual({ koy: { bitenler: [1], kaldigi: 1 } })
   })
 
@@ -184,7 +189,11 @@ describe('iki pencere (sekme, ana ekrandaki uygulama) aynı depoyu paylaşır', 
     const { depo, a, b } = ikiPencere()
     a.degistir((i) => ayarlariDegistir(i, { renkler: 'renksiz' }))
     b.degistir((i) => ayarlariDegistir(i, { hareket: 'azalt' }))
-    expect(ilerlemeyiYukle(depo).ayarlar).toEqual({ hareket: 'azalt', renkler: 'renksiz', ses: 'dokununca' })
+    expect(ilerlemeyiYukle(depo).ayarlar).toEqual({
+      ...VARSAYILAN_AYARLAR,
+      hareket: 'azalt',
+      renkler: 'renksiz',
+    })
   })
 
   it("sıfırlama yine her şeyi siler: eski B sıfırlarsa A'nın görevleri ve kartları da gider", () => {
@@ -194,7 +203,7 @@ describe('iki pencere (sekme, ana ekrandaki uygulama) aynı depoyu paylaşır', 
     // Ayarlar kalır (sıfırlama ayarları silmez); A'nın Renksiz'i de geri alınmaz.
     expect(ilerlemeyiYukle(depo)).toEqual({
       ...BOS_ILERLEME,
-      ayarlar: { hareket: 'sistem', renkler: 'renksiz', ses: 'dokununca' },
+      ayarlar: { ...VARSAYILAN_AYARLAR, renkler: 'renksiz' },
       sifirlama: 1,
     })
     expect(a.tazele()).toBe(true)
@@ -391,11 +400,21 @@ describe('bozuk veri', () => {
 
   it('tanınmayan ayar varsayılana döner, tanınan kalır', () => {
     expect(
-      yukle({ ayarlar: { hareket: 'hızlı', renkler: 'renksiz', ses: 'yüksek' } }).ayarlar,
-    ).toEqual({ hareket: 'sistem', renkler: 'renksiz', ses: 'dokununca' })
+      yukle({ ayarlar: { hareket: 'hızlı', renkler: 'renksiz', ses: 'yüksek', sinif: 'evet' } })
+        .ayarlar,
+    ).toEqual({ hareket: 'sistem', renkler: 'renksiz', ses: 'dokununca', sinif: 'kapali' })
     expect(yukle({ ayarlar: { ses: 'sesli' } }).ayarlar.ses).toBe('sesli')
     expect(yukle({ ayarlar: { ses: 'kapali' } }).ayarlar.ses).toBe('kapali')
-    expect(yukle({ ayarlar: 'azalt' }).ayarlar).toEqual({ hareket: 'sistem', renkler: 'renkli', ses: 'dokununca' })
+    expect(yukle({ ayarlar: { sinif: 'acik' } }).ayarlar.sinif).toBe('acik')
+    expect(yukle({ ayarlar: 'azalt' }).ayarlar).toEqual(VARSAYILAN_AYARLAR)
+  })
+
+  it('kapatılan ipuçları: yalnız bilinenler kalır; eksikse hiçbiri', () => {
+    expect(yukle({ kapananIpuclari: ['ana-ekran', 'yok', 3] }).kapananIpuclari).toEqual([
+      'ana-ekran',
+    ])
+    expect(yukle({ kapananIpuclari: 'ana-ekran' }).kapananIpuclari).toEqual([])
+    expect(yukle({}).kapananIpuclari).toEqual([])
   })
 
   it('son kurulma ilk tarihten önce olamaz; eksikse ilk tarih', () => {
@@ -664,17 +683,25 @@ describe('ayarlar ve sıfırlama', () => {
   it('ayarlar değişir ve kaydedilir', () => {
     const { depo } = bellekDeposu()
     const ilerleme = ayarlariDegistir(BOS_ILERLEME, { hareket: 'azalt' })
-    expect(ilerleme.ayarlar).toEqual({ hareket: 'azalt', renkler: 'renkli', ses: 'dokununca' })
+    expect(ilerleme.ayarlar).toEqual({ ...VARSAYILAN_AYARLAR, hareket: 'azalt' })
     ilerlemeyiKaydet(depo, ayarlariDegistir(ilerleme, { renkler: 'renksiz' }))
-    expect(ilerlemeyiYukle(depo).ayarlar).toEqual({ hareket: 'azalt', renkler: 'renksiz', ses: 'dokununca' })
+    expect(ilerlemeyiYukle(depo).ayarlar).toEqual({
+      ...VARSAYILAN_AYARLAR,
+      hareket: 'azalt',
+      renkler: 'renksiz',
+    })
   })
 
-  it('sıfırlama bütün ilerlemeyi ve kartları siler, ayarları bırakır', () => {
-    const ilerleme = ayarlariDegistir(oyna(BOS_ILERLEME, KOY, 10), { renkler: 'renksiz' })
+  it('sıfırlama bütün ilerlemeyi ve kartları siler; ayarları ve kapatılan ipuçlarını bırakır', () => {
+    const ilerleme = ipucunuKapat(
+      ayarlariDegistir(oyna(BOS_ILERLEME, KOY, 10), { renkler: 'renksiz' }),
+      'ana-ekran',
+    )
     const sifir = ilerlemeyiSifirla(ilerleme)
     expect(sifir).toEqual({
       ...BOS_ILERLEME,
-      ayarlar: { hareket: 'sistem', renkler: 'renksiz', ses: 'dokununca' },
+      ayarlar: { ...VARSAYILAN_AYARLAR, renkler: 'renksiz' },
+      kapananIpuclari: ['ana-ekran'],
       sifirlama: 1,
     })
     // Her sıfırlamada kimlik bir artar.
@@ -686,5 +713,157 @@ describe('ayarlar ve sıfırlama', () => {
       'kilitli',
     ])
     expect(kaldigiGorev(sifir, KOY)).toBe(0)
+  })
+})
+
+describe('sınıf modu (etkileşimli tahta)', () => {
+  const DUKKAN = bolgeBul('dukkan') as Bolge
+  const ilkGorev = (bolge: Bolge) => bolge.gorevler[0] as Gorev
+  const sinifiAc = (i: Ilerleme) => ayarlariDegistir(i, { sinif: 'acik' })
+  const sinifiKapat = (i: Ilerleme) => ayarlariDegistir(i, { sinif: 'kapali' })
+
+  /** Cihazında koyun üç görevi biten, Renksiz seçili bir pencere. */
+  function cihazi(ilk = ayarlariDegistir(oyna(BOS_ILERLEME, KOY, 3), { renkler: 'renksiz' })) {
+    const { depo, kayitlar } = bellekDeposu(JSON.stringify(ilk))
+    return { depo, kayitlar, kayit: oyunKaydi(depo), metin: () => kayitlar.get(ANAHTAR) }
+  }
+
+  it('açılınca ayar kayda yazılır; ilerleme sıfırdan, bellekte başlar', () => {
+    const { kayit, depo } = cihazi()
+    expect(kayit.degistir(sinifiAc)).toBe(true)
+    expect(ilerlemeyiYukle(depo).ayarlar.sinif).toBe('acik')
+    expect(kayit.ilerleme.bolgeler).toEqual({})
+    expect(kayit.ilerleme.kartlar).toEqual([])
+    expect(kayit.ilerleme.ayarlar).toEqual({ ...VARSAYILAN_AYARLAR, renkler: 'renksiz', sinif: 'acik' })
+  })
+
+  it('bütün bölgeler açık; kilit yok', () => {
+    expect(bolgeDurumlari(sinifiAc(BOS_ILERLEME)).map((b) => b.durum)).toEqual([
+      'acik',
+      'acik',
+      'acik',
+      'acik',
+    ])
+    // İçeriği olmayan bölge yine hazırlanıyor; biten bölge tamam.
+    expect(
+      bolgeDurumlari(sinifiAc(oyna(BOS_ILERLEME, ADA, 2)), KUCUK_ADA).map((b) => b.durum),
+    ).toEqual(['tamam', 'acik', 'hazirlaniyor'])
+  })
+
+  it('görevler, kartlar ve kalınan yer kayda yazılmaz; yalnız bellekte durur', () => {
+    const { kayit, metin } = cihazi()
+    kayit.degistir(sinifiAc)
+    const once = metin()
+    const acilis = kayit.ilerleme.sifirlama
+    expect(
+      kayit.degistir((i) => ekrandaGorevBitti(i, KOY, ilkGorev(KOY), BUGUN, acilis)),
+    ).toBe(false)
+    kayit.degistir((i) => gorevBitti(i, DUKKAN, ilkGorev(DUKKAN), BUGUN))
+    expect(metin()).toBe(once)
+    expect(kayit.ilerleme.bolgeler).toEqual({
+      koy: { bitenler: [1], kaldigi: 1 },
+      dukkan: { bitenler: [1], kaldigi: 1 },
+    })
+    expect(kayit.ilerleme.kartlar.map((k) => k.kelime)).toEqual(['atlar', 'kitabım'])
+    expect(sozlukGruplari(kayit.ilerleme).map((g) => g.bolge.kimlik)).toEqual(['koy', 'dukkan'])
+    expect(kaldigiGorev(kayit.ilerleme, KOY)).toBe(1)
+  })
+
+  it('sayfa yenilenince (yeni kayıt) sınıf modu açık kalır, ilerleme sıfırdan başlar', () => {
+    const { kayit, depo } = cihazi()
+    kayit.degistir(sinifiAc)
+    kayit.degistir((i) => oyna(i, KOY, 2))
+    const yeni = oyunKaydi(depo)
+    expect(yeni.ilerleme.ayarlar.sinif).toBe('acik')
+    expect(yeni.ilerleme.bolgeler).toEqual({})
+    expect(yeni.ilerleme.kartlar).toEqual([])
+  })
+
+  it('kapanınca cihazın kaydı olduğu gibi geri gelir; yeniden açılınca o açılışın ilerlemesi sürer', () => {
+    const ilk = ayarlariDegistir(oyna(BOS_ILERLEME, KOY, 3), { renkler: 'renksiz' })
+    const { kayit, depo } = cihazi(ilk)
+    kayit.degistir(sinifiAc)
+    kayit.degistir((i) => oyna(i, KOY, 5))
+    kayit.degistir(sinifiKapat)
+    expect(kayit.ilerleme).toEqual(ilk)
+    expect(ilerlemeyiYukle(depo)).toEqual(ilk)
+    kayit.degistir(sinifiAc)
+    expect(kayit.ilerleme.bolgeler).toEqual({ koy: { bitenler: [1, 2, 3, 4, 5], kaldigi: 5 } })
+  })
+
+  it('ayar değişikliği sınıf modunda da kayda yazılır; yalnız değişen alan', () => {
+    const { kayit, depo } = cihazi()
+    kayit.degistir(sinifiAc)
+    kayit.degistir((i) => oyna(i, KOY, 1))
+    expect(kayit.degistir((i) => ayarlariDegistir(i, { ses: 'sesli' }))).toBe(true)
+    const son = ilerlemeyiYukle(depo)
+    expect(son.ayarlar).toEqual({ ...VARSAYILAN_AYARLAR, renkler: 'renksiz', ses: 'sesli', sinif: 'acik' })
+    // Cihazın ilerlemesi değişmedi: koyun üç görevi.
+    expect(son.bolgeler).toEqual({ koy: { bitenler: [1, 2, 3], kaldigi: 3 } })
+    expect(kayit.ilerleme.ayarlar.ses).toBe('sesli')
+    expect(kayit.ilerleme.bolgeler).toEqual({ koy: { bitenler: [1], kaldigi: 1 } })
+  })
+
+  it('sıfırlama yalnız o açılışın ilerlemesini siler; cihazın kaydı kalır', () => {
+    const { kayit, metin } = cihazi()
+    kayit.degistir(sinifiAc)
+    kayit.degistir((i) => oyna(i, KOY, 2))
+    const once = metin()
+    kayit.degistir(ilerlemeyiSifirla)
+    expect(metin()).toBe(once)
+    expect(kayit.ilerleme.bolgeler).toEqual({})
+    expect(kayit.ilerleme.sifirlama).toBe(1)
+  })
+
+  it('başka pencere: cihazın ilerlemesi sınıfınkini değiştirmez, ayarı görünür', () => {
+    const { kayit, depo } = cihazi()
+    kayit.degistir(sinifiAc)
+    kayit.degistir((i) => oyna(i, KOY, 1))
+    const oteki = pencereKaydi(depo)
+    oteki.degistir((i) => oyna(i, KOY, 6))
+    const once = kayit.ilerleme
+    expect(kayit.tazele()).toBe(false)
+    expect(kayit.ilerleme).toBe(once)
+    oteki.degistir((i) => ayarlariDegistir(i, { hareket: 'azalt' }))
+    expect(kayit.tazele()).toBe(true)
+    expect(kayit.ilerleme.ayarlar.hareket).toBe('azalt')
+    expect(kayit.ilerleme.bolgeler).toEqual({ koy: { bitenler: [1], kaldigi: 1 } })
+    // Öteki pencere sınıf modunu kapatınca cihazın kaydı görünür.
+    oteki.degistir(sinifiKapat)
+    expect(kayit.tazele()).toBe(true)
+    expect(kayit.ilerleme.bolgeler).toEqual(ilerlemeyiYukle(depo).bolgeler)
+  })
+
+  it('depo yoksa sınıf modu yine açılır (bu açılış boyunca)', () => {
+    const kayit = oyunKaydi(null)
+    expect(kayit.degistir(sinifiAc)).toBe(false)
+    expect(kayit.ilerleme.ayarlar.sinif).toBe('acik')
+    kayit.degistir((i) => oyna(i, KOY, 1))
+    expect(kayit.ilerleme.bolgeler).toEqual({ koy: { bitenler: [1], kaldigi: 1 } })
+  })
+
+  it('sınıf modu kapalıyken kayıt pencereKaydi gibidir', () => {
+    const { kayit, depo } = cihazi()
+    kayit.degistir((i) => oyna(i, KOY, 4))
+    expect(ilerlemeyiYukle(depo).bolgeler).toEqual({ koy: { bitenler: [1, 2, 3, 4], kaldigi: 4 } })
+  })
+})
+
+describe('ipuçları', () => {
+  it('kapatılan ipucu kayda yazılır; ikinci kez kapatmak bir şey değiştirmez', () => {
+    const { depo } = bellekDeposu()
+    const kayit = oyunKaydi(depo)
+    expect(kayit.degistir((i) => ipucunuKapat(i, 'ana-ekran'))).toBe(true)
+    expect(ilerlemeyiYukle(depo).kapananIpuclari).toEqual(['ana-ekran'])
+    expect(kayit.degistir((i) => ipucunuKapat(i, 'ana-ekran'))).toBe(false)
+  })
+
+  it('sınıf modunda kapatılan ipucu da cihazın kaydına yazılır', () => {
+    const { depo } = bellekDeposu()
+    const kayit = oyunKaydi(depo)
+    kayit.degistir((i) => ayarlariDegistir(i, { sinif: 'acik' }))
+    kayit.degistir((i) => ipucunuKapat(i, 'ana-ekran'))
+    expect(ilerlemeyiYukle(depo).kapananIpuclari).toEqual(['ana-ekran'])
+    expect(kayit.ilerleme.kapananIpuclari).toEqual(['ana-ekran'])
   })
 })

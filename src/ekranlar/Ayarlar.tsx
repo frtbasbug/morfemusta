@@ -1,12 +1,14 @@
 // Ayarlar: Ses (Kapalı / Dokununca / Sesli mod), Hareket (Sistem gibi / Azalt), Renkler (Renkli /
-// Renksiz), ilerlemeyi sıfırlama ve Hakkında (lisanslar ve atıflar).
+// Renksiz), Sınıf modu (Kapalı / Açık), ilerlemeyi sıfırlama ve Hakkında (lisanslar ve atıflar).
 // Ayarlar cihazda saklanır; App onları belgenin köküne yazar (html[data-hareket],
-// html[data-renkler]). Azalt, prefers-reduced-motion gibi davranır. Renksiz, galerideki Renksiz
-// moddur; açıkken renkler büyüden sonra da gri kalır. Ses'in varsayılanı Dokununca'dır; Sesli
-// mod okumayı henüz sökmemiş çocuk içindir (DESIGN.md, "Ses ve resim").
+// html[data-renkler], html[data-sinif]). Azalt, prefers-reduced-motion gibi davranır. Renksiz,
+// galerideki Renksiz moddur; açıkken renkler büyüden sonra da gri kalır. Ses'in varsayılanı
+// Dokununca'dır; Sesli mod okumayı henüz sökmemiş çocuk içindir (DESIGN.md, "Ses ve resim").
+// Sınıf modu etkileşimli tahta içindir: bütün bölgeler açık, ilerleme kaydedilmez (adreste
+// ?sinif=1 de açar).
 //
 // Sıfırlama uygulamanın içinde iki adımdır; tarayıcının confirm penceresi kullanılmaz. Silinen:
-// bütün ilerleme ve kartlar. Ayarlar kalır.
+// bütün ilerleme ve kartlar (sınıf modunda yalnız o açılışınkiler). Ayarlar kalır.
 
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import UnluEtiketi from '../gorsel/UnluEtiketi.tsx'
@@ -34,6 +36,11 @@ const RENKLER: readonly Secenek<AyarDegerleri['renkler']>[] = [
   { deger: 'renksiz', ad: 'Renksiz' },
 ]
 
+const SINIF: readonly Secenek<AyarDegerleri['sinif']>[] = [
+  { deger: 'kapali', ad: 'Kapalı' },
+  { deger: 'acik', ad: 'Açık' },
+]
+
 export default function Ayarlar({
   ayarlar,
   onAyar,
@@ -49,6 +56,7 @@ export default function Ayarlar({
   const sifirlaRef = useRef<HTMLButtonElement>(null)
   const vazgecRef = useRef<HTMLButtonElement>(null)
   const oncekiSoru = useRef(soruluyor)
+  const sinifta = ayarlar.sinif === 'acik'
 
   useEffect(() => {
     baslikRef.current?.focus()
@@ -99,6 +107,21 @@ export default function Ayarlar({
         </span>
       </SecimGrubu>
 
+      <SecimGrubu
+        ad="sinif"
+        baslik="Sınıf modu"
+        secenekler={SINIF}
+        secili={ayarlar.sinif}
+        onSec={(sinif) => {
+          setSilindi(false)
+          onAyar({ sinif })
+        }}
+      >
+        <p className="ayar__aciklama">
+          Etkileşimli tahta için: bütün bölgeler açık, ilerleme kaydedilmez.
+        </p>
+      </SecimGrubu>
+
       <section className="sifirlama" aria-labelledby="sifirlama-baslik">
         <h2 id="sifirlama-baslik" className="ayar__baslik">
           İlerleme
@@ -106,7 +129,9 @@ export default function Ayarlar({
         {soruluyor ? (
           <div className="sifirlama__soru" role="group" aria-labelledby="sifirlama-uyari">
             <p id="sifirlama-uyari" className="sifirlama__uyari">
-              Bütün ilerleme ve kartlar silinecek.
+              {sinifta
+                ? 'Sınıf modunun ilerlemesi ve kartları silinecek.'
+                : 'Bütün ilerleme ve kartlar silinecek.'}
             </p>
             <div className="sifirlama__dugmeler">
               <button
@@ -144,7 +169,11 @@ export default function Ayarlar({
           </button>
         )}
         <p className="sifirlama__durum" role="status">
-          {silindi ? 'İlerleme ve kartlar silindi.' : ''}
+          {silindi
+            ? sinifta
+              ? 'Sınıf modunun ilerlemesi ve kartları silindi.'
+              : 'İlerleme ve kartlar silindi.'
+            : ''}
         </p>
       </section>
 

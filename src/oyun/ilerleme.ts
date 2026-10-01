@@ -7,15 +7,19 @@
 // oyun bellekte sürer: buradaki işlevler depo yüzünden hata atmaz, konsola da yazmaz. Bozuk
 // kayıttan yalnız geçerli parçalar alınır; gerisi baştan başlar. Aynı cihazda açık pencereler
 // (sekme, ana ekrandaki uygulama) aynı kaydı paylaşır: değişiklik depodaki son kayda uygulanır
-// (pencereKaydi).
+// (pencereKaydi). Sınıf modunda (etkileşimli tahta) ilerleme kayda yazılmaz, yalnız o açılış
+// boyunca bellekte durur; ayarlar yine kayda yazılır (oyunKaydi).
 //
 // Kaydın biçimi (sürüm 1):
 //   { "bolgeler": { "koy": { "bitenler": [1, 2, 3], "kaldigi": 3 } },
 //     "kartlar": [{ "kelime": "atlar", "kok": "at", "etiketler": ["PL"], "bolge": "koy",
 //                   "tarih": "2026-09-28T09:15:00.000Z", "sonKurulma": "2026-09-28T09:15:00.000Z" }],
-//     "ayarlar": { "hareket": "sistem", "renkler": "renkli", "ses": "dokununca" },
+//     "ayarlar": { "hareket": "sistem", "renkler": "renkli", "ses": "dokununca", "sinif": "kapali" },
+//     "kapananIpuclari": ["ana-ekran"],
 //     "sifirlama": 0 }
-// sifirlama: sıfırlama kimliği, her sıfırlamada bir artar; eksikse 0 sayılır.
+// sifirlama: sıfırlama kimliği, her sıfırlamada bir artar; eksikse 0 sayılır. Ayarların eksik
+// alanı varsayılandır (ses Oturum 10'da, sinif Oturum 11'de geldi). kapananIpuclari: bir kez
+// gösterilen ve kapatılan ipuçları (eksikse hiçbiri); bilinmeyen ipucu atılır.
 // kaldigi bütün tablodaki yerdir (0'dan); turlu bölgede (Uydurukçuklar) turu da o verir: 10,
 // 2. turun başıdır. Kartın kelimesi motorun kabul ettiği biçimlerden biridir (olasiBicimler):
 // uydurma kökte çocuğun seçtiği biçim (pıtakım ya da pıtağım).
@@ -44,7 +48,17 @@ export interface Ayarlar {
    * dokununca çalar; sesli: okuma gerektirmeyen sesli mod (görev, seçim ve sonuç söylenir).
    */
   readonly ses: 'kapali' | 'dokununca' | 'sesli'
+  /**
+   * Sınıf modu (etkileşimli tahta): açıkken bütün bölgeler açıktır; ilerleme, kartlar ve kalınan
+   * yer kayda yazılmaz, yalnız o açılış boyunca bellekte durur (oyunKaydi). Görünüm geniş yatay
+   * ekran içindir.
+   */
+  readonly sinif: 'kapali' | 'acik'
 }
+
+/** Bir kez gösterilen ipuçları: ana-ekran (iOS Safari'de Paylaş → Ana Ekrana Ekle). */
+export const IPUCLARI = ['ana-ekran'] as const
+export type Ipucu = (typeof IPUCLARI)[number]
 
 export interface BolgeIlerlemesi {
   /** En az bir kez biten görevlerin sıraları, küçükten büyüğe. */
@@ -76,6 +90,8 @@ export interface Ilerleme {
   /** Kartlar, kazanıldıkları sırayla. */
   readonly kartlar: readonly SozlukKarti[]
   readonly ayarlar: Ayarlar
+  /** Kapatılan ipuçları: bir daha gösterilmez. Sıfırlamada da kalır (ayarlar gibi). */
+  readonly kapananIpuclari: readonly Ipucu[]
   /**
    * Sıfırlama kimliği: ilerleme her sıfırlandığında bir artar. Bölge ekranı açılırken alır,
    * görev bitince yazmadan önce karşılaştırır (ekrandaGorevBitti): sıfırlamayı görmemiş bir
@@ -88,12 +104,14 @@ export const VARSAYILAN_AYARLAR: Ayarlar = {
   hareket: 'sistem',
   renkler: 'renkli',
   ses: 'dokununca',
+  sinif: 'kapali',
 }
 
 export const BOS_ILERLEME: Ilerleme = {
   bolgeler: {},
   kartlar: [],
   ayarlar: VARSAYILAN_AYARLAR,
+  kapananIpuclari: [],
   sifirlama: 0,
 }
 
@@ -187,6 +205,73 @@ export function pencereKaydi(depo: Depo | null, bolgeler: readonly Bolge[] = BOL
   }
 }
 
+/** Sınıf modu açık mı (ayarlar.sinif). */
+export const sinifModundaMi = (ilerleme: Ilerleme): boolean => ilerleme.ayarlar.sinif === 'acik'
+
+/** Sınıf modunda bir açılışın ilerlemesi: yalnız bellekte durur, kayda yazılmaz. */
+type SinifIlerlemesi = Pick<Ilerleme, 'bolgeler' | 'kartlar' | 'sifirlama'>
+
+const BOS_SINIF: SinifIlerlemesi = { bolgeler: {}, kartlar: [], sifirlama: 0 }
+
+/** İki ayar arasında değişen alanlar. */
+function degisenAyarlar(once: Ayarlar, sonra: Ayarlar): Partial<Ayarlar> {
+  const anahtarlar = Object.keys(sonra) as (keyof Ayarlar)[]
+  return Object.fromEntries(anahtarlar.filter((a) => once[a] !== sonra[a]).map((a) => [a, sonra[a]]))
+}
+
+/**
+ * Oyunun kaydı: cihazın kaydı (pencereKaydi) ve sınıf modunda o açılışın ilerlemesi.
+ *
+ * Sınıf modu kapalıyken her şey cihazın kaydındadır (pencereKaydi gibi). Açıkken (ayarlar.sinif)
+ * görünen ilerleme bellektedir: biten görevler, kalınan yer, kartlar ve sıfırlama kimliği kayda
+ * yazılmaz, yalnız bu kayıt nesnesi yaşadıkça (o açılış boyunca) durur; sayfa yenilenince sıfırdan
+ * başlar. Cihaza ait alanlar (ayarlar, kapatılan ipuçları) yine kayda yazılır; ayarda yalnız
+ * değişen alan. Sınıf modu kapanınca cihazın kaydı olduğu gibi görünür; yeniden açılırsa aynı
+ * açılışın ilerlemesi sürer.
+ */
+export function oyunKaydi(depo: Depo | null, bolgeler: readonly Bolge[] = BOLGELER): PencereKaydi {
+  const cihaz = pencereKaydi(depo, bolgeler)
+  let sinif = BOS_SINIF
+  // Görünen ilerleme sınıf modunda her istekte yeniden kurulmasın: aynı girdiden aynı nesne.
+  let onbellek: {
+    readonly cihaz: string
+    readonly sinif: SinifIlerlemesi
+    readonly ilerleme: Ilerleme
+  } | null = null
+  const gorunen = (): Ilerleme => {
+    const { ayarlar, kapananIpuclari } = cihaz.ilerleme
+    if (ayarlar.sinif !== 'acik') return cihaz.ilerleme
+    const cihazinki = JSON.stringify([ayarlar, kapananIpuclari])
+    if (onbellek?.sinif !== sinif || onbellek.cihaz !== cihazinki) {
+      onbellek = { cihaz: cihazinki, sinif, ilerleme: { ...sinif, ayarlar, kapananIpuclari } }
+    }
+    return onbellek.ilerleme
+  }
+  return {
+    get ilerleme() {
+      return gorunen()
+    },
+    tazele() {
+      const once = gorunen()
+      cihaz.tazele()
+      return gorunen() !== once
+    },
+    degistir(degisiklik) {
+      cihaz.tazele()
+      if (cihaz.ilerleme.ayarlar.sinif !== 'acik') return cihaz.degistir(degisiklik)
+      const once = gorunen()
+      const yeni = degisiklik(once)
+      if (yeni === once) return false
+      sinif = { bolgeler: yeni.bolgeler, kartlar: yeni.kartlar, sifirlama: yeni.sifirlama }
+      // Cihaza ait alanlar kayda yazılır: değişen ayarlar ve yeni kapatılan ipuçları.
+      const ayarlar = degisenAyarlar(once.ayarlar, yeni.ayarlar)
+      const ipuclari = yeni.kapananIpuclari.filter((i) => !once.kapananIpuclari.includes(i))
+      if (Object.keys(ayarlar).length === 0 && ipuclari.length === 0) return false
+      return cihaz.degistir((i) => ipuclari.reduce(ipucunuKapat, ayarlariDegistir(i, ayarlar)))
+    },
+  }
+}
+
 /**
  * İki ilerleme arasında ilerlemesi (biten görevler, kalınan yer) değişen bölgeler. Başka bir
  * pencerenin yazdığı kayıt alınınca açık bölge ekranı buna bakar: bölgesi değiştiyse (görev,
@@ -232,6 +317,7 @@ export function ilerlemeyiCoz(ham: unknown, bolgeler: readonly Bolge[] = BOLGELE
 
   const ayarlar = nesneMi(ham.ayarlar) ? ham.ayarlar : {}
   const { sifirlama } = ham
+  const ipuclari = Array.isArray(ham.kapananIpuclari) ? ham.kapananIpuclari : []
   return {
     bolgeler: Object.fromEntries(bolgeIlerlemeleri),
     kartlar,
@@ -239,7 +325,9 @@ export function ilerlemeyiCoz(ham: unknown, bolgeler: readonly Bolge[] = BOLGELE
       hareket: ayarlar.hareket === 'azalt' ? 'azalt' : 'sistem',
       renkler: ayarlar.renkler === 'renksiz' ? 'renksiz' : 'renkli',
       ses: ayarlar.ses === 'kapali' || ayarlar.ses === 'sesli' ? ayarlar.ses : 'dokununca',
+      sinif: ayarlar.sinif === 'acik' ? 'acik' : 'kapali',
     },
+    kapananIpuclari: IPUCLARI.filter((ipucu) => ipuclari.includes(ipucu)),
     sifirlama:
       typeof sifirlama === 'number' && Number.isSafeInteger(sifirlama) && sifirlama >= 0
         ? sifirlama
@@ -406,15 +494,19 @@ export interface HaritaBolgesi {
   readonly onceki: Bolge | null
 }
 
-/** Bir bölge, önceki bölge bitince (bolgeBittiMi) açılır. İlk bölge hep açıktır. */
+/**
+ * Bir bölge, önceki bölge bitince (bolgeBittiMi) açılır. İlk bölge hep açıktır. Sınıf modunda
+ * kilit yoktur: içeriği olan bütün bölgeler açıktır.
+ */
 export function bolgeDurumlari(
   ilerleme: Ilerleme,
   bolgeler: readonly Bolge[] = BOLGELER,
 ): HaritaBolgesi[] {
+  const kilitsiz = sinifModundaMi(ilerleme)
   return bolgeler.map((bolge, i) => {
     const onceki = bolgeler[i - 1] ?? null
     const durum: BolgeDurumu =
-      onceki !== null && !bolgeBittiMi(ilerleme, onceki)
+      !kilitsiz && onceki !== null && !bolgeBittiMi(ilerleme, onceki)
         ? 'kilitli'
         : bolge.gorevler.length === 0
           ? 'hazirlaniyor'
@@ -470,9 +562,24 @@ export function ayarlariDegistir(ilerleme: Ilerleme, degisen: Partial<Ayarlar>):
 }
 
 /**
- * Bütün ilerleme ve kartlar silinir; ayarlar kalır (renk körü çocuğun Renksiz'i gibi). Sıfırlama
- * kimliği bir artar: açık bölge ekranları sıfırlamayı geri alamaz (ekrandaGorevBitti).
+ * Bütün ilerleme ve kartlar silinir; ayarlar ve kapatılan ipuçları kalır (renk körü çocuğun
+ * Renksiz'i gibi). Sıfırlama kimliği bir artar: açık bölge ekranları sıfırlamayı geri alamaz
+ * (ekrandaGorevBitti). Sınıf modunda yalnız o açılışın ilerlemesi silinir (oyunKaydi).
  */
 export function ilerlemeyiSifirla(ilerleme: Ilerleme): Ilerleme {
-  return { ...BOS_ILERLEME, ayarlar: ilerleme.ayarlar, sifirlama: ilerleme.sifirlama + 1 }
+  return {
+    ...BOS_ILERLEME,
+    ayarlar: ilerleme.ayarlar,
+    kapananIpuclari: ilerleme.kapananIpuclari,
+    sifirlama: ilerleme.sifirlama + 1,
+  }
+}
+
+/** İpucu kapatıldı: bir daha gösterilmez. */
+export function ipucunuKapat(ilerleme: Ilerleme, ipucu: Ipucu): Ilerleme {
+  if (ilerleme.kapananIpuclari.includes(ipucu)) return ilerleme
+  return {
+    ...ilerleme,
+    kapananIpuclari: IPUCLARI.filter((i) => i === ipucu || ilerleme.kapananIpuclari.includes(i)),
+  }
 }

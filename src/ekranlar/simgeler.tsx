@@ -116,3 +116,22 @@ export function SiradakiSimgesi() {
     </Simge>
   )
 }
+
+/** Yazı tahtası: sınıf modu. */
+export function SinifSimgesi() {
+  return (
+    <Simge>
+      <rect x="3.5" y="4" width="17" height="11.5" rx="1.5" />
+      <path d="M8 19.5l2-4M16 19.5l-2-4M7.5 9h6M7.5 12h3.5" />
+    </Simge>
+  )
+}
+
+/** Çarpı: kapat. */
+export function KapatSimgesi() {
+  return (
+    <Simge>
+      <path d="M6.5 6.5l11 11M17.5 6.5l-11 11" />
+    </Simge>
+  )
+}

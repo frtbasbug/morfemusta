@@ -199,3 +199,28 @@ describe('haritanın yerleşimi', () => {
     expect(yumusakYol([])).toBe('')
   })
 })
+
+describe('AdaHaritasi: ana ekran ipucu ve sınıf modu', () => {
+  it('ipucu verilmezse yok; verilirse haritanın altında, kapatma düğmesiyle', () => {
+    expect(harita(BOS_ILERLEME)).not.toContain('harita__ipucu')
+    const html = renderToStaticMarkup(
+      <AdaHaritasi
+        bolgeler={bolgeDurumlari(BOS_ILERLEME)}
+        onBolge={() => {}}
+        ipucu="İlerlemen silinmesin: Paylaş → Ana Ekrana Ekle."
+        onIpucuKapat={() => {}}
+      />,
+    )
+    expect(html).toContain(
+      '<p class="harita__ipucu" role="note"><span>İlerlemen silinmesin: Paylaş → Ana Ekrana Ekle.</span>',
+    )
+    expect(html).toMatch(/<button type="button" class="harita__ipucu-kapat" aria-label="İpucunu kapat">/)
+    // İpucu haritanın çiziminden ve bölgelerden sonra gelir.
+    expect(html.indexOf('harita__ipucu')).toBeGreaterThan(html.indexOf('harita__bolgeler'))
+  })
+
+  it('sınıf modunda bütün bölgeler açık: kilit yok', () => {
+    const sinif: Ilerleme = { ...BOS_ILERLEME, ayarlar: { ...BOS_ILERLEME.ayarlar, sinif: 'acik' } }
+    expect(dugmeler(harita(sinif)).map((d) => d.durum)).toEqual(['acik', 'acik', 'acik', 'acik'])
+  })
+})
