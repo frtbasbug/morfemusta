@@ -12,9 +12,12 @@ const hepsi = [...new Set(gruplar.flatMap((g) => g.metinler))]
 
 const sesDosyalari = import.meta.glob('../../public/ses/*.mp3', { query: '?url', eager: true })
 const dosyaAdlari = Object.keys(sesDosyalari).map((yol) => yol.split('/').at(-1) ?? '')
+const ornekDosyalari = Object.keys(
+  import.meta.glob('../../public/ses/ornek/*.mp3', { query: '?url', eager: true }),
+).map((yol) => `ornek/${yol.split('/').at(-1) ?? ''}`)
 const kayitlar = liste.metinler as Record<
   string,
-  { dosya: string; okunus: string; bolgeler: string[] }
+  { dosya: string; okunus: string; bolgeler: string[]; hiz: number; surum: string }
 >
 
 describe('sesMetinleri: oyunun söyleyebileceği her metin, bölge bölge', () => {
@@ -55,7 +58,7 @@ describe('sesMetinleri: oyunun söyleyebileceği her metin, bölge bölge', () =
 
   it("Dükkân: kök, iki karonun kelimesi, neden cümlesi", () => {
     expect(grup('dukkan')).toEqual(
-      expect.arrayContaining(['kitap', 'kitapım', 'kitabım', 'p ünlüden önce jöle olur: b.']),
+      expect.arrayContaining(['kitap', 'kitapım', 'kitabım', 'Ek ünlüyle başlayınca p yumuşar: b olur.']),
     )
   })
 
@@ -102,9 +105,37 @@ describe('ses-listesi.json: her metnin sesi var', () => {
     for (const dosya of dosyaAdlari) expect(listedekiler).toContain(dosya)
   })
 
-  it('biçim MP3; ses tr_TR-dfki-medium (CC BY-NC-SA 4.0)', () => {
-    expect(liste.ses).toBe('tr_TR-dfki-medium')
-    expect(liste.lisans).toBe('CC BY-NC-SA 4.0')
-    for (const { dosya } of Object.values(kayitlar)) expect(dosya).toMatch(/^[0-9a-f]{12}\.mp3$/)
+  it('ses Chirp 3: HD Callirrhoe, hız 0.9; biçim MP3, mono, 24 kHz, 32 kbit/s', () => {
+    expect(liste.ses).toBe('tr-TR-Chirp3-HD-Callirrhoe')
+    expect(liste.saglayici).toBe('Google Cloud Text-to-Speech, Chirp 3: HD')
+    expect(liste.bicim).toBe('MP3, mono, 24000 Hz, 32 kbit/s')
+    expect(liste.hizlar).toEqual({ yavas: 0.9, olagan: 1.0 })
+    expect(JSON.stringify(liste)).not.toMatch(/dfki|piper|BY-NC-SA/i)
+    for (const kayit of Object.values(kayitlar)) {
+      expect(kayit.dosya).toMatch(/^[0-9a-f]{12}\.mp3$/)
+      expect(kayit.hiz).toBe(0.9)
+      expect(kayit.surum).toMatch(/^[0-9a-f]{12}$/)
+    }
+  })
+
+  it('okunuş tablosunun iki satırı kullanılıyor: Şahap\'ın → Şahabın', () => {
+    expect(kayitlar["Fıstıkçı Şahap'ın Dükkânı"]?.okunus).toBe('Fıstıkçı Şahabın Dükkânı')
+    expect(kayitlar["Önce Fıstıkçı Şahap'ın Dükkânı bitmeli."]?.okunus).toBe(
+      'Önce Fıstıkçı Şahabın Dükkânı bitmeli.',
+    )
+  })
+
+  it('örnekler: aynı beş cümle iki hızda (0.9 ve 1.0), dosyaları ve sürümleriyle', () => {
+    const ornekler = liste.ornekler
+    expect(ornekler).toHaveLength(10)
+    expect(ornekler.filter((o) => o.hiz === 0.9).map((o) => o.metin)).toEqual(
+      ornekler.filter((o) => o.hiz === 1.0).map((o) => o.metin),
+    )
+    expect(ornekler.map((o) => o.metin)).toContain('Ek ünlüyle başlayınca p yumuşar: b olur.')
+    for (const ornek of ornekler) {
+      expect(ornekDosyalari).toContain(ornek.dosya)
+      expect(ornek.surum).toMatch(/^[0-9a-f]{12}$/)
+      expect(ornek.okunus).toBe(okunus(ornek.metin))
+    }
   })
 })

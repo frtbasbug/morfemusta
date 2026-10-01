@@ -110,7 +110,7 @@ test.describe("Fıstıkçı Şahap'ın Dükkânı", () => {
 
     await tas.tap()
     await kart(page).tap()
-    await expect(neden(page).locator('.dukkan__cumle')).toHaveText('p ünlüden önce jöle olur: b.')
+    await expect(neden(page).locator('.dukkan__cumle')).toHaveText('Ek ünlüyle başlayınca p yumuşar: b olur.')
     // İlgili iki ses vurgulu: p çerçevede, ı etikette.
     await expect(neden(page).locator('.dukkan__aday .dukkan__ses')).toHaveText('p')
     await expect(neden(page).locator('.dukkan__aday .unlu-etiketi')).toHaveText('ı')

@@ -1,6 +1,7 @@
 // Ses Denetim Sayfası (ses.html): oyunun bütün sesleri, bölge bölge (sesMetinleri). Her sesin
 // çal düğmesi ve Hatalı işareti var; okunuşu yazısından farklıysa altında yazılır. İşaretler
 // yalnız bu cihazda, localStorage'da (ISARET_ANAHTARI) saklanır; hiçbir yere gönderilmez.
+// İşaret sesin sürümüne bağlıdır (metin → sürüm): ses yeniden üretilince eski işaret görünmez.
 // Listeyi kopyala, Hatalı işaretli metinleri satır satır panoya koyar: yanlış okunanların
 // okunuşu icerik/ses-okunus.csv'ye yazılır (kullanıcının onayıyla).
 //
@@ -14,14 +15,18 @@ import { sesMetinleri } from '../ses/metinler.ts'
 import { HoparlorSimgesi } from '../ekranlar/simgeler.tsx'
 import './SesDenetimi.css'
 
-/** İşaretlerin anahtarı: oyunun kaydından (morfemusta.v1) ayrı. */
-export const ISARET_ANAHTARI = 'morfemusta.ses-denetimi.v1'
+/** İşaretlerin anahtarı: oyunun kaydından (morfemusta.v1) ayrı. v1 sürümsüzdü, okunmaz. */
+export const ISARET_ANAHTARI = 'morfemusta.ses-denetimi.v2'
+
+/** Hatalı işaretleri: metin → işaretlendiğinde sesin sürümü. Sırası işaretleme sırasıdır. */
+type Isaretler = Readonly<Record<string, string>>
 
 interface Ornek {
   readonly hiz: number
   readonly ad: string
   readonly metin: string
   readonly dosya: string
+  readonly surum: string
 }
 
 const ORNEKLER = liste.ornekler as readonly Ornek[]
@@ -30,16 +35,22 @@ const HIZ_ADLARI: Readonly<Record<string, string>> = {
   olagan: 'Olağan',
 }
 
-function isaretleriOku(): string[] {
+/** Yalnız sesin bugünkü sürümüne konan işaretler okunur; eskileri atılır. */
+function isaretleriOku(): Isaretler {
   try {
-    const ham: unknown = JSON.parse(localStorage.getItem(ISARET_ANAHTARI) ?? '[]')
-    return Array.isArray(ham) ? ham.filter((m): m is string => typeof m === 'string') : []
+    const ham: unknown = JSON.parse(localStorage.getItem(ISARET_ANAHTARI) ?? '{}')
+    if (typeof ham !== 'object' || ham === null || Array.isArray(ham)) return {}
+    return Object.fromEntries(
+      Object.entries(ham).filter(
+        ([metin, surum]) => typeof surum === 'string' && SESLER[metin]?.surum === surum,
+      ),
+    )
   } catch {
-    return []
+    return {}
   }
 }
 
-function isaretleriYaz(isaretler: readonly string[]) {
+function isaretleriYaz(isaretler: Isaretler) {
   try {
     localStorage.setItem(ISARET_ANAHTARI, JSON.stringify(isaretler))
   } catch {
@@ -68,19 +79,22 @@ async function panoyaYaz(metin: string): Promise<boolean> {
 
 export default function SesDenetimi() {
   const gruplar = useMemo(() => sesMetinleri(), [])
-  const [hatalilar, setHatalilar] = useState<string[]>(isaretleriOku)
+  const [isaretler, setIsaretler] = useState<Isaretler>(isaretleriOku)
+  const hatalilar = Object.keys(isaretler)
   const [durum, setDurum] = useState('')
   const toplam = new Set(gruplar.flatMap((g) => g.metinler)).size
   const sesli = [...new Set(gruplar.flatMap((g) => g.metinler))].filter((m) => SESLER[m]).length
 
   useEffect(() => {
-    isaretleriYaz(hatalilar)
-  }, [hatalilar])
+    isaretleriYaz(isaretler)
+  }, [isaretler])
 
   function isaretle(metin: string, hatali: boolean) {
-    setHatalilar((onceki) =>
-      hatali ? [...onceki.filter((m) => m !== metin), metin] : onceki.filter((m) => m !== metin),
-    )
+    const surum = SESLER[metin]?.surum
+    setIsaretler((onceki) => {
+      const { [metin]: _, ...kalan } = onceki
+      return hatali && surum ? { ...kalan, [metin]: surum } : kalan
+    })
   }
 
   async function kopyala() {
@@ -92,7 +106,7 @@ export default function SesDenetimi() {
     <main className="ses-denetimi">
       <h1>Ses Denetimi</h1>
       <p className="ses-denetimi__ozet">
-        {toplam} metin; {sesli} sesi var. Ses: {liste.ses} ({liste.lisans}). {liste.bicim}
+        {toplam} metin; {sesli} sesi var. Ses: {liste.ses} ({liste.saglayici}). {liste.bicim}
       </p>
 
       <section aria-labelledby="ornekler-baslik">
@@ -112,7 +126,7 @@ export default function SesDenetimi() {
                       type="button"
                       className="ses-denetimi__cal"
                       aria-label={`Çal: ${ornek.metin} (${HIZ_ADLARI[ad]})`}
-                      onClick={() => void dosyaCal(ornek.dosya, ornek.metin)}
+                      onClick={() => void dosyaCal(ornek.dosya, ornek.metin, ornek.surum)}
                     >
                       <HoparlorSimgesi />
                     </button>

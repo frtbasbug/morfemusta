@@ -134,36 +134,36 @@ describe('nedenCumlesi: gövde ve ek başı', () => {
   const cumle = (kok: string, ekler: string, parca: string, govde = kok) =>
     nedenCumlesi(neden(kok, ekler.split('+'), parca.split('+'), govde))
 
-  it('yumuşama: p ünlüden önce jöle olur: b.', () => {
-    expect(cumle('kitap', 'POSS.1SG', 'ım')).toBe('p ünlüden önce jöle olur: b.')
-    expect(cumle('köpek', 'POSS.1SG', 'im')).toBe('k ünlüden önce jöle olur: ğ.')
-    expect(cumle('ağaç', 'ACC', 'ı')).toBe('ç ünlüden önce jöle olur: c.')
+  it('yumuşama: Ek ünlüyle başlayınca p yumuşar: b olur.', () => {
+    expect(cumle('kitap', 'POSS.1SG', 'ım')).toBe('Ek ünlüyle başlayınca p yumuşar: b olur.')
+    expect(cumle('köpek', 'POSS.1SG', 'im')).toBe('Ek ünlüyle başlayınca k yumuşar: ğ olur.')
+    expect(cumle('ağaç', 'ACC', 'ı')).toBe('Ek ünlüyle başlayınca ç yumuşar: c olur.')
   })
 
-  it('inatçı: top inatçı: p taş kalır.', () => {
-    expect(cumle('top', 'POSS.1SG', 'um', 'tob')).toBe('top inatçı: p taş kalır.')
-    expect(cumle('süt', 'ACC', 'ü', 'süd')).toBe('süt inatçı: t taş kalır.')
+  it('inatçı: top inatçıdır: p yumuşamaz.', () => {
+    expect(cumle('top', 'POSS.1SG', 'um', 'tob')).toBe('top inatçıdır: p yumuşamaz.')
+    expect(cumle('süt', 'ACC', 'ü', 'süd')).toBe('süt inatçıdır: t yumuşamaz.')
   })
 
-  it('yumuşamaz: sepet kelimesinde t taş kalır.', () => {
-    expect(cumle('sepet', 'ACC', 'i', 'seped')).toBe('sepet kelimesinde t taş kalır.')
+  it('yumuşamaz: sepet kelimesinde t yumuşamaz.', () => {
+    expect(cumle('sepet', 'ACC', 'i', 'seped')).toBe('sepet kelimesinde t yumuşamaz.')
   })
 
-  it('sertleşme: p taş, ekin başı da taş olur: t.', () => {
-    expect(cumle('kitap', 'LOC', 'da')).toBe('p taş, ekin başı da taş olur: t.')
-    expect(cumle('balık', 'AGT', 'cı')).toBe('k taş, ekin başı da taş olur: ç.')
+  it('sertleşme: p sert, ekin başı da sert olur: t.', () => {
+    expect(cumle('kitap', 'LOC', 'da')).toBe('p sert, ekin başı da sert olur: t.')
+    expect(cumle('balık', 'AGT', 'cı')).toBe('k sert, ekin başı da sert olur: ç.')
   })
 
-  it('yumuşak: v jöle, ekin başı da jöle kalır: d.', () => {
-    expect(cumle('ev', 'LOC', 'te')).toBe('v jöle, ekin başı da jöle kalır: d.')
+  it('yumuşak: v yumuşak, ekin başı da yumuşak kalır: d.', () => {
+    expect(cumle('ev', 'LOC', 'te')).toBe('v yumuşak, ekin başı da yumuşak kalır: d.')
   })
 
-  it('yumuşak, kökün sonu ünlüyse: Ünlüden sonra ekin başı jöle kalır: c.', () => {
-    expect(cumle('su', 'AGT', 'çu')).toBe('Ünlüden sonra ekin başı jöle kalır: c.')
+  it('yumuşak, kökün sonu ünlüyse: Ünlüden sonra ekin başı yumuşak kalır: c.', () => {
+    expect(cumle('su', 'AGT', 'çu')).toBe('Ünlüden sonra ekin başı yumuşak kalır: c.')
   })
 
   it('yalnız ilk neden: gövde, uyumdan önce', () => {
-    expect(cumle('kitap', 'POSS.1SG', 'im')).toBe('p ünlüden önce jöle olur: b.')
+    expect(cumle('kitap', 'POSS.1SG', 'im')).toBe('Ek ünlüyle başlayınca p yumuşar: b olur.')
   })
 
   it('tablodaki her nedenin bir cümlesi var', () => {

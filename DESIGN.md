@@ -278,15 +278,16 @@ seçilen:
 Bakılan ünlü kökte değil de önceki bir ekteyse sona *Bukalemun en yakın ünlüye bakar.*
 eklenir (*toplarim*). "Diğer" için cümle henüz yoktur.
 
-Gövde ve ek başı nedenlerinin cümleleri; harfler ve kök görevden gelir:
+Gövde ve ek başı nedenlerinin cümleleri; harfler ve kök görevden gelir. Cümleler okulun
+sözcükleriyle (sert, yumuşak) konuşur; taş ve jöle karoların resmidir, cümleye girmez:
 
 | Neden | Cümle |
 |-------|-------|
-| yumuşama | *p ünlüden önce jöle olur: b.* |
-| inatçı | *top inatçı: p taş kalır.* |
-| yumuşamaz | *sepet kelimesinde t taş kalır.* |
-| sertleşme | *p taş, ekin başı da taş olur: t.* |
-| yumuşak | *v jöle, ekin başı da jöle kalır: d.* Önceki ses ünlüyse: *Ünlüden sonra ekin başı jöle kalır: c.* |
+| yumuşama | *Ek ünlüyle başlayınca p yumuşar: b olur.* |
+| inatçı | *top inatçıdır: p yumuşamaz.* |
+| yumuşamaz | *sepet kelimesinde t yumuşamaz.* |
+| sertleşme | *p sert, ekin başı da sert olur: t.* |
+| yumuşak | *v yumuşak, ekin başı da yumuşak kalır: d.* Önceki ses ünlüyse: *Ünlüden sonra ekin başı yumuşak kalır: c.* |
 | kaynaştırma (eksik) | *İki ünlü yan yana gelmez: araya y girer.* (n ve s'de harf değişir) |
 | kaynaştırma (fazla) | *Ünsüzden sonra araya y girmez.* |
 
@@ -405,8 +406,8 @@ vardır (test denetler).
 
 - **Yalnız kategorik kurallar puanlanır:** ünlü uyumu, benzeşme, kaynaştırma (`neden`). Kıyıya
   `neden`'in kabul ettiği bütün kılıklar gelir: -(y)A'da kaynaştırmalı ve kaynaştırmasız,
-  -DA'da D yuvasının taşı ve jölesi (*mömüş* + *de*: *ş taş, ekin başı da taş olur: t.*). Seçeneklerin sırası sabit tohumla
-  karışıktır (Koy'daki gibi).
+  -DA'da D yuvasının taşı ve jölesi (*mömüş* + *de*: *ş sert, ekin başı da sert olur: t.*).
+  Seçeneklerin sırası sabit tohumla karışıktır (Koy'daki gibi).
 - **Sınır adımı:** kök p, ç, t ya da k ile bitip iyelik alınca doğru bukalemun oturduktan sonra
   Dükkân'ın tezgâhı gelir (taş solda, jöle sağda). İki karo da doğrudur (Becker, Ketrez &
   Nevins 2011); cümle: *İkisi de olur: pıtakım, pıtağım.* Jöle seçilirse kökün taşı erir.
@@ -545,7 +546,8 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
   *Vazgeç* / *Sil*. Tarayıcının onay penceresi kullanılmaz; odak önce Vazgeç'tedir. Ayarlar
   silinmez.
 - Seçimler büyük, dokunması kolay radyo düğmeleridir; seçili olan dolu ve halkası kalındır.
-- **Hakkında:** kodun (MIT), seslerin (Piper, tr_TR-dfki-medium, CC BY-NC-SA 4.0), emojilerin
+- **Hakkında:** kodun (MIT), seslerin (Google Cloud Text-to-Speech, Chirp 3: HD Callirrhoe; MIT
+  ses dosyalarını kapsamaz), emojilerin
   (Twemoji, CC BY 4.0) ve yazı tiplerinin (OFL-1.1) lisansı ve atfı. Bağlantı yok.
 
 ## Cihazda ilerleme
@@ -583,11 +585,15 @@ ne olduğunu okumadan gösterir.
   kelimeleri; her yanlış adayın neden cümlesi; *İkisi de olur* cümleleri; bölge adları, akşam
   başlıkları ve haritanın iletileri.
 - **Okunuş:** tek harf adıyla söylenir (*p* → *pe*, *b* → *be*, *ğ* → *yumuşak ge*; ünlüler
-  kendisi): *p ünlüden önce jöle olur: b.* → *pe ünlüden önce jöle olur: be.* Ok ve tire
-  okunmaz. Yanlış okunan metnin okunuşu `icerik/ses-okunus.csv`'ye yazılır (yalnız onayla).
-- **Ses:** Piper'ın `tr_TR-dfki-medium` sesi, çocuk için biraz yavaş (1.2). Lisansı CC BY-NC-SA
-  4.0'dır; ses dosyaları kodun MIT lisansından ayrı, aynı lisansla yayımlanır. Biçim MP3, mono,
-  22.05 kHz, 32 kbit/s (iOS Safari dahil her tarayıcıda çalar).
+  kendisi): *Ek ünlüyle başlayınca p yumuşar: b olur.* → *Ek ünlüyle başlayınca pe yumuşar: be
+  olur.* Ok ve tire okunmaz. Yanlış okunan metnin okunuşu `icerik/ses-okunus.csv`'ye yazılır
+  (yalnız onayla). Özel adda yazım korunur, söyleyiş yumuşar: *Fıstıkçı Şahap'ın Dükkânı* →
+  *Fıstıkçı Şahabın Dükkânı*.
+- **Ses:** Sesler yapay zekâyla, Google Cloud Text-to-Speech'in Chirp 3: HD Callirrhoe sesiyle
+  önceden üretildi; çocuk için biraz yavaş (0.9). Kodun MIT lisansı ses dosyalarını kapsamaz.
+  Gemini sesleri kullanılmaz (Gemini API'nin şartları 18 yaş altına yönelik uygulamalarda
+  kullanımı yasaklıyor). Bütün sesler aynı yükseklikte, baştaki ve sondaki sessizlik kırpılmış.
+  Biçim MP3, mono, 24 kHz, 32 kbit/s (iOS Safari dahil her tarayıcıda çalar).
 - **Ayar** (Ayarlar'da *Ses*):
 
 | Ayar | Ne olur |

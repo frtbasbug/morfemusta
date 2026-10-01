@@ -116,9 +116,12 @@ export function cal(metinler: string | readonly string[]): Promise<void> {
   return sirayla(sesler)
 }
 
-/** Listede olmayan bir dosyayı çalar (Ses Denetim Sayfası'nın örnekleri: ornek/yavas-1.mp3). */
-export function dosyaCal(dosya: string, metin: string): Promise<void> {
-  return sirayla([{ adres: sesAdresi(dosya), metin }])
+/**
+ * Listede olmayan bir dosyayı çalar (Ses Denetim Sayfası'nın örnekleri: ornek/yavas-1.mp3).
+ * Adı sesle değişmediği için adreste sürümü var: yeni örnek eski önbellekten gelmez.
+ */
+export function dosyaCal(dosya: string, metin: string, surum: string): Promise<void> {
+  return sirayla([{ adres: `${sesAdresi(dosya)}?v=${surum}`, metin }])
 }
 
 async function sirayla(sesler: readonly { adres: string; metin: string }[]): Promise<void> {

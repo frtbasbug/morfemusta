@@ -13,8 +13,8 @@ Tasarım için `DESIGN.md`, güncel durum ve sıradaki hedef için `NEXT.md` oku
   (800; başlık ve logo, yalnız latin ve latin-ext alt kümeleri), pakete gömülü.
 - **Görsel dil:** B · Canlı (`DESIGN.md`, "Görsel dil"); geometri `src/gorsel/cizim.ts`'te,
   belirteçler `src/gorsel/tema.css`'te.
-- **Ses ve resim:** sesler Piper'la önceden üretilir (`tr_TR-dfki-medium`, CC BY-NC-SA 4.0; kodun
-  MIT lisansından ayrı), MP3 olarak `public/ses/`'tedir; köklerin resmi Twemoji SVG'leridir
+- **Ses ve resim:** sesler yapay zekâyla, Google Cloud Text-to-Speech'in Chirp 3: HD Callirrhoe
+  sesiyle önceden üretilir (kodun MIT lisansı ses dosyalarını kapsamaz), MP3 olarak `public/ses/`'tedir; köklerin resmi Twemoji SVG'leridir
   (CC BY 4.0), `public/emoji/`'dedir. İkisi de pakete gömülüdür (`DESIGN.md`, "Ses ve resim").
 - **Test:** Vitest 5 (birim, `node` ortamı) ve Playwright 1.56.1 (uçtan uca, Pixel 7
   telefon profili, Chromium).
@@ -34,7 +34,7 @@ Tasarım için `DESIGN.md`, güncel durum ve sıradaki hedef için `NEXT.md` oku
 | `npm run ikonlar` | `scripts/ikon.svg`'den `public/` ikonlarını yeniden üretir |
 | `node scripts/denetim-bicimleri.mjs` | Biçim Denetim Sayfası'ndaki bütün biçimleri sekmeli metin olarak yazar |
 | `python3 scripts/zeyrek-denetimi.py` | O biçimleri zeyrek ile sınar (elle; CI'da yok, aşağıdaki nota bakın) |
-| `python3 scripts/ses-uret.py` | Sesleri Piper'la üretir: `public/ses/*.mp3` ve `src/ses/ses-listesi.json` (elle; CI'da yok, aşağıdaki nota bakın) |
+| `python3 scripts/ses-uret.py` | Sesleri Cloud Text-to-Speech'le üretir (`GOOGLE_TTS_KEY` gerekir): `public/ses/*.mp3` ve `src/ses/ses-listesi.json` (elle; CI'da yok, aşağıdaki nota bakın) |
 | `node scripts/ses-metinleri.mjs` | Oyunun söyleyebileceği bütün metinler, okunuşlarıyla (JSON; üreteç okur) |
 | `NODE_USE_ENV_PROXY=1 node scripts/emoji-indir.mjs` | `icerik/emoji.csv`'deki emojilerin Twemoji SVG'lerini `public/emoji/`'ye indirir |
 | `node scripts/uydurma-uret.mjs --tohum 7 --sayi 30` | Uydurma kök adayları: `uydurma-adaylari.tsv` (zeyrek gerekir; `--zeyreksiz` ile onsuz) |
@@ -116,9 +116,10 @@ DESIGN.md  NEXT.md  CLAUDE.md
    `@types/node`, `@playwright/test`. Oturum 3'te kullanıcının isteğiyle: `zeyrek`
    (Python; projenin bağımlılığı değil, yalnız `scripts/zeyrek-denetimi.py` için elle kurulur).
    Oturum 4'te kullanıcının isteğiyle: `@fontsource/baloo-2` (OFL-1.1). Oturum 10'da
-   kullanıcının isteğiyle: `piper-tts` ve `lameenc` (Python; projenin bağımlılığı değil, yalnız
+   kullanıcının isteğiyle: `lameenc` (Python; projenin bağımlılığı değil, yalnız
    `scripts/ses-uret.py` için elle kurulur) ve Twemoji'nin grafikleri (paket değil: tablodaki
-   emojilerin SVG dosyaları `public/emoji/`'de).
+   emojilerin SVG dosyaları `public/emoji/`'de). Oturum 10b'de `piper-tts` kalktı: sesler Google
+   Cloud Text-to-Speech'in REST arayüzüyle üretilir (kitaplık yok, yalnız `urllib`).
 3. **Biçimbilim motoru `src/motor` altındadır ve arayüzden bağımsızdır.** Motor saf
    TypeScript'tir: React'i, DOM'u, CSS'i ya da `src/motor` dışındaki uygulama kodunu içe
    aktarmaz. Arayüz motoru kullanır, motor arayüzü bilmez. Motor Vitest ile `node`
@@ -268,16 +269,30 @@ DESIGN.md  NEXT.md  CLAUDE.md
   adres değişir, eski sürümler bölge indirilirken silinir. Ön bellektekilerin adresi yalın kalır
   (Workbox `v`'yi yok saymaz; sorgu eklenirse ön bellekle eşleşmez). Ekran değişince `App.tsx`
   çalan sesi susturur (`useLayoutEffect`: yeni ekranın söyleyişinden önce).
-- **Ses üretimi (`scripts/ses-uret.py`):** `pip install piper-tts lameenc`; model
-  (`tr_TR-dfki-medium`) huggingface.co'dan `.piper/`'a iner (git'e girmez); betik MODEL_CARD'da
-  lisansı (by-nc-sa/4.0) arar. Hız: Piper'ın `length_scale`'i 1.2 (biraz yavaş); örnekler 1.2 ve
-  1.0. MP3, mono, 22.05 kHz, 32 kbit/s (`lameenc`; ffmpeg gerekmez). Okunuşu, sesi ve hızı
-  değişmeyen metin yeniden üretilmez; listede olmayan dosya silinir. Ses dosyaları kodun MIT
-  lisansından ayrı, CC BY-NC-SA 4.0 ile yayımlanır (README, Hakkında).
+- **Ses (karar, Oturum 10b):** Google Cloud Text-to-Speech'in Chirp 3: HD sesi,
+  `tr-TR-Chirp3-HD-Callirrhoe`. dfki sesi (Piper) bırakıldı: vurgusu ve duraklamaları kötü,
+  lisansı kuşkulu. **Gemini sesleri kullanılmaz:** Gemini API'nin şartları 18 yaş altına yönelik
+  uygulamalarda kullanımı yasaklıyor; Text-to-Speech ise Google'ın hizmet listesinde üretken
+  yapay zekâ hizmeti değil, Pre-Trained API. Atıf (README, Hakkında): Sesler yapay zekâyla,
+  Google Cloud Text-to-Speech'in Chirp 3: HD Callirrhoe sesiyle önceden üretildi. Kodun MIT
+  lisansı ses dosyalarını kapsamaz.
+- **Ses üretimi (`scripts/ses-uret.py`):** `pip install lameenc`; REST, `v1/text:synthesize`,
+  `languageCode` tr-TR, `speakingRate` 0.9 (oyun; örnekler 0.9 ve 1.0). Yanıt LINEAR16 (24 kHz):
+  baştaki ve sondaki sessizlik 80 ms pay bırakılarak kırpılır, konuşulan kısmın RMS'i -20 dBFS'ye
+  getirilir (tepe en çok -1 dBFS), sonra MP3: mono, 24 kHz, 32 kbit/s (`lameenc`). Boş, aşırı
+  kısa ya da uzun ses yeniden istenir (Chirp kısa parçada, *pe*, *lik*, ara sıra boş ses verir;
+  sonraki denemede sona nokta eklenir); yine olmazsa sonda listelenir. 429 ve 5xx'te beklenip
+  yeniden denenir. Okunuşu, sesi ve hızı değişmeyen metin yeniden üretilmez (`--hepsi` hepsini
+  üretir); listede olmayan dosya silinir. Betik CI'a girmez.
+- **API anahtarı:** yalnız `GOOGLE_TTS_KEY` ortam değişkeninde durur ve `X-Goog-Api-Key`
+  başlığıyla gider; depoya, kayda (günlük, çıktı) ve PR'a hiç girmez. **Her commit'ten önce
+  `git grep -n "AI[z]a"` boş dönmeli.** Google'a yalnız oyunun kendi metinleri gider; oyun
+  çalışırken hiçbir istek yapılmaz.
 - **Ses Denetim Sayfası (`ses.html`):** bütün sesler bölge bölge, çal düğmesi ve Hatalı işareti.
-  İşaretler oyunun kaydından ayrı bir anahtarda (`morfemusta.ses-denetimi.v1`) ve yalnız bu
-  cihazdadır; Listeyi kopyala Hatalı metinleri satır satır panoya koyar. Üstte aynı beş cümle
-  iki hızda (`ses-listesi.json`'daki `ornekler`).
+  İşaretler oyunun kaydından ayrı bir anahtarda (`morfemusta.ses-denetimi.v2`) ve yalnız bu
+  cihazdadır; işaret sesin sürümüne bağlıdır (metin → `surum`): ses yeniden üretilince eski
+  işaret görünmez. Listeyi kopyala Hatalı metinleri satır satır panoya koyar. Üstte aynı beş
+  cümle iki hızda (`ses-listesi.json`'daki `ornekler`; adreslerinde `?v=<sürüm>` var).
 - **Köklerin resmi:** `KokResmi` `icerik/emoji.csv`'deki kökü `public/emoji/<kod noktaları>.svg`
   ile gösterir (Twemoji'nin adı: ZWJ yoksa FE0F atılır); süstür (`alt` boş, `data-emoji`'de
   emoji), `loading="lazy"`: React 19 sunucu çıktısında tembel olmayan resim için `<link

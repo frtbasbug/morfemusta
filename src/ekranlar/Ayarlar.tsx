@@ -208,9 +208,8 @@ function Hakkinda() {
       <dl className="hakkinda__liste">
         <dt>Sesler</dt>
         <dd>
-          Piper metinden sese aracıyla, tr_TR-dfki-medium sesiyle üretildi (rhasspy/piper-voices;
-          veri kümesi: DFKI, github.com/marytts/dfki-ot-data). Ses dosyaları kodun lisansından
-          ayrı, CC BY-NC-SA 4.0 lisansıyla yayımlanır.
+          Sesler yapay zekâyla, Google Cloud Text-to-Speech'in Chirp 3: HD Callirrhoe sesiyle
+          önceden üretildi. Kodun MIT lisansı ses dosyalarını kapsamaz.
         </dd>
         <dt>Emojiler</dt>
         <dd>

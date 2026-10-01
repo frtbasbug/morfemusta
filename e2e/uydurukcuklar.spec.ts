@@ -157,7 +157,7 @@ test.describe('Uydurukçuklar', () => {
     await expect(hedef(page)).toHaveAccessibleName('zelüye')
   })
 
-  test('5. görevde (mömüş) de seçilince benzeşme cümlesi: ş taş, ekin başı da taş olur', async ({
+  test('5. görevde (mömüş) de seçilince benzeşme cümlesi: ş sert, ekin başı da sert olur', async ({
     page,
   }) => {
     await uydurugaGir(page, 4)
@@ -167,7 +167,7 @@ test.describe('Uydurukçuklar', () => {
     for (const yuzey of ['da', 'de', 'ta', 'te']) await expect(bukalemun(page, yuzey)).toHaveCount(1)
     await bukalemun(page, 'de').tap()
     await hedef(page).tap()
-    await expect(neden(page).locator('.uyduruk__cumle')).toHaveText('ş taş, ekin başı da taş olur: t.')
+    await expect(neden(page).locator('.uyduruk__cumle')).toHaveText('ş sert, ekin başı da sert olur: t.')
     // İlgili iki ses: ş ve d, çerçevede.
     await expect(neden(page).locator('.uyduruk__aday .uyduruk__ses')).toHaveText(['ş', 'd'])
     await secilebilir(bukalemun(page, 'te'))
@@ -177,13 +177,13 @@ test.describe('Uydurukçuklar', () => {
     await expect(hedef(page)).toHaveAccessibleName('mömüşte')
   })
 
-  test('7. görevde (zolku) ta seçilince: Ünlüden sonra ekin başı jöle kalır', async ({ page }) => {
+  test('7. görevde (zolku) ta seçilince: Ünlüden sonra ekin başı yumuşak kalır', async ({ page }) => {
     await uydurugaGir(page, 6)
     await expect(hedef(page)).toHaveAccessibleName('zolku')
     await bukalemun(page, 'ta').tap()
     await hedef(page).tap()
     await expect(neden(page).locator('.uyduruk__cumle')).toHaveText(
-      'Ünlüden sonra ekin başı jöle kalır: d.',
+      'Ünlüden sonra ekin başı yumuşak kalır: d.',
     )
     // İlgili iki ses: u etikette, t çerçevede.
     await expect(neden(page).locator('.uyduruk__aday .unlu-etiketi')).toHaveText('u')

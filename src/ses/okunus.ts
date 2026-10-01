@@ -1,7 +1,7 @@
 // Bir metnin sesli okunuşu: ses üretecine (scripts/ses-uret.py) verilen yazı. Saf TypeScript'tir.
 //
 //   - Tek harf adıyla söylenir: p → pe, b → be, ğ → yumuşak ge; ünlüler kendisidir (a, ı, ü).
-//     "p ünlüden önce jöle olur: b." → "pe ünlüden önce jöle olur: be."
+//     "Ek ünlüyle başlayınca p yumuşar: b olur." → "Ek ünlüyle başlayınca pe yumuşar: be olur."
 //   - Ok ve tire okunmaz: "-da → kitapta" → "da kitapta".
 //   - Yanlış okunan bir metnin okunuşu icerik/ses-okunus.csv'ye yazılır (metin,okunus); tablo
 //     yalnız kullanıcının onayıyla değişir. Tablodaki okunuş olduğu gibi kullanılır.
