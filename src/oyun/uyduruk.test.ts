@@ -156,11 +156,11 @@ describe('Uydurukçuklar: nedenler ve sınır', () => {
   it('mömüş + de: sertleşme; zolku + ta: ünlüden sonra jöle kalır; ilgili iki ses', () => {
     const momus = gorev('mömüş')
     const de = denemeyiDegerlendir(momus, uydurukAdimi(momus), 'de')
-    expect(de.cumle).toBe('ş taş, ekin başı da taş olur: t.')
+    expect(de.cumle).toBe('ş sert, ekin başı da sert olur: t.')
     expect(ilgiliSesler(de.nedenler[0])).toEqual([4, 5])
     const zolku = gorev('zolku')
     const ta = denemeyiDegerlendir(zolku, uydurukAdimi(zolku), 'ta')
-    expect(ta.cumle).toBe('Ünlüden sonra ekin başı jöle kalır: d.')
+    expect(ta.cumle).toBe('Ünlüden sonra ekin başı yumuşak kalır: d.')
     expect(ilgiliSesler(ta.nedenler[0])).toEqual([4, 5])
   })
 

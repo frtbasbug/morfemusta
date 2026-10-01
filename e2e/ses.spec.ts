@@ -203,7 +203,7 @@ test.describe('Kapalı ve Dokununca', () => {
     await page.reload()
     await expect(page.getByRole('group', { name: 'Ses' }).getByRole('radio', { name: 'Sesli mod' })).toBeChecked()
     await expect(page.getByRole('heading', { name: 'Hakkında' })).toBeVisible()
-    await expect(page.locator('.hakkinda')).toContainText('CC BY-NC-SA 4.0')
+    await expect(page.locator('.hakkinda')).toContainText('Chirp 3: HD Callirrhoe')
     await expect(page.locator('.hakkinda')).toContainText('Twemoji')
   })
 })
@@ -290,6 +290,13 @@ test.describe('Ses Denetim Sayfası', () => {
     await page.getByRole('button', { name: 'Çal: atler', exact: true }).tap()
     await expect.poll(() => calinanlar(page)).toEqual(['atler'])
 
+    // Örneğin adresinde sürümü var: yeniden üretilen örnek eski önbellekten gelmez.
+    const ornekIstegi = page.waitForRequest(/\/ses\/ornek\/yavas-3\.mp3\?v=[0-9a-f]{12}$/)
+    await page
+      .getByRole('button', { name: 'Çal: Ek ünlüyle başlayınca p yumuşar: b olur. (Biraz yavaş (oyunun hızı))' })
+      .tap()
+    await ornekIstegi
+
     const satir = (metin: string) =>
       page.locator('.ses-denetimi__liste li').filter({
         has: page.getByRole('button', { name: `Çal: ${metin}`, exact: true }),
@@ -304,6 +311,17 @@ test.describe('Ses Denetim Sayfası', () => {
     await page.reload()
     await expect(satir('atler').first().getByLabel('Hatalı')).toBeChecked()
     await expect(satir('kitapım').first().getByLabel('Hatalı')).toBeChecked()
+
+    // İşaret sesin sürümüne bağlı: ses yeniden üretilince (sürüm değişince) eski işaret görünmez.
+    await page.evaluate(() => {
+      const anahtar = 'morfemusta.ses-denetimi.v2'
+      const isaretler = JSON.parse(localStorage.getItem(anahtar) ?? '{}') as Record<string, string>
+      localStorage.setItem(anahtar, JSON.stringify({ ...isaretler, atler: '000000000000' }))
+    })
+    await page.reload()
+    await expect(satir('atler').first().getByLabel('Hatalı')).not.toBeChecked()
+    await expect(satir('kitapım').first().getByLabel('Hatalı')).toBeChecked()
+    await expect(page.getByText('1 hatalı', { exact: true })).toBeVisible()
     expect(hatalar).toEqual([])
     expect(disIstekler).toEqual([])
   })

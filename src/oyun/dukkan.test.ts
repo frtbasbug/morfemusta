@@ -75,16 +75,16 @@ describe('Fıstıkçı Şahap\'ın Dükkânı görevleri', () => {
       return `${deneme.aday}: ${deneme.cumle}`
     })
     expect(cumleler).toEqual([
-      'kitapım: p ünlüden önce jöle olur: b.',
-      'köpekim: k ünlüden önce jöle olur: ğ.',
-      'ağaçı: ç ünlüden önce jöle olur: c.',
-      'tobum: top inatçı: p taş kalır.',
-      'südü: süt inatçı: t taş kalır.',
-      'kitapda: p taş, ekin başı da taş olur: t.',
-      'evte: v jöle, ekin başı da jöle kalır: d.',
-      'balıkcı: k taş, ekin başı da taş olur: ç.',
-      'fıstıkı: k ünlüden önce jöle olur: ğ.',
-      'fıstıkcı: k taş, ekin başı da taş olur: ç.',
+      'kitapım: Ek ünlüyle başlayınca p yumuşar: b olur.',
+      'köpekim: Ek ünlüyle başlayınca k yumuşar: ğ olur.',
+      'ağaçı: Ek ünlüyle başlayınca ç yumuşar: c olur.',
+      'tobum: top inatçıdır: p yumuşamaz.',
+      'südü: süt inatçıdır: t yumuşamaz.',
+      'kitapda: p sert, ekin başı da sert olur: t.',
+      'evte: v yumuşak, ekin başı da yumuşak kalır: d.',
+      'balıkcı: k sert, ekin başı da sert olur: ç.',
+      'fıstıkı: Ek ünlüyle başlayınca k yumuşar: ğ olur.',
+      'fıstıkcı: k sert, ekin başı da sert olur: ç.',
     ])
   })
 
@@ -150,7 +150,7 @@ describe('dukkanIndirgeyici', () => {
     const bas = dukkanBaslangici(gorevler)
     const sekti = oyna(bas, { tur: 'dene', karo: 'taş' }, { tur: 'sekti' })
     expect(sekti.evre).toBe('secim')
-    expect(sekti.yanlis?.cumle).toBe('p ünlüden önce jöle olur: b.')
+    expect(sekti.yanlis?.cumle).toBe('Ek ünlüyle başlayınca p yumuşar: b olur.')
     // Yanlış denemede oturma olmaz.
     expect(oyna(bas, { tur: 'dene', karo: 'taş' }, { tur: 'oturdu' }).evre).toBe('deneme')
     expect(oyna(sekti, { tur: 'dene', karo: 'jöle' }).yanlis).toBeNull()

@@ -429,12 +429,15 @@ const yuvarlaklikAdi = (unlu: Unlu): string => (UNLULER[unlu].yuvarlak ? 'yuvarl
  *
  *     kaynaştırma  İki ünlü yan yana gelmez: araya y girer.   (eksik; n ve s'de harf değişir)
  *                  Ünsüzden sonra araya y girmez.             (fazla)
- *     yumuşama   p ünlüden önce jöle olur: b.
- *     inatçı     top inatçı: p taş kalır.
- *     yumuşamaz  sepet kelimesinde t taş kalır.
- *     sertleşme  p taş, ekin başı da taş olur: t.
- *     yumuşak    v jöle, ekin başı da jöle kalır: d.
- *                Ünlüden sonra ekin başı jöle kalır: c.   (önceki ses ünlüyse)
+ *     yumuşama   Ek ünlüyle başlayınca p yumuşar: b olur.
+ *     inatçı     top inatçıdır: p yumuşamaz.
+ *     yumuşamaz  sepet kelimesinde t yumuşamaz.
+ *     sertleşme  p sert, ekin başı da sert olur: t.
+ *     yumuşak    v yumuşak, ekin başı da yumuşak kalır: d.
+ *                Ünlüden sonra ekin başı yumuşak kalır: c.   (önceki ses ünlüyse)
+ *
+ * Cümleler okulun sözcükleriyle (sert, yumuşak) konuşur; taş ve jöle karoların resmidir,
+ * cümleye girmez.
  *
  * Neden yoksa ya da ilk neden "diğer"se cümle boştur.
  */
@@ -447,11 +450,11 @@ export function nedenCumlesi(nedenler: readonly Neden[]): string {
     case 'gövde':
       switch (ilk.ad) {
         case 'yumuşama':
-          return `${ilk.tas} ünlüden önce jöle olur: ${ilk.jole}.`
+          return `Ek ünlüyle başlayınca ${ilk.tas} yumuşar: ${ilk.jole} olur.`
         case 'inatçı':
-          return `${ilk.kok} inatçı: ${ilk.tas} taş kalır.`
+          return `${ilk.kok} inatçıdır: ${ilk.tas} yumuşamaz.`
         case 'yumuşamaz':
-          return `${ilk.kok} kelimesinde ${ilk.tas} taş kalır.`
+          return `${ilk.kok} kelimesinde ${ilk.tas} yumuşamaz.`
       }
       break
     case 'kaynaştırma':
@@ -460,11 +463,11 @@ export function nedenCumlesi(nedenler: readonly Neden[]): string {
         : `Ünsüzden sonra araya ${ilk.harf} girmez.`
     case 'ek başı':
       if (ilk.ad === 'sertleşme') {
-        return `${ilk.bakilan} taş, ekin başı da taş olur: ${ilk.beklenen}.`
+        return `${ilk.bakilan} sert, ekin başı da sert olur: ${ilk.beklenen}.`
       }
       return unluMu(ilk.bakilan)
-        ? `Ünlüden sonra ekin başı jöle kalır: ${ilk.beklenen}.`
-        : `${ilk.bakilan} jöle, ekin başı da jöle kalır: ${ilk.beklenen}.`
+        ? `Ünlüden sonra ekin başı yumuşak kalır: ${ilk.beklenen}.`
+        : `${ilk.bakilan} yumuşak, ekin başı da yumuşak kalır: ${ilk.beklenen}.`
     case 'uyum':
       return uyumCumlesi(ilk)
   }

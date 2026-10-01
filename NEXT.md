@@ -1,6 +1,103 @@
 # Sıradaki
 
-## Son oturum: Oturum 10 — ses ve resim (2026-09-30)
+**Sıradaki hedef: Oturum 11.** Kullanıcı oturumun tarifini verecek. Bekleyen planlar Oturum 6'nın
+bölümünde (iOS'ta ilerlemenin korunması, eski cihazlar, çok sekmede kalan durumlar); açık
+kalanlar aşağıda.
+
+## Son oturum: Oturum 10b — yeni ses ve sade cümleler (2026-10-01)
+
+### Kullanıcının kararı: yeni ses
+
+- **dfki sesi bırakıldı:** vurgusu ve duraklamaları kötü, lisansı kuşkulu (CC BY-NC-SA 4.0;
+  model İngilizce *lessac* sesinden ince ayarlı).
+- **Yeni ses:** Google Cloud Text-to-Speech'in Chirp 3: HD sesi, Callirrhoe
+  (`tr-TR-Chirp3-HD-Callirrhoe`, `languageCode` tr-TR).
+- **Gemini sesleri kullanılmaz:** Gemini API'nin şartları 18 yaş altına yönelik uygulamalarda
+  kullanımı yasaklıyor. Text-to-Speech ise Google'ın hizmet listesinde üretken yapay zekâ hizmeti
+  değil, Pre-Trained API.
+- **Atıf** (README, Hakkında, `public/ses/LISANS.txt`, CLAUDE.md, DESIGN.md): Sesler yapay
+  zekâyla, Google Cloud Text-to-Speech'in Chirp 3: HD Callirrhoe sesiyle önceden üretildi.
+  Kodun MIT lisansı ses dosyalarını kapsamaz. README: üretim sırasında Google'a yalnız oyunun
+  kendi metinleri gider; oyun çalışırken hiçbir istek yapılmaz.
+- **Anahtar** yalnız `GOOGLE_TTS_KEY` ortam değişkeninde; depoya, kayda ve PR'a girmez. Her
+  commit'ten önce `git grep -n "AI[z]a"` boş döndü (CLAUDE.md'de kural; kalıp `AI[z]a` yazılır ki kuralın kendisi eşleşmesin).
+
+### Bitenler
+
+- **Önce denetlendi:** Oturum 10'un işi main'de (ses.html, `ses-listesi.json`, `ses-uret.py`);
+  anahtar ortamda; *Bukalemun Koyu* deneme isteği HTTP 200 (24 kHz LINEAR16).
+- **Sade cümleler** (`nedenCumlesi`, `src/motor/neden.ts`): ünsüz nedenlerinin cümlelerinde taş
+  ve jöle yerine okulun sözcükleri; harfler ve kök görevden:
+  - yumuşama: *Ek ünlüyle başlayınca p yumuşar: b olur.*
+  - inatçı: *top inatçıdır: p yumuşamaz.*
+  - yumuşamaz: *sepet kelimesinde t yumuşamaz.*
+  - sertleşme: *p sert, ekin başı da sert olur: t.*
+  - yumuşak: *v yumuşak, ekin başı da yumuşak kalır: d.*; önceki ses ünlüyse *Ünlüden sonra
+    ekin başı yumuşak kalır: c.*
+  Karolar ve resimleri, ipucundaki *Taş sert, jöle yumuşak.* aynen kaldı. Neden tabloları
+  değişmedi (cümle içermiyorlar).
+- **Okunuş tablosu:** onaylı iki satır (*Fıstıkçı Şahap'ın Dükkânı* → *Fıstıkçı Şahabın
+  Dükkânı*; *Önce Fıstıkçı Şahap'ın Dükkânı bitmeli.* → *Önce Fıstıkçı Şahabın Dükkânı
+  bitmeli.*). Özel adda yazım korunur, söyleyiş yumuşar.
+- **Ses üretimi** (`scripts/ses-uret.py`, CI'da yok): REST `v1/text:synthesize`, `X-Goog-Api-Key`
+  başlığı; `speakingRate` 0.9. LINEAR16 → sessizlik 80 ms pay bırakılarak kırpılır → konuşulan
+  kısmın RMS'i -20 dBFS (tepe en çok -1 dBFS) → MP3, mono, 24 kHz, 32 kbit/s (`lameenc`). Boş,
+  aşırı kısa ya da uzun ses yeniden istenir (en çok 4 kez), yine olmazsa sonda listelenir; 429 ve
+  5xx'te üstel bekleme. Dört istek aynı anda. Piper, model indirme ve `.piper/` kalktı.
+- **Bütün sesler yeniden üretildi:** 690 ses, 3.22 MB; ön belleğe giren (arayüz ve Koy) 75 ses,
+  629 KB. Örnekler 10 dosya, 109 KB. Google'a iki üretimde toplam 16 821 karakter gönderildi
+  (8 411 + 8 410; 700'er metin, yeniden denemeler dahil; ikincisi Codex düzeltmesinden sonra).
+  Şüpheli kalan yok.
+- **Örnekler** (`ses.html`): aynı beş cümle (jöle cümlesinin yerine yeni yumuşama cümlesi)
+  Callirrhoe'yle 0.9 (oyunun hızı) ve 1.0 (olağan). Adreslerinde sürüm var (`?v=`): yeniden
+  üretilen örnek eski önbellekten gelmez.
+- **Hatalı işaretleri sesin sürümüne bağlı:** anahtar `morfemusta.ses-denetimi.v2`, değer metin
+  → `surum`; ses değişince eski işaret görünmez ve okunurken atılır. v1'deki (dfki) işaretler
+  okunmaz.
+- **Önbellek:** değişiklik gerekmedi. Ön bellekteki seslerin `revision`'ı içeriğin sürümü (yeni
+  sesler kendiliğinden iner); öteki bölgelerinki `?v=<sürüm>` ile, eski sürümler bölgeye girişte
+  silinir.
+- **Testler:** 2027 birim testi ve 88 uçtan uca test (hepsi yeşil; tür denetimi temiz).
+  - Birim: yeni cümleler (`neden-unsuz`, `dukkan`, `uyduruk`, `okunus`); `ses-listesi.json`'da ses,
+    sağlayıcı, hız (0.9), biçim (24 kHz), her kaydın sürümü, dfki izi yok; okunuş tablosunun iki
+    satırı kullanılıyor; örnekler (iki hız, dosya, sürüm); Hakkında'da *Chirp 3: HD* ve
+    *Callirrhoe*.
+  - Uçtan uca: Dükkân'ın 1. görevinde taş → *Ek ünlüyle başlayınca p yumuşar: b olur.*;
+    Uydurukçuklar'da *mömüş* + *de* → *ş sert, ekin başı da sert olur: t.*; *zolku* + *ta* →
+    *Ünlüden sonra ekin başı yumuşak kalır: d.*; ses.html'de örneğin adresi sürümlü, eski
+    sürümün işareti görünmez.
+
+### PR'dan sonra düzeltilen (Codex'in bulgusu, doğrulandı)
+
+- **MP3'ler 24 kHz değil 22.05 kHz'ti:** `set_in_sample_rate` yalnız girişi söylüyor; LAME
+  32 kbit/s'de çıkışı kendisi 22.05 kHz'e indiriyordu, listede yazan biçim yanlıştı (700
+  dosyanın başlığı okunarak doğrulandı). Artık `set_out_sample_rate(24000)`; `bicim` dosyaların
+  başlığından okunur, beklenen hız değilse betik durur. Sesler yeniden üretildi. Birim testi
+  her MP3'ün başlığını okur (eski 22.05 kHz'lik dosyayla kırmızı olduğu denendi).
+
+### Oturumda seçilen küçük ayrıntılar (kullanıcıya ayrıca sorulmadı)
+
+- **Kısa parçada boş ses:** Chirp *pe*, *lik* gibi tek heceli parçalarda ara sıra sessiz ses
+  veriyor. Yeniden deneme çoğunlukla düzeltiyor; ikinci denemeden sonra sona nokta eklenir
+  (yalnız istekte; listedeki okunuş değişmez).
+- **Süre sınırları:** en az max(0.15, 0.03 × harf / hız) s, en çok 1.2 + 0.16 × harf / hız s.
+- **Yükseklik:** RMS -20 dBFS, tepe sınırı -1 dBFS; sessizlik eşiği 10 ms'lik pencerede ortalama
+  genlik 300 (yaklaşık -40 dBFS).
+- **`public/ses/LISANS.txt`** adı kaldı; içi yeni atıf.
+
+### Açık kalanlar
+
+Oturum 10b'de eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak):
+
+- **Seslerin hızı:** kullanıcı `ses.html`'deki örneklerden seçecek (0.9 ya da 1.0). Seçince
+  `YAVAS` değişir, `--hepsi` ile yeniden üretilir.
+- **Seslerin dinlenmesi:** 690 Callirrhoe sesi kulakla denetlenmedi; özellikle uydurma
+  kelimeler (*fıngıl*, *zelüe*), harf adları (*pe*, *yumuşak ge*) ve tek heceli ekler (*lik*,
+  *çi*). Yanlışlar `ses.html`'de işaretlenip `icerik/ses-okunus.csv`'ye (onayla) yazılır.
+- **Chirp sesi zamanla değişebilir:** Google modeli güncellerse aynı metin farklı çıkar;
+  yalnız değişenler yeniden üretildiği için ses karışabilir. Gerekirse `--hepsi`.
+
+## Önceki oturum: Oturum 10 — ses ve resim (2026-09-30)
 
 ### Bitenler
 
@@ -100,18 +197,14 @@
 
 Oturum 10'da eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak):
 
-- **Seslerin hızı:** kullanıcı `ses.html`'deki örneklerden seçecek (1.2 ya da 1.0).
-- **Seslerin dinlenmesi:** 690 ses üretildi, hiçbiri kulakla denetlenmedi; özellikle uydurma
-  kelimeler (*fıngıl*, *zelüe*) ve harf adları. Yanlışlar `ses.html`'de işaretlenip
-  `icerik/ses-okunus.csv`'ye (onayla) yazılır, sesler yeniden üretilir.
-- **Modelin kökeni:** MODEL_CARD, dfki sesinin İngilizce *lessac* sesinden ince ayarla
-  eğitildiğini yazıyor; lessac veri kümesinin lisansı ayrıca incelenebilir.
+- ~~Seslerin hızı, seslerin dinlenmesi, modelin kökeni~~: dfki sesi Oturum 10b'de bırakıldı;
+  yerine geçen maddeler Oturum 10b'nin açık kalanlarında.
 - **İki sürüm aynı anda açıkken** eski kod `ayarlar.ses`'i tanımaz: bir ayar değiştirirse ses
   ayarı Dokununca'ya döner (bir kez).
 - **Ses listesi paketi büyütüyor:** `ses-listesi.json` (okunuş, boyut, sürüm dahil) JS paketine
-  giriyor (110 KB, gzip ile 25 KB). Oyun yalnız metin → dosya ve bölgeleri kullanıyor; liste
+  giriyor (Oturum 10b'de 126 KB, gzip ile 21 KB). Oyun yalnız metin → dosya ve bölgeleri kullanıyor; liste
   ikiye ayrılabilir.
-- **Uydurukçuklar'ın sesleri 2.2 MB:** bölgeye ilk girişte hepsi iner (100 görev, 10 tur).
+- **Uydurukçuklar'ın sesleri 2.2 MB (Oturum 10b'de 2.3 MB):** bölgeye ilk girişte hepsi iner (100 görev, 10 tur).
   Gerekirse tur tur indirilir.
 - **Haritanın ileti balonunda hoparlör** balonun kenarından biraz taşıyor (iletinin ayrılmış
   yeri değişmesin diye). Telefonda göz ile bakılmalı.
@@ -223,7 +316,7 @@ Oturum 9'da eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak):
   - Denetim sayfası, galeri ve ses denetim sayfası da önbelleğe giriyor; girmezlerse service
     worker onları oyuna düşürür, çıkarılmamalı.
 
-## Önceki oturum: Oturum 9 — Uydurukçuklar (2026-09-30)
+## Daha önceki oturum: Oturum 9 — Uydurukçuklar (2026-09-30)
 
 ### Bitenler
 
@@ -326,7 +419,7 @@ Oturum 9'da eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak):
   çocuğun biçimini gösterir; kök ve ek satırı kökü (*pıtak* + *ım*) gösterir.
 - **Yay ve zıplama** Koy'dan kopyalandı (ekranlar arasında ortak modül yok, Dükkân'daki gibi).
 
-## Daha önceki oturum: Oturum 8 — Kök Bahçesi (2026-09-30)
+## Daha da önceki oturum: Oturum 8 — Kök Bahçesi (2026-09-30)
 
 ### Bitenler
 
@@ -426,7 +519,7 @@ Oturum 8'de eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak; öncek
 - **Meyvenin ek yazısı 18px:** üç meyve tacın içine sığsın diye; ince renk üstünde izin verilen
   en küçük boy.
 
-## Daha da önceki oturum: Oturum 7 — Fıstıkçı Şahap'ın Dükkânı (2026-09-30)
+## Eski oturum: Oturum 7 — Fıstıkçı Şahap'ın Dükkânı (2026-09-30)
 
 ### Bitenler
 

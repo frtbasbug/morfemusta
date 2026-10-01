@@ -1,5 +1,4 @@
-Bu klasördeki ses dosyaları (*.mp3) Piper metinden sese aracıyla, tr_TR-dfki-medium sesiyle
-üretildi (rhasspy/piper-voices; veri kümesi: DFKI, github.com/marytts/dfki-ot-data).
+Bu klasördeki ses dosyaları (*.mp3) yapay zekâyla, Google Cloud Text-to-Speech'in
+Chirp 3: HD Callirrhoe sesiyle önceden üretildi (scripts/ses-uret.py).
 
-Lisans: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/).
-Ses dosyaları Morfemusta'nın kodundan (MIT) ayrı, bu lisansla yayımlanır.
+Kodun MIT lisansı ses dosyalarını kapsamaz.

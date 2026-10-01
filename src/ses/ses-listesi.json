@@ -1,6990 +1,7010 @@
 {
- "ses": "tr_TR-dfki-medium",
- "lisans": "CC BY-NC-SA 4.0",
- "bicim": "MP3, mono, 22050 Hz, 32 kbit/s",
+ "ses": "tr-TR-Chirp3-HD-Callirrhoe",
+ "saglayici": "Google Cloud Text-to-Speech, Chirp 3: HD",
+ "bicim": "MP3, mono, 24000 Hz, 32 kbit/s",
  "hizlar": {
-  "yavas": 1.2,
+  "yavas": 0.9,
   "olagan": 1.0
  },
  "metinler": {
   "Bahçede akşam oldu": {
    "dosya": "3d61362f5845.mp3",
    "okunus": "Bahçede akşam oldu",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 7419,
-   "surum": "a570ee984c71"
+   "boyut": 6144,
+   "surum": "b98ca4deb664"
   },
   "Bugün kurduğun kelimeler:": {
    "dosya": "70f7b2d4680d.mp3",
    "okunus": "Bugün kurduğun kelimeler:",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "arayuz"
    ],
-   "boyut": 8046,
-   "surum": "e6daa5c0ae5c"
+   "boyut": 6432,
+   "surum": "bcafc87cbbcf"
   },
   "Bukalemun Koyu": {
    "dosya": "c998a683afbe.mp3",
    "okunus": "Bukalemun Koyu",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "arayuz"
    ],
-   "boyut": 5329,
-   "surum": "c2470e036246"
+   "boyut": 5280,
+   "surum": "7b2a85e523ba"
   },
   "Burası hazırlanıyor. Yakında açılacak.": {
    "dosya": "b6f8c47ace24.mp3",
    "okunus": "Burası hazırlanıyor. Yakında açılacak.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "arayuz"
    ],
-   "boyut": 13584,
-   "surum": "19b46afba2dd"
+   "boyut": 11904,
+   "surum": "bce2263f31e5"
   },
   "Dükkânda akşam oldu": {
    "dosya": "5a49b1833951.mp3",
    "okunus": "Dükkânda akşam oldu",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 7210,
-   "surum": "8ce4454d9bc4"
+   "boyut": 6432,
+   "surum": "2dae608b0106"
+  },
+  "Ek ünlüyle başlayınca k yumuşar: ğ olur.": {
+   "dosya": "384f1affe997.mp3",
+   "okunus": "Ek ünlüyle başlayınca ke yumuşar: yumuşak ge olur.",
+   "hiz": 0.9,
+   "bolgeler": [
+    "dukkan"
+   ],
+   "boyut": 16320,
+   "surum": "a5370bc66514"
+  },
+  "Ek ünlüyle başlayınca p yumuşar: b olur.": {
+   "dosya": "3ba47a356c04.mp3",
+   "okunus": "Ek ünlüyle başlayınca pe yumuşar: be olur.",
+   "hiz": 0.9,
+   "bolgeler": [
+    "dukkan"
+   ],
+   "boyut": 13056,
+   "surum": "9a91fc1bc038"
+  },
+  "Ek ünlüyle başlayınca ç yumuşar: c olur.": {
+   "dosya": "f67b9f6fffae.mp3",
+   "okunus": "Ek ünlüyle başlayınca çe yumuşar: ce olur.",
+   "hiz": 0.9,
+   "bolgeler": [
+    "dukkan"
+   ],
+   "boyut": 15552,
+   "surum": "33f335fcee88"
   },
   "Fıstıkçı Şahap'ın Dükkânı": {
    "dosya": "3bc5da67941b.mp3",
-   "okunus": "Fıstıkçı Şahap'ın Dükkânı",
-   "hiz": 1.2,
+   "okunus": "Fıstıkçı Şahabın Dükkânı",
+   "hiz": 0.9,
    "bolgeler": [
     "arayuz"
    ],
-   "boyut": 8255,
-   "surum": "9e0872b62677"
+   "boyut": 7200,
+   "surum": "4d77aafb9ed9"
   },
   "Koyda akşam oldu": {
    "dosya": "4047b99d44e2.mp3",
    "okunus": "Koyda akşam oldu",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 5851,
-   "surum": "9b590d8dcec1"
+   "boyut": 5952,
+   "surum": "9f9f04739627"
   },
   "Kök Bahçesi": {
    "dosya": "db7a5bcc195d.mp3",
    "okunus": "Kök Bahçesi",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "arayuz"
    ],
-   "boyut": 4807,
-   "surum": "5e0c14cd5212"
+   "boyut": 4416,
+   "surum": "59b1c17ed339"
   },
   "Meyvenin üstüne gövde çıkmaz: önce cik.": {
    "dosya": "a5806be41c5b.mp3",
    "okunus": "Meyvenin üstüne gövde çıkmaz: önce cik.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 12748,
-   "surum": "07debde23554"
+   "boyut": 11232,
+   "surum": "45740c3b3e29"
   },
   "Meyvenin üstüne gövde çıkmaz: önce lik.": {
    "dosya": "06267097f139.mp3",
    "okunus": "Meyvenin üstüne gövde çıkmaz: önce lik.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 12852,
-   "surum": "d30bee0166ca"
+   "boyut": 13152,
+   "surum": "cca3701a44fc"
   },
   "Meyvenin üstüne gövde çıkmaz: önce luk.": {
    "dosya": "6ad3f2c37f1d.mp3",
    "okunus": "Meyvenin üstüne gövde çıkmaz: önce luk.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 12643,
-   "surum": "2c6fe0c8c770"
+   "boyut": 11616,
+   "surum": "0c0dd91f7771"
   },
   "Meyvenin üstüne gövde çıkmaz: önce lük.": {
    "dosya": "349d03cf5349.mp3",
    "okunus": "Meyvenin üstüne gövde çıkmaz: önce lük.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 12748,
-   "surum": "05aa80f0ceae"
+   "boyut": 13152,
+   "surum": "0c401ab7eda3"
   },
   "Meyvenin üstüne gövde çıkmaz: önce çi.": {
    "dosya": "861dae40429f.mp3",
    "okunus": "Meyvenin üstüne gövde çıkmaz: önce çi.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 12957,
-   "surum": "cdc3ef5714e3"
+   "boyut": 13920,
+   "surum": "07adbe2452c9"
   },
   "Meyvenin üstüne gövde çıkmaz: önce çü.": {
    "dosya": "629b6a941a6f.mp3",
    "okunus": "Meyvenin üstüne gövde çıkmaz: önce çü.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 13061,
-   "surum": "185f45afcceb"
+   "boyut": 12576,
+   "surum": "78d0686e67b8"
   },
   "Meyvenin üstüne gövde çıkmaz: önce çık.": {
    "dosya": "843bab2d5034.mp3",
    "okunus": "Meyvenin üstüne gövde çıkmaz: önce çık.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 13061,
-   "surum": "a25699ff0919"
+   "boyut": 13920,
+   "surum": "f4d8a416fd20"
   },
   "Uydurukçuklar": {
    "dosya": "6fc01de50cd8.mp3",
    "okunus": "Uydurukçuklar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "arayuz"
    ],
-   "boyut": 7732,
-   "surum": "bd8456bef5fd"
+   "boyut": 4800,
+   "surum": "cf933d55117b"
   },
   "Uydurukçuklarda akşam oldu": {
    "dosya": "ac81081d0c18.mp3",
    "okunus": "Uydurukçuklarda akşam oldu",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 9091,
-   "surum": "c801e6115de6"
+   "boyut": 8256,
+   "surum": "69c76c257728"
   },
   "a düz, u yuvarlak. Yuvarlaklıkları uyuşmuyor.": {
    "dosya": "19aed3bae77b.mp3",
    "okunus": "a düz, u yuvarlak. Yuvarlaklıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 15569,
-   "surum": "be36d078c0af"
+   "boyut": 21696,
+   "surum": "c202975e201f"
   },
   "a düz, u yuvarlak. Yuvarlaklıkları uyuşmuyor. Bukalemun en yakın ünlüye bakar.": {
    "dosya": "d95e127bf3de.mp3",
    "okunus": "a düz, u yuvarlak. Yuvarlaklıkları uyuşmuyor. Bukalemun en yakın ünlüye bakar.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 25704,
-   "surum": "48512ba50190"
+   "boyut": 29472,
+   "surum": "7339fc8b48a9"
   },
   "a kalın ve düz, ü ince ve yuvarlak. İkisi de uyuşmuyor.": {
    "dosya": "a750071fbbd2.mp3",
    "okunus": "a kalın ve düz, ü ince ve yuvarlak. İkisi de uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 18077,
-   "surum": "06c61f69aeb1"
+   "boyut": 21408,
+   "surum": "a4068069ffc8"
   },
   "a kalın ve düz, ü ince ve yuvarlak. İkisi de uyuşmuyor. Bukalemun en yakın ünlüye bakar.": {
    "dosya": "42aecbe7fcf1.mp3",
    "okunus": "a kalın ve düz, ü ince ve yuvarlak. İkisi de uyuşmuyor. Bukalemun en yakın ünlüye bakar.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 28003,
-   "surum": "33bef5f97ded"
+   "boyut": 27840,
+   "surum": "7ecd851222a6"
   },
   "a kalın, e ince. Kalınlıkları uyuşmuyor.": {
    "dosya": "4739a4f7f5bb.mp3",
    "okunus": "a kalın, e ince. Kalınlıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy",
     "uyduruk"
    ],
-   "boyut": 12957,
-   "surum": "3f496b49a79a"
+   "boyut": 16992,
+   "surum": "47858d61a618"
   },
   "a kalın, i ince. Kalınlıkları uyuşmuyor.": {
    "dosya": "6ae69196cc13.mp3",
    "okunus": "a kalın, i ince. Kalınlıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 12748,
-   "surum": "dce5ee5c6e7c"
+   "boyut": 15840,
+   "surum": "b1a4a817fb2d"
   },
   "a kalın, i ince. Kalınlıkları uyuşmuyor. Bukalemun en yakın ünlüye bakar.": {
    "dosya": "fb7ba39702ba.mp3",
    "okunus": "a kalın, i ince. Kalınlıkları uyuşmuyor. Bukalemun en yakın ünlüye bakar.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 23406,
-   "surum": "d44bf54d3b1f"
+   "boyut": 27648,
+   "surum": "436b4092dcab"
   },
   "at": {
    "dosya": "27e90dfa57c3.mp3",
    "okunus": "at",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 2194,
-   "surum": "1f57ba4b79dc"
+   "boyut": 2016,
+   "surum": "d46e4f265505"
   },
   "atlar": {
    "dosya": "884c0a80d9dd.mp3",
    "okunus": "atlar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 3657,
-   "surum": "260857e82c4b"
+   "boyut": 2880,
+   "surum": "0951d9d3cdd7"
   },
   "atler": {
    "dosya": "c77b48b3c33b.mp3",
    "okunus": "atler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 3657,
-   "surum": "e8077c53a8c4"
+   "boyut": 3072,
+   "surum": "3bd337f7f220"
   },
   "ağacı": {
    "dosya": "09d1f0ea77e8.mp3",
    "okunus": "ağacı",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 2717,
-   "surum": "92b68d3b63ee"
+   "boyut": 2976,
+   "surum": "6750bfaeffe0"
   },
   "ağaç": {
    "dosya": "d0fa3ddf1171.mp3",
    "okunus": "ağaç",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 3135,
-   "surum": "e724f02ea1d9"
+   "boyut": 2880,
+   "surum": "c3891dc7707b"
   },
   "ağaçı": {
    "dosya": "04e4c136b225.mp3",
    "okunus": "ağaçı",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 3030,
-   "surum": "4de0fdd7b751"
+   "boyut": 3360,
+   "surum": "3a4cb4b0fe48"
   },
   "balık": {
    "dosya": "6fcab87a08c8.mp3",
    "okunus": "balık",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 2403,
-   "surum": "9ee1525942ea"
+   "boyut": 2688,
+   "surum": "2e407c828eeb"
   },
   "balıkcı": {
    "dosya": "20badd7239f4.mp3",
    "okunus": "balıkcı",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 3657,
-   "surum": "9001a1030119"
+   "boyut": 3456,
+   "surum": "e24aa2680576"
   },
   "balıkçı": {
    "dosya": "f7d8e9540596.mp3",
    "okunus": "balıkçı",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 3657,
-   "surum": "e1ccaf0b9175"
+   "boyut": 3456,
+   "surum": "c8cf490a2351"
   },
   "bidiş": {
    "dosya": "d226e81ebf41.mp3",
    "okunus": "bidiş",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "c06c81cb3d42"
+   "boyut": 3264,
+   "surum": "343d774212c6"
   },
   "bidişda": {
    "dosya": "077f77737a15.mp3",
    "okunus": "bidişda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "10422b6b9ac1"
+   "boyut": 3840,
+   "surum": "044da3f3a07b"
   },
   "bidişde": {
    "dosya": "6b47e416ca61.mp3",
    "okunus": "bidişde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "2b1115a0a284"
+   "boyut": 3360,
+   "surum": "ff3cc34b9292"
   },
   "bidişta": {
    "dosya": "d7f3bb060bc7.mp3",
    "okunus": "bidişta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "52df3f0d357a"
+   "boyut": 2784,
+   "surum": "b0e740473713"
   },
   "bidişte": {
    "dosya": "8866ab535768.mp3",
    "okunus": "bidişte",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "042a06c8807b"
+   "boyut": 3360,
+   "surum": "c72318048c51"
   },
   "bügüz": {
    "dosya": "dbe808f244be.mp3",
    "okunus": "bügüz",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "c94a77de2410"
+   "boyut": 3168,
+   "surum": "cf6a7a600249"
   },
   "bügüzim": {
    "dosya": "6bfcf5198b0c.mp3",
    "okunus": "bügüzim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4075,
-   "surum": "fc0a526ddda0"
+   "boyut": 3648,
+   "surum": "1a92577fa1ea"
   },
   "bügüzum": {
    "dosya": "8d2e8f84a940.mp3",
    "okunus": "bügüzum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "d2c946477dc9"
+   "boyut": 3456,
+   "surum": "2129f0bf305d"
   },
   "bügüzüm": {
    "dosya": "ba7a49a79933.mp3",
    "okunus": "bügüzüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "ad9f56e971b8"
+   "boyut": 3552,
+   "surum": "3b6b00afb0bf"
   },
   "bügüzım": {
    "dosya": "3fc2d9b7923d.mp3",
    "okunus": "bügüzım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "afceaff9ab66"
+   "boyut": 3168,
+   "surum": "0b2d9855a1dd"
   },
   "bıma": {
    "dosya": "cf4661691d4b.mp3",
    "okunus": "bıma",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2299,
-   "surum": "2acfb9f2f678"
+   "boyut": 2496,
+   "surum": "d3ce15eacc77"
   },
   "bımada": {
    "dosya": "1ceda74073f4.mp3",
    "okunus": "bımada",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "925f76d0a008"
+   "boyut": 3456,
+   "surum": "1a1b27d6948b"
   },
   "bımade": {
    "dosya": "025605a3f46d.mp3",
    "okunus": "bımade",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "7ec7d87f35d0"
+   "boyut": 3456,
+   "surum": "b7b695dd8cb4"
   },
   "bımata": {
    "dosya": "8fc2eb8ec6d1.mp3",
    "okunus": "bımata",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "cd1aff57b980"
+   "boyut": 3072,
+   "surum": "c1fde400f277"
   },
   "bımate": {
    "dosya": "d4aff33a1b99.mp3",
    "okunus": "bımate",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "0c852671ce32"
+   "boyut": 3072,
+   "surum": "f134962b291d"
   },
   "bızıbım": {
    "dosya": "b813111a8190.mp3",
    "okunus": "bızıbım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "d5294710b9ec"
+   "boyut": 3552,
+   "surum": "098c51eedfc2"
   },
   "bızıp": {
    "dosya": "8929012f2121.mp3",
    "okunus": "bızıp",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "c2aeb45dafb9"
+   "boyut": 2592,
+   "surum": "dede26761592"
   },
   "bızıpim": {
    "dosya": "141fae570172.mp3",
    "okunus": "bızıpim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "d75660715094"
+   "boyut": 3360,
+   "surum": "54382d4e839e"
   },
   "bızıpum": {
    "dosya": "130a01c17933.mp3",
    "okunus": "bızıpum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "eb787a5bd36f"
+   "boyut": 3456,
+   "surum": "4b8fc982ce56"
   },
   "bızıpüm": {
    "dosya": "5c5252b20306.mp3",
    "okunus": "bızıpüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "d4bb7b6ee3eb"
+   "boyut": 3360,
+   "surum": "4d150e3e5e16"
   },
   "bızıpım": {
    "dosya": "cd077369bb9c.mp3",
    "okunus": "bızıpım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "d4827efc270c"
+   "boyut": 3072,
+   "surum": "da97c61e0f98"
   },
   "catabım": {
    "dosya": "706380ff5cb9.mp3",
    "okunus": "catabım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "91e6993f87c4"
+   "boyut": 3648,
+   "surum": "53f4748bdc52"
   },
   "catap": {
    "dosya": "19a50cebe883.mp3",
    "okunus": "catap",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "0ec7127cf4d2"
+   "boyut": 2880,
+   "surum": "7147748fefd2"
   },
   "catapim": {
    "dosya": "adaaf80816da.mp3",
    "okunus": "catapim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "1fe6ef9dc085"
+   "boyut": 3456,
+   "surum": "2432ee66814a"
   },
   "catapum": {
    "dosya": "2c85d9373e16.mp3",
    "okunus": "catapum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "ebec159d999c"
+   "boyut": 3744,
+   "surum": "37d09da56816"
   },
   "catapüm": {
    "dosya": "7471f1b8aeb0.mp3",
    "okunus": "catapüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "23ad5c715162"
+   "boyut": 3264,
+   "surum": "8f0f55ab569d"
   },
   "catapım": {
    "dosya": "24ac7e23ab76.mp3",
    "okunus": "catapım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "8ba2eab75507"
+   "boyut": 3360,
+   "surum": "dde7d194397c"
   },
   "cik": {
    "dosya": "2f74ad5375bb.mp3",
    "okunus": "cik",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 2194,
-   "surum": "ab4146f00c93"
+   "boyut": 3264,
+   "surum": "4450413b070c"
   },
   "cofar": {
    "dosya": "1631d1f145cf.mp3",
    "okunus": "cofar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "7d1dfbbe5f5f"
+   "boyut": 2784,
+   "surum": "4c47428e1052"
   },
   "cofarda": {
    "dosya": "a5330391b2a0.mp3",
    "okunus": "cofarda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "5ed746b32805"
+   "boyut": 3840,
+   "surum": "167208185886"
   },
   "cofarde": {
    "dosya": "3eb4d240ca3c.mp3",
    "okunus": "cofarde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "a6bcfe31d923"
+   "boyut": 3456,
+   "surum": "50f7013c154c"
   },
   "cofarta": {
    "dosya": "b45114228af4.mp3",
    "okunus": "cofarta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "461065477620"
+   "boyut": 3744,
+   "surum": "f58555a68761"
   },
   "cofarte": {
    "dosya": "0c1a19fa1dce.mp3",
    "okunus": "cofarte",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "d18d49a44fc2"
+   "boyut": 3552,
+   "surum": "7316e261f285"
   },
   "covuz": {
    "dosya": "2bc79bbc2636.mp3",
    "okunus": "covuz",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "76379464aebc"
+   "boyut": 2880,
+   "surum": "4a77223c0b83"
   },
   "covuzda": {
    "dosya": "8db6fa642055.mp3",
    "okunus": "covuzda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "b47da1014e27"
+   "boyut": 3264,
+   "surum": "2228f6426830"
   },
   "covuzde": {
    "dosya": "cf5585daaf87.mp3",
    "okunus": "covuzde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "79779805415e"
+   "boyut": 3360,
+   "surum": "f34f86ed4820"
   },
   "covuzta": {
    "dosya": "d1ab158c27a2.mp3",
    "okunus": "covuzta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "35c1d7a58875"
+   "boyut": 3360,
+   "surum": "2eb8c70053d5"
   },
   "covuzte": {
    "dosya": "d68b87902bba.mp3",
    "okunus": "covuzte",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "66cf1bf7667a"
+   "boyut": 3456,
+   "surum": "c5dcd83fa5bd"
   },
   "cu": {
    "dosya": "93c30b1a3b78.mp3",
    "okunus": "cu",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 1463,
-   "surum": "64870f169f68"
+   "boyut": 4128,
+   "surum": "dd23c25a6b4e"
   },
   "cütüs": {
    "dosya": "9883e8871bb1.mp3",
    "okunus": "cütüs",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "9a0cbb0e8f30"
+   "boyut": 3552,
+   "surum": "1a78222ee6bf"
   },
   "cütüsda": {
    "dosya": "de64bfd1246f.mp3",
    "okunus": "cütüsda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "d5359b6efc80"
+   "boyut": 3360,
+   "surum": "e3e1e3dc9b72"
   },
   "cütüsde": {
    "dosya": "0ebe47b729f4.mp3",
    "okunus": "cütüsde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "f7e1de722e96"
+   "boyut": 3840,
+   "surum": "bba6fa25dece"
   },
   "cütüsta": {
    "dosya": "c5437e9d59d2.mp3",
    "okunus": "cütüsta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "7cc3adee1833"
+   "boyut": 3648,
+   "surum": "0cee4d0c8679"
   },
   "cütüste": {
    "dosya": "df060983f6cd.mp3",
    "okunus": "cütüste",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "dff39169d0b9"
+   "boyut": 3744,
+   "surum": "29db66f72d73"
   },
   "cı": {
    "dosya": "f1e7fe4c5b64.mp3",
    "okunus": "cı",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 1463,
-   "surum": "e73a1abb6ea5"
+   "boyut": 1920,
+   "surum": "4369a9f8588f"
   },
   "dabız": {
    "dosya": "2f1ad1697a04.mp3",
    "okunus": "dabız",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "8d0ddb08963e"
+   "boyut": 2592,
+   "surum": "65c94d627274"
   },
   "dabızlar": {
    "dosya": "296562bb855c.mp3",
    "okunus": "dabızlar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "d1299ed14c49"
+   "boyut": 4032,
+   "surum": "bd198e46df84"
   },
   "dabızler": {
    "dosya": "1068cf38a774.mp3",
    "okunus": "dabızler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "83366dde9ac7"
+   "boyut": 3936,
+   "surum": "5e0c6aaf5772"
   },
   "datibim": {
    "dosya": "6cd8cfe4ae24.mp3",
    "okunus": "datibim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "3d5f01e2bb2b"
+   "boyut": 3360,
+   "surum": "59781d713df8"
   },
   "datip": {
    "dosya": "032d84b93375.mp3",
    "okunus": "datip",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "2e064f1ac782"
+   "boyut": 3456,
+   "surum": "85cc3b8589ad"
   },
   "datipim": {
    "dosya": "3328455ac5ae.mp3",
    "okunus": "datipim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "b5598246470a"
+   "boyut": 3936,
+   "surum": "9c8692b3f67a"
   },
   "datipum": {
    "dosya": "15dc4d86e663.mp3",
    "okunus": "datipum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "87804a089f24"
+   "boyut": 3744,
+   "surum": "a3e5ef9da199"
   },
   "datipüm": {
    "dosya": "1b56764abe8c.mp3",
    "okunus": "datipüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "0ccf19172311"
+   "boyut": 5952,
+   "surum": "8b1874f6c929"
   },
   "datipım": {
    "dosya": "1e4251cfbc0e.mp3",
    "okunus": "datipım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "d26eb1cd1436"
+   "boyut": 3552,
+   "surum": "89d31fd1651b"
   },
   "dobudum": {
    "dosya": "1930eb2c7611.mp3",
    "okunus": "dobudum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "1c64818f7685"
+   "boyut": 3648,
+   "surum": "03d5ac22aaf9"
   },
   "dobut": {
    "dosya": "13c96043accd.mp3",
    "okunus": "dobut",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "9aba19ca0848"
+   "boyut": 3264,
+   "surum": "43066241f127"
   },
   "dobutim": {
    "dosya": "e37345c9cb00.mp3",
    "okunus": "dobutim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "4455184d308c"
+   "boyut": 3552,
+   "surum": "bd7bc396469c"
   },
   "dobutum": {
    "dosya": "f4c9f71fe434.mp3",
    "okunus": "dobutum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "0985815f3572"
+   "boyut": 5952,
+   "surum": "bb71c67a5293"
   },
   "dobutüm": {
    "dosya": "dbe898b8f74f.mp3",
    "okunus": "dobutüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "123bfe8b4e9d"
+   "boyut": 3840,
+   "surum": "f00d62bdb89c"
   },
   "dobutım": {
    "dosya": "75d5b3221131.mp3",
    "okunus": "dobutım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "9b8cf867252f"
+   "boyut": 3552,
+   "surum": "621a814999c3"
   },
   "dozak": {
    "dosya": "031c73bcdd89.mp3",
    "okunus": "dozak",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2717,
-   "surum": "08c0b096f569"
+   "boyut": 3360,
+   "surum": "dcc39f8b1983"
   },
   "dozakim": {
    "dosya": "4e4d523c064b.mp3",
    "okunus": "dozakim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "7dec8b94b4a0"
+   "boyut": 3936,
+   "surum": "28a1de403977"
   },
   "dozakum": {
    "dosya": "a5ec94503fb1.mp3",
    "okunus": "dozakum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "9d1222d0da50"
+   "boyut": 4032,
+   "surum": "1786bbe5bee0"
   },
   "dozaküm": {
    "dosya": "a97bf479bce5.mp3",
    "okunus": "dozaküm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "b845b4963a93"
+   "boyut": 3456,
+   "surum": "85ba3dc23597"
   },
   "dozakım": {
    "dosya": "08b626d02b20.mp3",
    "okunus": "dozakım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "9e8a8bdf9aa6"
+   "boyut": 3648,
+   "surum": "46d9b63cf851"
   },
   "dozağım": {
    "dosya": "070d65444167.mp3",
    "okunus": "dozağım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "bedd9c7d3c08"
+   "boyut": 3072,
+   "surum": "dc880a738778"
   },
   "döpe": {
    "dosya": "7659167e28f4.mp3",
    "okunus": "döpe",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "a56a7e317cff"
+   "boyut": 2688,
+   "surum": "2a7b1f2cd54c"
   },
   "döpea": {
    "dosya": "40c81cf84116.mp3",
    "okunus": "döpea",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "3293dac7fe54"
+   "boyut": 2784,
+   "surum": "78864c3489a6"
   },
   "döpee": {
    "dosya": "37a5d746586a.mp3",
    "okunus": "döpee",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2717,
-   "surum": "7361af7cf76e"
+   "boyut": 2976,
+   "surum": "444d06331c22"
   },
   "döpeya": {
    "dosya": "bdaef1804767.mp3",
    "okunus": "döpeya",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "e2d35636144d"
+   "boyut": 3264,
+   "surum": "12a88a622cb3"
   },
   "döpeye": {
    "dosya": "dc44781cb14a.mp3",
    "okunus": "döpeye",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 6269,
-   "surum": "488bcb131a57"
+   "boyut": 3744,
+   "surum": "e20b117cf16f"
   },
   "düres": {
    "dosya": "f439726e7329.mp3",
    "okunus": "düres",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "53d909c7c45a"
+   "boyut": 3552,
+   "surum": "88b996af876b"
   },
   "düresda": {
    "dosya": "5a5075b9a789.mp3",
    "okunus": "düresda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4075,
-   "surum": "90da0875587e"
+   "boyut": 3648,
+   "surum": "60f4058029f8"
   },
   "düresde": {
    "dosya": "f5b0f2c497ee.mp3",
    "okunus": "düresde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4180,
-   "surum": "f47cdd7bd00c"
+   "boyut": 3744,
+   "surum": "4ccb7d877f44"
   },
   "düresta": {
    "dosya": "87ebf47c1a9a.mp3",
    "okunus": "düresta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "c9d279d28e41"
+   "boyut": 3552,
+   "surum": "bae4691909fe"
   },
   "düreste": {
    "dosya": "a7d9ca2a6e4f.mp3",
    "okunus": "düreste",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "3a90e2ebf8f2"
+   "boyut": 3648,
+   "surum": "6ba7f0e46d54"
   },
   "e düz, ü yuvarlak. Yuvarlaklıkları uyuşmuyor.": {
    "dosya": "accb4be1e823.mp3",
    "okunus": "e düz, ü yuvarlak. Yuvarlaklıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy",
     "uyduruk"
    ],
-   "boyut": 14838,
-   "surum": "2b34583db50b"
+   "boyut": 21120,
+   "surum": "ebc9fce990a7"
   },
   "e ince ve düz, u kalın ve yuvarlak. İkisi de uyuşmuyor.": {
    "dosya": "d71d1e3d6952.mp3",
    "okunus": "e ince ve düz, u kalın ve yuvarlak. İkisi de uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy",
     "uyduruk"
    ],
-   "boyut": 17345,
-   "surum": "a3b1d7c6af6f"
+   "boyut": 19104,
+   "surum": "586dbf32c644"
   },
   "e ince, a kalın. Kalınlıkları uyuşmuyor.": {
    "dosya": "b5f2c7445707.mp3",
    "okunus": "e ince, a kalın. Kalınlıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy",
     "uyduruk"
    ],
-   "boyut": 12852,
-   "surum": "4eced7d843ef"
+   "boyut": 20256,
+   "surum": "3a2bdc87007c"
   },
   "e ince, ı kalın. Kalınlıkları uyuşmuyor.": {
    "dosya": "803fdf43bd3b.mp3",
    "okunus": "e ince, ı kalın. Kalınlıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy",
     "uyduruk"
    ],
-   "boyut": 12539,
-   "surum": "8f027d373605"
+   "boyut": 14496,
+   "surum": "94755c18b6c4"
   },
   "el": {
    "dosya": "4f1ea4f09db2.mp3",
    "okunus": "el",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 2403,
-   "surum": "753e72e40633"
+   "boyut": 1824,
+   "surum": "a7f0486a3fb8"
   },
   "elim": {
    "dosya": "c634f79a3d84.mp3",
    "okunus": "elim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 2090,
-   "surum": "9d2c6b652c8a"
+   "boyut": 2400,
+   "surum": "4da045ab7fbd"
   },
   "elum": {
    "dosya": "c7fa1327cf16.mp3",
    "okunus": "elum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 2508,
-   "surum": "d986af00d75e"
+   "boyut": 2496,
+   "surum": "b938507403a7"
   },
   "elüm": {
    "dosya": "49e3dd3e80f4.mp3",
    "okunus": "elüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 2403,
-   "surum": "a5f1a0f7ac46"
+   "boyut": 2592,
+   "surum": "7ca4b8e44e20"
   },
   "elım": {
    "dosya": "cfeaaa2f0396.mp3",
    "okunus": "elım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 2717,
-   "surum": "44b338dd823b"
+   "boyut": 2304,
+   "surum": "a62591703f16"
   },
   "ev": {
    "dosya": "828e64e13e3f.mp3",
    "okunus": "ev",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy",
     "dukkan"
    ],
-   "boyut": 1985,
-   "surum": "bbffbb01b4ec"
+   "boyut": 1920,
+   "surum": "23ba018ca7ee"
   },
   "evde": {
    "dosya": "e900156bfdb3.mp3",
    "okunus": "evde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 3135,
-   "surum": "6e30dc0484bb"
+   "boyut": 2880,
+   "surum": "7a74e4e91589"
   },
   "evlar": {
    "dosya": "6d78eeba83f2.mp3",
    "okunus": "evlar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 3553,
-   "surum": "6d70c5e576cf"
+   "boyut": 3264,
+   "surum": "301f0b828be0"
   },
   "evler": {
    "dosya": "42aadf61b483.mp3",
    "okunus": "evler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 3448,
-   "surum": "63e07eb23ca4"
+   "boyut": 3072,
+   "surum": "ef95f0a9f93c"
   },
   "evte": {
    "dosya": "60a104faf8e9.mp3",
    "okunus": "evte",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 3030,
-   "surum": "5792369a2ec9"
+   "boyut": 2880,
+   "surum": "5c3a0a9af612"
   },
   "famul": {
    "dosya": "8faeca5d7050.mp3",
    "okunus": "famul",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "5552a9ce50ab"
+   "boyut": 3072,
+   "surum": "acca4ca7a16b"
   },
   "famulim": {
    "dosya": "1fec87fa0e01.mp3",
    "okunus": "famulim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "2e8e079df2a4"
+   "boyut": 2976,
+   "surum": "8deb8f605682"
   },
   "famulum": {
    "dosya": "5cdf46a82899.mp3",
    "okunus": "famulum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "b7087c6c9566"
+   "boyut": 3552,
+   "surum": "b55b43a0b03b"
   },
   "famulüm": {
    "dosya": "342efb045b63.mp3",
    "okunus": "famulüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "6c86a14e44a3"
+   "boyut": 3072,
+   "surum": "d240c5c59bd7"
   },
   "famulım": {
    "dosya": "574e0e6a1170.mp3",
    "okunus": "famulım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "8c1f8ecc954a"
+   "boyut": 3072,
+   "surum": "2222ce5f372f"
   },
   "farıcım": {
    "dosya": "39e9d9f2edc7.mp3",
    "okunus": "farıcım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "1fcabb55766b"
+   "boyut": 3072,
+   "surum": "2dff9c81fdf5"
   },
   "farıç": {
    "dosya": "0616f9239e43.mp3",
    "okunus": "farıç",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "5e7195557bc9"
+   "boyut": 3360,
+   "surum": "4b44d53cdfd0"
   },
   "farıçim": {
    "dosya": "f75ef84633a6.mp3",
    "okunus": "farıçim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "3c1a5b45a0cb"
+   "boyut": 2976,
+   "surum": "8bf3a7a9d4c8"
   },
   "farıçum": {
    "dosya": "46d70e5e84c9.mp3",
    "okunus": "farıçum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "e4f464ae96b2"
+   "boyut": 3552,
+   "surum": "b4fb67c40fdf"
   },
   "farıçüm": {
    "dosya": "d7724d0c91a8.mp3",
    "okunus": "farıçüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "fe21fe9ff95b"
+   "boyut": 3072,
+   "surum": "fc5f56added6"
   },
   "farıçım": {
    "dosya": "02c9175df093.mp3",
    "okunus": "farıçım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "a4c8db089e08"
+   "boyut": 2880,
+   "surum": "0c6a33d2e93c"
   },
   "fusaz": {
    "dosya": "146698c7b160.mp3",
    "okunus": "fusaz",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "522dee8abbba"
+   "boyut": 2880,
+   "surum": "0196d824df6d"
   },
   "fusazda": {
    "dosya": "a36c35d32768.mp3",
    "okunus": "fusazda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "2bf24023e948"
+   "boyut": 3456,
+   "surum": "9d55748129e3"
   },
   "fusazde": {
    "dosya": "22606f1872e6.mp3",
    "okunus": "fusazde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "f466637abcb0"
+   "boyut": 3456,
+   "surum": "282ce71d61df"
   },
   "fusazta": {
    "dosya": "9cffe0327118.mp3",
    "okunus": "fusazta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "56a684563aaf"
+   "boyut": 4032,
+   "surum": "ae61a2b45dc3"
   },
   "fusazte": {
    "dosya": "f4de0b9e7ec5.mp3",
    "okunus": "fusazte",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "5fbbf857dfa4"
+   "boyut": 3648,
+   "surum": "c4d6092505a1"
   },
   "fuzak": {
    "dosya": "962de8d16d20.mp3",
    "okunus": "fuzak",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2717,
-   "surum": "a387adbf8752"
+   "boyut": 2784,
+   "surum": "7a981bba1d87"
   },
   "fuzakim": {
    "dosya": "ccc2b7b3bb9c.mp3",
    "okunus": "fuzakim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "42a123f3a96f"
+   "boyut": 4224,
+   "surum": "0c0147e06959"
   },
   "fuzakum": {
    "dosya": "2c5db37c0eba.mp3",
    "okunus": "fuzakum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "b478d843bf3f"
+   "boyut": 4128,
+   "surum": "9e7c99c85e40"
   },
   "fuzaküm": {
    "dosya": "2ffffd767dad.mp3",
    "okunus": "fuzaküm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "05937badfde0"
+   "boyut": 4224,
+   "surum": "7e162a9b8df8"
   },
   "fuzakım": {
    "dosya": "05b254d6ebbe.mp3",
    "okunus": "fuzakım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "5b80cd1e423a"
+   "boyut": 2976,
+   "surum": "1302f50fac1a"
   },
   "fuzağım": {
    "dosya": "78830170390a.mp3",
    "okunus": "fuzağım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "b67c7040aa3c"
+   "boyut": 3648,
+   "surum": "06c870f6fb65"
   },
   "föle": {
    "dosya": "1054677a61e0.mp3",
    "okunus": "föle",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2299,
-   "surum": "cf748bf345a8"
+   "boyut": 2784,
+   "surum": "11f64df37726"
   },
   "fölea": {
    "dosya": "5bbf4ce652fe.mp3",
    "okunus": "fölea",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2717,
-   "surum": "3c3fd65fd12f"
+   "boyut": 3264,
+   "surum": "bbdbcfa08655"
   },
   "fölee": {
    "dosya": "b357810d464b.mp3",
    "okunus": "fölee",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2612,
-   "surum": "c5b4c1d93729"
+   "boyut": 3360,
+   "surum": "aafd3dde19ea"
   },
   "föleya": {
    "dosya": "d59d8b1b0fc3.mp3",
    "okunus": "föleya",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "e6681b585969"
+   "boyut": 3264,
+   "surum": "b4308679c81c"
   },
   "föleye": {
    "dosya": "00456bccfb58.mp3",
    "okunus": "föleye",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "15a7f96b7df2"
+   "boyut": 2976,
+   "surum": "ea1a4d1f3657"
   },
   "fünek": {
    "dosya": "ee3d4290f490.mp3",
    "okunus": "fünek",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2508,
-   "surum": "fa9495c163b1"
+   "boyut": 3072,
+   "surum": "b3a2a952d708"
   },
   "fünekim": {
    "dosya": "37fdf733cfa9.mp3",
    "okunus": "fünekim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "ad5b0a49c939"
+   "boyut": 3456,
+   "surum": "302e161b1d20"
   },
   "fünekum": {
    "dosya": "05c9496519de.mp3",
    "okunus": "fünekum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "38a72f645605"
+   "boyut": 3840,
+   "surum": "e399d60f74dd"
   },
   "füneküm": {
    "dosya": "2435c8dbb18c.mp3",
    "okunus": "füneküm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "bb6ae6b5691a"
+   "boyut": 3168,
+   "surum": "a2261fb1f571"
   },
   "fünekım": {
    "dosya": "8f57ecfeb9f1.mp3",
    "okunus": "fünekım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "e73998337ba3"
+   "boyut": 2976,
+   "surum": "f0ba73fda28d"
   },
   "füneğim": {
    "dosya": "db15669a2b09.mp3",
    "okunus": "füneğim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "0ecadd2f8b89"
+   "boyut": 3168,
+   "surum": "e28361c1bf53"
   },
   "fıngıl": {
    "dosya": "7a99027c4e06.mp3",
    "okunus": "fıngıl",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "b32b2d7cb56b"
+   "boyut": 2688,
+   "surum": "3fff4f8eaa29"
   },
   "fıngıllar": {
    "dosya": "387c0341a112.mp3",
    "okunus": "fıngıllar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 6165,
-   "surum": "b50fc106e683"
+   "boyut": 3936,
+   "surum": "3b354397bc4b"
   },
   "fıngıller": {
    "dosya": "c82eb29f21c6.mp3",
    "okunus": "fıngıller",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "6a4e9b1bd375"
+   "boyut": 3552,
+   "surum": "f20c4579ae41"
   },
   "fıstık": {
    "dosya": "c754836ea2df.mp3",
    "okunus": "fıstık",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 3448,
-   "surum": "bead672ce341"
+   "boyut": 2688,
+   "surum": "bfb536dc8b4c"
   },
   "fıstıkcı": {
    "dosya": "cb7e6da885f5.mp3",
    "okunus": "fıstıkcı",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 4389,
-   "surum": "b76e458503a0"
+   "boyut": 3840,
+   "surum": "ea46680e90f7"
   },
   "fıstıkçı": {
    "dosya": "187a3d63972b.mp3",
    "okunus": "fıstıkçı",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 4284,
-   "surum": "a01c08cd31aa"
+   "boyut": 3840,
+   "surum": "d23f91d30b86"
   },
   "fıstıkı": {
    "dosya": "3515e8872702.mp3",
    "okunus": "fıstıkı",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 3239,
-   "surum": "3815f883dfea"
+   "boyut": 3648,
+   "surum": "c62e35b4c625"
   },
   "fıstığı": {
    "dosya": "c5f1db14a2a0.mp3",
    "okunus": "fıstığı",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 2717,
-   "surum": "adf155fc0b75"
+   "boyut": 3264,
+   "surum": "8ff5f4ea4ad4"
   },
   "fıtay": {
    "dosya": "f8ed4427403b.mp3",
    "okunus": "fıtay",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "a1ef7fe1814d"
+   "boyut": 2880,
+   "surum": "3c04b48a118b"
   },
   "fıtaylar": {
    "dosya": "a525a8259c51.mp3",
    "okunus": "fıtaylar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "d9549dbf348f"
+   "boyut": 2976,
+   "surum": "46b2f3b0d663"
   },
   "fıtayler": {
    "dosya": "49a606f87e40.mp3",
    "okunus": "fıtayler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "8856c9846ac4"
+   "boyut": 3648,
+   "surum": "7901b9a84dbb"
   },
   "gagır": {
    "dosya": "e8945c39e3e8.mp3",
    "okunus": "gagır",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "a6535500fc6a"
+   "boyut": 2592,
+   "surum": "41cfc2209cbf"
   },
   "gagırlar": {
    "dosya": "55554aacbae8.mp3",
    "okunus": "gagırlar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "94e1f53b6ed4"
+   "boyut": 3552,
+   "surum": "da42f6776765"
   },
   "gagırler": {
    "dosya": "52e1965f32f9.mp3",
    "okunus": "gagırler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "2c66a690eb4c"
+   "boyut": 4032,
+   "surum": "d51b6672437c"
   },
   "gefiz": {
    "dosya": "be47bfa56852.mp3",
    "okunus": "gefiz",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "0afa60a50784"
+   "boyut": 3552,
+   "surum": "8587522f8e8d"
   },
   "gefizlar": {
    "dosya": "6d647e8993f3.mp3",
    "okunus": "gefizlar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "25f12b118f5e"
+   "boyut": 4032,
+   "surum": "9802274395d2"
   },
   "gefizler": {
    "dosya": "f81ad4107535.mp3",
    "okunus": "gefizler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "45b03bd247d2"
+   "boyut": 3552,
+   "surum": "93e9e17a9dbf"
   },
   "geşür": {
    "dosya": "8a925b948339.mp3",
    "okunus": "geşür",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "25038f1c4b5f"
+   "boyut": 2880,
+   "surum": "3b1900914124"
   },
   "geşürim": {
    "dosya": "76037af3061f.mp3",
    "okunus": "geşürim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "bb4be37a40d5"
+   "boyut": 3840,
+   "surum": "0bccce5575c5"
   },
   "geşürum": {
    "dosya": "c999cb0820b6.mp3",
    "okunus": "geşürum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "dc26756d1866"
+   "boyut": 3168,
+   "surum": "00af6d7495d2"
   },
   "geşürüm": {
    "dosya": "7eb1e5fc599c.mp3",
    "okunus": "geşürüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "dfe73efffa3f"
+   "boyut": 3360,
+   "surum": "0e1cb0fa9f14"
   },
   "geşürım": {
    "dosya": "a153fd72e05a.mp3",
    "okunus": "geşürım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "3be4ece8d7c6"
+   "boyut": 3456,
+   "surum": "f072757e82da"
   },
   "gosay": {
    "dosya": "1b47da80bc4b.mp3",
    "okunus": "gosay",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "26d85f615662"
+   "boyut": 2976,
+   "surum": "85941388c550"
   },
   "gosaylar": {
    "dosya": "a888f50ec702.mp3",
    "okunus": "gosaylar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "1d493bfaf628"
+   "boyut": 3552,
+   "surum": "78842723d965"
   },
   "gosayler": {
    "dosya": "e49a93bad2e5.mp3",
    "okunus": "gosayler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "4a5e49ef8cee"
+   "boyut": 3648,
+   "surum": "9c570313ef6d"
   },
   "goçu": {
    "dosya": "3b517b214e54.mp3",
    "okunus": "goçu",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2717,
-   "surum": "509a330feb2e"
+   "boyut": 2784,
+   "surum": "22bba8f8f77c"
   },
   "goçua": {
    "dosya": "72782cbeec04.mp3",
    "okunus": "goçua",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "c7fed5443b5c"
+   "boyut": 3360,
+   "surum": "19fbf2941cb1"
   },
   "goçue": {
    "dosya": "dce021ee3476.mp3",
    "okunus": "goçue",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "82c70dba2a19"
+   "boyut": 3168,
+   "surum": "ab667a2b69b6"
   },
   "goçuya": {
    "dosya": "4726d5a97678.mp3",
    "okunus": "goçuya",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "ca2d62837aa1"
+   "boyut": 3072,
+   "surum": "2d404aad2298"
   },
   "goçuye": {
    "dosya": "ed79f39eb25f.mp3",
    "okunus": "goçuye",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "a9191903a759"
+   "boyut": 2976,
+   "surum": "9e76958c9464"
   },
   "gukam": {
    "dosya": "be4425d15ea5.mp3",
    "okunus": "gukam",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "adbd060fef8f"
+   "boyut": 2784,
+   "surum": "7f43c6c4245a"
   },
   "gukamda": {
    "dosya": "de1c4d071713.mp3",
    "okunus": "gukamda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "6b9fb1831cf0"
+   "boyut": 3840,
+   "surum": "8f5d49b25093"
   },
   "gukamde": {
    "dosya": "1591f21924ed.mp3",
    "okunus": "gukamde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "a7aa603e456b"
+   "boyut": 3456,
+   "surum": "f386dfdbd8f9"
   },
   "gukamta": {
    "dosya": "61d474dc980b.mp3",
    "okunus": "gukamta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "0453f663fff8"
+   "boyut": 3648,
+   "surum": "e68810caa5c5"
   },
   "gukamte": {
    "dosya": "ff0ec637009d.mp3",
    "okunus": "gukamte",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "e5bd3d4aa9ac"
+   "boyut": 3648,
+   "surum": "aa196f8b89b9"
   },
   "göpecim": {
    "dosya": "335b47e49146.mp3",
    "okunus": "göpecim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "7535abcbeda8"
+   "boyut": 3072,
+   "surum": "07f848378546"
   },
   "göpeç": {
    "dosya": "0a5657549c42.mp3",
    "okunus": "göpeç",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "928b212472cb"
+   "boyut": 3360,
+   "surum": "c21c835b561f"
   },
   "göpeçim": {
    "dosya": "9c29f6357d4f.mp3",
    "okunus": "göpeçim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "5ce431bfe777"
+   "boyut": 3072,
+   "surum": "aab3ddb4bdbe"
   },
   "göpeçum": {
    "dosya": "49b8cd207491.mp3",
    "okunus": "göpeçum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "8ebb6c2e67f8"
+   "boyut": 3552,
+   "surum": "b1f8298ad7ec"
   },
   "göpeçüm": {
    "dosya": "796b6bdf5376.mp3",
    "okunus": "göpeçüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "16dfef16fdb5"
+   "boyut": 3840,
+   "surum": "2d65c5fe1361"
   },
   "göpeçım": {
    "dosya": "ef9b7b3a86ee.mp3",
    "okunus": "göpeçım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "f6512eff1d22"
+   "boyut": 3744,
+   "surum": "d2e638e8cbec"
   },
   "göz": {
    "dosya": "57eaf138cd38.mp3",
    "okunus": "göz",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy",
     "bahce"
    ],
-   "boyut": 2717,
-   "surum": "8dc12484cd78"
+   "boyut": 2688,
+   "surum": "65ea2f3cb155"
   },
   "gözim": {
    "dosya": "91026fd0d5f5.mp3",
    "okunus": "gözim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 3135,
-   "surum": "1bff58ab9981"
+   "boyut": 2688,
+   "surum": "2502aedcdbad"
   },
   "gözlar": {
    "dosya": "672954b30906.mp3",
    "okunus": "gözlar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 3344,
-   "surum": "fac524b0cd7a"
+   "boyut": 3552,
+   "surum": "53e49f45e1dc"
   },
   "gözler": {
    "dosya": "ed626ef37dfb.mp3",
    "okunus": "gözler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 3553,
-   "surum": "a56fc5a3af24"
+   "boyut": 3360,
+   "surum": "0fabeefae7c0"
   },
   "gözlük": {
    "dosya": "1bf93490cba9.mp3",
    "okunus": "gözlük",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 3135,
-   "surum": "d864e88b1679"
+   "boyut": 3072,
+   "surum": "6bd2c5f0204e"
   },
   "gözlükçü": {
    "dosya": "8c959bdd9e4b.mp3",
    "okunus": "gözlükçü",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 4180,
-   "surum": "f4db7c0d2b5b"
+   "boyut": 4224,
+   "surum": "5edaff68fff3"
   },
   "gözlükçüler": {
    "dosya": "90f6fb9ee083.mp3",
    "okunus": "gözlükçüler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 5120,
-   "surum": "02bf9d949557"
+   "boyut": 4800,
+   "surum": "ab9a3e8983b4"
   },
   "gözlükçüler: önce lük, sonra çü.": {
    "dosya": "6dfdcdde2498.mp3",
    "okunus": "gözlükçüler: önce lük, sonra çü.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 11912,
-   "surum": "a780ae4b0512"
+   "boyut": 12672,
+   "surum": "9fea5bf63ab8"
   },
   "gözum": {
    "dosya": "ef881bb69ad1.mp3",
    "okunus": "gözum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 2612,
-   "surum": "94a69200973a"
+   "boyut": 3072,
+   "surum": "a2383340a0c4"
   },
   "gözüm": {
    "dosya": "e8a424c10033.mp3",
    "okunus": "gözüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 2612,
-   "surum": "1e1a277260e4"
+   "boyut": 2688,
+   "surum": "1d7db9a7908e"
   },
   "gözım": {
    "dosya": "9c04446f853b.mp3",
    "okunus": "gözım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 3135,
-   "surum": "220958ce28e5"
+   "boyut": 3072,
+   "surum": "c731c32651bf"
   },
   "güfer": {
    "dosya": "f8ef9061632d.mp3",
    "okunus": "güfer",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "1618dcea0432"
+   "boyut": 2880,
+   "surum": "e7440d65b85c"
   },
   "güferlar": {
    "dosya": "f4c5b6e000a1.mp3",
    "okunus": "güferlar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4389,
-   "surum": "b91c2d2fed0f"
+   "boyut": 3840,
+   "surum": "a4f1d6f41bb5"
   },
   "güferler": {
    "dosya": "5e3b29cec15f.mp3",
    "okunus": "güferler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4180,
-   "surum": "405db4f14473"
+   "boyut": 4320,
+   "surum": "752fa787c50c"
   },
   "gül": {
    "dosya": "a205bbdfb728.mp3",
    "okunus": "gül",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 2299,
-   "surum": "4d7a47800a7f"
+   "boyut": 2400,
+   "surum": "1d1ebb33385e"
   },
   "gülim": {
    "dosya": "b6f7d8a9db96.mp3",
    "okunus": "gülim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 2717,
-   "surum": "86c30582822d"
+   "boyut": 2304,
+   "surum": "67768557ca36"
   },
   "gülum": {
    "dosya": "d81525f0f704.mp3",
    "okunus": "gülum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 2717,
-   "surum": "15998bb3bfc7"
+   "boyut": 3072,
+   "surum": "3575920aece5"
   },
   "gülüm": {
    "dosya": "a9066378c300.mp3",
    "okunus": "gülüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 2612,
-   "surum": "c6e6fd5dfac2"
+   "boyut": 2592,
+   "surum": "3bc75ef42d32"
   },
   "gülım": {
    "dosya": "3392de1c75b8.mp3",
    "okunus": "gülım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 3135,
-   "surum": "5eade7923847"
+   "boyut": 2976,
+   "surum": "e9eb1ee4c307"
   },
   "gıfaz": {
    "dosya": "fa5a59cac464.mp3",
    "okunus": "gıfaz",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "1320ccd0e081"
+   "boyut": 3264,
+   "surum": "1a89f20a2705"
   },
   "gıfazda": {
    "dosya": "38bab24071c2.mp3",
    "okunus": "gıfazda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4180,
-   "surum": "7ae68af3d440"
+   "boyut": 4128,
+   "surum": "56512137168f"
   },
   "gıfazde": {
    "dosya": "dd25ded0c28c.mp3",
    "okunus": "gıfazde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4493,
-   "surum": "ca3304edc24f"
+   "boyut": 3648,
+   "surum": "fc7d8ee2975c"
   },
   "gıfazta": {
    "dosya": "38d7dd248cf4.mp3",
    "okunus": "gıfazta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "0bfcc5206c11"
+   "boyut": 3744,
+   "surum": "f2fdad1fbbf8"
   },
   "gıfazte": {
    "dosya": "ca25a26384db.mp3",
    "okunus": "gıfazte",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4389,
-   "surum": "0247cb28b370"
+   "boyut": 3648,
+   "surum": "a6dfed96e631"
   },
   "gılay": {
    "dosya": "d03abc27c688.mp3",
    "okunus": "gılay",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "bd1fc21fd1b3"
+   "boyut": 2592,
+   "surum": "0d01b4e153c7"
   },
   "gılayda": {
    "dosya": "87eee9f6d673.mp3",
    "okunus": "gılayda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "58def47e2809"
+   "boyut": 3648,
+   "surum": "d6632e69e939"
   },
   "gılayde": {
    "dosya": "fa6b0f2f18a1.mp3",
    "okunus": "gılayde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "bb6beb3ea98e"
+   "boyut": 3744,
+   "surum": "581844a30330"
   },
   "gılayta": {
    "dosya": "763b4886762f.mp3",
    "okunus": "gılayta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "d11ae1aafb76"
+   "boyut": 3840,
+   "surum": "5d3f7d415f3d"
   },
   "gılayte": {
    "dosya": "a2f51a207b82.mp3",
    "okunus": "gılayte",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4180,
-   "surum": "f0bc4752eb74"
+   "boyut": 3744,
+   "surum": "f5f28438df65"
   },
   "i düz, ü yuvarlak. Yuvarlaklıkları uyuşmuyor.": {
    "dosya": "f9f8934daf10.mp3",
    "okunus": "i düz, ü yuvarlak. Yuvarlaklıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 15047,
-   "surum": "4445d360d10c"
+   "boyut": 16512,
+   "surum": "5609e9e7719b"
   },
   "i ince ve düz, u kalın ve yuvarlak. İkisi de uyuşmuyor.": {
    "dosya": "b23ffba74bd7.mp3",
    "okunus": "i ince ve düz, u kalın ve yuvarlak. İkisi de uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 16927,
-   "surum": "e315376f118a"
+   "boyut": 24768,
+   "surum": "1cc8e9a38f89"
   },
   "i ince, a kalın. Kalınlıkları uyuşmuyor.": {
    "dosya": "b7ac4994583f.mp3",
    "okunus": "i ince, a kalın. Kalınlıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 12643,
-   "surum": "9664a4fc4bd9"
+   "boyut": 14592,
+   "surum": "c9bdd2129bd5"
   },
   "i ince, ı kalın. Kalınlıkları uyuşmuyor.": {
    "dosya": "4f3cb6cb1385.mp3",
    "okunus": "i ince, ı kalın. Kalınlıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 12748,
-   "surum": "a24abd87dcb5"
+   "boyut": 16512,
+   "surum": "59789b3bcf01"
   },
   "im": {
    "dosya": "42a0d3068dfe.mp3",
    "okunus": "im",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 1776,
-   "surum": "29feffb6460c"
+   "boyut": 3360,
+   "surum": "8162b8f7f49a"
   },
-  "k taş, ekin başı da taş olur: t.": {
-   "dosya": "74eeadc9d7f9.mp3",
-   "okunus": "ke taş, ekin başı da taş olur: te.",
-   "hiz": 1.2,
+  "k sert, ekin başı da sert olur: t.": {
+   "dosya": "4db04e31d81e.mp3",
+   "okunus": "ke sert, ekin başı da sert olur: te.",
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 11180,
-   "surum": "cddb8db14674"
+   "boyut": 16320,
+   "surum": "5b5c80fc632e"
   },
-  "k taş, ekin başı da taş olur: ç.": {
-   "dosya": "e5d93ac37047.mp3",
-   "okunus": "ke taş, ekin başı da taş olur: çe.",
-   "hiz": 1.2,
+  "k sert, ekin başı da sert olur: ç.": {
+   "dosya": "66475b563b3d.mp3",
+   "okunus": "ke sert, ekin başı da sert olur: çe.",
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 11389,
-   "surum": "5108c35a9b14"
-  },
-  "k ünlüden önce jöle olur: ğ.": {
-   "dosya": "3893ca3ab5fe.mp3",
-   "okunus": "ke ünlüden önce jöle olur: yumuşak ge.",
-   "hiz": 1.2,
-   "bolgeler": [
-    "dukkan"
-   ],
-   "boyut": 11703,
-   "surum": "0030927ab60a"
+   "boyut": 12576,
+   "surum": "aded8e07d1f4"
   },
   "kalem": {
    "dosya": "dc569c4fa8b3.mp3",
    "okunus": "kalem",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 2612,
-   "surum": "32a5c0ab68d7"
+   "boyut": 2880,
+   "surum": "85dbc271413e"
   },
   "kalemlik": {
    "dosya": "5cd9480c2cfa.mp3",
    "okunus": "kalemlik",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 3657,
-   "surum": "f2bc8805e61d"
+   "boyut": 3360,
+   "surum": "6d618cfa2a57"
   },
   "kalemliğim": {
    "dosya": "3d24945fd279.mp3",
    "okunus": "kalemliğim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 4493,
-   "surum": "b784e207c6e5"
+   "boyut": 3744,
+   "surum": "d02b155484e0"
   },
   "kedi": {
    "dosya": "4606dc1cf44b.mp3",
    "okunus": "kedi",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 1985,
-   "surum": "0d3d9a485047"
+   "boyut": 2688,
+   "surum": "4d2d4cdee536"
   },
   "kedicik": {
    "dosya": "6a3296a06344.mp3",
    "okunus": "kedicik",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 3553,
-   "surum": "c9298c0cff7b"
+   "boyut": 3552,
+   "surum": "507d1f52b4e8"
   },
   "kediciğim": {
    "dosya": "8e103e0b9267.mp3",
    "okunus": "kediciğim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 3553,
-   "surum": "2f1d285a770e"
+   "boyut": 2784,
+   "surum": "d96639dc7568"
   },
   "kenek": {
    "dosya": "29ffe145ac73.mp3",
    "okunus": "kenek",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2717,
-   "surum": "faee92a61fe4"
+   "boyut": 3072,
+   "surum": "ba918930d1ed"
   },
   "kenekda": {
    "dosya": "b8575085a8de.mp3",
    "okunus": "kenekda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "c7d55a8b6996"
+   "boyut": 3072,
+   "surum": "0752fd21089e"
   },
   "kenekde": {
    "dosya": "e003881634ea.mp3",
    "okunus": "kenekde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "0c8427c3d80a"
+   "boyut": 3264,
+   "surum": "dcffa7f36299"
   },
   "kenekta": {
    "dosya": "4fdfaf5bdd43.mp3",
    "okunus": "kenekta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "718ee4052264"
+   "boyut": 3360,
+   "surum": "b5a48effc466"
   },
   "kenekte": {
    "dosya": "be1c94581b5f.mp3",
    "okunus": "kenekte",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "74e010f1410f"
+   "boyut": 3360,
+   "surum": "8368a65d5570"
   },
   "kitabım": {
    "dosya": "33c7eadbee4f.mp3",
    "okunus": "kitabım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 3135,
-   "surum": "1c5791a1f011"
+   "boyut": 3072,
+   "surum": "21a4368b0105"
   },
   "kitap": {
    "dosya": "16c7a10f07a5.mp3",
    "okunus": "kitap",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan",
     "bahce"
    ],
-   "boyut": 3030,
-   "surum": "9ff83d4daeda"
+   "boyut": 2880,
+   "surum": "f02e237b13ec"
   },
   "kitapda": {
    "dosya": "c6bbf70127bd.mp3",
    "okunus": "kitapda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 3762,
-   "surum": "993f58a75ee7"
+   "boyut": 3360,
+   "surum": "3b7d957ffa14"
   },
   "kitapta": {
    "dosya": "a704fc3135f0.mp3",
    "okunus": "kitapta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 3657,
-   "surum": "1a1f00b2298b"
+   "boyut": 3360,
+   "surum": "7b51d98c335c"
   },
   "kitapçık": {
    "dosya": "c9f12ca024c0.mp3",
    "okunus": "kitapçık",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 3971,
-   "surum": "e4021ebf38f2"
+   "boyut": 3360,
+   "surum": "e1ee1cc33793"
   },
   "kitapçıklar": {
    "dosya": "efb1acebf66a.mp3",
    "okunus": "kitapçıklar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 4911,
-   "surum": "fdba7d5ab52a"
+   "boyut": 4032,
+   "surum": "b2fd28e5a688"
   },
   "kitapım": {
    "dosya": "27f463eeac38.mp3",
    "okunus": "kitapım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 3553,
-   "surum": "c58a45eb2dd2"
+   "boyut": 2880,
+   "surum": "2b0717289adf"
   },
   "kolgan": {
    "dosya": "374f49dba615.mp3",
    "okunus": "kolgan",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "507e9553a9c0"
+   "boyut": 3360,
+   "surum": "7b6c6b32301d"
   },
   "kolganda": {
    "dosya": "08af1031781d.mp3",
    "okunus": "kolganda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4075,
-   "surum": "517afe1eac3d"
+   "boyut": 3840,
+   "surum": "cafde6f7f711"
   },
   "kolgande": {
    "dosya": "5ffb639db3cc.mp3",
    "okunus": "kolgande",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "f9c0edd7cb9e"
+   "boyut": 4032,
+   "surum": "4262c465f32e"
   },
   "kolganta": {
    "dosya": "a0d4e2848b0f.mp3",
    "okunus": "kolganta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4180,
-   "surum": "a20c1ef4bda4"
+   "boyut": 3840,
+   "surum": "8e19c751edd8"
   },
   "kolgante": {
    "dosya": "e592c23b779e.mp3",
    "okunus": "kolgante",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "99fb9cf8bfd5"
+   "boyut": 4032,
+   "surum": "cd6b6833c576"
   },
   "kubu": {
    "dosya": "843591f1dc2f.mp3",
    "okunus": "kubu",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2299,
-   "surum": "1d0d72de13b5"
+   "boyut": 2592,
+   "surum": "d3030ee05f87"
   },
   "kubua": {
    "dosya": "723f43e8db4e.mp3",
    "okunus": "kubua",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2508,
-   "surum": "d22a41b2293c"
+   "boyut": 2976,
+   "surum": "bf2f06a6c300"
   },
   "kubue": {
    "dosya": "d2e886d45213.mp3",
    "okunus": "kubue",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "7be89360c493"
+   "boyut": 2688,
+   "surum": "6c8782449521"
   },
   "kubuya": {
    "dosya": "c83a5a26f0d9.mp3",
    "okunus": "kubuya",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "172b024da125"
+   "boyut": 2976,
+   "surum": "afe7984b31c5"
   },
   "kubuye": {
    "dosya": "5132d2ea9361.mp3",
    "okunus": "kubuye",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "df51a73c3aa8"
+   "boyut": 2880,
+   "surum": "01068050af6c"
   },
   "kulde": {
    "dosya": "064e6cf532a8.mp3",
    "okunus": "kulde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2508,
-   "surum": "eedd7766fe82"
+   "boyut": 2688,
+   "surum": "dfbdc1392727"
   },
   "kuldeda": {
    "dosya": "25902dd0b1ad.mp3",
    "okunus": "kuldeda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "2f9765be1bb6"
+   "boyut": 3360,
+   "surum": "6f73da0bf4b7"
   },
   "kuldede": {
    "dosya": "a8c00ea9800a.mp3",
    "okunus": "kuldede",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "cc4ca6e72508"
+   "boyut": 3456,
+   "surum": "b85a020012e6"
   },
   "kuldeta": {
    "dosya": "c01bea1e68eb.mp3",
    "okunus": "kuldeta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "3033960a9e23"
+   "boyut": 3360,
+   "surum": "443eeb90b398"
   },
   "kuldete": {
    "dosya": "5fe46e99de48.mp3",
    "okunus": "kuldete",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "6d9198ac5fa0"
+   "boyut": 3168,
+   "surum": "5069200a5e95"
   },
   "kuçal": {
    "dosya": "3aa30691f624.mp3",
    "okunus": "kuçal",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "9361e3ddd08d"
+   "boyut": 2880,
+   "surum": "df4b7fe6813a"
   },
   "kuçallar": {
    "dosya": "823cc0049893.mp3",
    "okunus": "kuçallar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "b8603dd28936"
+   "boyut": 3936,
+   "surum": "c011587d04fd"
   },
   "kuçaller": {
    "dosya": "0ce4be39e4a3.mp3",
    "okunus": "kuçaller",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 6165,
-   "surum": "135c581d8965"
+   "boyut": 3840,
+   "surum": "b09fcabe6fa5"
   },
   "kuş": {
    "dosya": "6d4029c7cb26.mp3",
    "okunus": "kuş",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 5120,
-   "surum": "29cdeb38b171"
+   "boyut": 2496,
+   "surum": "0dc8c68ec6f9"
   },
   "kuşlar": {
    "dosya": "685e1b0f9db3.mp3",
    "okunus": "kuşlar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 6165,
-   "surum": "90af057b667d"
+   "boyut": 2880,
+   "surum": "27ce8d90d741"
   },
   "kuşler": {
    "dosya": "1f9d221e516a.mp3",
    "okunus": "kuşler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 5329,
-   "surum": "ee08540f38ea"
+   "boyut": 3360,
+   "surum": "450ac6c142ee"
   },
   "köpek": {
    "dosya": "5f98acbf1e9a.mp3",
    "okunus": "köpek",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 2717,
-   "surum": "8aa56e133b1a"
+   "boyut": 2976,
+   "surum": "f95d1e763a94"
   },
   "köpekim": {
    "dosya": "00bf451432a5.mp3",
    "okunus": "köpekim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 3448,
-   "surum": "9ca8b49fad28"
+   "boyut": 3744,
+   "surum": "3e190d2f5935"
   },
   "köpeğim": {
    "dosya": "6e081cf86c60.mp3",
    "okunus": "köpeğim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 3135,
-   "surum": "44babb9a6022"
+   "boyut": 3168,
+   "surum": "996857697d4e"
   },
   "kıbı": {
    "dosya": "c854bd0a795f.mp3",
    "okunus": "kıbı",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2508,
-   "surum": "64838afaccc9"
+   "boyut": 2496,
+   "surum": "8effa6b5df81"
   },
   "kıbıa": {
    "dosya": "2e2ca1c50414.mp3",
    "okunus": "kıbıa",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "b31ff4f2c048"
+   "boyut": 3264,
+   "surum": "d04567751e0c"
   },
   "kıbıe": {
    "dosya": "de87021f5dc8.mp3",
    "okunus": "kıbıe",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "ada80b804428"
+   "boyut": 2688,
+   "surum": "c4e225d6657a"
   },
   "kıbıya": {
    "dosya": "eb951d6332a6.mp3",
    "okunus": "kıbıya",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "20f3d3aa6e70"
+   "boyut": 2784,
+   "surum": "b4556127bab9"
   },
   "kıbıye": {
    "dosya": "b839a58273eb.mp3",
    "okunus": "kıbıye",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "f88a67da00de"
+   "boyut": 3072,
+   "surum": "0f934cad831e"
   },
   "kıgır": {
    "dosya": "1f9af9a028b2.mp3",
    "okunus": "kıgır",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2612,
-   "surum": "5afa2f730ee2"
+   "boyut": 2880,
+   "surum": "a564675c2ce9"
   },
   "kıgırlar": {
    "dosya": "79eb5b973ace.mp3",
    "okunus": "kıgırlar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "1cd362df0f39"
+   "boyut": 3456,
+   "surum": "e2dff8f6e7f5"
   },
   "kıgırler": {
    "dosya": "7027de6dc593.mp3",
    "okunus": "kıgırler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "f93e046b77ea"
+   "boyut": 3552,
+   "surum": "67de356225b3"
   },
   "kız": {
    "dosya": "997d71813ec8.mp3",
    "okunus": "kız",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 2403,
-   "surum": "f03ae7c64924"
+   "boyut": 2016,
+   "surum": "f0663084bd47"
   },
   "kızim": {
    "dosya": "b0cc7b9e2116.mp3",
    "okunus": "kızim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 2717,
-   "surum": "3eb5520a7676"
+   "boyut": 2592,
+   "surum": "46c6c29b9c1d"
   },
   "kızum": {
    "dosya": "23beca77e5f2.mp3",
    "okunus": "kızum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 2403,
-   "surum": "ad583a25d089"
+   "boyut": 2688,
+   "surum": "2c25be27abce"
   },
   "kızüm": {
    "dosya": "637f65279120.mp3",
    "okunus": "kızüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 2612,
-   "surum": "a17732f257df"
+   "boyut": 2784,
+   "surum": "80568817c20a"
   },
   "kızım": {
    "dosya": "a4ba8882e84a.mp3",
    "okunus": "kızım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 2612,
-   "surum": "1358046240c8"
+   "boyut": 2400,
+   "surum": "78fd5ada6a7f"
   },
-  "l jöle, ekin başı da jöle kalır: d.": {
-   "dosya": "f1332d978b98.mp3",
-   "okunus": "le jöle, ekin başı da jöle kalır: de.",
-   "hiz": 1.2,
+  "l yumuşak, ekin başı da yumuşak kalır: d.": {
+   "dosya": "7f23c2451f18.mp3",
+   "okunus": "le yumuşak, ekin başı da yumuşak kalır: de.",
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 11494,
-   "surum": "a433cd03acf6"
+   "boyut": 21792,
+   "surum": "45e529b1e710"
   },
   "lar": {
    "dosya": "21a871b1445e.mp3",
    "okunus": "lar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 2717,
-   "surum": "df9af3090e63"
+   "boyut": 2016,
+   "surum": "5e4d54013570"
   },
   "ler": {
    "dosya": "40d748da9e4d.mp3",
    "okunus": "ler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 2403,
-   "surum": "c85384f8cac8"
+   "boyut": 2304,
+   "surum": "9b9784e59a74"
   },
   "lik": {
    "dosya": "73a35b0416d1.mp3",
    "okunus": "lik",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 2403,
-   "surum": "6e7eae242335"
+   "boyut": 2400,
+   "surum": "4ec070a09fc0"
   },
   "luk": {
    "dosya": "041c5db4909d.mp3",
    "okunus": "luk",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 1985,
-   "surum": "c867e8220482"
+   "boyut": 1824,
+   "surum": "49436a5ade54"
   },
   "lük": {
    "dosya": "f6409a42d1e7.mp3",
    "okunus": "lük",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 2508,
-   "surum": "a80e7dfd0188"
+   "boyut": 2400,
+   "surum": "9e949ca8e393"
   },
   "lı": {
    "dosya": "bf377a2131d2.mp3",
    "okunus": "lı",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 2090,
-   "surum": "8d6c11bc94ce"
+   "boyut": 1920,
+   "surum": "648be73e32f8"
   },
-  "m jöle, ekin başı da jöle kalır: d.": {
-   "dosya": "1f43696b6e2b.mp3",
-   "okunus": "me jöle, ekin başı da jöle kalır: de.",
-   "hiz": 1.2,
+  "m yumuşak, ekin başı da yumuşak kalır: d.": {
+   "dosya": "7156ae8ec291.mp3",
+   "okunus": "me yumuşak, ekin başı da yumuşak kalır: de.",
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 11494,
-   "surum": "a2fcd22b796d"
+   "boyut": 18432,
+   "surum": "eb03826e4e7e"
   },
   "motu": {
    "dosya": "0854b8bdb122.mp3",
    "okunus": "motu",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2299,
-   "surum": "8df9393b974e"
+   "boyut": 2784,
+   "surum": "f3d0e2d01720"
   },
   "motua": {
    "dosya": "9cf2ae37d9bf.mp3",
    "okunus": "motua",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "572f1cb0448c"
+   "boyut": 3264,
+   "surum": "aa1665718d84"
   },
   "motue": {
    "dosya": "64b204fc39bd.mp3",
    "okunus": "motue",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "73389359eccf"
+   "boyut": 2976,
+   "surum": "b35d6a65e222"
   },
   "motuya": {
    "dosya": "f09d94f80be0.mp3",
    "okunus": "motuya",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "7706ffb06cbe"
+   "boyut": 3264,
+   "surum": "a81d11d57ed3"
   },
   "motuye": {
    "dosya": "82eb7caddbaf.mp3",
    "okunus": "motuye",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "4f505446f2ff"
+   "boyut": 3360,
+   "surum": "d527fe364900"
   },
   "mödüdüm": {
    "dosya": "d6707aae3530.mp3",
    "okunus": "mödüdüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "69c54e52ba1f"
+   "boyut": 3264,
+   "surum": "1be7c974ec97"
   },
   "mödüt": {
    "dosya": "334a0b3a380f.mp3",
    "okunus": "mödüt",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "7baa8fd5195d"
+   "boyut": 3264,
+   "surum": "e51154cb8284"
   },
   "mödütim": {
    "dosya": "ed9183be9083.mp3",
    "okunus": "mödütim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "a2b8211e51dc"
+   "boyut": 3552,
+   "surum": "806b4def9e71"
   },
   "mödütum": {
    "dosya": "19df0562e757.mp3",
    "okunus": "mödütum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "051cafc2fe3b"
+   "boyut": 3456,
+   "surum": "a0d7aa6c8f4f"
   },
   "mödütüm": {
    "dosya": "fbc1959d753b.mp3",
    "okunus": "mödütüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "1cd164b828a8"
+   "boyut": 3552,
+   "surum": "8d796cc9ea2f"
   },
   "mödütım": {
    "dosya": "48dc3c17b2ac.mp3",
    "okunus": "mödütım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "4ec688f8053d"
+   "boyut": 3168,
+   "surum": "b5f45d5167fb"
   },
   "mömüş": {
    "dosya": "f94fe2b291b9.mp3",
    "okunus": "mömüş",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "aabb1847ec34"
+   "boyut": 3168,
+   "surum": "ed1114ba6daa"
   },
   "mömüşda": {
    "dosya": "1f4ed57570c7.mp3",
    "okunus": "mömüşda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "f4dacc096998"
+   "boyut": 3840,
+   "surum": "978562dfb6fc"
   },
   "mömüşde": {
    "dosya": "5b55bb3da629.mp3",
    "okunus": "mömüşde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "faa9772011de"
+   "boyut": 2592,
+   "surum": "5c28178602d7"
   },
   "mömüşta": {
    "dosya": "359a9069da2d.mp3",
    "okunus": "mömüşta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "d88f8b46ef8b"
+   "boyut": 3552,
+   "surum": "e725338c017c"
   },
   "mömüşte": {
    "dosya": "044a19ddfbb4.mp3",
    "okunus": "mömüşte",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "455c86f84bcb"
+   "boyut": 3648,
+   "surum": "808309f16d3f"
   },
   "möver": {
    "dosya": "d8a3a56de0d2.mp3",
    "okunus": "möver",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "4a4f85c0b58c"
+   "boyut": 3072,
+   "surum": "fd7e5443e791"
   },
   "möverlar": {
    "dosya": "401f1b7a4485.mp3",
    "okunus": "möverlar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "f9e5f516f0fa"
+   "boyut": 4032,
+   "surum": "460b04092b0c"
   },
   "möverler": {
    "dosya": "7e5280b9344d.mp3",
    "okunus": "möverler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "be02fe727fda"
+   "boyut": 3840,
+   "surum": "7f59fb2b4aa6"
   },
   "mılal": {
    "dosya": "a880238f55b7.mp3",
    "okunus": "mılal",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "e36288296ebe"
+   "boyut": 2688,
+   "surum": "0d4da9eaf18f"
   },
   "mılalda": {
    "dosya": "8369688ea183.mp3",
    "okunus": "mılalda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "bd4ca25d5d8f"
+   "boyut": 3360,
+   "surum": "30985e6dc82f"
   },
   "mılalde": {
    "dosya": "47fa45d0d68a.mp3",
    "okunus": "mılalde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "d10af7892e90"
+   "boyut": 3744,
+   "surum": "28dcf3bb7318"
   },
   "mılalta": {
    "dosya": "79289ea19f32.mp3",
    "okunus": "mılalta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "27d5debec318"
+   "boyut": 4128,
+   "surum": "2966a79a60ca"
   },
   "mılalte": {
    "dosya": "575e97cb1f37.mp3",
    "okunus": "mılalte",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "abef9c2edc2a"
+   "boyut": 4032,
+   "surum": "44266af1d52c"
   },
   "mıtı": {
    "dosya": "f283fbf9acff.mp3",
    "okunus": "mıtı",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "bd9025e7254d"
+   "boyut": 2688,
+   "surum": "0ecdc5d1b530"
   },
   "mıtıa": {
    "dosya": "bf88db810f6c.mp3",
    "okunus": "mıtıa",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "5e73ed308e66"
+   "boyut": 3072,
+   "surum": "d0689355eac5"
   },
   "mıtıe": {
    "dosya": "f253867ec025.mp3",
    "okunus": "mıtıe",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "110fb42519a0"
+   "boyut": 2880,
+   "surum": "0effa3c44b67"
   },
   "mıtıya": {
    "dosya": "1d8a81e994a3.mp3",
    "okunus": "mıtıya",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "ea2fc6f1ca78"
+   "boyut": 3168,
+   "surum": "fe32216a078e"
   },
   "mıtıye": {
    "dosya": "d00f411f597c.mp3",
    "okunus": "mıtıye",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "fd807116f730"
+   "boyut": 3264,
+   "surum": "e36d4018721e"
   },
-  "n jöle, ekin başı da jöle kalır: d.": {
-   "dosya": "3c86c437d973.mp3",
-   "okunus": "ne jöle, ekin başı da jöle kalır: de.",
-   "hiz": 1.2,
+  "n yumuşak, ekin başı da yumuşak kalır: d.": {
+   "dosya": "5a6842cc3dbe.mp3",
+   "okunus": "ne yumuşak, ekin başı da yumuşak kalır: de.",
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 11076,
-   "surum": "af07ccc48ba6"
+   "boyut": 13824,
+   "surum": "7bab76942230"
   },
   "nebiş": {
    "dosya": "adf2fe2b0f8b.mp3",
    "okunus": "nebiş",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "ca63ec5de9e6"
+   "boyut": 3264,
+   "surum": "6978198345c4"
   },
   "nebişda": {
    "dosya": "72c5531c9192.mp3",
    "okunus": "nebişda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4180,
-   "surum": "62d748a64561"
+   "boyut": 3456,
+   "surum": "70b1ef0a0e1e"
   },
   "nebişde": {
    "dosya": "100a9d64472d.mp3",
    "okunus": "nebişde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "27e4d9a63f65"
+   "boyut": 3456,
+   "surum": "9bcbd6402104"
   },
   "nebişta": {
    "dosya": "98aad135e092.mp3",
    "okunus": "nebişta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "a750fcd9ce45"
+   "boyut": 3648,
+   "surum": "3c6ffc7bcc42"
   },
   "nebişte": {
    "dosya": "c0f8723aa210.mp3",
    "okunus": "nebişte",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "135e7a2aa8ea"
+   "boyut": 4032,
+   "surum": "c61ee0e8f338"
   },
   "nevik": {
    "dosya": "ce099a233ce7.mp3",
    "okunus": "nevik",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "67c954a03f63"
+   "boyut": 3264,
+   "surum": "0e35f168cb5e"
   },
   "nevikim": {
    "dosya": "946f0adf5549.mp3",
    "okunus": "nevikim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "b9be2518e75e"
+   "boyut": 3456,
+   "surum": "e02fa80ba29e"
   },
   "nevikum": {
    "dosya": "a0dd3a99f870.mp3",
    "okunus": "nevikum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4075,
-   "surum": "39dc42591c98"
+   "boyut": 3552,
+   "surum": "f7fb9686b0a3"
   },
   "neviküm": {
    "dosya": "c7b4c12318d4.mp3",
    "okunus": "neviküm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "612754cac409"
+   "boyut": 4032,
+   "surum": "0d39975c32e0"
   },
   "nevikım": {
    "dosya": "cfc1da396b86.mp3",
    "okunus": "nevikım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "67e02679d5bb"
+   "boyut": 3744,
+   "surum": "6757b23a5ae1"
   },
   "neviğim": {
    "dosya": "f11b4eab935c.mp3",
    "okunus": "neviğim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "9e63c12881ef"
+   "boyut": 3264,
+   "surum": "b6827f90e8a0"
   },
   "nibi": {
    "dosya": "199d13f6fb2a.mp3",
    "okunus": "nibi",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "ac0334653aa9"
+   "boyut": 2880,
+   "surum": "49d2f7036c82"
   },
   "nibia": {
    "dosya": "1baa750c4c8b.mp3",
    "okunus": "nibia",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "f3dbf521fea8"
+   "boyut": 3360,
+   "surum": "55f1482dbdf6"
   },
   "nibie": {
    "dosya": "3bd0b9aaede5.mp3",
    "okunus": "nibie",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "b323859d125b"
+   "boyut": 3072,
+   "surum": "b2cf9e614bec"
   },
   "nibiya": {
    "dosya": "551a4fa65994.mp3",
    "okunus": "nibiya",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "dc1a9cb21430"
+   "boyut": 3744,
+   "surum": "69f54b35293c"
   },
   "nibiye": {
    "dosya": "b1339e924848.mp3",
    "okunus": "nibiye",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "b059c1a42f10"
+   "boyut": 3264,
+   "surum": "b48f2ea22aef"
   },
   "nofa": {
    "dosya": "4a0bd8b80d26.mp3",
    "okunus": "nofa",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2612,
-   "surum": "4e7f3b1a8cba"
+   "boyut": 2880,
+   "surum": "fc8c799af5ac"
   },
   "nofaa": {
    "dosya": "da9322699ed2.mp3",
    "okunus": "nofaa",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "3130fc865c48"
+   "boyut": 3360,
+   "surum": "6263dfa4e4be"
   },
   "nofae": {
    "dosya": "fbde78df98b9.mp3",
    "okunus": "nofae",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "826139cf8a9a"
+   "boyut": 2784,
+   "surum": "1a96236c5769"
   },
   "nofaya": {
    "dosya": "a53f6cff869e.mp3",
    "okunus": "nofaya",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "30db7f2fd0eb"
+   "boyut": 2784,
+   "surum": "c124236eab92"
   },
   "nofaye": {
    "dosya": "6f3c92d0133b.mp3",
    "okunus": "nofaye",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "982699999569"
+   "boyut": 3552,
+   "surum": "11523f85eaf2"
   },
   "nogur": {
    "dosya": "b0cc4ab1870a.mp3",
    "okunus": "nogur",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "3b770ee501c6"
+   "boyut": 2784,
+   "surum": "95e81839bfe3"
   },
   "nogurim": {
    "dosya": "99b917277b35.mp3",
    "okunus": "nogurim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "80408330a290"
+   "boyut": 3264,
+   "surum": "4fd240137727"
   },
   "nogurum": {
    "dosya": "d0dc9b112067.mp3",
    "okunus": "nogurum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "3668a2c6c03c"
+   "boyut": 3360,
+   "surum": "4de5e0f909fc"
   },
   "nogurüm": {
    "dosya": "8e71d3c3d35e.mp3",
    "okunus": "nogurüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "08cf4c32b9ab"
+   "boyut": 3168,
+   "surum": "e7685a382ca9"
   },
   "nogurım": {
    "dosya": "f59800e5218a.mp3",
    "okunus": "nogurım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "94f74eba4357"
+   "boyut": 2592,
+   "surum": "f0a264db4d12"
   },
   "nuvar": {
    "dosya": "2d1f2ff48288.mp3",
    "okunus": "nuvar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "1bb0b3ae3f61"
+   "boyut": 3840,
+   "surum": "2d19d6d43d7e"
   },
   "nuvarda": {
    "dosya": "a3c3eaea3f3e.mp3",
    "okunus": "nuvarda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "951c13f4d63a"
+   "boyut": 4032,
+   "surum": "9c582936ec9b"
   },
   "nuvarde": {
    "dosya": "d77c2d346512.mp3",
    "okunus": "nuvarde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "b845599676fc"
+   "boyut": 3456,
+   "surum": "8d13082b353d"
   },
   "nuvarta": {
    "dosya": "431fd7c51498.mp3",
    "okunus": "nuvarta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "3f89f699070f"
+   "boyut": 3456,
+   "surum": "ddd2bcc0cc0f"
   },
   "nuvarte": {
    "dosya": "65ec386fc7f9.mp3",
    "okunus": "nuvarte",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4180,
-   "surum": "6c603284bddb"
+   "boyut": 3840,
+   "surum": "e03432420b6d"
   },
   "nöfel": {
    "dosya": "99d6d756beef.mp3",
    "okunus": "nöfel",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "a2bf19281ad7"
+   "boyut": 2784,
+   "surum": "7aecb6729758"
   },
   "nöfellar": {
    "dosya": "d4f01a09ca21.mp3",
    "okunus": "nöfellar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "c77f687d8ddf"
+   "boyut": 3648,
+   "surum": "fe150f443b7d"
   },
   "nöfeller": {
    "dosya": "8f69979cbab0.mp3",
    "okunus": "nöfeller",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "799dfaacbf26"
+   "boyut": 4224,
+   "surum": "185652807e36"
   },
   "nöpü": {
    "dosya": "c0405de62154.mp3",
    "okunus": "nöpü",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2717,
-   "surum": "16a78a744699"
+   "boyut": 2976,
+   "surum": "17f45420d4bb"
   },
   "nöpüda": {
    "dosya": "f48be3f33c90.mp3",
    "okunus": "nöpüda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "48722da535a3"
+   "boyut": 3168,
+   "surum": "2f0c080937a8"
   },
   "nöpüde": {
    "dosya": "6d6da4d4840e.mp3",
    "okunus": "nöpüde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "de8a0fe614aa"
+   "boyut": 3360,
+   "surum": "f67f6c092ba5"
   },
   "nöpüta": {
    "dosya": "9a6dfab1cd5f.mp3",
    "okunus": "nöpüta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "09e428aba422"
+   "boyut": 3072,
+   "surum": "b8e1b819b3bc"
   },
   "nöpüte": {
    "dosya": "c4ac2800f32b.mp3",
    "okunus": "nöpüte",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "eea668c2f255"
+   "boyut": 3456,
+   "surum": "a96fc6e0becd"
   },
   "nübük": {
    "dosya": "6b3c1545b4fd.mp3",
    "okunus": "nübük",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2717,
-   "surum": "b96c9bdfde19"
+   "boyut": 3168,
+   "surum": "f57cf8498f72"
   },
   "nübükim": {
    "dosya": "8a3f1c57748a.mp3",
    "okunus": "nübükim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "2360d2df713a"
+   "boyut": 3456,
+   "surum": "b12c95008ac5"
   },
   "nübükum": {
    "dosya": "de2fb95fa22c.mp3",
    "okunus": "nübükum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "ef46d1cada59"
+   "boyut": 3168,
+   "surum": "44507884f4f7"
   },
   "nübüküm": {
    "dosya": "bbe1af92f657.mp3",
    "okunus": "nübüküm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "761fec34c62b"
+   "boyut": 3360,
+   "surum": "06a05286c2c0"
   },
   "nübükım": {
    "dosya": "1e520fcebef3.mp3",
    "okunus": "nübükım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "561aeaacd9a0"
+   "boyut": 3168,
+   "surum": "7ff253f9cfec"
   },
   "nübüğüm": {
    "dosya": "b9c5dbcc1bc4.mp3",
    "okunus": "nübüğüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2612,
-   "surum": "ae7e54e978f5"
+   "boyut": 3552,
+   "surum": "5b8a9e49b828"
   },
   "nüdebim": {
    "dosya": "75189bf9b8c4.mp3",
    "okunus": "nüdebim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "03179bbc2813"
+   "boyut": 3552,
+   "surum": "ec394d368922"
   },
   "nüdep": {
    "dosya": "3aa60bc5978f.mp3",
    "okunus": "nüdep",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "ac63c5e0ed0e"
+   "boyut": 3072,
+   "surum": "882fdf882d7f"
   },
   "nüdepim": {
    "dosya": "de43b7db0406.mp3",
    "okunus": "nüdepim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "7cc66c1eee46"
+   "boyut": 3360,
+   "surum": "20d5774c13a7"
   },
   "nüdepum": {
    "dosya": "e20b0be160a7.mp3",
    "okunus": "nüdepum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "05cbc29e2908"
+   "boyut": 3552,
+   "surum": "fe6fbf31551f"
   },
   "nüdepüm": {
    "dosya": "2f688cd7a5d2.mp3",
    "okunus": "nüdepüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "082158a3f94f"
+   "boyut": 3552,
+   "surum": "0e57ca6e927a"
   },
   "nüdepım": {
    "dosya": "196f72c5d7d0.mp3",
    "okunus": "nüdepım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "2b40099b2f12"
+   "boyut": 3456,
+   "surum": "d795f51cd1e5"
   },
   "nütül": {
    "dosya": "fd4a04266ba9.mp3",
    "okunus": "nütül",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "cdeae337af85"
+   "boyut": 2976,
+   "surum": "029692a544e9"
   },
   "nütülim": {
    "dosya": "14d4c7d25e28.mp3",
    "okunus": "nütülim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "5c67dbecaa71"
+   "boyut": 3264,
+   "surum": "b246c66fe786"
   },
   "nütülum": {
    "dosya": "aa3db4143b78.mp3",
    "okunus": "nütülum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "e7c1fd29c055"
+   "boyut": 3360,
+   "surum": "f82c79763182"
   },
   "nütülüm": {
    "dosya": "759f5c8587e8.mp3",
    "okunus": "nütülüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "73b2fd0f50b4"
+   "boyut": 3552,
+   "surum": "4bcc185c5865"
   },
   "nütülım": {
    "dosya": "2740fec7d315.mp3",
    "okunus": "nütülım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "8dae1cb3d428"
+   "boyut": 3360,
+   "surum": "b8ff519c53c8"
   },
   "o kalın ve yuvarlak, i ince ve düz. İkisi de uyuşmuyor.": {
    "dosya": "e387bbd9035c.mp3",
    "okunus": "o kalın ve yuvarlak, i ince ve düz. İkisi de uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 17345,
-   "surum": "216759d331ad"
+   "boyut": 18912,
+   "surum": "a0c62b4be1a2"
   },
   "o kalın, e ince. Kalınlıkları uyuşmuyor.": {
    "dosya": "64523bf361e0.mp3",
    "okunus": "o kalın, e ince. Kalınlıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 13270,
-   "surum": "d76ac7f2b572"
+   "boyut": 12960,
+   "surum": "4286ffdf7437"
   },
   "o kalın, ü ince. Kalınlıkları uyuşmuyor.": {
    "dosya": "f9f8d960463a.mp3",
    "okunus": "o kalın, ü ince. Kalınlıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 13166,
-   "surum": "fc2eebade22d"
+   "boyut": 14400,
+   "surum": "a1f69dc281d7"
   },
   "o yuvarlak, ı düz. Yuvarlaklıkları uyuşmuyor.": {
    "dosya": "fdbfd42ee1f8.mp3",
    "okunus": "o yuvarlak, ı düz. Yuvarlaklıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 15569,
-   "surum": "a38aa523805d"
+   "boyut": 16320,
+   "surum": "0b1fb60665ac"
   },
-  "p taş, ekin başı da taş olur: t.": {
-   "dosya": "239f5f7c78a9.mp3",
-   "okunus": "pe taş, ekin başı da taş olur: te.",
-   "hiz": 1.2,
+  "p sert, ekin başı da sert olur: t.": {
+   "dosya": "e39c80d6981f.mp3",
+   "okunus": "pe sert, ekin başı da sert olur: te.",
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 11598,
-   "surum": "04a8baf01cee"
-  },
-  "p ünlüden önce jöle olur: b.": {
-   "dosya": "047717e10d9f.mp3",
-   "okunus": "pe ünlüden önce jöle olur: be.",
-   "hiz": 1.2,
-   "bolgeler": [
-    "dukkan"
-   ],
-   "boyut": 9091,
-   "surum": "12035421aed3"
+   "boyut": 22272,
+   "surum": "6a1c929f4c8a"
   },
   "pobul": {
    "dosya": "67684e176614.mp3",
    "okunus": "pobul",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2612,
-   "surum": "c668f3fdeda2"
+   "boyut": 2592,
+   "surum": "8f6aa453f5e5"
   },
   "pobulim": {
    "dosya": "6abadeac0758.mp3",
    "okunus": "pobulim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "891ac6712296"
+   "boyut": 2784,
+   "surum": "10b31cc3ee33"
   },
   "pobulum": {
    "dosya": "02b79d154ad8.mp3",
    "okunus": "pobulum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "0c570f4e0afd"
+   "boyut": 2784,
+   "surum": "9d7416f6df5d"
   },
   "pobulüm": {
    "dosya": "684ebe0b1564.mp3",
    "okunus": "pobulüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "1b1bd97ad633"
+   "boyut": 2880,
+   "surum": "539305601b8d"
   },
   "pobulım": {
    "dosya": "578e2c02dd49.mp3",
    "okunus": "pobulım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "2ea796d03128"
+   "boyut": 3168,
+   "surum": "5b29c52471a6"
   },
   "poguk": {
    "dosya": "2d988d40749a.mp3",
    "okunus": "poguk",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2612,
-   "surum": "c38274e0f79e"
+   "boyut": 2592,
+   "surum": "e17a4b5cbf56"
   },
   "pogukim": {
    "dosya": "fd6d2edf7771.mp3",
    "okunus": "pogukim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "0a901f06af41"
+   "boyut": 2784,
+   "surum": "2c21ff18b71d"
   },
   "pogukum": {
    "dosya": "304d9ea0de9d.mp3",
    "okunus": "pogukum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "b4844efd6693"
+   "boyut": 3168,
+   "surum": "6b392ef4d70f"
   },
   "poguküm": {
    "dosya": "79bdd829d376.mp3",
    "okunus": "poguküm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "ea14ff5055b3"
+   "boyut": 2784,
+   "surum": "3eb18b33863b"
   },
   "pogukım": {
    "dosya": "7aad48be890c.mp3",
    "okunus": "pogukım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "1a1397717368"
+   "boyut": 3360,
+   "surum": "6d32ff109553"
   },
   "poguğum": {
    "dosya": "9dd3b09bcd5f.mp3",
    "okunus": "poguğum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2717,
-   "surum": "3b2fbeeecc19"
+   "boyut": 3456,
+   "surum": "9e198cb7048e"
   },
   "polvu": {
    "dosya": "9cfeb17efeb8.mp3",
    "okunus": "polvu",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "fad936621e68"
+   "boyut": 3072,
+   "surum": "fd9a8356b9b3"
   },
   "polvuda": {
    "dosya": "59e1f7ff76c5.mp3",
    "okunus": "polvuda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "2cb96cac59da"
+   "boyut": 3360,
+   "surum": "b7c3303df65f"
   },
   "polvude": {
    "dosya": "a677fa40c74f.mp3",
    "okunus": "polvude",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4180,
-   "surum": "5827b6453578"
+   "boyut": 2784,
+   "surum": "78f901bf299e"
   },
   "polvuta": {
    "dosya": "5be2a630f301.mp3",
    "okunus": "polvuta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "10c461043d8d"
+   "boyut": 3360,
+   "surum": "7e951d9f96d2"
   },
   "polvute": {
    "dosya": "2af453a25459.mp3",
    "okunus": "polvute",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "0f06013b19ae"
+   "boyut": 3648,
+   "surum": "5d06f331ee0a"
   },
   "pulkul": {
    "dosya": "ffd945d9c2be.mp3",
    "okunus": "pulkul",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "39116c748f7f"
+   "boyut": 3072,
+   "surum": "07ea7b27b112"
   },
   "pulkulda": {
    "dosya": "f128931d332b.mp3",
    "okunus": "pulkulda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "9b59c4d364ca"
+   "boyut": 3168,
+   "surum": "fbe4fb124588"
   },
   "pulkulde": {
    "dosya": "5eeab108f93d.mp3",
    "okunus": "pulkulde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "0e1fb7c8df84"
+   "boyut": 3456,
+   "surum": "53d54d89271e"
   },
   "pulkulta": {
    "dosya": "27d12f429446.mp3",
    "okunus": "pulkulta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "bfd2c95707b3"
+   "boyut": 3648,
+   "surum": "f68a0ce23b0a"
   },
   "pulkulte": {
    "dosya": "498b8040edc0.mp3",
    "okunus": "pulkulte",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "7534f2498d2b"
+   "boyut": 3264,
+   "surum": "94eca1b98e9e"
   },
   "pundar": {
    "dosya": "f727eb1c153e.mp3",
    "okunus": "pundar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "40b40fb4c4d0"
+   "boyut": 3072,
+   "surum": "9fc3a687d454"
   },
   "pundarlar": {
    "dosya": "8a3bb1a6ee07.mp3",
    "okunus": "pundarlar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "02949f9c5ba4"
+   "boyut": 3648,
+   "surum": "60048b9156fa"
   },
   "pundarler": {
    "dosya": "468b7aeaf70e.mp3",
    "okunus": "pundarler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "dd8e03e1aa74"
+   "boyut": 4032,
+   "surum": "209f0a8b7f06"
   },
   "punga": {
    "dosya": "3cbf174cbff4.mp3",
    "okunus": "punga",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "356dbfd19b62"
+   "boyut": 3168,
+   "surum": "c777275800f9"
   },
   "pungaa": {
    "dosya": "9d326c423887.mp3",
    "okunus": "pungaa",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "8e25fd4d6d24"
+   "boyut": 2784,
+   "surum": "c027d551a432"
   },
   "pungae": {
    "dosya": "5a181821cf58.mp3",
    "okunus": "pungae",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "79e24c4ccb1e"
+   "boyut": 3552,
+   "surum": "1c8a1b984aff"
   },
   "pungaya": {
    "dosya": "9ac13c3b43b8.mp3",
    "okunus": "pungaya",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "75666b80fd0c"
+   "boyut": 3264,
+   "surum": "df98ee3a7066"
   },
   "pungaye": {
    "dosya": "6ffab72875df.mp3",
    "okunus": "pungaye",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "b3a50a628cb3"
+   "boyut": 3552,
+   "surum": "750ae8150261"
   },
   "puzay": {
    "dosya": "8aa089bd5f26.mp3",
    "okunus": "puzay",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2717,
-   "surum": "77f10d9abf42"
+   "boyut": 2592,
+   "surum": "7424f080a3a2"
   },
   "puzaylar": {
    "dosya": "a30990cb3e0b.mp3",
    "okunus": "puzaylar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "5b05dccd79a8"
+   "boyut": 3648,
+   "surum": "9df5a2714c3b"
   },
   "puzayler": {
    "dosya": "c61aaa826af8.mp3",
    "okunus": "puzayler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "bea89fe21399"
+   "boyut": 3744,
+   "surum": "0c00235012b8"
   },
   "pıbız": {
    "dosya": "387bf2534973.mp3",
    "okunus": "pıbız",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "3c5019a0b50d"
+   "boyut": 2976,
+   "surum": "c46af5b96ea8"
   },
   "pıbızlar": {
    "dosya": "327b4ec4713f.mp3",
    "okunus": "pıbızlar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "6db53855025a"
+   "boyut": 3552,
+   "surum": "81ec5cb4e98b"
   },
   "pıbızler": {
    "dosya": "acd13c9b6e8d.mp3",
    "okunus": "pıbızler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "91d1fc1d2554"
+   "boyut": 3552,
+   "surum": "3aa80e18153c"
   },
   "pıtak": {
    "dosya": "eed19735b5d6.mp3",
    "okunus": "pıtak",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "f0232e96257f"
+   "boyut": 2784,
+   "surum": "aecd4ce4e017"
   },
   "pıtakim": {
    "dosya": "adda486953e9.mp3",
    "okunus": "pıtakim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "5eae3db0e486"
+   "boyut": 3552,
+   "surum": "e4bd9fe8c800"
   },
   "pıtakum": {
    "dosya": "5595d53dff5a.mp3",
    "okunus": "pıtakum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "d324d42d2038"
+   "boyut": 3552,
+   "surum": "acb6c1a88bee"
   },
   "pıtaküm": {
    "dosya": "7bbb29acb5a9.mp3",
    "okunus": "pıtaküm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "45bbb91b1af1"
+   "boyut": 5184,
+   "surum": "fed150f37d37"
   },
   "pıtakım": {
    "dosya": "1ff15d2a2126.mp3",
    "okunus": "pıtakım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "0599c672b469"
+   "boyut": 3360,
+   "surum": "e13c07b3a3c7"
   },
   "pıtağım": {
    "dosya": "95619219d59e.mp3",
    "okunus": "pıtağım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "ab0d427ca7e1"
+   "boyut": 2880,
+   "surum": "91971605d1c0"
   },
-  "r jöle, ekin başı da jöle kalır: d.": {
-   "dosya": "614d06f7fe94.mp3",
-   "okunus": "re jöle, ekin başı da jöle kalır: de.",
-   "hiz": 1.2,
+  "r yumuşak, ekin başı da yumuşak kalır: d.": {
+   "dosya": "769ddb41f4ac.mp3",
+   "okunus": "re yumuşak, ekin başı da yumuşak kalır: de.",
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 11807,
-   "surum": "a3c2c21bf0ad"
+   "boyut": 13920,
+   "surum": "3970ae444df0"
   },
-  "s taş, ekin başı da taş olur: t.": {
-   "dosya": "b921656fd420.mp3",
-   "okunus": "se taş, ekin başı da taş olur: te.",
-   "hiz": 1.2,
+  "s sert, ekin başı da sert olur: t.": {
+   "dosya": "217263a0a6fb.mp3",
+   "okunus": "se sert, ekin başı da sert olur: te.",
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 12016,
-   "surum": "cf07163966c6"
+   "boyut": 15072,
+   "surum": "ac8099bf5ee9"
   },
   "segem": {
    "dosya": "33f636419e43.mp3",
    "okunus": "segem",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "ec958f9b82b0"
+   "boyut": 2976,
+   "surum": "eff3b0d4eead"
   },
   "segemlar": {
    "dosya": "9c84eb584a85.mp3",
    "okunus": "segemlar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4284,
-   "surum": "2a7cdf35a18a"
+   "boyut": 4224,
+   "surum": "cd158be9a7ee"
   },
   "segemler": {
    "dosya": "7ff949caa459.mp3",
    "okunus": "segemler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4389,
-   "surum": "8f5f65d2f3f7"
+   "boyut": 4224,
+   "surum": "e7a8b2f65143"
   },
   "ses": {
    "dosya": "58db18624ec5.mp3",
    "okunus": "ses",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 3239,
-   "surum": "05b5b863da9c"
+   "boyut": 2976,
+   "surum": "0605c7cd9387"
   },
   "sessiz": {
    "dosya": "4b7d38095206.mp3",
    "okunus": "sessiz",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 3971,
-   "surum": "6f041e3fb48c"
+   "boyut": 2784,
+   "surum": "1c90d8286d3f"
   },
   "sessizlik": {
    "dosya": "d2c70112ab20.mp3",
    "okunus": "sessizlik",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 4807,
-   "surum": "4e0854e99871"
+   "boyut": 3648,
+   "surum": "cd95a9367e60"
   },
   "sessizlik: önce siz, sonra lik.": {
    "dosya": "f7169b4d4337.mp3",
    "okunus": "sessizlik: önce siz, sonra lik.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 11598,
-   "surum": "7c7480bafcf8"
+   "boyut": 12672,
+   "surum": "71b004fce3d7"
   },
   "siledim": {
    "dosya": "3cab1797f06d.mp3",
    "okunus": "siledim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "727165d68d5a"
+   "boyut": 2784,
+   "surum": "3d2e40593293"
   },
   "silet": {
    "dosya": "a8799c53fdd9.mp3",
    "okunus": "silet",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "eb0d5e914008"
+   "boyut": 2592,
+   "surum": "0ba36ca4b896"
   },
   "siletim": {
    "dosya": "2265b7bbe243.mp3",
    "okunus": "siletim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "4f94957aa11e"
+   "boyut": 3360,
+   "surum": "dac021b2ae34"
   },
   "siletum": {
    "dosya": "b29502c2bbf0.mp3",
    "okunus": "siletum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "d9cfb87ecd32"
+   "boyut": 3264,
+   "surum": "09f88ae3333a"
   },
   "siletüm": {
    "dosya": "e399eb836f90.mp3",
    "okunus": "siletüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "43af0f0405cc"
+   "boyut": 2976,
+   "surum": "cb273e0a76dc"
   },
   "siletım": {
    "dosya": "c6d374a11692.mp3",
    "okunus": "siletım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "e44aef3b48e7"
+   "boyut": 3744,
+   "surum": "0989e5e5bf91"
   },
   "siz": {
    "dosya": "a02d15de0263.mp3",
    "okunus": "siz",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 2612,
-   "surum": "ac2e286d337a"
+   "boyut": 2592,
+   "surum": "7417442b8d2c"
   },
   "sobu": {
    "dosya": "7b21a808f6c4.mp3",
    "okunus": "sobu",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2717,
-   "surum": "56172f08cc72"
+   "boyut": 2592,
+   "surum": "ab7111544caf"
   },
   "sobua": {
    "dosya": "843dd2fedf1a.mp3",
    "okunus": "sobua",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "b78ef8337683"
+   "boyut": 3456,
+   "surum": "cc13ef54e626"
   },
   "sobue": {
    "dosya": "4c50382c8fd6.mp3",
    "okunus": "sobue",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "313b01e8a6eb"
+   "boyut": 2976,
+   "surum": "debe667799c0"
   },
   "sobuya": {
    "dosya": "35f80e5755e3.mp3",
    "okunus": "sobuya",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "13feaa2d8415"
+   "boyut": 2976,
+   "surum": "ac755b17946a"
   },
   "sobuye": {
    "dosya": "9702c84c58dd.mp3",
    "okunus": "sobuye",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "62b75ddcd1ed"
+   "boyut": 2976,
+   "surum": "2a711b3f9613"
   },
   "su": {
    "dosya": "363eb224f6ff.mp3",
    "okunus": "su",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 2090,
-   "surum": "a2841e4cbddf"
+   "boyut": 2208,
+   "surum": "18614aced3d9"
   },
   "susuz": {
    "dosya": "370b3c355a26.mp3",
    "okunus": "susuz",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 3344,
-   "surum": "1ec53be7cd19"
+   "boyut": 2784,
+   "surum": "8ebf8dfdf955"
   },
   "susuzluk": {
    "dosya": "710ca2e9b6f1.mp3",
    "okunus": "susuzluk",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 3866,
-   "surum": "f7fcc66c8caa"
+   "boyut": 3840,
+   "surum": "0684e43c69ec"
   },
   "susuzluk: önce suz, sonra luk.": {
    "dosya": "b7fa8694ff21.mp3",
    "okunus": "susuzluk: önce suz, sonra luk.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 9927,
-   "surum": "6cacc41efe90"
+   "boyut": 13056,
+   "surum": "d925bcf89f73"
   },
   "suz": {
    "dosya": "10109d76a0fa.mp3",
    "okunus": "suz",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 2612,
-   "surum": "dd61419882c9"
+   "boyut": 3168,
+   "surum": "1f925258bbd8"
   },
   "söbez": {
    "dosya": "9733e9dc2baf.mp3",
    "okunus": "söbez",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "a0ff419aba90"
+   "boyut": 2784,
+   "surum": "ab233c78ed7f"
   },
   "söbezlar": {
    "dosya": "f7cac23c699f.mp3",
    "okunus": "söbezlar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4180,
-   "surum": "6d15295361b4"
+   "boyut": 4128,
+   "surum": "df94b04a099d"
   },
   "söbezler": {
    "dosya": "aa8dabbcce0c.mp3",
    "okunus": "söbezler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4180,
-   "surum": "69146e15297d"
+   "boyut": 3264,
+   "surum": "5f1d1a689ce3"
   },
   "südü": {
    "dosya": "adbd7d1bf7f3.mp3",
    "okunus": "südü",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 2717,
-   "surum": "a6903c94cf18"
+   "boyut": 2592,
+   "surum": "e40877f46c71"
   },
   "süt": {
    "dosya": "bff26db9ff4a.mp3",
    "okunus": "süt",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 2508,
-   "surum": "083092dd68cc"
+   "boyut": 2016,
+   "surum": "dab59bdecb0c"
   },
-  "süt inatçı: t taş kalır.": {
-   "dosya": "a32df4fe971a.mp3",
-   "okunus": "süt inatçı: te taş kalır.",
-   "hiz": 1.2,
+  "süt inatçıdır: t yumuşamaz.": {
+   "dosya": "e41023bcfe55.mp3",
+   "okunus": "süt inatçıdır: te yumuşamaz.",
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 9091,
-   "surum": "09675283f572"
+   "boyut": 10848,
+   "surum": "bdf94ec4720a"
   },
   "sütü": {
    "dosya": "02c8466495ce.mp3",
    "okunus": "sütü",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 2508,
-   "surum": "655f873e875d"
+   "boyut": 2400,
+   "surum": "ed5e1756a240"
   },
   "tat": {
    "dosya": "3811d14d3bf7.mp3",
    "okunus": "tat",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 2090,
-   "surum": "01630e39ca47"
+   "boyut": 2208,
+   "surum": "3094a869c05a"
   },
   "tatlı": {
    "dosya": "92485508dff6.mp3",
    "okunus": "tatlı",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 2821,
-   "surum": "c18da95b8f5a"
+   "boyut": 2976,
+   "surum": "8489ca678590"
   },
   "tatlıcı": {
    "dosya": "1dd78d97d2b9.mp3",
    "okunus": "tatlıcı",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 5956,
-   "surum": "bd7600633e19"
+   "boyut": 3648,
+   "surum": "bf71ee43bd47"
   },
   "tatlıcı: önce lı, sonra cı.": {
    "dosya": "bbf80b152391.mp3",
    "okunus": "tatlıcı: önce lı, sonra cı.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 10240,
-   "surum": "78359abaeb39"
+   "boyut": 12096,
+   "surum": "5b7daf6c6d8e"
   },
   "tobum": {
    "dosya": "8314d196a0ab.mp3",
    "okunus": "tobum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 2612,
-   "surum": "c365ba928a7c"
+   "boyut": 3072,
+   "surum": "c4d0e803f2ae"
   },
   "toduz": {
    "dosya": "7462659b25e0.mp3",
    "okunus": "toduz",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "ea659631da87"
+   "boyut": 2880,
+   "surum": "c89bcdd1a73c"
   },
   "toduzim": {
    "dosya": "10611477f259.mp3",
    "okunus": "toduzim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "11cea9c47f87"
+   "boyut": 3072,
+   "surum": "670becc07307"
   },
   "toduzum": {
    "dosya": "5f4eb052d934.mp3",
    "okunus": "toduzum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "f146c986be14"
+   "boyut": 3072,
+   "surum": "ff592b12e0f2"
   },
   "toduzüm": {
    "dosya": "5f533aa8fcae.mp3",
    "okunus": "toduzüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "24e68d3ad5d5"
+   "boyut": 3360,
+   "surum": "7946b74b2693"
   },
   "toduzım": {
    "dosya": "72f417152e00.mp3",
    "okunus": "toduzım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "5133c5ca9496"
+   "boyut": 3360,
+   "surum": "6d3f7883ed08"
   },
   "top": {
    "dosya": "af2c7b4ca07a.mp3",
    "okunus": "top",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy",
     "dukkan"
    ],
-   "boyut": 1776,
-   "surum": "13ba9e649e7a"
+   "boyut": 1536,
+   "surum": "ad1c542a4c99"
   },
-  "top inatçı: p taş kalır.": {
-   "dosya": "734d2db85292.mp3",
-   "okunus": "top inatçı: pe taş kalır.",
-   "hiz": 1.2,
+  "top inatçıdır: p yumuşamaz.": {
+   "dosya": "7dc9ac83c650.mp3",
+   "okunus": "top inatçıdır: pe yumuşamaz.",
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 9195,
-   "surum": "444dd8038dcf"
+   "boyut": 9984,
+   "surum": "74e80f83d31c"
   },
   "topim": {
    "dosya": "485492524ab2.mp3",
    "okunus": "topim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 2926,
-   "surum": "21ed346f030f"
+   "boyut": 3168,
+   "surum": "48500a7d87c6"
   },
   "toplar": {
    "dosya": "5a72deea95c9.mp3",
    "okunus": "toplar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 3344,
-   "surum": "0e319dbfe8f5"
+   "boyut": 3168,
+   "surum": "c6bb785c8062"
   },
   "toplarim": {
    "dosya": "e676b0ccfdd3.mp3",
    "okunus": "toplarim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 5433,
-   "surum": "a0b939200042"
+   "boyut": 3168,
+   "surum": "025253557bf0"
   },
   "toplarum": {
    "dosya": "eb725c9bf315.mp3",
    "okunus": "toplarum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 3239,
-   "surum": "e697b3cf8d53"
+   "boyut": 3840,
+   "surum": "8f88f3aac776"
   },
   "toplarüm": {
    "dosya": "98d427d8bc5e.mp3",
    "okunus": "toplarüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 5642,
-   "surum": "9529930aeeaf"
+   "boyut": 3840,
+   "surum": "e62997bae123"
   },
   "toplarım": {
    "dosya": "d5789619d969.mp3",
    "okunus": "toplarım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 5851,
-   "surum": "1eb9b1604573"
+   "boyut": 3264,
+   "surum": "5bb1534febca"
   },
   "topler": {
    "dosya": "a0d360df8839.mp3",
    "okunus": "topler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 3344,
-   "surum": "0b6bd3f66807"
+   "boyut": 2880,
+   "surum": "c3218badfab8"
   },
   "topum": {
    "dosya": "7106701be9ba.mp3",
    "okunus": "topum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy",
     "dukkan"
    ],
-   "boyut": 2717,
-   "surum": "f610d4a8e2c8"
+   "boyut": 3168,
+   "surum": "40565522e993"
   },
   "topüm": {
    "dosya": "6b6ce49b04ad.mp3",
    "okunus": "topüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 2717,
-   "surum": "394a21e05d8c"
+   "boyut": 3264,
+   "surum": "e198b6714cbb"
   },
   "topım": {
    "dosya": "671825716806.mp3",
    "okunus": "topım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 2717,
-   "surum": "f026831d2d10"
+   "boyut": 2496,
+   "surum": "c00215aa41c7"
   },
   "tugak": {
    "dosya": "012a4a3538b5.mp3",
    "okunus": "tugak",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2612,
-   "surum": "ad71056f66fb"
+   "boyut": 2784,
+   "surum": "95c1c0ba4582"
   },
   "tugakim": {
    "dosya": "8c549a697bf4.mp3",
    "okunus": "tugakim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "f8b558169d23"
+   "boyut": 3648,
+   "surum": "12c445446c61"
   },
   "tugakum": {
    "dosya": "63a0a923cae0.mp3",
    "okunus": "tugakum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "05c05282eb83"
+   "boyut": 3552,
+   "surum": "30d698bb7be6"
   },
   "tugaküm": {
    "dosya": "9dd42f5dada1.mp3",
    "okunus": "tugaküm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "1d6fb25d9b76"
+   "boyut": 3552,
+   "surum": "db6bc9d6adac"
   },
   "tugakım": {
    "dosya": "672d209cf2d8.mp3",
    "okunus": "tugakım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "45d1f4f2854e"
+   "boyut": 3552,
+   "surum": "2a3d39dd0a5d"
   },
   "tugağım": {
    "dosya": "564eb32c8cf2.mp3",
    "okunus": "tugağım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "4724a965d428"
+   "boyut": 3168,
+   "surum": "d437d1c65cec"
   },
   "tuz": {
    "dosya": "c3e95f14f6ba.mp3",
    "okunus": "tuz",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 1985,
-   "surum": "55d20a8fb07a"
+   "boyut": 2592,
+   "surum": "b0ad3d2243d6"
   },
   "tuzluk": {
    "dosya": "4a9b2a913ff3.mp3",
    "okunus": "tuzluk",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 2821,
-   "surum": "52eccffd05f8"
+   "boyut": 3648,
+   "surum": "08f5ed83f91e"
   },
   "tuzluklar": {
    "dosya": "84fbba998535.mp3",
    "okunus": "tuzluklar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 4075,
-   "surum": "2b72ac79655d"
+   "boyut": 3840,
+   "surum": "882252ed2b18"
   },
   "töleş": {
    "dosya": "0736bb219f54.mp3",
    "okunus": "töleş",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "fedffe265e9c"
+   "boyut": 2880,
+   "surum": "bcd1104a82bd"
   },
   "töleşda": {
    "dosya": "b344e90f87df.mp3",
    "okunus": "töleşda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "621c7d64b562"
+   "boyut": 3264,
+   "surum": "832da2af0db7"
   },
   "töleşde": {
    "dosya": "7b2bcd33bcbc.mp3",
    "okunus": "töleşde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "8fd6832b47b1"
+   "boyut": 3648,
+   "surum": "86db9af93bf8"
   },
   "töleşta": {
    "dosya": "0243fe1f3f40.mp3",
    "okunus": "töleşta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "b0af51d9d8ca"
+   "boyut": 3552,
+   "surum": "aef3483b5465"
   },
   "töleşte": {
    "dosya": "673fef0e7ee5.mp3",
    "okunus": "töleşte",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "263c26786ee4"
+   "boyut": 3648,
+   "surum": "240fa68cc82f"
   },
   "tömü": {
    "dosya": "d9dd109910f2.mp3",
    "okunus": "tömü",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2090,
-   "surum": "822ebf095023"
+   "boyut": 2400,
+   "surum": "af226b7baee6"
   },
   "tömüda": {
    "dosya": "25b81aaf516f.mp3",
    "okunus": "tömüda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2717,
-   "surum": "7c5b0127eb63"
+   "boyut": 2976,
+   "surum": "c6b16d05b390"
   },
   "tömüde": {
    "dosya": "eca82ef55aee.mp3",
    "okunus": "tömüde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2717,
-   "surum": "d73f19c32545"
+   "boyut": 2976,
+   "surum": "579c77a093ba"
   },
   "tömüta": {
    "dosya": "d9678e4861ba.mp3",
    "okunus": "tömüta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "50d0404c7c7f"
+   "boyut": 3072,
+   "surum": "60136768a48b"
   },
   "tömüte": {
    "dosya": "9687f0bec0ff.mp3",
    "okunus": "tömüte",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "c3ebbd240db3"
+   "boyut": 2976,
+   "surum": "cc8257d24413"
   },
   "tüdez": {
    "dosya": "776f576088b6.mp3",
    "okunus": "tüdez",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "3675b4d7ee4f"
+   "boyut": 3168,
+   "surum": "5b37e3e31659"
   },
   "tüdezlar": {
    "dosya": "1bcae37396fc.mp3",
    "okunus": "tüdezlar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "5519e0ec310f"
+   "boyut": 3648,
+   "surum": "031673cb66b1"
   },
   "tüdezler": {
    "dosya": "1827f09adc52.mp3",
    "okunus": "tüdezler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "355283544b0b"
+   "boyut": 3552,
+   "surum": "196dd9ae22ce"
   },
   "tügü": {
    "dosya": "1ebee97e561c.mp3",
    "okunus": "tügü",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2194,
-   "surum": "80e32c0169b0"
+   "boyut": 2784,
+   "surum": "d8334af23def"
   },
   "tügüa": {
    "dosya": "52b16f878b75.mp3",
    "okunus": "tügüa",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2717,
-   "surum": "403b7bbaa274"
+   "boyut": 2784,
+   "surum": "fbfcbd2b17d5"
   },
   "tügüe": {
    "dosya": "e032601371b7.mp3",
    "okunus": "tügüe",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2717,
-   "surum": "6a2d672c61ff"
+   "boyut": 2688,
+   "surum": "61ee803d60d6"
   },
   "tügüya": {
    "dosya": "51a1767fbd49.mp3",
    "okunus": "tügüya",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "f4a4685f959a"
+   "boyut": 3072,
+   "surum": "726fe38f7bce"
   },
   "tügüye": {
    "dosya": "d16a1d195b51.mp3",
    "okunus": "tügüye",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "e0eae4a16235"
+   "boyut": 3072,
+   "surum": "8e019f109bbf"
   },
   "u kalın ve yuvarlak, i ince ve düz. İkisi de uyuşmuyor.": {
    "dosya": "4cdde3622500.mp3",
    "okunus": "u kalın ve yuvarlak, i ince ve düz. İkisi de uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 16614,
-   "surum": "58b7d28ec8e2"
+   "boyut": 18240,
+   "surum": "7287a06d9cbd"
   },
   "u kalın, e ince. Kalınlıkları uyuşmuyor.": {
    "dosya": "51c4cf5b443d.mp3",
    "okunus": "u kalın, e ince. Kalınlıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy",
     "uyduruk"
    ],
-   "boyut": 13479,
-   "surum": "bb7ab2f4d97d"
+   "boyut": 18528,
+   "surum": "33a0dcbd3d3e"
   },
   "u kalın, ü ince. Kalınlıkları uyuşmuyor.": {
    "dosya": "ae25f5dd4aaa.mp3",
    "okunus": "u kalın, ü ince. Kalınlıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 12748,
-   "surum": "2bddfdbec4ea"
+   "boyut": 16416,
+   "surum": "8b0047606599"
   },
   "u yuvarlak, ı düz. Yuvarlaklıkları uyuşmuyor.": {
    "dosya": "b7e639b18609.mp3",
    "okunus": "u yuvarlak, ı düz. Yuvarlaklıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 15151,
-   "surum": "185ac8f716d1"
+   "boyut": 16992,
+   "surum": "dd07a526d034"
   },
-  "v jöle, ekin başı da jöle kalır: d.": {
-   "dosya": "e278ebddbb19.mp3",
-   "okunus": "ve jöle, ekin başı da jöle kalır: de.",
-   "hiz": 1.2,
+  "v yumuşak, ekin başı da yumuşak kalır: d.": {
+   "dosya": "a70f5244cc51.mp3",
+   "okunus": "ve yumuşak, ekin başı da yumuşak kalır: de.",
+   "hiz": 0.9,
    "bolgeler": [
     "dukkan"
    ],
-   "boyut": 10762,
-   "surum": "70ac17b08c2b"
+   "boyut": 14208,
+   "surum": "a018d77f95c1"
   },
   "vebi": {
    "dosya": "e58e7b9f82d4.mp3",
    "okunus": "vebi",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "625005cf878b"
+   "boyut": 2688,
+   "surum": "3196a0465ea9"
   },
   "vebia": {
    "dosya": "e1db5b5910e9.mp3",
    "okunus": "vebia",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "e059cb62b62b"
+   "boyut": 2784,
+   "surum": "c4c582745563"
   },
   "vebie": {
    "dosya": "e6688a42ec7b.mp3",
    "okunus": "vebie",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "2776c1e20e88"
+   "boyut": 3264,
+   "surum": "6859a60502e6"
   },
   "vebiya": {
    "dosya": "089aadcbbbd8.mp3",
    "okunus": "vebiya",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "ea7fa76e6571"
+   "boyut": 3552,
+   "surum": "a51205a2978c"
   },
   "vebiye": {
    "dosya": "33eb960d4132.mp3",
    "okunus": "vebiye",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "3969efaf5eb4"
+   "boyut": 3744,
+   "surum": "788b2aaa7de9"
   },
   "vemi": {
    "dosya": "60a06a54cd6f.mp3",
    "okunus": "vemi",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2194,
-   "surum": "f09ab7e8cba3"
+   "boyut": 2784,
+   "surum": "effbebd55566"
   },
   "vemia": {
    "dosya": "92a21073d2df.mp3",
    "okunus": "vemia",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "9d2c60d4286d"
+   "boyut": 3072,
+   "surum": "1be13a1762de"
   },
   "vemie": {
    "dosya": "3b943e03ee0b.mp3",
    "okunus": "vemie",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "230d2e82370f"
+   "boyut": 3072,
+   "surum": "996d540699bd"
   },
   "vemiya": {
    "dosya": "c9d2f5a994f7.mp3",
    "okunus": "vemiya",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "eabc2c3d79e7"
+   "boyut": 3360,
+   "surum": "874bcbfae56a"
   },
   "vemiye": {
    "dosya": "e664b722f63f.mp3",
    "okunus": "vemiye",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 5224,
-   "surum": "b7002f929dda"
+   "boyut": 2976,
+   "surum": "51564c8bdc7d"
   },
   "vikir": {
    "dosya": "8c4550307e54.mp3",
    "okunus": "vikir",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "0379e032c3c4"
+   "boyut": 3072,
+   "surum": "717e4f9c872b"
   },
   "vikirlar": {
    "dosya": "d2da78ba61c3.mp3",
    "okunus": "vikirlar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "7601c123d05c"
+   "boyut": 4032,
+   "surum": "96bd9d83067b"
   },
   "vikirler": {
    "dosya": "eab5ccbd6a3d.mp3",
    "okunus": "vikirler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "84d890e15883"
+   "boyut": 4032,
+   "surum": "0a66756db927"
   },
   "voyul": {
    "dosya": "c4cc53e6cc4c.mp3",
    "okunus": "voyul",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "f474ea9f07e6"
+   "boyut": 2880,
+   "surum": "dab362104b51"
   },
   "voyulim": {
    "dosya": "c74acfb93685.mp3",
    "okunus": "voyulim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "b5e095b8bec2"
+   "boyut": 3264,
+   "surum": "2a2c3d9f5090"
   },
   "voyulum": {
    "dosya": "dfa8c5bd8ba7.mp3",
    "okunus": "voyulum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "0cf68defd1e6"
+   "boyut": 3168,
+   "surum": "4c05c9acc5ab"
   },
   "voyulüm": {
    "dosya": "e7efad60d429.mp3",
    "okunus": "voyulüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "e01c26ab6946"
+   "boyut": 3360,
+   "surum": "a70883d2c8b2"
   },
   "voyulım": {
    "dosya": "15dfa397658f.mp3",
    "okunus": "voyulım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "ed10662b63b8"
+   "boyut": 3168,
+   "surum": "e49542810b36"
   },
   "vuva": {
    "dosya": "66ad5aa05e29.mp3",
    "okunus": "vuva",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "888d0057a1f2"
+   "boyut": 2496,
+   "surum": "2f5ba4084247"
   },
   "vuvaa": {
    "dosya": "3874bdf42fff.mp3",
    "okunus": "vuvaa",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2612,
-   "surum": "29525847f3fc"
+   "boyut": 2784,
+   "surum": "c53dab150038"
   },
   "vuvae": {
    "dosya": "ed2b2db9a106.mp3",
    "okunus": "vuvae",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "c0fa1f7c1023"
+   "boyut": 2784,
+   "surum": "0a43a2361ed6"
   },
   "vuvaya": {
    "dosya": "f2b3df8d5e28.mp3",
    "okunus": "vuvaya",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "427681073a25"
+   "boyut": 3264,
+   "surum": "3bb78a773b65"
   },
   "vuvaye": {
    "dosya": "779f355fe257.mp3",
    "okunus": "vuvaye",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "19ccda44ec06"
+   "boyut": 3936,
+   "surum": "424299130ef4"
   },
   "vökül": {
    "dosya": "0c8d86a22c45.mp3",
    "okunus": "vökül",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "2cc107e649ef"
+   "boyut": 2976,
+   "surum": "6a369c5a564c"
   },
   "vökülim": {
    "dosya": "80158a0a558b.mp3",
    "okunus": "vökülim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "6f35f02b7a09"
+   "boyut": 3072,
+   "surum": "64fffb48095b"
   },
   "vökülum": {
    "dosya": "1ff6976f3b88.mp3",
    "okunus": "vökülum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "223f53c5a647"
+   "boyut": 3072,
+   "surum": "afbe772fb3f6"
   },
   "vökülüm": {
    "dosya": "16c9d9990321.mp3",
    "okunus": "vökülüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "e5e7c5ccd465"
+   "boyut": 2976,
+   "surum": "1d834d28ff40"
   },
   "vökülım": {
    "dosya": "bdc217a14d31.mp3",
    "okunus": "vökülım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "27e6e9087d5c"
+   "boyut": 3072,
+   "surum": "f2cf93e7bd89"
   },
-  "y jöle, ekin başı da jöle kalır: d.": {
-   "dosya": "a959010942ae.mp3",
-   "okunus": "ye jöle, ekin başı da jöle kalır: de.",
-   "hiz": 1.2,
+  "y yumuşak, ekin başı da yumuşak kalır: d.": {
+   "dosya": "708652a3d83d.mp3",
+   "okunus": "ye yumuşak, ekin başı da yumuşak kalır: de.",
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 11076,
-   "surum": "e004d4502448"
+   "boyut": 14496,
+   "surum": "6b2f8ba51727"
   },
   "yabiz": {
    "dosya": "7e4df4475764.mp3",
    "okunus": "yabiz",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "18e16732926c"
+   "boyut": 3072,
+   "surum": "100520e7df63"
   },
   "yabizlar": {
    "dosya": "99e2852fde18.mp3",
    "okunus": "yabizlar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4180,
-   "surum": "e150c9f1d55b"
+   "boyut": 4032,
+   "surum": "98aa89f23465"
   },
   "yabizler": {
    "dosya": "4ed8c8f64c57.mp3",
    "okunus": "yabizler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4389,
-   "surum": "d5532e07e345"
+   "boyut": 4032,
+   "surum": "2b9c526bf599"
   },
   "yol": {
    "dosya": "45bb56343267.mp3",
    "okunus": "yol",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 2508,
-   "surum": "3a5c471d8732"
+   "boyut": 2496,
+   "surum": "454b77422152"
   },
   "yolcu": {
    "dosya": "0c74a5faa9b7.mp3",
    "okunus": "yolcu",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 3135,
-   "surum": "b82bda4a375b"
+   "boyut": 3264,
+   "surum": "a52783a70a24"
   },
   "yolculuk": {
    "dosya": "33a5b4138e98.mp3",
    "okunus": "yolculuk",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 3657,
-   "surum": "b5f7f7afa19c"
+   "boyut": 4032,
+   "surum": "ec9842dec691"
   },
   "yolculuk: önce cu, sonra luk.": {
    "dosya": "8567fbf9331f.mp3",
    "okunus": "yolculuk: önce cu, sonra luk.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 10658,
-   "surum": "3f9fceafc347"
+   "boyut": 17184,
+   "surum": "c128c611d490"
   },
   "yotu": {
    "dosya": "8139bfc94bdb.mp3",
    "okunus": "yotu",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2612,
-   "surum": "aeb93e2eb617"
+   "boyut": 2592,
+   "surum": "f2ff86a20eb3"
   },
   "yotuda": {
    "dosya": "d26e74ab61f1.mp3",
    "okunus": "yotuda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "9bb7edf35a93"
+   "boyut": 2592,
+   "surum": "4b7c6f632cdb"
   },
   "yotude": {
    "dosya": "82c78141440c.mp3",
    "okunus": "yotude",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "0e584cef6635"
+   "boyut": 4032,
+   "surum": "34002f7d2bb7"
   },
   "yotuta": {
    "dosya": "8225eb1949d9.mp3",
    "okunus": "yotuta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "0093462f6abf"
+   "boyut": 3072,
+   "surum": "9d43f6093625"
   },
   "yotute": {
    "dosya": "e1e03d72cb5a.mp3",
    "okunus": "yotute",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "f0db891824ba"
+   "boyut": 2880,
+   "surum": "3d63ad775651"
   },
   "yüfes": {
    "dosya": "399a0ec9fe0a.mp3",
    "okunus": "yüfes",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "17529d58001e"
+   "boyut": 3072,
+   "surum": "e5eaea30ec46"
   },
   "yüfesda": {
    "dosya": "9aeb0303e49a.mp3",
    "okunus": "yüfesda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4389,
-   "surum": "c8fd5faa532b"
+   "boyut": 3648,
+   "surum": "57ef8ed0bd84"
   },
   "yüfesde": {
    "dosya": "2d4a699b9f05.mp3",
    "okunus": "yüfesde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4284,
-   "surum": "03a2ed513431"
+   "boyut": 3552,
+   "surum": "2137a580c866"
   },
   "yüfesta": {
    "dosya": "84910417c164.mp3",
    "okunus": "yüfesta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4075,
-   "surum": "06e054bb29e0"
+   "boyut": 3456,
+   "surum": "434615acea47"
   },
   "yüfeste": {
    "dosya": "458f26cb024a.mp3",
    "okunus": "yüfeste",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4180,
-   "surum": "4e94a03371d6"
+   "boyut": 3744,
+   "surum": "9996fa306d5a"
   },
-  "z jöle, ekin başı da jöle kalır: d.": {
-   "dosya": "84d78851640b.mp3",
-   "okunus": "ze jöle, ekin başı da jöle kalır: de.",
-   "hiz": 1.2,
+  "z yumuşak, ekin başı da yumuşak kalır: d.": {
+   "dosya": "59beb5d47694.mp3",
+   "okunus": "ze yumuşak, ekin başı da yumuşak kalır: de.",
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 11494,
-   "surum": "20f382853d88"
+   "boyut": 14976,
+   "surum": "f8f9276897d5"
   },
   "zaba": {
    "dosya": "28befc338bd7.mp3",
    "okunus": "zaba",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2612,
-   "surum": "d1ecc0aa828d"
+   "boyut": 3264,
+   "surum": "b7dd8f973603"
   },
   "zabaa": {
    "dosya": "1f55cf03314a.mp3",
    "okunus": "zabaa",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "56dfc79dbcc2"
+   "boyut": 3072,
+   "surum": "0ce00d0a9ad1"
   },
   "zabae": {
    "dosya": "f31b6d0e0989.mp3",
    "okunus": "zabae",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "af7a67a68bfb"
+   "boyut": 3840,
+   "surum": "809b03122aa5"
   },
   "zabaya": {
    "dosya": "2110d7d4ae1f.mp3",
    "okunus": "zabaya",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "f35b36927f5a"
+   "boyut": 3456,
+   "surum": "67623a8cb9e2"
   },
   "zabaye": {
    "dosya": "96c06ab8def6.mp3",
    "okunus": "zabaye",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "b43ffac5bf17"
+   "boyut": 3936,
+   "surum": "2ed3f96d61c8"
   },
   "zebes": {
    "dosya": "7235daac1b9e.mp3",
    "okunus": "zebes",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "cea33e679c36"
+   "boyut": 3840,
+   "surum": "38f4dee289f6"
   },
   "zebesda": {
    "dosya": "20f80d8b922c.mp3",
    "okunus": "zebesda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4180,
-   "surum": "f1a24de5be3e"
+   "boyut": 3744,
+   "surum": "2903057c9235"
   },
   "zebesde": {
    "dosya": "d57f620cb210.mp3",
    "okunus": "zebesde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "c89ce25e39ce"
+   "boyut": 3456,
+   "surum": "60bb33e2ed5d"
   },
   "zebesta": {
    "dosya": "0133896756c6.mp3",
    "okunus": "zebesta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "ba364309e686"
+   "boyut": 3744,
+   "surum": "258a8e807349"
   },
   "zebeste": {
    "dosya": "ebce95dcec1d.mp3",
    "okunus": "zebeste",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "f5c192d02ef0"
+   "boyut": 3936,
+   "surum": "79e6416501b8"
   },
   "zelü": {
    "dosya": "d0e2ee5b4cf9.mp3",
    "okunus": "zelü",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2508,
-   "surum": "c34679201c1d"
+   "boyut": 2784,
+   "surum": "8fab6960b65f"
   },
   "zelüa": {
    "dosya": "113b8bb864f6.mp3",
    "okunus": "zelüa",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "04a3bf1d9334"
+   "boyut": 2784,
+   "surum": "d4c2e6475094"
   },
   "zelüe": {
    "dosya": "dd1107a62a5c.mp3",
    "okunus": "zelüe",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "af1fded1653e"
+   "boyut": 2688,
+   "surum": "16af934b2518"
   },
   "zelüya": {
    "dosya": "0d81b2e2ffe3.mp3",
    "okunus": "zelüya",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "78dcff564aee"
+   "boyut": 3552,
+   "surum": "0b6695efebe5"
   },
   "zelüye": {
    "dosya": "f4c1548db81a.mp3",
    "okunus": "zelüye",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "6be4ce35f177"
+   "boyut": 3552,
+   "surum": "5e9f8689f1fb"
   },
   "zitebim": {
    "dosya": "efbe0b6c4cb4.mp3",
    "okunus": "zitebim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "e4745c4cb4f5"
+   "boyut": 3744,
+   "surum": "aa5b7844ef49"
   },
   "zitep": {
    "dosya": "37b7a0a167f4.mp3",
    "okunus": "zitep",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "b2e199be94f1"
+   "boyut": 3168,
+   "surum": "aeda5f211086"
   },
   "zitepim": {
    "dosya": "d90728d8e46f.mp3",
    "okunus": "zitepim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "d88d3d69f6fa"
+   "boyut": 3168,
+   "surum": "41391361f264"
   },
   "zitepum": {
    "dosya": "e73614e4c985.mp3",
    "okunus": "zitepum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "f6eda43d2874"
+   "boyut": 2592,
+   "surum": "be7985421cae"
   },
   "zitepüm": {
    "dosya": "447a92dc28bb.mp3",
    "okunus": "zitepüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "198135988888"
+   "boyut": 3936,
+   "surum": "96adb5c6bd2a"
   },
   "zitepım": {
    "dosya": "29524d09bed6.mp3",
    "okunus": "zitepım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "a86888ce73c7"
+   "boyut": 3360,
+   "surum": "95ef37b2f2ad"
   },
   "zodadım": {
    "dosya": "cc83f41ebb13.mp3",
    "okunus": "zodadım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "3a6a965c8bcd"
+   "boyut": 2592,
+   "surum": "0567699bd340"
   },
   "zodat": {
    "dosya": "0b352ef2ead5.mp3",
    "okunus": "zodat",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "17f13c198cc9"
+   "boyut": 2592,
+   "surum": "0e7ab6e062fd"
   },
   "zodatim": {
    "dosya": "aed76f251ee9.mp3",
    "okunus": "zodatim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "981dc30429ab"
+   "boyut": 3840,
+   "surum": "cdd5f8e78123"
   },
   "zodatum": {
    "dosya": "651c04d6363e.mp3",
    "okunus": "zodatum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "14b023415339"
+   "boyut": 4128,
+   "surum": "5a989b515953"
   },
   "zodatüm": {
    "dosya": "a6161bf9741f.mp3",
    "okunus": "zodatüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "ddca52a4291b"
+   "boyut": 3744,
+   "surum": "287bf6cf58d2"
   },
   "zodatım": {
    "dosya": "05127c0cd3f9.mp3",
    "okunus": "zodatım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "c856c61652e0"
+   "boyut": 3264,
+   "surum": "ecad23e6a364"
   },
   "zolku": {
    "dosya": "a5030052d31a.mp3",
    "okunus": "zolku",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3657,
-   "surum": "fdd43ed5172e"
+   "boyut": 3648,
+   "surum": "f602cf3889cf"
   },
   "zolkuda": {
    "dosya": "9b58a88ca132.mp3",
    "okunus": "zolkuda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4075,
-   "surum": "32258e531119"
+   "boyut": 3648,
+   "surum": "6841ff8a8cb4"
   },
   "zolkude": {
    "dosya": "6811f691432d.mp3",
    "okunus": "zolkude",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "baf60364c48a"
+   "boyut": 4032,
+   "surum": "43eb6863174a"
   },
   "zolkuta": {
    "dosya": "0a39d3786bb7.mp3",
    "okunus": "zolkuta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 4075,
-   "surum": "b42eecc03eca"
+   "boyut": 3648,
+   "surum": "41c929b07d3c"
   },
   "zolkute": {
    "dosya": "8054ee35e319.mp3",
    "okunus": "zolkute",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "f587bb9a8345"
+   "boyut": 3840,
+   "surum": "c608bdccd3eb"
   },
   "zöpü": {
    "dosya": "9b5740ea63c2.mp3",
    "okunus": "zöpü",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "29e75a3e8a44"
+   "boyut": 2976,
+   "surum": "9e07490c00e4"
   },
   "zöpüa": {
    "dosya": "e7b1b12640f7.mp3",
    "okunus": "zöpüa",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "f0f7aecb6490"
+   "boyut": 3552,
+   "surum": "97c8a1eebdf2"
   },
   "zöpüe": {
    "dosya": "655fc7795808.mp3",
    "okunus": "zöpüe",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "21f2689f04cf"
+   "boyut": 3168,
+   "surum": "b57c74bfde3a"
   },
   "zöpüya": {
    "dosya": "dce564770cef.mp3",
    "okunus": "zöpüya",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "5532678294ae"
+   "boyut": 3072,
+   "surum": "0f6a47baaf70"
   },
   "zöpüye": {
    "dosya": "00adc0ba125a.mp3",
    "okunus": "zöpüye",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "d71171975e93"
+   "boyut": 3552,
+   "surum": "a4afb3b32bcc"
   },
   "züdü": {
    "dosya": "17618df960bd.mp3",
    "okunus": "züdü",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "9d1d02ac2323"
+   "boyut": 2880,
+   "surum": "a120d44692ac"
   },
   "züdüa": {
    "dosya": "81cee00b6293.mp3",
    "okunus": "züdüa",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "51c9dccd5a63"
+   "boyut": 3648,
+   "surum": "c8bff41d2aa1"
   },
   "züdüe": {
    "dosya": "6bc12aa8521b.mp3",
    "okunus": "züdüe",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "7568bee25dcd"
+   "boyut": 2976,
+   "surum": "18bd9ce5f8b7"
   },
   "züdüya": {
    "dosya": "efa7c185a39f.mp3",
    "okunus": "züdüya",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "afff4e18be4a"
+   "boyut": 2784,
+   "surum": "b484e4aea800"
   },
   "züdüye": {
    "dosya": "3cd2b9afabec.mp3",
    "okunus": "züdüye",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3762,
-   "surum": "f54d21a91f63"
+   "boyut": 3552,
+   "surum": "58a40a049d8a"
   },
   "Önce Bukalemun Koyu bitmeli.": {
    "dosya": "051978b3eef5.mp3",
    "okunus": "Önce Bukalemun Koyu bitmeli.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "arayuz"
    ],
-   "boyut": 9300,
-   "surum": "340b958c36fa"
+   "boyut": 8256,
+   "surum": "710c4c1fed4a"
   },
   "Önce Fıstıkçı Şahap'ın Dükkânı bitmeli.": {
    "dosya": "a61149fcc9b2.mp3",
-   "okunus": "Önce Fıstıkçı Şahap'ın Dükkânı bitmeli.",
-   "hiz": 1.2,
+   "okunus": "Önce Fıstıkçı Şahabın Dükkânı bitmeli.",
+   "hiz": 0.9,
    "bolgeler": [
     "arayuz"
    ],
-   "boyut": 12016,
-   "surum": "66bca4be864b"
+   "boyut": 10752,
+   "surum": "8c580f74af0f"
   },
   "Önce Kök Bahçesi bitmeli.": {
    "dosya": "2426be7a6e27.mp3",
    "okunus": "Önce Kök Bahçesi bitmeli.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "arayuz"
    ],
-   "boyut": 8673,
-   "surum": "aa2b6cbc7822"
+   "boyut": 7872,
+   "surum": "e8bda4d6c609"
   },
-  "Ünlüden sonra ekin başı jöle kalır: d.": {
-   "dosya": "5b02f28557df.mp3",
-   "okunus": "Ünlüden sonra ekin başı jöle kalır: de.",
-   "hiz": 1.2,
+  "Ünlüden sonra ekin başı yumuşak kalır: d.": {
+   "dosya": "69ac25839b29.mp3",
+   "okunus": "Ünlüden sonra ekin başı yumuşak kalır: de.",
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 12434,
-   "surum": "1070f1494942"
-  },
-  "ç ünlüden önce jöle olur: c.": {
-   "dosya": "9bbe5085d5dd.mp3",
-   "okunus": "çe ünlüden önce jöle olur: ce.",
-   "hiz": 1.2,
-   "bolgeler": [
-    "dukkan"
-   ],
-   "boyut": 10031,
-   "surum": "1eaba87cdc0a"
+   "boyut": 14112,
+   "surum": "3b974fa0bc73"
   },
   "çevicim": {
    "dosya": "3e55f3eec137.mp3",
    "okunus": "çevicim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "e377f6ee9de6"
+   "boyut": 6528,
+   "surum": "96fae91456cc"
   },
   "çeviç": {
    "dosya": "06dd7b98e344.mp3",
    "okunus": "çeviç",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "18367203dfc3"
+   "boyut": 3648,
+   "surum": "61c5676a5f0e"
   },
   "çeviçim": {
    "dosya": "935049437f49.mp3",
    "okunus": "çeviçim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "d608ee27ea04"
+   "boyut": 5952,
+   "surum": "ee0f4ae0311c"
   },
   "çeviçum": {
    "dosya": "a1ab1b011cbd.mp3",
    "okunus": "çeviçum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "b0177a1e4f2c"
+   "boyut": 5952,
+   "surum": "69f69fde9b1d"
   },
   "çeviçüm": {
    "dosya": "6c59a2fe6ee7.mp3",
    "okunus": "çeviçüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "091eb8d963fc"
+   "boyut": 3360,
+   "surum": "f7cef4723acb"
   },
   "çeviçım": {
    "dosya": "cfd02bc6fd1c.mp3",
    "okunus": "çeviçım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "2f67ed26ecc0"
+   "boyut": 3264,
+   "surum": "0c07e7869923"
   },
   "çi": {
    "dosya": "eee13eb95cd8.mp3",
    "okunus": "çi",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 1567,
-   "surum": "332b32cf72c1"
+   "boyut": 1824,
+   "surum": "6b8c233c6521"
   },
   "çibi": {
    "dosya": "efdb36741c8a.mp3",
    "okunus": "çibi",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2403,
-   "surum": "9839c69e046f"
+   "boyut": 2112,
+   "surum": "a8753826e61d"
   },
   "çibia": {
    "dosya": "670b95909687.mp3",
    "okunus": "çibia",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "f8d6026c6145"
+   "boyut": 2784,
+   "surum": "68bae1e11b1d"
   },
   "çibie": {
    "dosya": "c480b0808f4e.mp3",
    "okunus": "çibie",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2508,
-   "surum": "85e8f03bb53c"
+   "boyut": 3744,
+   "surum": "d21fa8dd6c72"
   },
   "çibiya": {
    "dosya": "79513d73791e.mp3",
    "okunus": "çibiya",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2717,
-   "surum": "ccdef7fd90fe"
+   "boyut": 4128,
+   "surum": "61c8ead6d779"
   },
   "çibiye": {
    "dosya": "c614c0136eae.mp3",
    "okunus": "çibiye",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "1fba8fc8dd06"
+   "boyut": 3360,
+   "surum": "2fab949ee4bf"
   },
   "çiçek": {
    "dosya": "3ff5fb62918c.mp3",
    "okunus": "çiçek",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 3344,
-   "surum": "b9923e6c99b3"
+   "boyut": 3168,
+   "surum": "ea149475bf82"
   },
   "çiçekçi": {
    "dosya": "25609065da2f.mp3",
    "okunus": "çiçekçi",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 3762,
-   "surum": "f7a17056c4ee"
+   "boyut": 3936,
+   "surum": "836045eb34ca"
   },
   "çiçekçiler": {
    "dosya": "8ba854805142.mp3",
    "okunus": "çiçekçiler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 4389,
-   "surum": "c73b94a2d56f"
+   "boyut": 4320,
+   "surum": "152c3e634577"
   },
   "çöbüş": {
    "dosya": "b2beadbc8122.mp3",
    "okunus": "çöbüş",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "b3b54d26b88d"
+   "boyut": 2976,
+   "surum": "67d109966386"
   },
   "çöbüşda": {
    "dosya": "8f142a164cae.mp3",
    "okunus": "çöbüşda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "4a40b16d92a4"
+   "boyut": 3360,
+   "surum": "bf458e19b439"
   },
   "çöbüşde": {
    "dosya": "045dd712e8a7.mp3",
    "okunus": "çöbüşde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "c2a314e0928b"
+   "boyut": 3648,
+   "surum": "0d08e0673724"
   },
   "çöbüşta": {
    "dosya": "8670e8f8861a.mp3",
    "okunus": "çöbüşta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "f0e4ebe4dc05"
+   "boyut": 3360,
+   "surum": "848b9731a06b"
   },
   "çöbüşte": {
    "dosya": "e9f2d83ce5e8.mp3",
    "okunus": "çöbüşte",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "9cf4221591e3"
+   "boyut": 3744,
+   "surum": "488d5f3c4f5a"
   },
   "çöfür": {
    "dosya": "4075a525946e.mp3",
    "okunus": "çöfür",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "d3df048f930c"
+   "boyut": 2592,
+   "surum": "5103d4ff5f7c"
   },
   "çöfürim": {
    "dosya": "515b5dd3f3f0.mp3",
    "okunus": "çöfürim",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "e7c1098136f0"
+   "boyut": 2592,
+   "surum": "89139a774e84"
   },
   "çöfürum": {
    "dosya": "be2601410dac.mp3",
    "okunus": "çöfürum",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2926,
-   "surum": "b8adae14e40e"
+   "boyut": 3456,
+   "surum": "b976f99ed069"
   },
   "çöfürüm": {
    "dosya": "633de01be319.mp3",
    "okunus": "çöfürüm",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3135,
-   "surum": "a8b973f46e73"
+   "boyut": 3168,
+   "surum": "e0a99e0cd00c"
   },
   "çöfürım": {
    "dosya": "7fcd3317914a.mp3",
    "okunus": "çöfürım",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "98a35ca7223f"
+   "boyut": 3168,
+   "surum": "36fc391f191b"
   },
   "çü": {
    "dosya": "72cfbbc8940f.mp3",
    "okunus": "çü",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 1672,
-   "surum": "70cc9c625cc2"
+   "boyut": 2400,
+   "surum": "3a3fa5af11bc"
   },
   "çübü": {
    "dosya": "0b43f6ccb0cf.mp3",
    "okunus": "çübü",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2299,
-   "surum": "ce446517e975"
+   "boyut": 2496,
+   "surum": "ee3ddb252dda"
   },
   "çübüda": {
    "dosya": "40427b68a1fe.mp3",
    "okunus": "çübüda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2717,
-   "surum": "7576bd80c554"
+   "boyut": 3168,
+   "surum": "374c729aafe2"
   },
   "çübüde": {
    "dosya": "3fc7215a02c9.mp3",
    "okunus": "çübüde",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2821,
-   "surum": "4a151a60484b"
+   "boyut": 2880,
+   "surum": "503a8215668e"
   },
   "çübüta": {
    "dosya": "282b851bf67b.mp3",
    "okunus": "çübüta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "08c848310133"
+   "boyut": 3168,
+   "surum": "67d0fa460eb6"
   },
   "çübüte": {
    "dosya": "4efbbc29c8be.mp3",
    "okunus": "çübüte",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2612,
-   "surum": "5751af64c6ca"
+   "boyut": 3072,
+   "surum": "e06e7338e40f"
   },
   "çık": {
    "dosya": "85b8b7a206a6.mp3",
    "okunus": "çık",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "bahce"
    ],
-   "boyut": 1985,
-   "surum": "1aaabeb75ea8"
+   "boyut": 2112,
+   "surum": "95d5ff3b8778"
   },
   "ö ince ve yuvarlak, ı kalın ve düz. İkisi de uyuşmuyor.": {
    "dosya": "a86f3020592a.mp3",
    "okunus": "ö ince ve yuvarlak, ı kalın ve düz. İkisi de uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 16927,
-   "surum": "e3822499fa92"
+   "boyut": 26400,
+   "surum": "8784bd4c7e0f"
   },
   "ö ince, a kalın. Kalınlıkları uyuşmuyor.": {
    "dosya": "c6649e427f1b.mp3",
    "okunus": "ö ince, a kalın. Kalınlıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 12643,
-   "surum": "dd1a8256ca79"
+   "boyut": 13056,
+   "surum": "e7393c51830d"
   },
   "ö ince, u kalın. Kalınlıkları uyuşmuyor.": {
    "dosya": "b65844ac55ec.mp3",
    "okunus": "ö ince, u kalın. Kalınlıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 12643,
-   "surum": "7fc42e48a3c2"
+   "boyut": 14880,
+   "surum": "418b4e82523a"
   },
   "ö yuvarlak, i düz. Yuvarlaklıkları uyuşmuyor.": {
    "dosya": "ffbde33c00d9.mp3",
    "okunus": "ö yuvarlak, i düz. Yuvarlaklıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy"
    ],
-   "boyut": 15569,
-   "surum": "a4d68a3ff61e"
+   "boyut": 22080,
+   "surum": "3fa57e75b70e"
   },
   "ü ince ve yuvarlak, ı kalın ve düz. İkisi de uyuşmuyor.": {
    "dosya": "98e309f96d2e.mp3",
    "okunus": "ü ince ve yuvarlak, ı kalın ve düz. İkisi de uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy",
     "uyduruk"
    ],
-   "boyut": 17345,
-   "surum": "f19b82dd8e70"
+   "boyut": 24192,
+   "surum": "c6c4b73b1dd8"
   },
   "ü ince, a kalın. Kalınlıkları uyuşmuyor.": {
    "dosya": "69326915228c.mp3",
    "okunus": "ü ince, a kalın. Kalınlıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 12643,
-   "surum": "4edcebdfc880"
+   "boyut": 15840,
+   "surum": "f2e123f7f133"
   },
   "ü ince, u kalın. Kalınlıkları uyuşmuyor.": {
    "dosya": "f244a8526a7d.mp3",
    "okunus": "ü ince, u kalın. Kalınlıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy",
     "uyduruk"
    ],
-   "boyut": 12539,
-   "surum": "f393431bcf14"
+   "boyut": 14400,
+   "surum": "23bcea763135"
   },
   "ü yuvarlak, i düz. Yuvarlaklıkları uyuşmuyor.": {
    "dosya": "67936d3262a2.mp3",
    "okunus": "ü yuvarlak, i düz. Yuvarlaklıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy",
     "uyduruk"
    ],
-   "boyut": 14838,
-   "surum": "0465b042a8f6"
+   "boyut": 19296,
+   "surum": "ca6de55cee79"
   },
   "İki ünlü yan yana gelmez: araya y girer.": {
    "dosya": "5123be925cfd.mp3",
    "okunus": "İki ünlü yan yana gelmez: araya ye girer.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 12016,
-   "surum": "040648c57ac9"
+   "boyut": 12864,
+   "surum": "9349ac61fddf"
   },
   "İkisi de olur: bızıpım, bızıbım.": {
    "dosya": "af0a16f515cd.mp3",
    "okunus": "İkisi de olur: bızıpım, bızıbım.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 10031,
-   "surum": "1130acb0c1df"
+   "boyut": 10464,
+   "surum": "696fbd6e6b26"
   },
   "İkisi de olur: catapım, catabım.": {
    "dosya": "3b300ec04d6b.mp3",
    "okunus": "İkisi de olur: catapım, catabım.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 10658,
-   "surum": "50b9fd9df7c3"
+   "boyut": 10752,
+   "surum": "e237d027ec7d"
   },
   "İkisi de olur: datipim, datibim.": {
    "dosya": "f3f349f9fe35.mp3",
    "okunus": "İkisi de olur: datipim, datibim.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 10449,
-   "surum": "22011453d442"
+   "boyut": 12288,
+   "surum": "4862f4021d6d"
   },
   "İkisi de olur: dobutum, dobudum.": {
    "dosya": "de57bc8a6c50.mp3",
    "okunus": "İkisi de olur: dobutum, dobudum.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 9718,
-   "surum": "3205934c18f2"
+   "boyut": 10848,
+   "surum": "1d350a6fec85"
   },
   "İkisi de olur: dozakım, dozağım.": {
    "dosya": "a54744d93523.mp3",
    "okunus": "İkisi de olur: dozakım, dozağım.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 10031,
-   "surum": "ebb45733693a"
+   "boyut": 12000,
+   "surum": "337d9730359d"
   },
   "İkisi de olur: farıçım, farıcım.": {
    "dosya": "0cb8ab82188d.mp3",
    "okunus": "İkisi de olur: farıçım, farıcım.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 10344,
-   "surum": "20c76f4fa8b1"
+   "boyut": 10752,
+   "surum": "3bf5f69f9587"
   },
   "İkisi de olur: fuzakım, fuzağım.": {
    "dosya": "86d04219e9f4.mp3",
    "okunus": "İkisi de olur: fuzakım, fuzağım.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 9822,
-   "surum": "390d825f8514"
+   "boyut": 11328,
+   "surum": "07c6a1e6f4dc"
   },
   "İkisi de olur: fünekim, füneğim.": {
    "dosya": "d354734bcda5.mp3",
    "okunus": "İkisi de olur: fünekim, füneğim.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 10240,
-   "surum": "8a323fbd3fc2"
+   "boyut": 12768,
+   "surum": "5ac0df7ef5d7"
   },
   "İkisi de olur: göpeçim, göpecim.": {
    "dosya": "968183280ed8.mp3",
    "okunus": "İkisi de olur: göpeçim, göpecim.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 10553,
-   "surum": "448612e9dcfc"
+   "boyut": 13632,
+   "surum": "986f2d3d24c5"
   },
   "İkisi de olur: mödütüm, mödüdüm.": {
    "dosya": "e918edc015df.mp3",
    "okunus": "İkisi de olur: mödütüm, mödüdüm.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 9300,
-   "surum": "93d626afc314"
+   "boyut": 10656,
+   "surum": "f2240a9f7661"
   },
   "İkisi de olur: nevikim, neviğim.": {
    "dosya": "c6b2a26ecf5f.mp3",
    "okunus": "İkisi de olur: nevikim, neviğim.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 9404,
-   "surum": "6d3ea210fbde"
+   "boyut": 10752,
+   "surum": "9530e1eb4d41"
   },
   "İkisi de olur: nübüküm, nübüğüm.": {
    "dosya": "3dfd6bd757a9.mp3",
    "okunus": "İkisi de olur: nübüküm, nübüğüm.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 10031,
-   "surum": "5535de379f08"
+   "boyut": 10848,
+   "surum": "4638e0bbd651"
   },
   "İkisi de olur: nüdepim, nüdebim.": {
    "dosya": "318f76375dae.mp3",
    "okunus": "İkisi de olur: nüdepim, nüdebim.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 9718,
-   "surum": "386d32d25754"
+   "boyut": 10176,
+   "surum": "80fe074ecc35"
   },
   "İkisi de olur: pogukum, poguğum.": {
    "dosya": "396f3db3c764.mp3",
    "okunus": "İkisi de olur: pogukum, poguğum.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 9927,
-   "surum": "b56819328c36"
+   "boyut": 12000,
+   "surum": "2fd8b49d1726"
   },
   "İkisi de olur: pıtakım, pıtağım.": {
    "dosya": "2f467897afea.mp3",
    "okunus": "İkisi de olur: pıtakım, pıtağım.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 10971,
-   "surum": "9b61c6d4bac1"
+   "boyut": 9984,
+   "surum": "c86408579e1d"
   },
   "İkisi de olur: siletim, siledim.": {
    "dosya": "14dd1bd509fb.mp3",
    "okunus": "İkisi de olur: siletim, siledim.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 9822,
-   "surum": "14e3a6b9a6c8"
+   "boyut": 11136,
+   "surum": "bb7c8ad7f89a"
   },
   "İkisi de olur: tugakım, tugağım.": {
    "dosya": "5a61df4dade9.mp3",
    "okunus": "İkisi de olur: tugakım, tugağım.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 10762,
-   "surum": "afba4b7d848b"
+   "boyut": 10848,
+   "surum": "d797cf37e518"
   },
   "İkisi de olur: zitepim, zitebim.": {
    "dosya": "8575aacfc7b4.mp3",
    "okunus": "İkisi de olur: zitepim, zitebim.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 10553,
-   "surum": "6d46855b0b34"
+   "boyut": 10944,
+   "surum": "8248b6995fe4"
   },
   "İkisi de olur: zodatım, zodadım.": {
    "dosya": "2bb950353e3d.mp3",
    "okunus": "İkisi de olur: zodatım, zodadım.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 9509,
-   "surum": "614ca7e574a6"
+   "boyut": 10848,
+   "surum": "25df3611d8ae"
   },
   "İkisi de olur: çeviçim, çevicim.": {
    "dosya": "313158b7031f.mp3",
    "okunus": "İkisi de olur: çeviçim, çevicim.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 9300,
-   "surum": "bf9801a15c26"
+   "boyut": 12864,
+   "surum": "b042629a0ed5"
   },
   "ı düz, u yuvarlak. Yuvarlaklıkları uyuşmuyor.": {
    "dosya": "20764abb2b61.mp3",
    "okunus": "ı düz, u yuvarlak. Yuvarlaklıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy",
     "uyduruk"
    ],
-   "boyut": 14733,
-   "surum": "e0615f2915f7"
+   "boyut": 21600,
+   "surum": "78d9caa5bf2a"
   },
   "ı kalın ve düz, ü ince ve yuvarlak. İkisi de uyuşmuyor.": {
    "dosya": "4b93c846e115.mp3",
    "okunus": "ı kalın ve düz, ü ince ve yuvarlak. İkisi de uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy",
     "uyduruk"
    ],
-   "boyut": 17450,
-   "surum": "181c3b639f2a"
+   "boyut": 24960,
+   "surum": "586f17585098"
   },
   "ı kalın, e ince. Kalınlıkları uyuşmuyor.": {
    "dosya": "8aa3f5c111c9.mp3",
    "okunus": "ı kalın, e ince. Kalınlıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 13166,
-   "surum": "dbdc40625b63"
+   "boyut": 19200,
+   "surum": "396417b186e9"
   },
   "ı kalın, i ince. Kalınlıkları uyuşmuyor.": {
    "dosya": "7f25ab54cc6e.mp3",
    "okunus": "ı kalın, i ince. Kalınlıkları uyuşmuyor.",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "koy",
     "uyduruk"
    ],
-   "boyut": 12643,
-   "surum": "5439fa32da52"
+   "boyut": 15360,
+   "surum": "08aa77777493"
   },
-  "ş taş, ekin başı da taş olur: t.": {
-   "dosya": "9a08e6eec718.mp3",
-   "okunus": "şe taş, ekin başı da taş olur: te.",
-   "hiz": 1.2,
+  "ş sert, ekin başı da sert olur: t.": {
+   "dosya": "cc0ef03f1652.mp3",
+   "okunus": "şe sert, ekin başı da sert olur: te.",
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 12330,
-   "surum": "e8ad6df5d04c"
+   "boyut": 14112,
+   "surum": "6607181fe26a"
   },
   "şöbe": {
    "dosya": "14149820d82b.mp3",
    "okunus": "şöbe",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2717,
-   "surum": "4eb1038f4093"
+   "boyut": 3072,
+   "surum": "10c8a727895e"
   },
   "şöbeda": {
    "dosya": "31810b89c744.mp3",
    "okunus": "şöbeda",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "7af781e3cb42"
+   "boyut": 3552,
+   "surum": "188010e38825"
   },
   "şöbede": {
    "dosya": "dbdb24255bf8.mp3",
    "okunus": "şöbede",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "808ba70586bc"
+   "boyut": 4032,
+   "surum": "2954552731ce"
   },
   "şöbeta": {
    "dosya": "9f1921f8d138.mp3",
    "okunus": "şöbeta",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "76adbe955680"
+   "boyut": 3168,
+   "surum": "99245e9c1567"
   },
   "şöbete": {
    "dosya": "07a1bc02f920.mp3",
    "okunus": "şöbete",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "033c82cb1ab5"
+   "boyut": 3648,
+   "surum": "ea143fd72f31"
   },
   "şüven": {
    "dosya": "c3cbcd6816be.mp3",
    "okunus": "şüven",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3030,
-   "surum": "bcf4fc920542"
+   "boyut": 3456,
+   "surum": "7341360ed33b"
   },
   "şüvenlar": {
    "dosya": "1e9a7e6186b6.mp3",
    "okunus": "şüvenlar",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3971,
-   "surum": "512ed6657dc4"
+   "boyut": 3936,
+   "surum": "a6366c8fa7ed"
   },
   "şüvenler": {
    "dosya": "4a9896ac9224.mp3",
    "okunus": "şüvenler",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3866,
-   "surum": "709d97f9cb20"
+   "boyut": 4224,
+   "surum": "e529937c3e53"
   },
   "şıba": {
    "dosya": "a0645d97e029.mp3",
    "okunus": "şıba",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 2717,
-   "surum": "b076dce8acfa"
+   "boyut": 2976,
+   "surum": "164e77fbda33"
   },
   "şıbada": {
    "dosya": "0272528039d4.mp3",
    "okunus": "şıbada",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3448,
-   "surum": "e5949cb57c5e"
+   "boyut": 3648,
+   "surum": "124f33e2da30"
   },
   "şıbade": {
    "dosya": "886f7079552d.mp3",
    "okunus": "şıbade",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3344,
-   "surum": "782d8991cdd5"
+   "boyut": 3648,
+   "surum": "d3bee1b1b4d1"
   },
   "şıbata": {
    "dosya": "5a5f8a5b9cfd.mp3",
    "okunus": "şıbata",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3553,
-   "surum": "d043f692758a"
+   "boyut": 3456,
+   "surum": "cdefaab2c406"
   },
   "şıbate": {
    "dosya": "b28e37066b87.mp3",
    "okunus": "şıbate",
-   "hiz": 1.2,
+   "hiz": 0.9,
    "bolgeler": [
     "uyduruk"
    ],
-   "boyut": 3239,
-   "surum": "021f42f5d8e5"
+   "boyut": 3936,
+   "surum": "11e25c7233d1"
   }
  },
  "ornekler": [
   {
-   "hiz": 1.2,
+   "hiz": 0.9,
    "ad": "yavas",
    "metin": "Bukalemun Koyu",
-   "dosya": "ornek/yavas-1.mp3"
+   "okunus": "Bukalemun Koyu",
+   "dosya": "ornek/yavas-1.mp3",
+   "surum": "7b2a85e523ba"
   },
   {
-   "hiz": 1.2,
+   "hiz": 0.9,
    "ad": "yavas",
    "metin": "e ince, a kalın. Kalınlıkları uyuşmuyor.",
-   "dosya": "ornek/yavas-2.mp3"
+   "okunus": "e ince, a kalın. Kalınlıkları uyuşmuyor.",
+   "dosya": "ornek/yavas-2.mp3",
+   "surum": "75c30e105533"
   },
   {
-   "hiz": 1.2,
+   "hiz": 0.9,
    "ad": "yavas",
-   "metin": "p ünlüden önce jöle olur: b.",
-   "dosya": "ornek/yavas-3.mp3"
+   "metin": "Ek ünlüyle başlayınca p yumuşar: b olur.",
+   "okunus": "Ek ünlüyle başlayınca pe yumuşar: be olur.",
+   "dosya": "ornek/yavas-3.mp3",
+   "surum": "f4233153beec"
   },
   {
-   "hiz": 1.2,
+   "hiz": 0.9,
    "ad": "yavas",
    "metin": "İkisi de olur: pıtakım, pıtağım.",
-   "dosya": "ornek/yavas-4.mp3"
+   "okunus": "İkisi de olur: pıtakım, pıtağım.",
+   "dosya": "ornek/yavas-4.mp3",
+   "surum": "e030f0be9530"
   },
   {
-   "hiz": 1.2,
+   "hiz": 0.9,
    "ad": "yavas",
    "metin": "Meyvenin üstüne gövde çıkmaz: önce çi.",
-   "dosya": "ornek/yavas-5.mp3"
+   "okunus": "Meyvenin üstüne gövde çıkmaz: önce çi.",
+   "dosya": "ornek/yavas-5.mp3",
+   "surum": "edc362966b6b"
   },
   {
    "hiz": 1.0,
    "ad": "olagan",
    "metin": "Bukalemun Koyu",
-   "dosya": "ornek/olagan-1.mp3"
+   "okunus": "Bukalemun Koyu",
+   "dosya": "ornek/olagan-1.mp3",
+   "surum": "2d6097a4b283"
   },
   {
    "hiz": 1.0,
    "ad": "olagan",
    "metin": "e ince, a kalın. Kalınlıkları uyuşmuyor.",
-   "dosya": "ornek/olagan-2.mp3"
+   "okunus": "e ince, a kalın. Kalınlıkları uyuşmuyor.",
+   "dosya": "ornek/olagan-2.mp3",
+   "surum": "c7011743eb5e"
   },
   {
    "hiz": 1.0,
    "ad": "olagan",
-   "metin": "p ünlüden önce jöle olur: b.",
-   "dosya": "ornek/olagan-3.mp3"
+   "metin": "Ek ünlüyle başlayınca p yumuşar: b olur.",
+   "okunus": "Ek ünlüyle başlayınca pe yumuşar: be olur.",
+   "dosya": "ornek/olagan-3.mp3",
+   "surum": "f163b783574e"
   },
   {
    "hiz": 1.0,
    "ad": "olagan",
    "metin": "İkisi de olur: pıtakım, pıtağım.",
-   "dosya": "ornek/olagan-4.mp3"
+   "okunus": "İkisi de olur: pıtakım, pıtağım.",
+   "dosya": "ornek/olagan-4.mp3",
+   "surum": "d67b4475d7b8"
   },
   {
    "hiz": 1.0,
    "ad": "olagan",
    "metin": "Meyvenin üstüne gövde çıkmaz: önce çi.",
-   "dosya": "ornek/olagan-5.mp3"
+   "okunus": "Meyvenin üstüne gövde çıkmaz: önce çi.",
+   "dosya": "ornek/olagan-5.mp3",
+   "surum": "e550e40c904f"
   }
  ]
 }

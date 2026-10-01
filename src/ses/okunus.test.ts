@@ -24,9 +24,9 @@ describe('okunuş: tek harf adıyla söylenir', () => {
   })
 
   it('cümlede yalnız tek harfler değişir; kelimeler olduğu gibi kalır', () => {
-    expect(okunus('p ünlüden önce jöle olur: b.')).toBe('pe ünlüden önce jöle olur: be.')
-    expect(okunus('k ünlüden önce jöle olur: ğ.')).toBe('ke ünlüden önce jöle olur: yumuşak ge.')
-    expect(okunus('top inatçı: p taş kalır.')).toBe('top inatçı: pe taş kalır.')
+    expect(okunus('Ek ünlüyle başlayınca p yumuşar: b olur.')).toBe('Ek ünlüyle başlayınca pe yumuşar: be olur.')
+    expect(okunus('Ek ünlüyle başlayınca k yumuşar: ğ olur.')).toBe('Ek ünlüyle başlayınca ke yumuşar: yumuşak ge olur.')
+    expect(okunus('top inatçıdır: p yumuşamaz.')).toBe('top inatçıdır: pe yumuşamaz.')
     expect(okunus('e ince, a kalın. Kalınlıkları uyuşmuyor.')).toBe(
       'e ince, a kalın. Kalınlıkları uyuşmuyor.',
     )

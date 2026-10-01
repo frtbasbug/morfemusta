@@ -79,7 +79,7 @@ export function denemeyiDegerlendir(gorev: Gorev, sinir: Sinir, karo: Karo): Den
 
 /**
  * Nedenin ilgili iki sesi, adaydaki yerleriyle: gövdede seçilen ünsüz ve ardındaki ünlü (p
- * ünlüden önce); ek başında önceki ses ve seçilen ünsüz (p taş, ekin başı da taş);
+ * ünlüden önce); ek başında önceki ses ve seçilen ünsüz (p sert, ekin başı da sert);
  * kaynaştırmada ekten önceki ses ve ekin ilk sesi (zelü + e: ü ve e; fıngıl + ya: l ve y);
  * uyumda bakılan ve seçilen ünlü. Uydurukçuklar da kullanır.
  */
