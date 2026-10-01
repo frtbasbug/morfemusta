@@ -64,10 +64,17 @@ OLAGAN = 1.0
 ORNEKLEME = 24000  # Hz; Chirp 3: HD'nin LINEAR16 çıktısı
 BIT_HIZI = 32  # kbit/s
 
-# Sessizlik: 10 ms'lik pencerelerde ortalama genlik bu eşiğin altındaysa sessiz sayılır.
+# Boş ses: hiçbir 10 ms'lik pencerenin ortalama genliği bu eşiğe varmıyorsa ses boştur.
 PENCERE = ORNEKLEME // 100
 SESSIZLIK_ESIGI = 300  # int16 genliği (yaklaşık -40 dBFS)
 PAY = 0.08  # saniye: kırpılan sessizliğin başta ve sonda bırakılan payı
+# İç sessizlik: 10 ms'lik pencerenin RMS'i sesin tepesinin 35 dB altındaysa sessizdir. 0.5 sn'den
+# uzun iç sessizlik 0.5 sn'ye indirilir (uyum cümlelerinde Chirp 0.8–1.9 sn duruyordu).
+GORECE_ESIK_DB = 35
+IC_SESSIZLIK = 0.5  # saniye: iç sessizliğin en uzun hâli (kısaltma)
+# Denetim: bunları geçen ses hatadır (üreteç durur).
+EN_COK_KENAR = 0.3  # saniye: baştaki ya da sondaki sessizlik
+EN_COK_IC = 0.6  # saniye: iç sessizlik
 # Yükseklik: konuşulan pencerelerin RMS'i bu düzeye getirilir; tepe -1 dBFS'yi aşmaz.
 HEDEF_RMS = 0.1 * 32767  # -20 dBFS
 TEPE = 0.89 * 32767  # -1 dBFS
@@ -178,16 +185,88 @@ def pencere_genlikleri(ornekler):
     ]
 
 
+def sessiz_pencereler(ornekler):
+    """Her 10 ms'lik pencere sessiz mi: RMS'i sesin tepesinin GORECE_ESIK_DB altında."""
+    tepe = max((abs(x) for x in ornekler), default=0)
+    esik = tepe * 10 ** (-GORECE_ESIK_DB / 20)
+    sonuc = []
+    for i in range(0, len(ornekler), PENCERE):
+        parca = ornekler[i : i + PENCERE]
+        rms = math.sqrt(sum(x * x for x in parca) / len(parca))
+        sonuc.append(rms < esik)
+    return sonuc
+
+
+def sessizlikler(ornekler):
+    """Baştaki, sondaki ve en uzun iç sessizlik (saniye)."""
+    sessiz = sessiz_pencereler(ornekler)
+    if all(sessiz):
+        sure = len(ornekler) / ORNEKLEME
+        return sure, sure, 0.0
+    ilk = sessiz.index(False)
+    son = len(sessiz) - 1 - sessiz[::-1].index(False)
+    en_uzun = dizi = 0
+    for s in sessiz[ilk : son + 1]:
+        dizi = dizi + 1 if s else 0
+        en_uzun = max(en_uzun, dizi)
+    pencere = PENCERE / ORNEKLEME
+    return ilk * pencere, (len(sessiz) - 1 - son) * pencere, en_uzun * pencere
+
+
+def ic_sessizligi_kisalt(ornekler):
+    """IC_SESSIZLIK'ten uzun her iç sessizliği IC_SESSIZLIK'e indirir (ortasından keser)."""
+    sessiz = sessiz_pencereler(ornekler)
+    if all(sessiz):
+        return ornekler
+    ilk = sessiz.index(False)
+    son = len(sessiz) - 1 - sessiz[::-1].index(False)
+    en_cok = round(IC_SESSIZLIK * ORNEKLEME / PENCERE)
+    atilacak = set()
+    i = ilk
+    while i <= son:
+        if not sessiz[i]:
+            i += 1
+            continue
+        j = i
+        while j <= son and sessiz[j]:
+            j += 1
+        uzunluk = j - i
+        if uzunluk > en_cok:
+            # Sessizliğin iki ucu kalır (sesin sönüşü ve başlayışı), ortası atılır.
+            yarim = en_cok // 2
+            atilacak.update(range(i + yarim, j - (en_cok - yarim)))
+        i = j
+    if not atilacak:
+        return ornekler
+    sonuc = array.array('h')
+    for k in range(len(sessiz)):
+        if k not in atilacak:
+            sonuc.extend(ornekler[k * PENCERE : (k + 1) * PENCERE])
+    return sonuc
+
+
+def sessizlik_sorunu(ornekler):
+    """Denetim: kenar sessizliği EN_COK_KENAR'ı, iç sessizlik EN_COK_IC'yi geçerse sorun."""
+    bas, son, ic = sessizlikler(ornekler)
+    if bas > EN_COK_KENAR or son > EN_COK_KENAR:
+        return f'kenar sessizliği uzun (baş {bas:.2f} s, son {son:.2f} s)'
+    if ic > EN_COK_IC:
+        return f'iç sessizlik uzun ({ic:.2f} s)'
+    return None
+
+
 def isle(ornekler):
-    """Sessizliği kırpar (kısa pay bırakır) ve sesi aynı yüksekliğe getirir. Boşsa None."""
-    genlikler = pencere_genlikleri(ornekler)
-    sesli = [i for i, g in enumerate(genlikler) if g >= SESSIZLIK_ESIGI]
-    if not sesli:
+    """Sessizliği kırpar (kısa pay bırakır), uzun iç sessizliği kısaltır, sesi aynı yüksekliğe
+    getirir. Boşsa None."""
+    # Hiçbir pencere SESSIZLIK_ESIGI'ne varmıyorsa ses boştur. Kırpma göreli eşikle yapılır
+    # (tepenin 35 dB altı): denetim de aynı ölçüyle bakar.
+    if max(pencere_genlikleri(ornekler), default=0) < SESSIZLIK_ESIGI:
         return None
+    sesli = [i for i, s in enumerate(sessiz_pencereler(ornekler)) if not s]
     pay = int(PAY * ORNEKLEME)
     bas = max(0, sesli[0] * PENCERE - pay)
     son = min(len(ornekler), (sesli[-1] + 1) * PENCERE + pay)
-    kirpik = ornekler[bas:son]
+    kirpik = ic_sessizligi_kisalt(ornekler[bas:son])
 
     konusulan = [x for i in sesli for x in ornekler[i * PENCERE : (i + 1) * PENCERE]]
     rms = math.sqrt(sum(x * x for x in konusulan) / len(konusulan))
@@ -243,6 +322,7 @@ def uret(okunus, hiz):
     """MP3 baytları ve sorun (yoksa None). Aşırı kısa, uzun ya da boş ses yeniden istenir."""
     en_az, en_cok = beklenen_sure(okunus, hiz)
     sorun = None
+    sessizlik = None
     islenmis = None
     for deneme in range(DENEME):
         # Chirp kısa parçada (pe, lik) ara sıra boş ses verir; sonraki denemelerde sona nokta
@@ -253,22 +333,45 @@ def uret(okunus, hiz):
             sorun = 'boş'
             continue
         sure = len(islenmis) / ORNEKLEME
-        if sure < en_az:
+        sessizlik = sessizlik_sorunu(islenmis)
+        if sessizlik:
+            sorun = sessizlik
+        elif sure < en_az:
             sorun = f'kısa ({sure:.2f} s < {en_az:.2f} s)'
         elif sure > en_cok:
             sorun = f'uzun ({sure:.2f} s > {en_cok:.2f} s)'
         else:
             return mp3(islenmis), None
+    if sessizlik:
+        raise SessizlikHatasi(f'{okunus}: {sessizlik}')
     if islenmis is None:
         islenmis = array.array('h', [0] * PENCERE)
     return mp3(islenmis), sorun
 
 
+class SessizlikHatasi(Exception):
+    """Denetimi geçemeyen ses: üreteç durur, dosya yazılmaz."""
+
+
 def main():
     ayrac = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ayrac.add_argument('--hepsi', action='store_true', help='hepsini yeniden üret')
+    ayrac.add_argument(
+        '--yeniden',
+        metavar='DOSYA',
+        help='yalnız bu dosyadaki ses dosyalarını yeniden üret (satır satır: abc123.mp3, '
+        'ornek/yavas-2.mp3); ötekiler değişmez. Listede olmayan bayat ses varsa hiç istek '
+        'gitmeden durur',
+    )
     secenekler = ayrac.parse_args()
     anahtar()
+    yeniden = set()
+    if secenekler.yeniden:
+        yeniden = {
+            satir.strip()
+            for satir in Path(secenekler.yeniden).read_text(encoding='utf-8').splitlines()
+            if satir.strip()
+        }
 
     metinler = metinleri_al()
     eski = json.loads(LISTE.read_text(encoding='utf-8')) if LISTE.exists() else {}
@@ -280,8 +383,10 @@ def main():
     ORNEK_DIZINI.mkdir(parents=True, exist_ok=True)
     okunuslar = {m['metin']: m['okunus'] for m in metinler}
 
-    # İşler: (yol, okunuş, hız, etiket). Değişmeyenler atlanır.
+    # İşler: (yol, okunuş, hız, etiket). Değişmeyenler atlanır. --yeniden verilince yalnız
+    # listedekiler üretilir; listede olmayan bayat ses varsa hiç istek gitmeden durulur.
     isler = []
+    bayatlar = []
     for kayit in metinler:
         metin, okunus = kayit['metin'], kayit['okunus']
         yol = SES_DIZINI / f'{ozet(metin)}.mp3'
@@ -293,7 +398,9 @@ def main():
             and onceki.get('hiz') == YAVAS
             and yol.exists()
         )
-        if not ayni:
+        if yeniden and not ayni and yol.name not in yeniden:
+            bayatlar.append(f'{yol.name}\t{metin}')
+        elif not ayni or yol.name in yeniden:
             isler.append((yol, okunus, YAVAS, metin))
     ornek_kayitlari = []
     for hiz, ad in ((YAVAS, 'yavas'), (OLAGAN, 'olagan')):
@@ -309,17 +416,34 @@ def main():
                 and onceki.get('hiz') == hiz
                 and yol.exists()
             )
-            if not ayni:
+            if yeniden and not ayni and dosya not in yeniden:
+                bayatlar.append(f'{dosya}\t{cumle} ({hiz})')
+            elif not ayni or dosya in yeniden:
                 isler.append((yol, okunuslar[cumle], hiz, f'{cumle} ({hiz})'))
             ornek_kayitlari.append((hiz, ad, cumle, dosya, yol))
 
+    if bayatlar:
+        sys.exit(
+            '--yeniden ile durdu: listede olmayan bu sesler de güncel değil (okunuş, ses ya da '
+            'hız değişti ya da dosya yok). Önce --yeniden olmadan çalıştırın ya da listeye '
+            'ekleyin:\n  ' + '\n  '.join(bayatlar)
+        )
+
     sorunlular = []
+    hatalar = []
+    basarisiz = set()  # denetimi geçemeyen işlerin yolu: listede eski kaydı kalır
     bitti = 0
 
     def is_yap(is_):
         nonlocal bitti
         yol, okunus, hiz, etiket = is_
-        veri, sorun = uret(okunus, hiz)
+        try:
+            veri, sorun = uret(okunus, hiz)
+        except SessizlikHatasi as hata:
+            with kilit:
+                hatalar.append((etiket, str(hata)))
+                basarisiz.add(yol)
+            return
         yol.write_bytes(veri)
         with kilit:
             bitti += 1
@@ -335,6 +459,13 @@ def main():
     for kayit in metinler:
         metin = kayit['metin']
         dosya = f'{ozet(metin)}.mp3'
+        if SES_DIZINI / dosya in basarisiz:
+            # Denetimi geçemeyen ses: eski kaydı (eski okunuşu, sürümü) kalır, sonraki
+            # çalıştırmada yine bayat sayılır. Eski kaydı yoksa listeye girmez.
+            if metin in eski_metinler:
+                liste[metin] = eski_metinler[metin]
+                toplam += eski_metinler[metin].get('boyut', 0)
+            continue
         veri = (SES_DIZINI / dosya).read_bytes()
         toplam += len(veri)
         liste[metin] = {
@@ -348,6 +479,10 @@ def main():
     ornekler = []
     ornek_toplami = 0
     for hiz, ad, cumle, dosya, yol in ornek_kayitlari:
+        if yol in basarisiz:
+            if dosya in eski_ornekler:
+                ornekler.append(eski_ornekler[dosya])
+            continue
         veri = yol.read_bytes()
         ornek_toplami += len(veri)
         ornekler.append(
@@ -399,10 +534,16 @@ def main():
         f'{len(isler)} metin üretildi, Google\'a {gonderilen_karakter} karakter gönderildi',
         file=sys.stderr,
     )
+    if hatalar:
+        print('\nSessizlik denetimini geçemedi (dosya yazılmadı):', file=sys.stderr)
+        for etiket, hata in hatalar:
+            print(f'  {etiket}\t{hata}', file=sys.stderr)
     if sorunlular:
         print('\nYeniden denendi, yine şüpheli (ses.html\'de dinlenmeli):', file=sys.stderr)
         for etiket, sorun in sorunlular:
             print(f'  {etiket}\t{sorun}', file=sys.stderr)
+    if hatalar:
+        sys.exit(1)
 
 
 if __name__ == '__main__':

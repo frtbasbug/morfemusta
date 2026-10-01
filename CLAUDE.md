@@ -278,9 +278,14 @@ DESIGN.md  NEXT.md  CLAUDE.md
   lisansı ses dosyalarını kapsamaz.
 - **Ses üretimi (`scripts/ses-uret.py`):** `pip install lameenc`; REST, `v1/text:synthesize`,
   `languageCode` tr-TR, `speakingRate` 0.9 (oyun; örnekler 0.9 ve 1.0). Yanıt LINEAR16 (24 kHz):
-  baştaki ve sondaki sessizlik 80 ms pay bırakılarak kırpılır, konuşulan kısmın RMS'i -20 dBFS'ye
-  getirilir (tepe en çok -1 dBFS), sonra MP3: mono, 24 kHz, 32 kbit/s (`lameenc`). Boş, aşırı
-  kısa ya da uzun ses yeniden istenir (Chirp kısa parçada, *pe*, *lik*, ara sıra boş ses verir;
+  baştaki ve sondaki sessizlik 80 ms pay bırakılarak kırpılır, 0.5 sn'den uzun iç sessizlik
+  0.5 sn'ye indirilir (sessizlik: 10 ms'lik pencerenin RMS'i sesin tepesinin 35 dB altı),
+  konuşulan kısmın RMS'i -20 dBFS'ye getirilir (tepe en çok -1 dBFS), sonra MP3: mono, 24 kHz,
+  32 kbit/s (`lameenc`). Denetim: baştaki ya da sondaki sessizlik 0.3 sn'yi, iç sessizlik
+  0.6 sn'yi geçerse ses yeniden istenir, yine olmazsa üreteç hata verir (dosya yazılmaz; listede
+  eski kaydı kalır, sonraki çalıştırmada yine bayat sayılır). `--yeniden DOSYA` yalnız listedeki
+  ses dosyalarını yeniden üretir: Chirp her üretimde biraz farklı okur, onaylanmış sesler
+  değişmesin. Listede olmayan bayat ses varsa hiç istek gitmeden durur. Boş, aşırı kısa ya da uzun ses yeniden istenir (Chirp kısa parçada, *pe*, *lik*, ara sıra boş ses verir;
   sonraki denemede sona nokta eklenir); yine olmazsa sonda listelenir. 429 ve 5xx'te beklenip
   yeniden denenir. Okunuşu, sesi ve hızı değişmeyen metin yeniden üretilmez (`--hepsi` hepsini
   üretir); listede olmayan dosya silinir. Betik CI'a girmez.
