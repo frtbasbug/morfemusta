@@ -41,8 +41,10 @@ import { EtiketliKok } from '../gorsel/KokYazisi.tsx'
 import UnluEtiketi from '../gorsel/UnluEtiketi.tsx'
 import { UNLULER } from '../gorsel/cizim.ts'
 import '../gorsel/tema.css'
+import { useDenemeGunlugu } from '../kabuk/gunluk.tsx'
 import type { Bolge } from '../oyun/bolgeler.ts'
 import type { Gorev } from '../oyun/gorevler.ts'
+import { nedenKodlari } from '../oyun/gunluk.ts'
 import type { SozlukKarti } from '../oyun/ilerleme.ts'
 import {
   TEZGAH,
@@ -117,6 +119,7 @@ export default function FistikciSahap({
   const bagli = useRef(false)
   const gorulenGorev = useRef(durum.gorevYeri)
   const { soyle, sonuc } = useSes()
+  const kaydet = useDenemeGunlugu(bolge.kimlik, gorev)
 
   // Sesli mod: görev başlayınca kök söylenir; bölgeye girişte önce bölgenin adı.
   const [acilisYeri] = useState(durum.gorevYeri)
@@ -162,6 +165,14 @@ export default function FistikciSahap({
   async function tasi(karo: KaroTuru, kayma: Nokta = DURAGAN) {
     if (!gorev || !sinir || evre !== 'secim') return
     const deneme = denemeyiDegerlendir(gorev, sinir, karo)
+    // Pilotun günlüğü: seçilen karonun harfi ve kurduğu kelime.
+    kaydet('sinir', {
+      dogruBicim: kelime,
+      secilen: karoHarfi(sinir, karo),
+      aday: deneme.aday,
+      dogru: dogruMu(deneme),
+      neden: nedenKodlari(deneme.nedenler),
+    })
     flushSync(() => gonder({ tur: 'dene', karo }))
     const oge = karolar.current.get(karo)
     if (dogruMu(deneme)) await otur(oge, karo, kayma)

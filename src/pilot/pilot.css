@@ -1,0 +1,249 @@
+/* Pilot sayfası (pilot.html). Yetişkin aracıdır; oyunun belirteçlerini (tema.css) kullanır.
+   Dokunma hedefleri en az 44 px; telefonda da tablette de tek sütun. */
+.pilot {
+  width: 100%;
+  max-width: 44rem;
+  margin-inline: auto;
+  padding:
+    calc(env(safe-area-inset-top) + 1rem) calc(env(safe-area-inset-right) + 1rem)
+    calc(env(safe-area-inset-bottom) + 2rem) calc(env(safe-area-inset-left) + 1rem);
+  line-height: 1.45;
+}
+
+.pilot h1 {
+  margin: 0;
+  font-family: var(--yazi-tipi-baslik);
+  font-size: 2rem;
+}
+
+.pilot h1:focus {
+  outline: none;
+}
+
+.pilot h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.35rem;
+}
+
+.pilot h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.2rem;
+}
+
+.pilot p {
+  margin: 0 0 0.6rem;
+}
+
+.pilot__surum {
+  font-weight: 700;
+}
+
+.pilot__not,
+.pilot__aciklama {
+  color: var(--soluk);
+}
+
+.pilot__bolum {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--ayrac);
+}
+
+.pilot__uyarilar {
+  display: grid;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pilot__uyari {
+  padding: 0.6rem 0.8rem;
+  border: 2px dashed var(--murekkep);
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+.pilot__durum {
+  font-size: 1.1rem;
+}
+
+.pilot__form {
+  margin: 0.75rem 0 0.5rem;
+}
+
+.pilot__etiket {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-weight: 700;
+}
+
+.pilot__satir {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.pilot__kod {
+  width: 7.5rem;
+  min-height: 2.75rem;
+  padding: 0 0.8rem;
+  border: 2px solid var(--murekkep);
+  border-radius: 12px;
+  background: var(--zemin);
+  color: var(--murekkep);
+  font: inherit;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pilot__kod[aria-invalid='true'] {
+  border-style: dashed;
+}
+
+.pilot__hata:empty {
+  display: none;
+}
+
+.pilot__hata {
+  font-weight: 700;
+}
+
+.pilot__dugmeler {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0.5rem 0 0.75rem;
+}
+
+.pilot__dugme {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0 1.1rem;
+  border: 2px solid var(--murekkep);
+  border-radius: 999px;
+  background: var(--murekkep);
+  color: var(--zemin);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.pilot__dugme--ikincil,
+.pilot__dugme--sil {
+  background: var(--zemin);
+  color: var(--murekkep);
+}
+
+.pilot__dugme--sil {
+  border-style: dashed;
+}
+
+.pilot__dugme:disabled {
+  border-style: dashed;
+  background: var(--zemin);
+  color: var(--soluk);
+  cursor: default;
+}
+
+.pilot__dugme:focus-visible,
+.pilot__kod:focus-visible,
+.pilot a:focus-visible {
+  outline: 3px solid var(--murekkep);
+  outline-offset: 3px;
+}
+
+.pilot__soru {
+  padding: 0.75rem;
+  border: 2px dashed var(--murekkep);
+  border-radius: 12px;
+}
+
+.pilot__ileti:empty {
+  display: none;
+}
+
+.pilot__elle-kopya {
+  width: 100%;
+  min-height: 8rem;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  font-size: 0.85rem;
+}
+
+.pilot__ozet {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  border: 2px solid var(--murekkep);
+  border-radius: 12px;
+}
+
+/* Dar ekranda tablo kendi içinde kayar; sayfa yana kaymaz. */
+.pilot__ozet {
+  overflow-x: auto;
+}
+
+.pilot__tablo {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 0.5rem;
+}
+
+.pilot__tablo th,
+.pilot__tablo td {
+  padding: 0.35rem 0.4rem;
+  border-bottom: 1px solid var(--ayrac);
+  text-align: left;
+  vertical-align: top;
+}
+
+.pilot__tablo td {
+  white-space: nowrap;
+}
+
+.pilot__tablo tfoot th,
+.pilot__tablo tfoot td {
+  border-bottom: 0;
+  font-weight: 700;
+}
+
+.pilot__nedenler-baslik {
+  font-weight: 700;
+}
+
+.pilot__nedenler {
+  margin: 0 0 0.5rem;
+  padding-left: 1.5rem;
+}
+
+.pilot__nedenler code {
+  font-family: inherit;
+  font-weight: 700;
+}
+
+.pilot__belgeler {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0 0 0.6rem;
+  padding: 0;
+  list-style: none;
+}
+
+.pilot__belgeler li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 0.5rem;
+}
+
+.pilot__belgeler a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--murekkep);
+  font-weight: 700;
+}

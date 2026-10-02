@@ -95,6 +95,35 @@ test.describe('ada haritası', () => {
     await expect(page).toHaveURL(/#\/$/)
   })
 
+  test("tabelanın yazısı kutusundan taşmaz: 390 px'lik iPhone'da da (Uydurukçuklar)", async ({
+    page,
+  }) => {
+    await page.goto('./')
+    for (const [en, boy] of [
+      [390, 844],
+      [412, 839],
+      [375, 667],
+      [360, 640],
+      [320, 568],
+    ] as const) {
+      await page.setViewportSize({ width: en, height: boy })
+      await page.evaluate(() => document.fonts.ready)
+      const tasanlar = await page.evaluate(() =>
+        [...document.querySelectorAll('.harita__bolgeler button')].flatMap((dugme) => {
+          const kutu = dugme.getBoundingClientRect()
+          const st = getComputedStyle(dugme)
+          const ic = kutu.right - parseFloat(st.borderRightWidth) - parseFloat(st.paddingRight)
+          return [...dugme.querySelectorAll('.bolge__ad, .bolge__durum')]
+            .filter((yazi) => yazi.getBoundingClientRect().right > ic + 0.5)
+            .map((yazi) => yazi.textContent)
+        }),
+      )
+      expect(tasanlar, `${en}×${boy}`).toEqual([])
+      expect(await yatayTasma(page), `${en}×${boy}`).toBeLessThanOrEqual(0)
+      expect(await cakisanlar(page), `${en}×${boy}`).toEqual([])
+    }
+  })
+
   test("360×640'ta kaydırmadan sığar; düğmeler üst üste binmez, en az 44 px", async ({ page }) => {
     await page.goto('./')
     for (const [en, boy] of [

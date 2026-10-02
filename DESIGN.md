@@ -495,8 +495,10 @@ kimlik, ad, akşam, görev tablosu); görev tablosu boş olan bölgenin içeriğ
 - **Renkler:** deniz, kara, krem, mürekkep, soluk ve ayraç. Kalın ve ince renkleri kullanılmaz;
   yalnız bukalemun ve karolar, dilbilgisel figürler olarak kendi renklerindedir. Gölge ve
   degrade yok.
-- **Sığma:** harita 360×640'ta kaydırmadan sığar (320×568'de de). Çizim ve düğmeler, kalan
-  alana en/boy oranı korunarak sığan bir kutudadır; düğmeler üst üste binmez.
+- **Sığma:** harita 360×640'ta kaydırmadan sığar (320×568'de de). Tabelanın yazısı kutusundan
+  taşmaz: en uzun tek sözcük (*Uydurukçuklar*) işaretiyle birlikte sığar (390 px'lik iPhone'da
+  da). Çizim ve düğmeler, kalan alana en/boy oranı korunarak sığan bir kutudadır; düğmeler üst
+  üste binmez.
 
 ### Gezinme
 
@@ -524,6 +526,10 @@ gövdeden düşer: her yapım adımının kelimesi (*çiçekçi*; *çiçekçiler
   kart önde. Kartın kök ve ek satırı kırılmaz: bir sütuna sığmayan kart (360–412 px'te *topum*,
   *toplarım*) iki sütun genişliğinde durur.
 - **Boşsa:** *Sözlüğün henüz boş. Bir kelime kurunca kartı buraya gelir.*
+- **Sınıf modunda** (geniş yatay ekran) bölgeler yan yana durur. Kartlar çoğalıp ekran kaymaya
+  başlayınca Sözlük bölge bölge olur: üstte bölgelerin sekmeleri (kart sayılarıyla), seçili
+  bölgenin kartları ekrana sığan sayfalarda, altta *Önceki* / *Sonraki*. Kartta künye yok (bölge
+  sekmede, tarih o gün). Tahtada kaydırma yok.
 - Kartta kelime, kök ve ek etiketleri saklıdır; ekler her açılışta motordan gelir. Kelime
   motorun kabul ettiği biçimlerden biridir: uydurma kökte çocuğun seçtiği (*pıtağım* ya da
   *pıtakım*; ikisi ayrı karttır).
@@ -545,7 +551,7 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
 - **Hareket:** *Sistem gibi* (cihazın hareket azaltma ayarına uyar) / *Azalt*
   (`prefers-reduced-motion` ile aynı davranır: hiçbir şey hareket etmez).
 - **Renkler:** *Renkli* / *Renksiz* (galerideki Renksiz mod; açıkken renkler büyüden sonra
-  da gri kalır). Yanında kalın *a* ile ince *e* etiketi örnek olarak durur.
+  da gri kalır). Başlığın yanında kalın *a* ile ince *e* etiketi örnek olarak durur.
 - **Sınıf modu:** *Kapalı* / *Açık*; altında *Etkileşimli tahta için: bütün bölgeler açık,
   ilerleme kaydedilmez.* Adreste `?sinif=1` de açar, `?sinif=0` kapatır ("Koleksiyon ve
   modlar").
@@ -554,7 +560,7 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
   kapatılan ipuçları silinmez. Sınıf modunda yalnız o açılışınkiler silinir: *Sınıf modunun
   ilerlemesi ve kartları silinecek.*
 - Seçimler büyük, dokunması kolay radyo düğmeleridir; seçili olan dolu ve halkası kalındır.
-- **Hakkında:** kodun (MIT), seslerin (Google Cloud Text-to-Speech, Chirp 3: HD Callirrhoe; MIT
+- **Hakkında:** sürüm (*pilot-1 (a1b2c3d, 2026-10-01)*: ad, kısa commit, commit'in günü), kodun (MIT), seslerin (Google Cloud Text-to-Speech, Chirp 3: HD Callirrhoe; MIT
   ses dosyalarını kapsamaz), emojilerin
   (Twemoji, CC BY 4.0) ve yazı tiplerinin (OFL-1.1) lisansı ve atfı. Bağlantı yok.
 
@@ -584,7 +590,9 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
   iPad Safari'de, oyun ana ekrandan açılmamışsa haritanın altında bir kez küçük bir ipucu
   görünür: *İlerlemen silinmesin: Paylaş → Ana Ekrana Ekle.* Yanında kapatma düğmesi (×,
   *İpucunu kapat*). Kapatılınca kayda yazılır, bir daha çıkmaz; sıfırlamada da kalır. Başka
-  tarayıcıda, ana ekrandan açılınca ve sınıf modunda görünmez.
+  tarayıcıda, ana ekrandan açılınca, sınıf modunda ve pilotun deneme günlüğü açıkken (çocuk kodu
+  varken) görünmez: ana ekrana eklenen uygulamanın deposu Safari'ninkinden ayrıdır, oyun simgeden
+  açılırsa denemeler pilot.html'e düşmez ("Pilot").
 - Sıfırlama geri alınmaz. Kayıtta bir sıfırlama kimliği var; her sıfırlamada artar. Bölge
   ekranı açılırken kimliği alır, görev bitince yazmadan önce karşılaştırır. Farklıysa ekran
   açıkken ilerleme sıfırlanmıştır: hiçbir şey yazılmaz, ekran baştan açılır.
@@ -753,7 +761,96 @@ ilerlemesi olduğu belli değildir, bu yüzden hiçbir şey kaydedilmez.
   ölçeklenir: 1920×1080'de 28 px; en küçük yazı 1 rem (28 px), dokunma hedefleri en az
   2.75 rem (77 px; en az 64 px olmalı). Harita, dört bölge, Sözlük ve akşam ekranı 1920×1080'de
   ve 1366×768'de kaydırmadan sığar. Bölge ekranlarında içerik 60 rem'lik sütunda, bukalemunlar
-  tek sırada; Sözlük'te bölgeler yan yana, kart sayısıyla orantılı genişlikte. Piksel boylu
-  çizimler (ağaç, karo, harita işaretleri) yazıyla aynı oranda büyür. Telefonda ve dikey ekranda
-  sınıf modu oyunun olağan görünümündedir.
-- Sınırlar: çok kartlı Sözlük (bir açılışta onlarca kelime) ve Ayarlar kayabilir.
+  tek sırada; Koy'un ve Dükkân'ın kelime kartı iri (yazı 3 rem); Bahçe'nin ağacı ekranın
+  ortasında ve 1.5 kat büyük, tabela ve kelimenin o anki hâli ağacın sağında, ortasıyla hizalı.
+  Sözlük'te bölgeler yan yana, kart sayısıyla orantılı genişlikte; sığmayınca bölge bölge ve
+  sayfalı ("Sözlük"). Ayarlar üç sütun; Hakkında Renkler'in ve İlerleme'nin yanında, iki metin
+  sütununda (sıfırlama sorusu açıkken de sığar). Piksel boylu çizimler (ağaç, karo, harita
+  işaretleri) yazıyla aynı oranda büyür. Telefonda ve dikey ekranda sınıf modu oyunun olağan
+  görünümündedir.
+
+## Pilot
+
+Oyun okulda, gözlemcinin yanında, çocuk çocuk denenir. Amaç oyunun anlaşılır ve eğlenceli olup
+olmadığını görmektir; değerlendirilen oyundur, çocuk değil. Hiçbir şey kendiliğinden
+gönderilmez: deneme günlüğü yalnız cihazdadır, yetişkin elle indirir.
+
+### Sürüm
+
+- Derlemede sürümün adı (*pilot-1*), derlenen commit'in kısa özeti ve commit'in günü pakete girer
+  (`src/surum.ts`, `vite.config.ts`). Ayarlar'daki Hakkında'da ve pilot.html'de görünür:
+  *pilot-1 (a1b2c3d, 2026-10-01)*. Günlüğün her satırında adı (*surum*).
+- Pilot sürerken main'e yalnız pilot düzeltmeleri girer; her biri adı artırır: *pilot-1.1*,
+  *pilot-1.2* (CLAUDE.md, 17. kural).
+
+### Deneme günlüğü
+
+- **Açılır, kapanır:** pilot.html'de bir çocuk kodu girilince açılır, kod silinince kapanır. Kod
+  bir harf ve iki ya da üç rakamdır (*P01*); ad yazılamaz. Kod yokken ve sınıf modunda hiçbir
+  deneme yazılmaz.
+- **Satır:** dört bölgede çocuğun her seçimi (bukalemunu, karoyu ya da eki köke, yuvaya, ağaca,
+  yaratığa taşıması) bir satırdır. Sütunlar:
+
+| Sütun | Ne |
+|-------|----|
+| `zaman` | seçimin anı, yerel saatle ISO 8601 (*2026-10-01T10:15:03.250+03:00*) |
+| `cocuk` | çocuk kodu |
+| `surum` | sürümün adı (*pilot-1*) |
+| `bolge` | bölgenin kimliği: koy, dukkan, bahce, uyduruk |
+| `tur`, `gorev` | görevin turu (tursuz bölgede 1) ve turdaki sırası |
+| `kok`, `ekler` | görevin kökü ve ekleri (*top*, *PL+POSS.1SG*) |
+| `dogru_bicim` | bu seçimin doğru biçimi: zincirde adımın biçimi (*toplar*, sonra *toplarım*), Bahçe'de sıradaki gövde; iki biçim de doğruysa / ile (*pıtakım/pıtağım*) |
+| `secilen` | ekin yüzeyi (*ler*) ya da karonun harfi (*b*) |
+| `aday` | seçimin kurduğu kelime (*atler*, *kitapım*, *çiçekler*) |
+| `sonuc` | *dogru* ya da *yanlis* |
+| `neden` | motorun kodu, ; ile (*PL:kalınlık*, *GÖVDE:yumuşama*, *LOC:sertleşme;LOC:kalınlık*); Bahçe'de *meyve:AGT* (ek sırası) ya da *önce:AGT*; doğruysa boş |
+| `deneme_no` | bu adımdaki kaçıncı deneme (1'den) |
+| `sure_ms` | görevin başından bu seçime geçen süre |
+| `ses_modu` | kapali, dokununca ya da sesli |
+
+- **Yer:** yalnız cihazda, oyunun kaydından ayrı bir anahtarda (`morfemusta.pilot.v1`). Her
+  seçimde son kayıt okunur, satır sonuna eklenir; kayıttaki öteki satırlar ve alanlar olduğu
+  gibi kalır.
+- **Depo dolarsa** oyun sürer, günlük durur: satırlar silinmez, durma işareti yazılır
+  (`morfemusta.pilot.durdu`); pilot.html *Günlük durdu* der. İşaret de yazılamazsa pilot.html
+  deponun dolu olduğunu kendisi sınar. Günlük yalnız *Günlüğü sil* ile silinir; o zaman yeniden
+  yazılır.
+
+### pilot.html
+
+Yetişkin içindir: oyundan bağlantı almaz, adresle açılır, arama motorlarına kapalıdır; önbellekte
+olduğu için çevrim dışı da açılır.
+
+- **Çocuk:** kod alanı ve *Yeni çocuk*: kodu yazar; oyunun ilerlemesini, kartlarını ve kalınan
+  yerini sıfırlar (ayarlar ve günlük kalır). Her çocuk Bukalemun Koyu'ndan başlar. *Kodu sil*
+  günlüğü kapatır. *Oyunu aç* oyuna götürür. Oyunun ses modu ve sınıf modu yazılıdır.
+- **Özet,** çocuk başına: bölge başına biten görev (son seçimi doğru olan görev; bir kez
+  sayılır), ilk denemede doğru oranı (her seçim yerinin ilk denemesi; iki biçimin de doğru
+  olduğu sınır adımı sayılmaz) ve en sık üç neden (her yanlış seçimin nedenleri ayrı ayrı).
+- **Günlük:** *CSV indir* (UTF-8 imli, noktalı virgüllü, satır sonu CRLF: Türkçe Excel Türkçe
+  harfleriyle doğrudan açar; virgül Türkçe Excel'de ondalık işaretidir), *Kopyala* (sekmeyle
+  ayrılmış; tabloya yapıştırılınca her alan bir hücreye), *Günlüğü sil* (iki adım: *Vazgeç* /
+  *Sil*; odak önce *Vazgeç*'te; kod kalır).
+- **Uyarılar:** günlük durdu, depo dolu, sınıf modu açık, kayıt okunamıyor.
+- Sürümün adı ve üç belgeye bağlantılar sayfada durur.
+
+### Belgeler
+
+Üç yazdırılabilir belge (`belgeler/*.html`): A4, siyah beyaz, Türkçe, her biri tek sayfa.
+Yazı tipi gömülü Andika'dır: tarayıcıdan yazdırılınca ya da PDF olarak kaydedilince her cihazda
+aynı dizilir.
+
+- **Gözlem formu** (çocuk başına bir sayfa): çocuk kodu, tarih, gözlemci, sınıf (1–4), cihaz, ses
+  modu, başlangıç ve bitiş saati; her bölge için biten görev (/10), yardım sayısı, zorlandığı
+  görevler, işaretlenecek kutular (sürükledi, dokundu, sesi dinledi, nedeni okudu ya da dinledi,
+  tahmin etti), not; çocuğun sözleri (aynen), arayüz sorunları (sürükleme zor, yazı küçük, ses
+  duyulmadı, ne yapacağını anlamadı, sıkıldı), genel izlenim (eğlendi ve anladı, 1–5).
+- **Veli bilgilendirme ve onay formu:** oyun, pilotun amacı, süre (20–30 dakika), ne kaydedildiği
+  (gözlemci notları ve cihazda kodla tutulan adsız deneme kaydı; ses, fotoğraf ya da görüntü
+  kaydı yok), gönüllülük ve istendiği an bırakma, iletişim. Araştırmacının adı, kurumu ve
+  iletişim bilgisi boş bırakılır (kurum adı yazılmaz). İmza yerleri: çocuğun adı, velinin adı,
+  imza, tarih; çocuğun sözlü onayı için bir kutu.
+- **Gözlemci yönergesi:** oyunun ve pilot.html'in adresi büyük puntoyla; hazırlık, her çocuk
+  için adımlar (Yeni çocuk, yansız giriş cümlesi, kuralı öğretmemek, yardım ancak iki başarısız
+  denemeden ya da 30 saniye takılmadan sonra ve forma işlenir, 20–25 dakika ya da çocuk
+  isteyene kadar, sözler aynen, kayıt yok), gün sonunda CSV.

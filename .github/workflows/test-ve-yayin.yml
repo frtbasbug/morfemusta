@@ -16,7 +16,7 @@ jobs:
   test:
     name: Testler
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
 
@@ -37,9 +37,13 @@ jobs:
       - name: Playwright Chromium'unu kur
         run: npx playwright install --with-deps --only-shell chromium
 
+      # Pilot yolu ve pilot.html WebKit'te de koşar (iPhone profili; playwright.config.ts).
+      - name: Playwright WebKit'ini kur
+        run: npx playwright install --with-deps webkit
+
       # webServer adımı siteyi dist/ altına derleyip önizler; aşağıda yayınlanan
       # dist/, uçtan uca testlerden geçen derlemenin kendisidir.
-      - name: Uçtan uca testler (telefon, Playwright)
+      - name: Uçtan uca testler (telefon, Chromium ve WebKit; Playwright)
         run: npm run test:e2e
 
       - name: Playwright raporunu sakla

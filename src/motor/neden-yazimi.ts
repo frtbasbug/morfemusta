@@ -5,7 +5,8 @@
 //   ek başı   ETİKET:sertleşme, ETİKET:yumuşak, ETİKET:kaynaştırma
 //   diğer     diğer
 //
-// Yalnız testler kullanır; oyun nedenin kendisiyle çalışır.
+// Testler ve pilotun deneme günlüğü (src/oyun/gunluk.ts, neden sütunu) kullanır; oyun nedenin
+// kendisiyle çalışır.
 
 import type { Neden } from './neden.ts'
 

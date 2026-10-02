@@ -44,8 +44,10 @@ import KokYazisi from '../gorsel/KokYazisi.tsx'
 import KurulanKelime from '../gorsel/KurulanKelime.tsx'
 import UnluEtiketi from '../gorsel/UnluEtiketi.tsx'
 import '../gorsel/tema.css'
+import { useDenemeGunlugu } from '../kabuk/gunluk.tsx'
 import type { Bolge } from '../oyun/bolgeler.ts'
 import type { Gorev } from '../oyun/gorevler.ts'
+import { nedenKodlari } from '../oyun/gunluk.ts'
 import type { SozlukKarti } from '../oyun/ilerleme.ts'
 import {
   ANLAM_ETKILERI,
@@ -116,6 +118,7 @@ export default function BukalemunKoyu({
   const bagli = useRef(false)
   const gorulenGorev = useRef(durum.gorevYeri)
   const { soyle, sonuc, buyu: buyuSesi } = useSes()
+  const kaydet = useDenemeGunlugu(bolge.kimlik, gorev)
 
   // Sesli mod: görev başlayınca kök söylenir; bölgeye girişte önce bölgenin adı.
   const [acilisYeri] = useState(durum.gorevYeri)
@@ -166,6 +169,14 @@ export default function BukalemunKoyu({
     const secenek = adim.secenekler.find((s) => s.yuzey === yuzey)
     if (!secenek) return
     const deneme = denemeyiDegerlendir(gorev, adim, yuzey)
+    // Pilotun günlüğü: her seçim bir satır (kod yokken ve sınıf modunda yazılmaz).
+    kaydet(String(adim.sira), {
+      dogruBicim: adim.bicim,
+      secilen: yuzey,
+      aday: deneme.aday,
+      dogru: dogruMu(deneme),
+      neden: nedenKodlari(deneme.nedenler),
+    })
     const etki = ANLAM_ETKILERI[adim.etiket]
     flushSync(() => gonder({ tur: 'dene', yuzey }))
     const oge = bukalemunlar.current.get(yuzey)

@@ -10,10 +10,12 @@ import {
   bahceGorevi,
   bahceIndirgeyici,
   buyusu,
+  denemeninAdayi,
   denemeyiDegerlendir,
   dogruMu,
   govdeDegisimi,
   kartEtiketleri,
+  nedenKodu,
   sepettekiler,
   simdikiKelime,
   type BahceDurumu,
@@ -189,6 +191,34 @@ describe('denemeyiDegerlendir', () => {
     })
     expect(dogruMu(denemeyiDegerlendir(a, 0, 2))).toBe(true)
     expect(denemeyiDegerlendir(a, 0, 1).cumle).toBe('gözlükçülük: önce lük, sonra çü.')
+  })
+})
+
+describe('deneme günlüğü için: aday ve nedenin kodu', () => {
+  it('aday, ağaçtaki eklerle seçilen ekin motordaki biçimi; doğruda sıradaki gövde', () => {
+    const a = agac(1)
+    expect(denemeninAdayi(a, 0, parcaSirasi(a, 'ler'))).toBe('çiçekler')
+    expect(denemeninAdayi(a, 0, parcaSirasi(a, 'çi'))).toBe('çiçekçi')
+    expect(denemeninAdayi(agac(6), 0, parcaSirasi(agac(6), 'luk'))).toBe('yolluk')
+    // Meyve gövdenin sonunu eritir: kalemlik + im → kalemliğim (yan yana yazılmaz).
+    const k = agac(7)
+    expect(denemeninAdayi(k, 1, parcaSirasi(k, 'im'))).toBe('kalemliğim')
+    for (const b of agaclar) {
+      for (let kurulan = 0; kurulan < b.parcalar.length; kurulan++) {
+        expect(denemeninAdayi(b, kurulan, kurulan)).toBe(simdikiKelime(b, kurulan + 1))
+      }
+    }
+  })
+
+  it('nedenin kodu: meyve motorun ek sırası koduyla (meyve:AGT), önce sıradaki ekle', () => {
+    const a = agac(1)
+    const meyve = denemeyiDegerlendir(a, 0, parcaSirasi(a, 'ler')).neden
+    expect(nedenKodu(meyve)).toBe('meyve:AGT')
+    expect(ekSirasiHatasi(['PL', 'AGT'])).toBe('meyve:AGT')
+    expect(nedenKodu(denemeyiDegerlendir(agac(6), 0, parcaSirasi(agac(6), 'luk')).neden)).toBe(
+      'önce:AGT',
+    )
+    expect(nedenKodu(null)).toBe('')
   })
 })
 

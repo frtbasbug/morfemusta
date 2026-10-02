@@ -140,7 +140,9 @@
 .harita__yer {
   position: absolute;
   width: max-content;
-  max-width: 10.25rem;
+  /* En uzun tek sözcük (Uydurukçuklar) işaretiyle birlikte sığar; uzun ad (Fıstıkçı Şahap'ın
+     Dükkânı) satırlara bölünür. Yazı tabelasından taşmaz (harita.spec.ts ölçer). */
+  max-width: 11.25rem;
   transform: translate(-50%, -50%);
 }
 

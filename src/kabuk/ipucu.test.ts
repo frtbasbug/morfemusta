@@ -38,23 +38,29 @@ describe('iOS Safari', () => {
 
 describe('ana ekran ipucu: bir kez gösterilir', () => {
   it('iPhone Safari\'de, ana ekrana eklenmemişse görünür', () => {
-    expect(anaEkranIpucuGorunsunMu(cihaz(IPHONE_SAFARI), BOS_ILERLEME)).toBe(true)
+    expect(anaEkranIpucuGorunsunMu(cihaz(IPHONE_SAFARI), BOS_ILERLEME, false)).toBe(true)
     expect(ANA_EKRAN_IPUCU).toBe('İlerlemen silinmesin: Paylaş → Ana Ekrana Ekle.')
   })
 
   it('ana ekrandan açılmışsa, başka tarayıcıda ya da sınıf modunda görünmez', () => {
-    expect(anaEkranIpucuGorunsunMu(cihaz(IPHONE_SAFARI, { anaEkranda: true }), BOS_ILERLEME)).toBe(
+    expect(anaEkranIpucuGorunsunMu(cihaz(IPHONE_SAFARI, { anaEkranda: true }), BOS_ILERLEME, false)).toBe(
       false,
     )
-    expect(anaEkranIpucuGorunsunMu(cihaz(ANDROID_CHROME), BOS_ILERLEME)).toBe(false)
+    expect(anaEkranIpucuGorunsunMu(cihaz(ANDROID_CHROME), BOS_ILERLEME, false)).toBe(false)
     expect(
-      anaEkranIpucuGorunsunMu(cihaz(IPHONE_SAFARI), ayarlariDegistir(BOS_ILERLEME, { sinif: 'acik' })),
+      anaEkranIpucuGorunsunMu(cihaz(IPHONE_SAFARI), ayarlariDegistir(BOS_ILERLEME, { sinif: 'acik' }), false),
     ).toBe(false)
+  })
+
+  it('pilotun deneme günlüğü açıkken (çocuk kodu varken) görünmez', () => {
+    // Ana ekrandaki uygulamanın deposu Safari'ninkinden ayrıdır: denemeler pilot.html'e düşmezdi.
+    expect(anaEkranIpucuGorunsunMu(cihaz(IPHONE_SAFARI), BOS_ILERLEME, true)).toBe(false)
+    expect(anaEkranIpucuGorunsunMu(cihaz(IPAD_SAFARI), BOS_ILERLEME, true)).toBe(false)
   })
 
   it('kapatılınca bir daha çıkmaz; ilerleme sıfırlansa da', () => {
     const kapali = ipucunuKapat(BOS_ILERLEME, 'ana-ekran')
-    expect(anaEkranIpucuGorunsunMu(cihaz(IPHONE_SAFARI), kapali)).toBe(false)
-    expect(anaEkranIpucuGorunsunMu(cihaz(IPHONE_SAFARI), ilerlemeyiSifirla(kapali))).toBe(false)
+    expect(anaEkranIpucuGorunsunMu(cihaz(IPHONE_SAFARI), kapali, false)).toBe(false)
+    expect(anaEkranIpucuGorunsunMu(cihaz(IPHONE_SAFARI), ilerlemeyiSifirla(kapali), false)).toBe(false)
   })
 })

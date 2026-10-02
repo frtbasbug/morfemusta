@@ -3,7 +3,7 @@ import { expect, test, type Page } from '@playwright/test'
 import { ANAHTAR, bukalemun, gorevleriOyna, kart, sonraki } from './yardimcilar.ts'
 
 // Erişilebilirlik (axe-core): oyunun ekranları Renkli, Renksiz ve sınıf modunda; geliştirici
-// sayfaları (denetim.html, galeri.html, ses.html, cihaz.html). Ciddi ya da kritik bulgu kalmaz.
+// sayfaları (denetim.html, galeri.html, ses.html, cihaz.html) ve pilot (pilot.html, belgeler). Ciddi ya da kritik bulgu kalmaz.
 
 type Mod = 'renkli' | 'renksiz' | 'sinif'
 
@@ -125,7 +125,7 @@ test.describe("iOS Safari'de ana ekran ipucu", () => {
 })
 
 test.describe('geliştirici sayfaları', () => {
-  test('denetim.html, galeri.html, ses.html ve cihaz.html', async ({ page }) => {
+  test('denetim.html, galeri.html, ses.html, cihaz.html, pilot.html ve belgeler', async ({ page }) => {
     test.setTimeout(120_000)
     const bulgular = []
     for (const [adres, baslik] of [
@@ -133,6 +133,10 @@ test.describe('geliştirici sayfaları', () => {
       ['galeri.html', 'Karakter Galerisi'],
       ['ses.html', 'Ses Denetimi'],
       ['cihaz.html', 'Cihaz Denetimi'],
+      ['pilot.html', 'Pilot'],
+      ['belgeler/gozlem-formu.html', 'Morfemusta pilotu · Gözlem formu'],
+      ['belgeler/veli-onay-formu.html', 'Morfemusta pilotu · Veli bilgilendirme ve onay formu'],
+      ['belgeler/gozlemci-yonergesi.html', 'Morfemusta pilotu · Gözlemci yönergesi'],
     ] as const) {
       await page.goto(adres)
       await expect(page.getByRole('heading', { level: 1, name: baslik })).toBeVisible()

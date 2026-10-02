@@ -1,9 +1,144 @@
 # Sıradaki
 
-**Sıradaki hedef: Oturum 12, pilot sürümü.** Kullanıcı oturumun tarifini verecek. Açık kalanlar
-aşağıda: Oturum 11'in bölümünde (Oturum 12 için) ve önceki oturumların bölümlerinde.
+**Sıradaki hedef: Oturum 13, pilot sonrası düzeltmeler.** Pilotun gözlem formları ve CSV'si
+gelince kullanıcı oturumun tarifini verecek. Pilot sürerken main'e yalnız pilot düzeltmeleri
+girer, her biri sürüm adını artırır (CLAUDE.md, 17. kural). Açık kalanlar aşağıda.
 
-## Son oturum: Oturum 11 — cila (2026-10-01)
+## Pilot günü yapılacakları
+
+1. **Bir gün önce:** PR birleşip yayınlandıktan sonra her cihazda
+   <https://frtbasbug.github.io/morfemusta/pilot.html>'i açın; sürüm *pilot-1* görünmeli.
+   Oyunu da bir kez açın. Okulda internet yoksa oyunun Ayarlar'ında Sınıf modu'nu açıp dört
+   bölgeye birer kez girin (sesler iner), sonra Sınıf modu'nu kapatın.
+2. **Yazdırın:** çocuk sayısınca gözlem formu, veli onay formu (araştırmacının adı, kurumu ve
+   iletişim bilgisi elle), her gözlemciye yönerge. Tarayıcıdan A4, ölçek %100.
+3. **Her cihazda:** şarj, ses açık, sessiz anahtar kapalı. Ayarlar'da Ses: 1–2. sınıfa Sesli mod,
+   3–4. sınıfa Dokununca; Sınıf modu Kapalı. pilot.html'deki "Oyunun ayarları" satırına bakın.
+4. **Her çocuk:** pilot.html → kod (P01 ...) → Yeni çocuk → Oyunu aç. Kodu forma yazın (veli
+   formundaki "Çocuk kodu" alanına da). **iPhone ve iPad'de oyunu ana ekrandaki simgeden
+   açmayın; pilot sayfasındaki Oyunu aç'la Safari'de açın.** Ana ekrandaki uygulamanın deposu
+   Safari'ninkinden ayrıdır: denemeler pilot.html'e düşmez. Pilot sayfasını yer imlerine ekleyin.
+5. **Gün sonu:** pilot.html → CSV indir (dosya adı günü taşır), dosyayı yedekleyin; formları
+   toplayın. Günlüğü sil yalnız CSV alındıktan sonra. Uyarı varsa (günlük durdu, sınıf modu açık)
+   önce CSV.
+6. **Gözlenecek ek noktalar** (önceki oturumların listelerinden): iOS'ta sesli mod ve efektler
+   ilk dokunuştan sonra, sessiz anahtar; etkileşimli tahtada sınıf modu (sayfalı Sözlük);
+   parmakla sürükleme; en eski cihazda cihaz.html'in sonucu.
+
+## Son oturum: Oturum 12 — pilot sürümü (2026-10-01)
+
+### Kullanıcının kararları
+
+- **Derleme hedefi bugünkü gibi kalır** (Vite'ın varsayılanı: Safari 16.4+, Chrome 111+, Firefox
+  114+). Çok eski tarayıcıda Oturum 11'in uyarısı çıkar (*Bu tarayıcı Morfemusta için çok eski.*
+  ve *Cihazı denetle*). Oturum 11'in "Derleme hedefi" maddesi kapandı.
+- **Pilotta denemeler yalnız cihazda, çocuk koduyla tutulur;** hiçbir şey kendiliğinden
+  gönderilmez.
+- **Üç yazdırılabilir belge:** gözlem formu, veli bilgilendirme ve onay formu, gözlemci yönergesi.
+
+### Bitenler
+
+- **Önce denetlendi:** Oturum 11'in işi main'de
+  ([frtbasbug/morfemusta#15](https://github.com/frtbasbug/morfemusta/pull/15), `109ad17`):
+  sınıf modu, cihaz.html, efektler.
+- **Sürüm** (`src/surum.ts`): *pilot-1*, kısa commit ve commit'in günü derlemede pakete girer;
+  Hakkında'da ve pilot.html'de: *pilot-1 (a1b2c3d, 2026-10-01)*. CLAUDE.md'ye 17. kural: pilot
+  sürerken main'e yalnız pilot düzeltmeleri, her biri sürümü artırır.
+- **Deneme günlüğü** (`src/oyun/gunluk.ts`, `src/kabuk/gunluk.tsx`): dört bölgedeki her seçim bir
+  satır, 16 sütun (DESIGN.md, "Pilot"). Ayrı anahtar `morfemusta.pilot.v1`. Kod yokken ve sınıf
+  modunda yazılmaz. Depo dolunca oyun sürer, günlük durur, işaret yazılır; satırlar silinmez.
+  Motorun neden yazımı (`nedenYazimi`) genel kapıdan açıldı.
+- **pilot.html** (altıncı giriş; noindex, oyundan bağlantı yok, önbellekte): çocuk kodu ve Yeni
+  çocuk, Kodu sil, Oyunu aç; çocuk başına özet; CSV indir, Kopyala, iki adımlı Günlüğü sil;
+  uyarılar; sürüm ve belgeler.
+- **Belgeler** (`belgeler/*.html`): A4, siyah beyaz, tek sayfa, gömülü Andika.
+- **Küçük düzeltmeler:**
+  - Sınıf modunda Bahçe: ağaç ekranın tam ortasında ve 1.5 kat; tabela ve o anki kelime ağacın
+    sağında, ortasıyla hizalı.
+  - Sınıf modunda Koy'un ve Dükkân'ın kelime kartı iri (yazı 3 rem).
+  - Haritada tabelanın en çok eni 10.25 rem'den 11.25 rem'e: *Uydurukçuklar* (ve *Bukalemun*)
+    yazısı kutusundan taşmıyordu değil, taşıyordu (13.8 px ve 9 px; 412 px'te de, rem'le
+    ölçüldüğü için). 320–412 px'te taşma ve çakışma yok.
+  - Sınıf modunda Sözlük: yan yana bölgeler sığmayınca bölge bölge sekmeli ve sayfalı (45 kartla
+    önce 3169 px kayıyordu). Ayarlar üç sütun, Hakkında iki metin sütunu (önce 468 px kayıyordu);
+    Renkler'in a/e örneği başlığın yanına geçti (telefonda da).
+- **Testler:** birim (günlük satırı, kodsuz ve sınıf modunda yazılmaması, Yeni çocuk, CSV ve
+  Türkçe harfler, depo dolu, özet, sayaç; Bahçe'nin adayı ve kodu; sürüm; pilot sayfası) ve uçtan
+  uca: pilot yolu (sesli mod, dört bölge, her bölgede bir yanlış, 40 görev, özet, CSV'nin 58
+  satırı ve 16 sütunu, konsol hatası ve dış istek yok), Yeni çocuk, Günlüğü sil, Kopyala, kodsuz
+  ve sınıf modu, depo dolu, çevrim dışı; belgeler tek sayfa (page.pdf); harita 390 px; sınıf
+  modunda Bahçe, kartlar, çok kartlı Sözlük, Ayarlar (soru açıkken de); axe (pilot.html ve
+  belgeler). Pilot testleri WebKit'te de (iPhone 13); CI'a WebKit eklendi, süre sınırı 30 dk.
+
+### Oturumda seçilen küçük ayrıntılar (kullanıcıya ayrıca sorulmadı)
+
+- **Çocuk kodu:** bir büyük harf ve iki ya da üç rakam (P01, P123); küçük harf büyür. Ad
+  yazılamasın diye dar tutuldu.
+- **CSV ayracı noktalı virgül:** Türkçe Excel'de liste ayracı ; (virgül ondalık işareti);
+  virgüllü dosya tek sütunda açılırdı. UTF-8 imi ve CRLF. R'de `read.csv2`, pandas'ta `sep=';'`.
+- **Zaman** yerel saatle, saat farkıyla (gözlem formundaki saatlerle karşılaştırılsın).
+- **Bir satır, bir seçim:** taşıma anı (bukalemun kelimeye, karo yuvaya, ek ağaca); yalnız
+  seçip bırakmak satır değildir. `deneme_no` adım başına; görevden çıkılıp dönülünce sayaç ve
+  süre baştan.
+- **dogru_bicim** adımındır (zincirde *toplar*, sonra *toplarım*; Bahçe'de sıradaki gövde).
+  Uydurukçuklar'ın sınır adımında iki biçim / ile; özetin ilk deneme oranına girmez (yanlışı yok).
+- **Bahçe'nin neden kodu:** *meyve:AGT* (motorun ek sırası kodu) ya da *önce:AGT*; aday motorla
+  kurulur (*çiçekler*, *yolluk*).
+- **Özet:** biten görev = son seçimi doğru olan görev (tur ve görev bir kez); en sık üç neden,
+  her yanlışın kodları ayrı ayrı, eşitlikte önce görülen.
+- **Günlüğü sil kodu korur;** Yeni çocuk onay sormaz. Yeni çocuk aynı kodla yeniden girilirse
+  satırlar eklenir (uyarı yazılır).
+- **Veli formuna çocuğun adı alanı** eklendi (onayın kimin için olduğu); kod formda yok (kod ile
+  ad aynı kâğıtta eşleşmesin). İsterseniz kalkar.
+- **"Adres büyük harflerle"** büyük puntoyla (17 pt) yorumlandı: adresin yolu büyük-küçük harfe
+  duyarlıdır, büyük harfle yazılırsa açılmaz.
+- **Gözlemci yönergesindeki giriş cümlesi:** *Bu yeni bir kelime oyunu. Oynarken seni izleyip
+  not alacağım. Burada yanlış yok; oyunu deniyoruz, seni değil. İstediğin an bırakabilirsin.*
+  Yardım yalnız ne yapılacağını söyler (ör. *Bir bukalemunu kelimeye taşı.*).
+- **Sınıf modunda sayfalı Sözlük** yalnız yan yana sığmayınca; kartta künye yok.
+- **Bulut oturumunda WebKit yok** (Playwright'ın indirme sunucusu ağ kuralında kapalı): WebKit
+  testleri yalnız CI'da koştu.
+
+### Birleşmeden önce eklenenler (kullanıcının isteği; sürüm pilot-1 kaldı)
+
+- **Ana ekran ipucu günlük açıkken çıkmaz** (`anaEkranIpucuGorunsunMu`'nun üçüncü koşulu,
+  `gunlukAcikMi`): iPhone ve iPad'de ana ekrana eklenen uygulamanın deposu Safari'ninkinden
+  ayrıdır; oyun simgeden açılırsa denemeler pilot.html'e düşmezdi. Yönergeye ve yukarıdaki
+  listeye: oyunu simgeden değil, Oyunu aç'la Safari'de açın; pilot sayfasını yer imlerine ekleyin.
+- **Yönergenin giriş cümlesi:** *Bu yeni bir kelime oyunu. Sen oynarken ben not alacağım. Yanlış
+  yapmak sorun değil; oyunu deniyoruz, seni değil. İstediğin an bırakabilirsin.*
+- **Veli formu:** *Çocuk doğru eki kelimenin köküne taşır* (iki anlamlı "köküne doğru" kalktı);
+  onay geri alınırsa notlar ve deneme kaydı silinir; onay kutusunda *Çocuk kodu (gözlemci
+  doldurur)*: onay geri alınınca kayıt bu kodla bulunur.
+
+### Açık kalanlar
+
+Oturum 12'de eklenenler (Oturum 13 için):
+
+- **Uzun pilot yolu WebKit'te koşmuyor** (`playwright.config.ts`, webkit projesinin
+  `grepInvert`'i; pilot.html'in testleri WebKit'te kalır). Playwright'ın WebKit'teki (iPhone 13)
+  `tap()`'i de `click()`'i de, ekranın altından taşan öğeye (Bahçe'nin 15 kartlı akşam ekranında
+  Haritaya dön) kendi kaydırmasında ara sıra takılıyor; sayfa elle olağan kayıyor. `ac58bd9`'un
+  iki CI koşusundan biri yeşil, öteki bu yüzden kırmızıydı (kullanıcının kararı: iki denemede
+  kararlı yeşil olmazsa yalnız Chromium). Oturum 13'te yeniden denenecek: Playwright sürümü ya da
+  dokunuştan önce elle kaydırma, kaydırmasız dokunuş.
+
+- **Sınıf modunda Kök Bahçesi'nde ağaç ortada ama küçük** (1920×1080'de ekran yüksekliğinin
+  üçte biri kadar): büyütülsün.
+
+- **İki sekme aynı anda yazarsa** (iki oyun sekmesi) günlükte satır kaybolabilir: her yazış son
+  kaydı okur, ama tarayıcılar arası localStorage eşzamanlı değil. Pilotta tek sekme.
+- **Durma işareti de yazılamazsa** (depo tümüyle dolu) günlük o açılışta durur, sonraki açılışta
+  yeniden dener; aradaki satırlar yazılmamış olur. pilot.html *Cihazın deposu dolu* der.
+- **Görevden çıkıp dönünce** `deneme_no` ve `sure_ms` baştan sayılır (ilk deneme yeniden 1).
+- **Sınıf modundaki sayfalı Sözlük tek yönlü:** ekran açıkken pencere büyüse de yan yana dönmez;
+  ekran yeniden açılınca dener.
+- **Belgeler yalnız Chromium'da tek sayfa ölçüldü;** Safari ve Firefox'ta yazdırma (kenar
+  boşlukları, üst-alt bilgi) elle denenmeli. Sayfaların altında 25–30 mm pay var.
+- **Özet yalnız pilot.html'de;** gözlem formuyla eşleme (yardım sayısı) elle.
+- Önceki açık kalanlar aşağıda (Oturum 11'in bölümünde; "Derleme hedefi" kapandı).
+
+## Önceki oturum: Oturum 11 — cila (2026-10-01)
 
 ### Kullanıcının kararları
 
@@ -148,8 +283,8 @@ aşağıda: Oturum 11'in bölümünde (Oturum 12 için) ve önceki oturumların 
 
 Oturum 11'de eklenenler (Oturum 12 için; kullanıcıya ayrıca sorulacak):
 
-- **Derleme hedefi:** kullanıcı en eski cihazda `cihaz.html`'i açıp *Kopyala*'nın sonucunu
-  verecek. Hedef ona göre seçilir (Vite `build.target`; `dvh`, kap sorgusu birimleri ve
+- ~~**Derleme hedefi:**~~ Oturum 12'de kapandı: bugünkü hedef kalır. Kullanıcı en eski cihazda `cihaz.html`'i açıp *Kopyala*'nın sonucunu
+  verecekti. Hedef ona göre seçilir (Vite `build.target`; `dvh`, kap sorgusu birimleri ve
   `:has()` için geri dönüşler; Oturum 6'nın planı).
 - **Ana ekrandaki uygulamada güncelleme:** yeni sürüm oyunun bütün pencereleri kapanınca gelir.
   Telefon uygulamayı arka planda günlerce canlı tutarsa eski sürüm o kadar sürebilir. Gerçek
@@ -159,7 +294,7 @@ Oturum 11'de eklenenler (Oturum 12 için; kullanıcıya ayrıca sorulacak):
   tanımaz; eski sekme kaydı yazarken düşürür. Sınıf modu kapanır ya da ipucu bir kez daha
   görünür (bir kez). `skipWaiting` kalktığı için eski ve yeni sürüm farklı sekmelerde daha uzun
   birlikte açık kalabilir.
-- **Sınıf modunda çok kartlı Sözlük kayar** (bir açılışta onlarca kelime; ör. Koy 10 ve Bahçe 15
+- ~~**Sınıf modunda çok kartlı Sözlük kayar**~~ (Oturum 12'de: sayfalı; Ayarlar üç sütun) (bir açılışta onlarca kelime; ör. Koy 10 ve Bahçe 15
   kart, 1920×1080'de). Ayarlar da kayar (Hakkında uzun). İkisi de ölçütün dışında; gerekirse
   kartlar küçülür.
 - **Sınıf modu dikey tahtada ve dar pencerede** olağan görünümde (1024 px'ten dar ya da dikey).
@@ -185,7 +320,7 @@ Oturum 11'de eklenenler (Oturum 12 için; kullanıcıya ayrıca sorulacak):
   kapatılması; efektler (iOS'ta ilk dokunuştan sonra); uçak modunda açılış; yeni sürümün
   gelişi; en eski cihazda cihaz.html.
 
-## Önceki oturum: Oturum 10b — yeni ses ve sade cümleler (2026-10-01)
+## Daha önceki oturum: Oturum 10b — yeni ses ve sade cümleler (2026-10-01)
 
 ### Kullanıcının kararı: yeni ses
 
@@ -1057,9 +1192,3 @@ Oturum 8'de eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak; öncek
      görevlerinde böyle kök yok.
    - Fıstıkçı Şahap'ın Dükkânı'nda çocuk gövdeyi de seçecek (*kitap* / *kitab*). `neden`'e bir
      gövde parçası eklenecek.
-
-## Sıradaki hedef: Oturum 12 — pilot sürümü
-
-Kapsam oturum başında kullanıcıyla belirlenir. Bekleyenler: derleme hedefi (en eski cihazda
-`cihaz.html`), gerçek telefonda ve etkileşimli tahtada doğrulama, seslerin dinlenmesi, açık
-kalanlar (Oturum 11'in bölümünde ve öncekilerde).

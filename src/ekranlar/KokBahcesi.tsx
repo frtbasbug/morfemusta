@@ -40,10 +40,12 @@ import {
   bahceBaslangici,
   bahceIndirgeyici,
   buyusu,
+  denemeninAdayi,
   denemeyiDegerlendir,
   dogruMu,
   govdeDegisimi,
   kartEtiketleri,
+  nedenKodu,
   oynananGorev,
   sepettekiler,
   simdikiKelime,
@@ -51,6 +53,7 @@ import {
   type BahceParcasi,
   type GovdeKelimesi,
 } from '../oyun/bahce.ts'
+import { useDenemeGunlugu } from '../kabuk/gunluk.tsx'
 import type { Bolge } from '../oyun/bolgeler.ts'
 import type { Gorev } from '../oyun/gorevler.ts'
 import type { SozlukKarti } from '../oyun/ilerleme.ts'
@@ -120,6 +123,7 @@ export default function KokBahcesi({
   const bagli = useRef(false)
   const gorulenGorev = useRef(durum.gorevYeri)
   const { soyle, sonuc, buyu: buyuSesi } = useSes()
+  const kaydet = useDenemeGunlugu(bolge.kimlik, gorev)
 
   // Sesli mod: ağaç başlayınca hedef söylenir; bölgeye girişte önce bölgenin adı.
   const [acilisYeri] = useState(durum.gorevYeri)
@@ -172,6 +176,14 @@ export default function KokBahcesi({
     const parca = bahce.parcalar[sira]
     if (!parca) return
     const deneme = denemeyiDegerlendir(bahce, kurulan, sira)
+    // Pilotun günlüğü: seçilen ek ve kurduğu kelime; doğru biçim sıradaki gövdedir.
+    kaydet(String(kurulan), {
+      dogruBicim: simdikiKelime(bahce, kurulan + 1),
+      secilen: parca.yuzey,
+      aday: denemeninAdayi(bahce, kurulan, sira),
+      dogru: dogruMu(deneme),
+      neden: nedenKodu(deneme.neden),
+    })
     flushSync(() => gonder({ tur: 'dene', sira }))
     const oge = bukalemunlar.current.get(sira)
     if (dogruMu(deneme)) await tutun(oge, parca, kayma)

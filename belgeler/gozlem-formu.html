@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gözlem formu · Morfemusta pilotu</title>
+    <meta name="description" content="Morfemusta pilotunun gözlem formu: çocuk başına bir sayfa." />
+    <!-- Pilotun yazdırılabilir belgesi: pilot.html'den bağlantı alır, oyundan almaz; arama
+         motorlarına kapalı. A4, siyah beyaz, tek sayfa (e2e/belgeler.spec.ts ölçer). -->
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/src/belgeler/belge.css" />
+    <style>
+      .bolgeler th:nth-child(1) {
+        width: 28mm;
+      }
+      .bolgeler th:nth-child(2),
+      .bolgeler th:nth-child(3) {
+        width: 13mm;
+      }
+      .bolgeler th:nth-child(4) {
+        width: 34mm;
+      }
+      .bolgeler th:nth-child(5) {
+        width: 47mm;
+      }
+      .bolgeler tbody td,
+      .bolgeler tbody th {
+        height: 27mm;
+      }
+      .bolgeler tbody th {
+        font-size: 9pt;
+      }
+      .bolgeler .onda {
+        vertical-align: bottom;
+        text-align: right;
+        white-space: nowrap;
+      }
+      /* Çocuk ne yaptı: her satırda beş kutu, alt alta. */
+      .yaptiklari {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        font-size: 8.5pt;
+        line-height: 1.2;
+      }
+      .yaptiklari li {
+        margin: 0 0 0.9mm;
+        white-space: nowrap;
+      }
+      .yaptiklari .kutu {
+        width: 3.4mm;
+        height: 3.4mm;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="belge">
+      <p class="ekranda">
+        Çocuk başına bir sayfa yazdırın (A4). Ad yazılmaz: yalnız çocuk kodu (pilot.html'deki
+        kodun aynısı).
+      </p>
+      <h1>Morfemusta pilotu · Gözlem formu</h1>
+      <p class="alt-baslik">
+        Çocuğun adını yazmayın; yalnız kodu. Çocuğun sözlerini aynen yazın. Fotoğraf, ses ya da
+        görüntü kaydı yapılmaz.
+      </p>
+
+      <div class="alanlar">
+        <div class="alan alan--2"><span class="etiket">Çocuk kodu</span><span class="cizgi"></span></div>
+        <div class="alan alan--2"><span class="etiket">Tarih</span><span class="cizgi"></span></div>
+        <div class="alan alan--2"><span class="etiket">Gözlemci</span><span class="cizgi"></span></div>
+        <div class="alan alan--2">
+          <span class="etiket">Sınıf</span>
+          <span class="secenekler">
+            <span><span class="kutu"></span>1</span>
+            <span><span class="kutu"></span>2</span>
+            <span><span class="kutu"></span>3</span>
+            <span><span class="kutu"></span>4</span>
+          </span>
+        </div>
+        <div class="alan alan--4">
+          <span class="etiket">Ses modu</span>
+          <span class="secenekler">
+            <span><span class="kutu"></span>Kapalı</span>
+            <span><span class="kutu"></span>Dokununca</span>
+            <span><span class="kutu"></span>Sesli</span>
+          </span>
+        </div>
+        <div class="alan alan--2"><span class="etiket">Cihaz</span><span class="cizgi"></span></div>
+        <div class="alan alan--2"><span class="etiket">Başlangıç saati</span><span class="cizgi"></span></div>
+        <div class="alan alan--2"><span class="etiket">Bitiş saati</span><span class="cizgi"></span></div>
+      </div>
+
+      <h2>Bölgeler</h2>
+      <table class="bolgeler">
+        <thead>
+          <tr>
+            <th scope="col">Bölge</th>
+            <th scope="col">Biten görev</th>
+            <th scope="col">Yardım sayısı</th>
+            <th scope="col">Zorlandığı görevler</th>
+            <th scope="col">Çocuk ne yaptı (işaretleyin)</th>
+            <th scope="col">Not</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Bukalemun Koyu</th>
+            <td class="onda">/10</td>
+            <td></td>
+            <td></td>
+            <td>
+              <ul class="yaptiklari">
+                <li><span class="kutu"></span>sürükledi</li>
+                <li><span class="kutu"></span>dokundu</li>
+                <li><span class="kutu"></span>sesi dinledi</li>
+                <li><span class="kutu"></span>nedeni okudu ya da dinledi</li>
+                <li><span class="kutu"></span>tahmin etti</li>
+              </ul>
+            </td>
+            <td></td>
+          </tr>
+          <tr>
+            <th scope="row">Fıstıkçı Şahap'ın Dükkânı</th>
+            <td class="onda">/10</td>
+            <td></td>
+            <td></td>
+            <td>
+              <ul class="yaptiklari">
+                <li><span class="kutu"></span>sürükledi</li>
+                <li><span class="kutu"></span>dokundu</li>
+                <li><span class="kutu"></span>sesi dinledi</li>
+                <li><span class="kutu"></span>nedeni okudu ya da dinledi</li>
+                <li><span class="kutu"></span>tahmin etti</li>
+              </ul>
+            </td>
+            <td></td>
+          </tr>
+          <tr>
+            <th scope="row">Kök Bahçesi</th>
+            <td class="onda">/10</td>
+            <td></td>
+            <td></td>
+            <td>
+              <ul class="yaptiklari">
+                <li><span class="kutu"></span>sürükledi</li>
+                <li><span class="kutu"></span>dokundu</li>
+                <li><span class="kutu"></span>sesi dinledi</li>
+                <li><span class="kutu"></span>nedeni okudu ya da dinledi</li>
+                <li><span class="kutu"></span>tahmin etti</li>
+              </ul>
+            </td>
+            <td></td>
+          </tr>
+          <tr>
+            <th scope="row">Uydurukçuklar (1. tur)</th>
+            <td class="onda">/10</td>
+            <td></td>
+            <td></td>
+            <td>
+              <ul class="yaptiklari">
+                <li><span class="kutu"></span>sürükledi</li>
+                <li><span class="kutu"></span>dokundu</li>
+                <li><span class="kutu"></span>sesi dinledi</li>
+                <li><span class="kutu"></span>nedeni okudu ya da dinledi</li>
+                <li><span class="kutu"></span>tahmin etti</li>
+              </ul>
+            </td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Çocuğun sözleri (aynen)</h2>
+      <div class="yazi-alani">
+        <div class="yazi-satiri"></div>
+        <div class="yazi-satiri"></div>
+        <div class="yazi-satiri"></div>
+        <div class="yazi-satiri"></div>
+        <div class="yazi-satiri"></div>
+        <div class="yazi-satiri"></div>
+      </div>
+
+      <h2>Arayüz sorunları</h2>
+      <p class="secenekler">
+        <span><span class="kutu"></span>Sürükleme zor</span>
+        <span><span class="kutu"></span>Yazı küçük</span>
+        <span><span class="kutu"></span>Ses duyulmadı</span>
+        <span><span class="kutu"></span>Ne yapacağını anlamadı</span>
+        <span><span class="kutu"></span>Sıkıldı</span>
+      </p>
+      <div class="alan"><span class="etiket">Nerede, ne zaman</span><span class="cizgi"></span></div>
+
+      <h2>Genel izlenim</h2>
+      <p>
+        <span class="etiket">Eğlendi</span>
+        <span class="olcek"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></span>
+        <span style="margin-left: 10mm" class="etiket">Anladı</span>
+        <span class="olcek"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></span>
+      </p>
+      <p class="dip">
+        Birini yuvarlak içine alın: 1 hiç, 5 çok. · Yardım: ancak iki başarısız denemeden ya da 30
+        saniye takılmadan sonra; her yardım bir çentik. · Morfemusta pilotu, gözlem formu.
+      </p>
+    </main>
+  </body>
+</html>

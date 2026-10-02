@@ -91,10 +91,14 @@
 }
 
 /* Renk seçiminin örneği: kalın a ile ince e etiketi. */
+/* Renkler'in örneği: başlığın yanında, kalın a ile ince e. */
 .ayar__ornek {
-  display: flex;
-  gap: 0.5rem;
-  font-size: var(--boyut-kok);
+  display: inline-flex;
+  gap: 0.4rem;
+  margin-inline-start: 0.75rem;
+  font-family: var(--yazi-tipi);
+  font-size: 1.5rem;
+  vertical-align: middle;
 }
 
 .sifirlama {
@@ -170,6 +174,12 @@
 
 .hakkinda p {
   margin: 0;
+}
+
+/* Tanıtım ve liste; sınıf modunda üç sütuna akar (Sinif.css). */
+.hakkinda__metin {
+  display: grid;
+  gap: 0.6rem;
 }
 
 .hakkinda__liste {

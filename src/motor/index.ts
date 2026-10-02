@@ -15,6 +15,7 @@ export type {
 export { EK_ENVANTERI, ekEnvanteriniOku } from './envanter.ts'
 export type { EkEnvanteri, EkTanimi, EkTuru } from './envanter.ts'
 export { kaynastirmaKarsiti, neden, nedenCumlesi, yuzeySecenekleri } from './neden.ts'
+export { nedenYazimi } from './neden-yazimi.ts'
 export type {
   DigerNeden,
   EkBasiNedeni,

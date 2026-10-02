@@ -133,3 +133,70 @@
   font-size: 0.875rem;
   line-height: 1.3;
 }
+
+/* Sınıf modunda sığmayan Sözlük (Sozluk.tsx, BolumluSozluk; yerleşimi Sinif.css'te): bölgelerin
+   sekmeleri ve sayfa çubuğu. Seçili sekme dolu (renkten başka biçimle de ayrılır). */
+.sozluk__sekmeler {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.sozluk__sekme,
+.sozluk__sayfa-dugmesi {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0 1.1rem;
+  border: var(--cizgi-unlu-karti) solid var(--murekkep);
+  border-radius: 999px;
+  background: var(--zemin);
+  color: var(--murekkep);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sozluk__sekme[aria-pressed='true'] {
+  background: var(--murekkep);
+  color: var(--zemin);
+}
+
+.sozluk__sekme:focus-visible,
+.sozluk__sayfa-dugmesi:focus-visible {
+  outline: 3px solid var(--murekkep);
+  outline-offset: 3px;
+}
+
+/* Bölgenin kart sayısı: sekmenin içinde, kesik çerçeveli. */
+.sozluk__sayi {
+  padding: 0 0.45rem;
+  border: 2px dashed currentcolor;
+  border-radius: 999px;
+}
+
+.sozluk__sayfalar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 0.75rem;
+}
+
+/* Tek sayfada sayfa çubuğu görünmez ama yeri kalır: sayfanın boyu değişmez. */
+.sozluk__sayfalar--tek {
+  visibility: hidden;
+}
+
+.sozluk__sayfa {
+  font-weight: 700;
+}
+
+.sozluk__sayfa-dugmesi:disabled {
+  border-style: dashed;
+  color: var(--soluk);
+  cursor: default;
+}

@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
 import {
   ANAHTAR,
+  bahceGorevi,
   bolge,
   bukalemun,
   disIstekleriTopla,
@@ -181,6 +182,29 @@ for (const [en, boy] of [
           kimlik === 'uyduruk' ? '1. tur · Görev 1 / 10' : 'Görev 1 / 10',
         )
         await sinanan(kimlik)
+        // Koy'un ve Dükkân'ın kelime kartı iri (yazı 3rem); Bahçe'nin ağacı ortada ve büyük.
+        if (kimlik === 'koy' || kimlik === 'dukkan') {
+          const secici = kimlik === 'koy' ? '.koy__sahne .kelime' : '.dukkan__kelime'
+          const boy = await page.locator(secici).evaluate((o) => parseFloat(getComputedStyle(o).fontSize))
+          const kok = await page.evaluate(() => parseFloat(getComputedStyle(document.documentElement).fontSize))
+          expect.soft(boy / kok, `${kimlik}: kelimenin boyu (rem)`).toBeCloseTo(3, 2)
+        }
+        if (kimlik === 'bahce') {
+          const agac = await page.locator('button.bahce__agac').boundingBox()
+          const tabela = await page.locator('.bahce__yan').boundingBox()
+          expect(agac && tabela).toBeTruthy()
+          if (agac && tabela) {
+            expect.soft(Math.abs(agac.x + agac.width / 2 - en / 2), 'ağaç ortada').toBeLessThanOrEqual(1)
+            // Tabela ve kelime ağacın sağında, ağacın ortasıyla hizalı.
+            expect.soft(tabela.x).toBeGreaterThan(agac.x + agac.width)
+            const agacOrtasi = agac.y + agac.height / 2
+            expect.soft(Math.abs(tabela.y + tabela.height / 2 - agacOrtasi)).toBeLessThanOrEqual(2)
+            // Büyük: tacı olağanın (148 px) 1.5 katı, kökün boyuyla ölçeklenmiş.
+            const tac = await page.locator('.agac__tac > svg').boundingBox()
+            const kok = await page.evaluate(() => parseFloat(getComputedStyle(document.documentElement).fontSize))
+            expect.soft(tac?.width ?? 0).toBeCloseTo((148 * 1.5 * kok) / 16, 0)
+          }
+        }
         if (kimlik === 'koy') {
           // Yanlış deneme: neden ve cümlesi.
           await bukalemun(page, 'ler').tap()
@@ -199,6 +223,15 @@ for (const [en, boy] of [
       await expect(kartKelimeleri(page)).toHaveText(['atlar', 'kitabım', 'çiçekçi', 'fıngıllar'])
       await sinanan('sozluk')
 
+      // Ayarlar: üç sütun, Hakkında yanında; sıfırlama sorusu açıkken de kaydırmasız.
+      await gezinme(page, 'Ayarlar').tap()
+      await expect(baslik(page, 'Ayarlar')).toBeVisible()
+      await sinanan('ayarlar')
+      await page.getByRole('button', { name: 'İlerlemeyi sıfırla' }).tap()
+      await expect(page.getByRole('button', { name: 'Vazgeç' })).toBeVisible()
+      await sinanan('ayarlar-soru')
+      await page.getByRole('button', { name: 'Vazgeç' }).tap()
+
       // Akşam ekranı: koyun on görevi (ilki oynandı; koy kalınan yerden, 2. görevden açılır).
       await gezinme(page, 'Harita').tap()
       await bolge(page, 'Bukalemun Koyu').tap()
@@ -213,6 +246,73 @@ for (const [en, boy] of [
           expect.soft(o.hedef.px, `${ekran}: en küçük hedef ${o.hedef.ad}`).toBeGreaterThanOrEqual(64)
         }
       }
+      expect(hatalar).toEqual([])
+    })
+  })
+}
+
+for (const [en, boy] of [
+  [1920, 1080],
+  [1366, 768],
+] as const) {
+  test.describe(`sınıf modu, çok kartla ${en}×${boy}`, () => {
+    test.use({
+      viewport: { width: en, height: boy },
+      deviceScaleFactor: 1,
+      isMobile: false,
+      hasTouch: true,
+      contextOptions: { reducedMotion: 'reduce' },
+    })
+
+    test('Sözlük bölge bölge ve sayfalı, kaydırmasız; kartlar taşmaz', async ({ page }) => {
+      test.setTimeout(180_000)
+      const hatalar = hatalariTopla(page)
+      await page.goto('./?sinif=1')
+      await expect(haritaBasligi(page)).toBeVisible()
+      // Koy'un on görevi (10 kart) ve Bahçe'nin on ağacı (15 kart): yan yana sığmaz.
+      await bolge(page, 'Bukalemun Koyu').tap()
+      await gorevleriOyna(page, 0, 9)
+      await page.getByRole('button', { name: 'Haritaya dön' }).tap()
+      await bolge(page, 'Kök Bahçesi').tap()
+      for (let yer = 0; yer < 10; yer++) {
+        await bahceGorevi(page, yer)
+        await sonraki(page).tap()
+      }
+      await page.getByRole('button', { name: 'Haritaya dön' }).tap()
+
+      await gezinme(page, 'Sözlük').tap()
+      const sekmeler = page.getByRole('group', { name: 'Bölgeler' }).getByRole('button')
+      await expect(sekmeler).toHaveText(['Bukalemun Koyu10', 'Kök Bahçesi15'])
+      await expect(sekmeler.first()).toHaveAttribute('aria-pressed', 'true')
+      const olcu = await olc(page)
+      expect(olcu.dikey).toBe(0)
+      expect(olcu.yatay).toBe(0)
+      if (en === 1920) {
+        expect(olcu.yazi.px, olcu.yazi.metin).toBeGreaterThanOrEqual(28)
+        expect(olcu.hedef.px, olcu.hedef.ad).toBeGreaterThanOrEqual(64)
+      }
+
+      // Bahçe'nin 15 kartı sayfa sayfa: her sayfadaki kartlar sayfaya sığar.
+      await sekmeler.nth(1).tap()
+      const goruler: string[] = []
+      const sayfa = page.locator('.sozluk__sayfa')
+      const toplam = Number((await sayfa.textContent())?.split('/')[1]?.trim())
+      expect(toplam).toBeGreaterThanOrEqual(1)
+      for (let i = 1; i <= toplam; i++) {
+        await expect(sayfa).toHaveText(`${i} / ${toplam}`)
+        expect((await olc(page)).dikey).toBe(0)
+        const tasan = await page.evaluate(() => {
+          const liste = document.querySelector('.sozluk__kartlar')!.getBoundingClientRect()
+          return [...document.querySelectorAll('.sozluk-karti')].filter((k) => {
+            const kutu = k.getBoundingClientRect()
+            return kutu.bottom > liste.bottom + 0.5 || k.scrollWidth > k.clientWidth + 1
+          }).length
+        })
+        expect(tasan).toBe(0)
+        goruler.push(...(await kartKelimeleri(page).allTextContents()))
+        if (i < toplam) await page.getByRole('button', { name: 'Sonraki' }).tap()
+      }
+      expect(new Set(goruler).size).toBe(15)
       expect(hatalar).toEqual([])
     })
   })
