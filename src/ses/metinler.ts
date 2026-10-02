@@ -11,7 +11,8 @@
 //   uyduruk  kök, her bukalemunun adayı (zelüye, zelüe), doğru biçimler (gıvakım, gıvağım),
 //            İkisi de olur cümleleri, neden cümleleri
 //
-// Her bölgenin grubunda akşam ekranının başlığı da vardır. Saf TypeScript'tir.
+// Her bölgenin grubunda akşam ekranının başlığı ve ilk dakika elinin cümlesi de vardır. Saf
+// TypeScript'tir.
 
 import { ekle, olasiBicimler } from '../motor/index.ts'
 import {
@@ -31,6 +32,17 @@ import { sinirCumlesi, uydurukAdimi, uydurukSiniri } from '../oyun/uyduruk.ts'
 
 /** Akşam ekranında başlığın altındaki yazı. */
 export const BUGUN_KURULANLAR = 'Bugün kurduğun kelimeler:'
+
+/**
+ * İlk dakika elinin cümlesi, bölgenin kimliğiyle (DESIGN.md, "Akış ve puan"): el hamleyi
+ * gösterirken söylenir. Kuralı değil hamleyi öğretir.
+ */
+export const EL_CUMLELERI: Readonly<Record<string, string>> = {
+  koy: 'Bir bukalemunu kelimeye taşı!',
+  dukkan: 'Bir taşı ya da jöleyi boşluğa koy!',
+  bahce: 'Bir bukalemunu ağaca taşı!',
+  uyduruk: 'Bir bukalemunu yaratığa taşı!',
+}
 
 export interface SesGrubu {
   /** arayuz ya da bölgenin kimliği. */
@@ -127,7 +139,13 @@ export function sesMetinleri(bolgeler: readonly Bolge[] = BOLGELER): SesGrubu[] 
     return {
       kimlik: bolge.kimlik,
       ad: bolge.ad,
-      metinler: tekil([bolge.aksam, ...bolge.gorevler.flatMap((g) => gorevMetinleri?.(g) ?? [])]),
+      metinler: tekil([
+        bolge.aksam,
+        ...(bolge.gorevler.length > 0 && Object.hasOwn(EL_CUMLELERI, bolge.kimlik)
+          ? [EL_CUMLELERI[bolge.kimlik] ?? '']
+          : []),
+        ...bolge.gorevler.flatMap((g) => gorevMetinleri?.(g) ?? []),
+      ]),
     }
   })
   return [arayuz, ...gruplar]

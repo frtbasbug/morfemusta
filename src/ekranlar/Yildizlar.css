@@ -1,0 +1,11 @@
+/* Üç yıldız yan yana (Yildizlar.tsx); boyu yazının boyundan. */
+.yildizlar {
+  display: inline-flex;
+  gap: 0.1em;
+  vertical-align: middle;
+}
+
+.yildizlar .simge {
+  width: 1.2em;
+  height: 1.2em;
+}

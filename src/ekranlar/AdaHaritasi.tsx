@@ -30,6 +30,7 @@ import {
   KumSaatiSimgesi,
   TamamSimgesi,
 } from './simgeler.tsx'
+import Yildizlar, { yildizAdi } from './Yildizlar.tsx'
 import './AdaHaritasi.css'
 
 /** Çizimin kutusu (viewBox). Düğmeler aynı kutuda, yüzde konumlarla durur. */
@@ -226,7 +227,7 @@ export default function AdaHaritasi({
 
           <ol className="harita__bolgeler">
             {bolgeler.map((haritaBolgesi, i) => {
-              const { bolge, durum } = haritaBolgesi
+              const { bolge, durum, yildiz } = haritaBolgesi
               const yer = BOLGE_YERLERI[i]
               if (!yer) return null
               const Simge = DURUM_SIMGELERI[durum]
@@ -245,12 +246,18 @@ export default function AdaHaritasi({
                     className={`bolge bolge--${durum}`}
                     data-bolge={bolge.kimlik}
                     // Adı görünen yazının aynısı; virgül ekran okuyucuya durak verir.
-                    aria-label={`${bolge.ad}, ${DURUM_ADLARI[durum]}`}
+                    aria-label={`${bolge.ad}, ${DURUM_ADLARI[durum]}${yildiz ? `, ${yildizAdi(yildiz)}` : ''}`}
                     onClick={() => dokunuldu(haritaBolgesi)}
                   >
-                    {bolgeIsareti && (
-                      <span className="bolge__isaret" aria-hidden="true">
-                        {bolgeIsareti}
+                    {(bolgeIsareti || yildiz) && (
+                      // Bölgenin en iyi yıldızı işaretin altında (tabelanın yazısı genişlemesin).
+                      <span className="bolge__sol">
+                        {bolgeIsareti && (
+                          <span className="bolge__isaret" aria-hidden="true">
+                            {bolgeIsareti}
+                          </span>
+                        )}
+                        {yildiz && <Yildizlar yildiz={yildiz} sinif="bolge__yildizlar" />}
                       </span>
                     )}
                     <span className="bolge__yazi">

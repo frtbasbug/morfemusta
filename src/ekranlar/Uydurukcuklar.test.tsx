@@ -11,7 +11,7 @@ describe('Uydurukcuklar', () => {
   const html = renderToStaticMarkup(<Uydurukcuklar bolge={UYDURUK} onHarita={() => {}} />)
 
   it('başlık bölge tablosundan; Harita düğmesi ve turdaki görev sırası', () => {
-    expect(html).toMatch(/^<main class="uyduruk">/)
+    expect(html).toMatch(/^<main class="uyduruk" data-evre="secim">/)
     expect(html).toContain('<h1 class="bolge-ustu__baslik" tabindex="-1">Uydurukçuklar</h1>')
     // Turlu bölge: sıranın önünde tur (dar ekranda tur üstte, ayraç gizli).
     expect(html).toContain(
@@ -48,7 +48,11 @@ describe('Uydurukcuklar', () => {
     expect(pitak).toContain('class="uyduruk__cep"')
   })
 
-  it('hiçbir yerde puan, seri ya da süre yok', () => {
-    expect(html).not.toMatch(/puan|seri|süre|skor/i)
+  it('üst çubukta turun puanı sıfırdan başlar; süre ve sıralama yok (puan yalnız artar)', () => {
+    expect(html).toContain('<p class="bolge-ustu__puan">')
+    expect(html).toContain('<span class="gizli">Puan: </span>0</p>')
+    expect(html).not.toMatch(/süre|skor|sıralama/i)
+    // Kendiliğinden geçiş varsayılandır: başta Sıradaki düğmesi yok.
+    expect(html).not.toContain('Sıradaki')
   })
 })

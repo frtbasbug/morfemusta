@@ -52,6 +52,20 @@
   outline: none;
 }
 
+.aksam__puan {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.aksam__yildizlar {
+  font-size: 1.75rem;
+}
+
 .aksam__metin {
   margin: 0;
   font-size: 1.15rem;

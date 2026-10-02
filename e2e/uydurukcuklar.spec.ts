@@ -11,7 +11,11 @@ import {
   sira,
   sonraki,
   yatayTasma,
+  dugmeyleOyna,
 } from './yardimcilar.ts'
+
+// Bu dosyadaki testler Düğmeyle ayarında koşar (yardimcilar.ts, dugmeyleOyna).
+test.beforeEach(({ page }) => dugmeyleOyna(page))
 
 // Uydurukçuklar: uydurma yaratıklarla wug görevleri. Oyun doğru biçimi motordan alır; burada
 // yalnız testlerin beklediği sonuçlar yazılıdır (1. turun on görevi, sırayla). Sınır adımı
@@ -101,10 +105,15 @@ test.describe('Uydurukçuklar', () => {
     await expect(page.locator('.aksam__kelimeler .sonuc-kelime__okunan')).toHaveText(
       GOREVLER.map((g) => g.kelime),
     )
-    await expect(page.getByText(/puan|seri|süre|skor/i)).toHaveCount(0)
+    // Turun puanı ve yıldızları: on iki yerleştirme (iki sınır adımı) ilk denemede, dört seri.
+    await expect(page.locator('.aksam__puan')).toContainText('Puan: 140')
+    await expect(page.getByRole('img', { name: '3 yıldızdan 3' })).toBeVisible()
+    await expect(page.getByText(/süre|skor/i)).toHaveCount(0)
     await page.getByRole('button', { name: 'Haritaya dön' }).click()
     // İlk tur bitince bölge tamam.
-    await expect(bolge(page, 'Uydurukçuklar')).toHaveAccessibleName('Uydurukçuklar, Tamam')
+    await expect(bolge(page, 'Uydurukçuklar')).toHaveAccessibleName(
+      'Uydurukçuklar, Tamam, 3 yıldızdan 3',
+    )
 
     // İkinci giriş: 2. turun ilk yaratığı; üst çubukta tur numarası da yazar.
     await bolge(page, 'Uydurukçuklar').click()
@@ -149,7 +158,9 @@ test.describe('Uydurukçuklar', () => {
     await expect(neden(page).locator('.uyduruk__aday .unlu-etiketi')).toHaveText(['ü', 'e'])
     await expect(bukalemun(page, 'e')).toHaveAttribute('aria-disabled', 'false')
     await expect(sira(page)).toHaveText('1. tur · Görev 8 / 10')
-    await expect(page.getByText(/puan|skor|süre/i)).toHaveCount(0)
+    // Yanlış puan düşürmez; süre yok.
+    await expect(page.locator('.bolge-ustu__puan')).toHaveText('Puan: 0')
+    await expect(page.getByText(/skor|süre/i)).toHaveCount(0)
 
     await bukalemun(page, 'ye').tap()
     await hedef(page).tap()

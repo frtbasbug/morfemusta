@@ -1,14 +1,15 @@
 # Sıradaki
 
-**Sıradaki hedef: Oturum 13, pilot sonrası düzeltmeler.** Pilotun gözlem formları ve CSV'si
-gelince kullanıcı oturumun tarifini verecek. Pilot sürerken main'e yalnız pilot düzeltmeleri
-girer, her biri sürüm adını artırır (CLAUDE.md, 17. kural). Açık kalanlar aşağıda.
+**Sıradaki: hafif oyun testi** (kullanıcının kararı): 3–5 tanıdık çocuk, yaklaşık 15 dakika, sürüm
+*pilot-2*. Belgeler (veli formu, gözlemci yönergesi) yeni süreye göre güncellendi. Ardından
+**Oturum 14: örnek bölge Koy.** Pilot sürerken main'e yalnız pilot düzeltmeleri girer, her biri
+sürüm adını artırır (CLAUDE.md, 17. kural). Açık kalanlar aşağıda.
 
 ## Pilot günü yapılacakları
 
 1. **Bir gün önce:** PR birleşip yayınlandıktan sonra her cihazda
    <https://frtbasbug.github.io/ekle-bakalim/pilot.html>'i açın (oyunda Ayarlar → Hakkında →
-   *Yetişkinler için: Pilot sayfası*); sürüm *pilot-1.1* görünmeli. Oyunu da bir kez açın. Eski
+   *Yetişkinler için: Pilot sayfası*); sürüm *pilot-2* görünmeli. Oyunu da bir kez açın. Eski
    adresin (`/morfemusta/`) yer imini ve ana ekran simgesini silin: eski adres artık açılmaz. Okulda internet yoksa oyunun Ayarlar'ında Sınıf modu'nu açıp dört
    bölgeye birer kez girin (sesler iner), sonra Sınıf modu'nu kapatın.
 2. **Yazdırın:** çocuk sayısınca gözlem formu, veli onay formu (araştırmacının adı, kurumu ve
@@ -27,7 +28,120 @@ girer, her biri sürüm adını artırır (CLAUDE.md, 17. kural). Açık kalanla
    ilk dokunuştan sonra, sessiz anahtar; etkileşimli tahtada sınıf modu (sayfalı Sözlük);
    parmakla sürükleme; en eski cihazda cihaz.html'in sonucu.
 
-## Son oturum: Oturum 12b — pilot öncesi düzeltme: Ekle Bakalım (2026-10-02)
+## Son oturum: Oturum 13 — akış ve puan (oyun testinden önce) (2026-10-02)
+
+Sürüm *pilot-2* (kullanıcının kararı; CLAUDE.md, 17. kural).
+
+### Kullanıcının kararları (stüdyo denetiminden)
+
+- **Sıradaki düğmesi kalkar:** doğru cevaptan 1,5 saniye sonra sıradaki görev kendiliğinden gelir.
+  Ayarlar'da *Sıradaki görev: Kendiliğinden / Düğmeyle*; varsayılan Kendiliğinden, sınıf modunda
+  Düğmeyle.
+- **Oyun hızlanır:** doğru yerleştirmeden sıradaki görevin oynanabilir olmasına en çok 1,5 saniye.
+- **Puan yalnız artıdır;** yanlış puan düşürmez. Yanlışın komik sonucu ve neden cümlesi kalır.
+- **İlk dakika öğretilir:** her bölgenin ilk görevinde bir el hamleyi gösterir; kuralı değil,
+  hamleyi.
+- **Oyun testi hafif:** 3–5 tanıdık çocuk, yaklaşık 15 dakika.
+
+### Bitenler
+
+- **Önce denetlendi:** pilot-1.1 main'de ([frtbasbug/ekle-bakalim#17](https://github.com/frtbasbug/ekle-bakalim/pull/17),
+  `99c505a`: Ekle Bakalım adı, gıvak, Hakkında'daki Pilot sayfası bağlantısı); `GOOGLE_TTS_KEY`
+  ortamda, kısa bir deneme isteği (*Deneme.*) Google'dan ses döndü.
+- **Kendiliğinden geçiş** (`src/ekranlar/akis.tsx`, dört bölge): görevin son doğru
+  yerleştirmesinden 1,4 saniye sonra sıradaki görev; sesli modda kurulan kelimenin sesi bitmeden
+  geçmez (`sesBitince`, calar.ts; en çok 8 saniye). Bu sürede ekrana dokunan (Enter, boşluk)
+  hemen geçer, ses susar; büyü sürüyorsa sonuna atlar (`hizlandir`, hareket.ts). Yanlışta geçiş
+  yok. Son görevden sonra akşam ekranı kendiliğinden. Düğmeyle'de bugünkü Sıradaki düğmesi.
+  Yeni görev ekran okuyucuya duyurulur (*Sıradaki görev: ev*); klavyede odak yeni görevin ilk
+  seçilebilir öğesine.
+- **Hız:** hareketler kısaldı ve bindirildi (uçuş 200 ms; yay ve zıplama birlikte; ek belirirken
+  anlam etkisi; Bahçe'de halka ve kart birlikte, meyve asılırken taş erir). Ölçü (Chromium,
+  hareket açık, doğrudan sıradaki görevin ilk öğesi seçilebilir olana): Koy 1414 ms (çoğul) ve
+  1410 ms (cep), Dükkân 1412 ms (taş eriyor), Bahçe 1412 ms, Uydurukçuklar 1415 ms (sınır adımı ve
+  cep); dokununca 116 ms. Önce 3–4 saniye ve düğme. Yanlışta karo ve bukalemun 0,9 saniyede
+  yeniden seçilebilir.
+- **Puan** (`src/oyun/puan.ts`): ilk denemede +10, sonra +5, yanlış 0; üst üste üç ilk deneme +5
+  ve şenlik (puanın çevresinde parıltı ve yeni *seri* efekti, E6 G6 C7, 380 ms; hareket azaltmada
+  yalnız efekt). Zincirde ve ağaçta her adım ayrı; Uydurukçuklar'ın sınır adımı hep ilk deneme.
+  Üst çubukta turun puanı (yıldız simgesi ve sayı).
+- **Yıldız:** akşam ekranında turun puanı ve 1–3 yıldız (%90 / %60); haritada her bölgenin en iyi
+  yıldızı (tabelada ve düğmenin adında).
+- **Kayıt** (`morfemusta.v1`, biçim aynı, yeni alanlar isteğe bağlı): bölgede `tur` (süren turun
+  biten görevlerindeki puan) ve `yildiz` (en iyi); `eller` (kapanan ilk dakika elleri); ayarlarda
+  `gecis` ve `sinifGecis`. Eski kayıt bozulmadan okunur. Sınıf modunda bellekte; Yeni çocuk ve
+  sıfırlama siler.
+- **İlk dakika eli:** yarı saydam el, ilk bukalemunun (Dükkân'da taşın) kopyasını hedefe doğru
+  yolun dörtte üçü kadar götürür, bırakmadan kaybolur. Sesli modda bölgenin cümlesi (4 yeni ses,
+  Callirrhoe, 0.9; Google'a 118 karakter gitti; 694 ses, 3.12 MB). İlk üç görevde 8 saniye
+  dokunulmazsa yeniden; bir doğrudan sonra hiç. Hareket azaltmada kıpırdamaz.
+- **Ayarlar:** *Sıradaki görev* seçimi; sınıf modunda ızgara iki satırda üç sütun, Hakkında altta.
+- **Belgeler:** veli formunda *yaklaşık 15 dakika*; gözlemci yönergesinde *yaklaşık 15 dakika* ve
+  *15 dakika ya da çocuk isteyene kadar* (yönergede Sıradaki geçmiyordu). Üçü yine tek A4.
+- **DESIGN.md:** yeni "Akış ve puan" bölümü (eksi puan yok ilkesi; İlkeler'e de girdi); bölgelerin,
+  akşam ekranının, Ayarlar'ın ve efektlerin satırları.
+- **Testler:** birim (`puan.test.ts`: ilk deneme, sonraki deneme, seri, sınır adımı, yıldız
+  eşikleri, kayıttan okuma; `ilerleme.test.ts`: tur puanının kaydı ve sürmesi, tur sonunda yıldız,
+  eski kayıt, sınıf modunda kaydedilmemesi, sıfırlama kimliği, el; `gunluk.test.ts`: Yeni çocuk
+  puanı ve eli sıfırlar; akşam ekranı ve harita yıldızları; Ayarlar'ın yeni seçimi). Uçtan uca
+  (`e2e/akis.spec.ts`): kendiliğinden geçiş ve dört bölgenin hız ölçümü, dokununca hemen,
+  yanlışta geçmez, seri şenliği, son görevden akşam ekranına (puan ve yıldız), haritada yıldız,
+  Düğmeyle, sınıf modunda Düğmeyle ve kaydedilmeme, sesli modda sesten önce geçmeme, ilk dakika
+  eli (dört bölge, doğrudan sonra çıkmaz, 8 saniyede döner, sesli modda cümle, hareket azaltma);
+  axe (eli, puanı, yıldızları ve akşamı da tarar). Pilot yolu yeni akışla (Koy bekleyerek, öteki
+  bölgeler dokunarak). 2195 birim testi ve 158 uçtan uca test yeşil (Chromium; WebKit bulut oturumunda kurulu
+  değil, CI koşar); tür denetimi temiz. `git grep -n "AI[z]a"` boş.
+
+### PR'dan sonra düzeltilen (Codex'in iki bulgusu, doğrulandı)
+
+- **Görev bitmişken başka sekmede geçiş ayarı değişirse** ekran yeniden kurulmuyordu: Kendiliğinden'e
+  geçince düğme kalkıyor, zamanlayıcı kurulmuyor, görev takılı kalıyordu (ters yönde de düğme
+  görünürken kendiliğinden geçiyordu). Geçişin etkisi artık ayara da bağlı (`akis.tsx`); test:
+  iki sekme, iki yön.
+- **Açılışta el çıkmadan dokunulursa** el yine 600 ms'de (ya da sesli modda açılış sesinden sonra)
+  çıkıyordu. Dokunuş açılışın gösterimini iptal eder, 8 saniye beklenir; test: elin belgeye hiç
+  eklenmediği izlenir.
+
+### Oturumda seçilen küçük ayrıntılar (kullanıcıya ayrıca sorulmadı)
+
+- **Gecikme 1,4 saniye** (doğrudan sonra): yeni görev ekrana kurulurken 1,5 saniyenin içinde
+  oynanabilir olsun (ölçü 1410–1415 ms).
+- **El yalnız sesli modda konuşur:** Dokununca'da konuşma yalnız hoparlörledir (bugünkü kural);
+  el orada sessiz. İsterseniz Dokununca'da da söyler.
+- **El hep kıyıdaki ilk öğeyi götürür** (sabit tohumlu sırada; bazen doğru olandır, bırakılmaz).
+  Dükkân'da taş (tezgâhın solu).
+- **Eski kayıtta oynanmış bölgede el çıkmaz** (biten görev varsa): pilot-1 ile oynamış çocuk.
+- **Puan görev bitince kaydedilir:** yarım bırakılan görev baştan başladığı için puanı da yazılmaz.
+- **Şenlik** doğrunun efektinden 300 ms sonra; parıltı üst çubuktaki puanın çevresinde.
+- **Geçiş sayılmayan dokunuşlar:** hoparlör ve Harita düğmesi. Tuşlarda yalnız Enter ve boşluk.
+- **Sınıf modunda el** o açılış boyunca bellekte kapanır (tahtada her açılışta yeniden çıkar).
+- **Akşam ekranında puan söylenmez** (sayıların sesi yok); sesli modda başlık ve kelimeler kalır.
+- **Telefonda üst çubuk:** sağ sütunda sıra ve altında puan (Uydurukçuklar'da tur, sıra, puan üç
+  satır). 320×568'de sığsın diye Uydurukçuklar'ın yaratığı çok alçak ekranda 4 rem'e indi.
+- **Deneme günlüğü değişmedi** (puan CSV'ye girmez; anahtar `morfemusta.pilot.v1` kalır).
+- **Uçtan uca testler:** bölgelerin ayrıntı testleri Düğmeyle ayarında koşar (`dugmeyleOyna`);
+  yeni akışı `akis.spec.ts` ve pilot yolu sınar.
+
+### Açık kalanlar
+
+Oturum 13'te eklenenler (Oturum 14 için):
+
+- **Yeni seslerin dinlenmesi:** dört el cümlesi Ses Denetim Sayfası'nda dinlenmeli
+  (*bukalemunu*: sözcük tablosundaki IPA yalnız bütün sözcük *Bukalemun*'a uygulanır; çekimli
+  biçimde Chirp ilk a'yı uzatabilir).
+- **Hızın gerçek cihazda ölçülmesi:** ölçü Chromium'da (masaüstü işlemci). Eski telefonda büyü
+  1,3 saniyeyi aşarsa geçiş büyü bitince olur (yine dokununca hemen).
+- **Puan iki sekmede:** iki pencere aynı turu oynarsa tur puanı son yazanınkidir.
+- **Elin yeri dar ekranda:** el kaynağın sağ altından çıkar; 320 px'te Dükkân'da hedefe yakındır.
+- **Uzun pilot yolu WebKit'te hâlâ koşmuyor** (Oturum 12'nin maddesi; bu oturumun hedefi
+  değildi, yeniden denenmedi).
+- **Büyü sürerken Düğmeyle'ye geçilirse** (başka sekmeden; dokunuş zaten gelmişse) büyü hızlı
+  biter, düğme çıkar; kalan uç durumlar Codex turundan sonra incelenmedi (tek tur).
+- **Oyun testinin gözlemi:** çocuk kendiliğinden geçişi anlıyor mu, dokunarak geçiyor mu, el
+  yardım sayılır mı (gözlem formunda alan yok).
+- Oturum 12b'nin ve öncekilerin açık kalanları aşağıda.
+
+## Önceki oturum: Oturum 12b — pilot öncesi düzeltme: Ekle Bakalım (2026-10-02)
 
 Sürüm *pilot-1.1* (CLAUDE.md, 17. kural: pilot düzeltmesi).
 
@@ -130,7 +244,7 @@ Oturum 12b'de eklenenler (Oturum 13 için):
   Bir süre sonra (bütün cihazlar yeni adresi açtıktan sonra) kaldırılabilir.
 - Oturum 12'nin açık kalanları aşağıda.
 
-## Önceki oturum: Oturum 12 — pilot sürümü (2026-10-01)
+## Daha önceki oturum: Oturum 12 — pilot sürümü (2026-10-01)
 
 
 ### Kullanıcının kararları

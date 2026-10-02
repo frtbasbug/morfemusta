@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 import {
+  ANAHTAR,
   bolge,
   dikeyTasma,
   disIstekleriTopla,
@@ -121,6 +122,53 @@ test.describe('ada haritası', () => {
       expect(tasanlar, `${en}×${boy}`).toEqual([])
       expect(await yatayTasma(page), `${en}×${boy}`).toBeLessThanOrEqual(0)
       expect(await cakisanlar(page), `${en}×${boy}`).toEqual([])
+    }
+  })
+
+  test('bütün bölgeler yıldızlıyken de tabelalar kutusundan taşmaz, üst üste binmez, sığar', async ({
+    page,
+  }) => {
+    // Her bölgenin en iyi yıldızı işaretin altında (DESIGN.md, "Akış ve puan").
+    const bitti = (yildiz: number) => ({
+      bitenler: Array.from({ length: 10 }, (_, i) => i + 1),
+      kaldigi: 10,
+      yildiz,
+    })
+    await page.addInitScript(
+      ([anahtar, kayit]) => localStorage.setItem(anahtar!, kayit!),
+      [
+        ANAHTAR,
+        JSON.stringify({
+          bolgeler: { koy: bitti(2), dukkan: bitti(3), bahce: bitti(1), uyduruk: bitti(3) },
+        }),
+      ] as const,
+    )
+    await page.goto('./')
+    await expect(bolge(page, 'Bukalemun Koyu')).toHaveAccessibleName(
+      'Bukalemun Koyu, Tamam, 3 yıldızdan 2',
+    )
+    for (const [en, boy] of [
+      [412, 839],
+      [390, 844],
+      [360, 640],
+      [320, 568],
+    ] as const) {
+      await page.setViewportSize({ width: en, height: boy })
+      const etiket = `${en}×${boy}`
+      const tasanlar = await page.evaluate(() =>
+        [...document.querySelectorAll('.harita__bolgeler button')].flatMap((dugme) => {
+          const kutu = dugme.getBoundingClientRect()
+          return [...dugme.querySelectorAll('.bolge__ad, .bolge__durum, .bolge__yildizlar')]
+            .filter((yazi) => {
+              const k = yazi.getBoundingClientRect()
+              return k.right > kutu.right - 2 || k.left < kutu.left + 2 || k.bottom > kutu.bottom - 2
+            })
+            .map((yazi) => yazi.textContent || yazi.getAttribute('aria-label'))
+        }),
+      )
+      expect(tasanlar, etiket).toEqual([])
+      expect(await dikeyTasma(page), etiket).toBeLessThanOrEqual(0)
+      expect(await cakisanlar(page), etiket).toEqual([])
     }
   })
 

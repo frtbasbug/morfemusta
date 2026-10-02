@@ -204,6 +204,24 @@
   height: 1rem;
 }
 
+/* İşaret ve altında bölgenin en iyi yıldızı. */
+.bolge__sol {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.bolge__yildizlar {
+  gap: 0;
+}
+
+.bolge__yildizlar .simge {
+  width: calc(15 * var(--birim));
+  height: calc(15 * var(--birim));
+}
+
 .bolge--tamam .bolge__durum {
   color: var(--murekkep);
 }

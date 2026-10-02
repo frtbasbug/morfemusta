@@ -44,8 +44,25 @@ describe('AksamEkrani', () => {
     ).toEqual([[true, 'Haritaya dön']])
   })
 
-  it('puan, seri ve süre yok', () => {
+  it('puan verilmezse yok; süre hiç yok', () => {
     expect(html).not.toMatch(/puan|seri|süre|skor|dakika|saniye/i)
+  })
+
+  it('turun puanı ve 1–3 yıldız: dolu yıldızlar boyalı, adı yazıyla', () => {
+    const puanli = (yildiz: 1 | 2 | 3) =>
+      renderToStaticMarkup(
+        <AksamEkrani baslik="Koyda akşam oldu" kartlar={KARTLAR} puan={105} yildiz={yildiz} />,
+      )
+    const uc = puanli(3)
+    expect(uc).toContain('<span>Puan: 105</span>')
+    expect(uc).toContain('role="img" aria-label="3 yıldızdan 3"')
+    for (const yildiz of [1, 2, 3] as const) {
+      const dolular = puanli(yildiz).match(/simge--yildiz simge--dolu/g) ?? []
+      const hepsi = puanli(yildiz).match(/simge--yildiz/g) ?? []
+      expect([dolular.length, hepsi.length]).toEqual([yildiz, 3])
+    }
+    // Süre ve sıralama yine yok.
+    expect(uc).not.toMatch(/süre|skor|dakika|saniye|sıra/i)
   })
 
   it('bugün kelime yoksa liste de yok', () => {

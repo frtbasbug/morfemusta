@@ -19,22 +19,25 @@ const secenekler = (html: string) =>
   ].map(([, ad, secili, deger, yazi]) => [ad, deger, secili !== undefined, yazi])
 
 describe('Ayarlar', () => {
-  it('başlık; Ses, Hareket, Renkler ve Sınıf modu birer seçim grubu', () => {
+  it('başlık; Ses, Sıradaki görev, Hareket, Renkler ve Sınıf modu birer seçim grubu', () => {
     const html = ayarlar()
     expect(html).toMatch(/<h1 id="ayarlar-baslik" class="ekran-basligi" tabindex="-1">Ayarlar<\/h1>/)
     expect(eslesmeler(html, /<legend class="ayar__baslik">([^<]*)/g)).toEqual([
       'Ses',
+      'Sıradaki görev',
       'Hareket',
       'Renkler',
       'Sınıf modu',
     ])
   })
 
-  it('Ses: Kapalı / Dokununca / Sesli mod (varsayılan Dokununca); Hareket; Renkler; Sınıf modu', () => {
+  it('Ses: Kapalı / Dokununca / Sesli mod (varsayılan Dokununca); Sıradaki görev; Hareket; Renkler; Sınıf modu', () => {
     expect(secenekler(ayarlar())).toEqual([
       ['ses', 'kapali', false, 'Kapalı'],
       ['ses', 'dokununca', true, 'Dokununca'],
       ['ses', 'sesli', false, 'Sesli mod'],
+      ['gecis', 'kendiliginden', true, 'Kendiliğinden'],
+      ['gecis', 'dugmeyle', false, 'Düğmeyle'],
       ['hareket', 'sistem', true, 'Sistem gibi'],
       ['hareket', 'azalt', false, 'Azalt'],
       ['renkler', 'renkli', true, 'Renkli'],
@@ -43,10 +46,28 @@ describe('Ayarlar', () => {
       ['sinif', 'acik', false, 'Açık'],
     ])
     expect(
-      secenekler(ayarlar({ hareket: 'azalt', renkler: 'renksiz', ses: 'sesli', sinif: 'acik' })).map(
-        ([, deger, secili]) => (secili ? deger : null),
-      ),
-    ).toEqual([null, null, 'sesli', null, 'azalt', null, 'renksiz', null, 'acik'])
+      secenekler(
+        ayarlar({
+          hareket: 'azalt',
+          renkler: 'renksiz',
+          ses: 'sesli',
+          sinif: 'acik',
+          gecis: 'kendiliginden',
+          sinifGecis: 'dugmeyle',
+        }),
+      ).map(([, deger, secili]) => (secili ? deger : null)),
+    ).toEqual([null, null, 'sesli', null, 'dugmeyle', null, 'azalt', null, 'renksiz', null, 'acik'])
+  })
+
+  it('Sıradaki görev: sınıf modunda sınıfın seçimi görünür (varsayılanı Düğmeyle)', () => {
+    const secili = (a: Parameters<typeof ayarlar>[0]) =>
+      secenekler(ayarlar(a)).find(([ad, , secili]) => ad === 'gecis' && secili)?.[1]
+    expect(secili({ ...VARSAYILAN_AYARLAR })).toBe('kendiliginden')
+    expect(secili({ ...VARSAYILAN_AYARLAR, sinif: 'acik' })).toBe('dugmeyle')
+    expect(secili({ ...VARSAYILAN_AYARLAR, gecis: 'dugmeyle' })).toBe('dugmeyle')
+    expect(secili({ ...VARSAYILAN_AYARLAR, sinif: 'acik', sinifGecis: 'kendiliginden' })).toBe(
+      'kendiliginden',
+    )
   })
 
   it('Renkler: örnek (kalın a, ince e) başlığın yanında, ekran okuyucudan gizli', () => {
@@ -90,7 +111,7 @@ describe('Ayarlar', () => {
       `Sürüm: ${SURUM_ADI}`,
       'Yetişkinler için: Pilot sayfası',
     ])
-    expect(SURUM_ADI).toBe('pilot-1.1')
+    expect(SURUM_ADI).toBe('pilot-2')
     expect(bolum).toContain(
       `<a href="${LISANSLAR.ccBy}" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>`,
     )

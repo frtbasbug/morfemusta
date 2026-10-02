@@ -8,3 +8,8 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
+/* Dolu yıldız: içi yanak renginde (Uydurukçuklar'ın yıldızı gibi), çizgisi yazının renginde. */
+.simge--dolu {
+  fill: var(--yanak);
+}

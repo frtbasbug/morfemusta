@@ -144,3 +144,12 @@ export function KapatSimgesi() {
     </Simge>
   )
 }
+
+/** Beş köşeli yıldız: puan ve yıldızlar. Dolu yıldızın içi simgeler.css'te (simge--dolu). */
+export function YildizSimgesi({ dolu = false }: { dolu?: boolean }) {
+  return (
+    <Simge sinif={dolu ? 'simge--yildiz simge--dolu' : 'simge--yildiz'}>
+      <path d="M12 3.2l2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 17l-5.4 2.9 1.1-6.1-4.5-4.2 6.1-.8z" />
+    </Simge>
+  )
+}

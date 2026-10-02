@@ -11,7 +11,11 @@ import {
   sira,
   sonraki,
   yatayTasma,
+  dugmeyleOyna,
 } from './yardimcilar.ts'
+
+// Bu dosyadaki testler Düğmeyle ayarında koşar (yardimcilar.ts, dugmeyleOyna).
+test.beforeEach(({ page }) => dugmeyleOyna(page))
 
 // Kök Bahçesi: çocuk ekleri sırayla ağaca taşır. Yapım eki gövdeyi bir halka büyütür, yeni
 // kelime kart olarak düşer; çekim eki meyve olur. Oyun hedefi, yüzeyleri ve gövde kelimelerini
@@ -95,9 +99,12 @@ test.describe('Kök Bahçesi', () => {
     const gunun = AGACLAR.flatMap((a) => a.kartlar)
     expect(gunun).toHaveLength(15)
     await expect(page.locator('.aksam__kelimeler .sonuc-kelime__okunan')).toHaveText(gunun)
-    await expect(page.getByText(/puan|seri|süre|skor/i)).toHaveCount(0)
+    // Turun puanı ve yıldızları: her ek ayrı yerleştirme (21), hepsi ilk denemede, yedi seri.
+    await expect(page.locator('.aksam__puan')).toContainText('Puan: 245')
+    await expect(page.getByRole('img', { name: '3 yıldızdan 3' })).toBeVisible()
+    await expect(page.getByText(/süre|skor/i)).toHaveCount(0)
     await page.getByRole('button', { name: 'Haritaya dön' }).click()
-    await expect(bolge(page, 'Kök Bahçesi')).toHaveAccessibleName('Kök Bahçesi, Tamam')
+    await expect(bolge(page, 'Kök Bahçesi')).toHaveAccessibleName('Kök Bahçesi, Tamam, 3 yıldızdan 3')
     // Bahçe bitince Uydurukçuklar açılır ve girilir.
     await expect(bolge(page, 'Uydurukçuklar')).toHaveAccessibleName('Uydurukçuklar, Açık')
     await bolge(page, 'Uydurukçuklar').click()

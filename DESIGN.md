@@ -38,9 +38,12 @@ Kök Bahçesi'nin büyüleri (halka, meyve, kartlar) kendi bölümündedir.
   puanlanır: ünlü uyumu, -DA/-CI benzeşmesi, kaynaştırma. Ünsüz yumuşaması sözlükseldir;
   iki biçim de kabul edilir (Becker, Ketrez & Nevins 2011).
 - **Yanlış komik bir sonuç doğurur.** Kırmızı çarpı ya da "yanlış" sesi yok.
+- **Eksi puan yok.** Puan yalnız artar; yanlış hiçbir şey eksiltmez ("Akış ve puan").
 - **Uyum ipucu hem renkle hem biçimle verilir** (renk körlüğü).
 - **Kısa oturum, doğal durak.** Oyun oturumları 5–10 dakika; birkaç görevden sonra adada
-  akşam olur (doğal durma noktası); seri baskısı yok.
+  akşam olur (doğal durma noktası). Seri yalnız ödüldür: kopunca hiçbir şey kaybedilmez.
+- **Oyun akar.** Doğrudan sonra sıradaki görev kendiliğinden gelir; çocuk düğme aramaz
+  ("Akış ve puan").
 
 ## Ünlü karakterleri
 
@@ -233,14 +236,16 @@ renksiz); doğru biçim görev dosyasına yazılmaz, motordan gelir (`olasiBicim
   (*a*) geçer; sonra iyeliğin bukalemunları gelir.
 - **Yanlışsa:** bukalemun eğilir, düşer, kıyıya döner. Kelimenin altında denenen biçim ve
   nedenin cümlesi görünür. Denenen biçim uymayan sonuçtur: üstü çizili ve `--cizik` renginde;
-  ilgili iki ünlü etiketindedir, çizgi etiketlere geçmez. Ceza, puan ve süre yok.
+  ilgili iki ünlü etiketindedir, çizgi etiketlere geçmez. Ceza ve süre yok; puan düşmez.
 - **Renksiz görev:** kalın ve ince aynı gri; bedenler ve kulak yeter. Büyü olunca renkler
   geri gelir (Ayarlar'da Renksiz açıksa gelmez).
 - **Hareket azaltma** açıksa (cihazda ya da Ayarlar'da) hiçbir şey hareket etmez; yalnız renk
   ve yazı değişir.
-- **Üst çubuk:** Harita düğmesi (harita simgesi), bölgenin adı, görev sırası ("3 / 10").
+- **Üst çubuk:** Harita düğmesi (harita simgesi), bölgenin adı, görev sırası ("3 / 10") ve
+  altında turun puanı (yıldız simgesi ve sayı).
 - **Sürdürme:** her görev bitince ilerleme kaydedilir; koya dönen çocuk kaldığı görevden
   sürdürür. Tur bitince sonraki giriş baştan başlar.
+- **Sıradaki görev** kendiliğinden gelir ("Akış ve puan").
 - **Kapanış:** görevler bitince koyda akşam olur: ortak akşam ekranı ("Akşam ekranı").
 
 ### Yanlış biçimin nedeni
@@ -319,7 +324,7 @@ doğru karo görev dosyasına yazılmaz, motordan gelir (`sinirSecenekleri`, `ne
 - **Yanlışsa** karo yuvanın üstünde seker ve tezgâha döner. Kelimenin altında denenen biçim
   (üstü çizili, `--cizik`) ve nedenin cümlesi görünür; ilgili iki ses vurgulanır: ünlü
   etiketinde, ünsüz çerçevede (gövdede seçilen ünsüz ve ardındaki ünlü; ek başında önceki ses
-  ve seçilen ünsüz). Ceza, puan ve süre yok.
+  ve seçilen ünsüz). Ceza ve süre yok; puan düşmez.
 - **Raf:** bu turda kurulan kelimeler, sırayla. İki sıranın yeri boşken de ayrılmıştır.
 - **Hareket azaltma** açıksa hiçbir şey hareket etmez; yalnız durum değişir.
 
@@ -346,8 +351,8 @@ yapım, en çok bir çekim eki vardır ve çekim en sondadır (test denetler).
   Dokunma alanları en az 44 px.
 - **Doğruysa** (sıradaki ek): yapım eki gövdeye bir halka ekler, yeni kelime kart olarak düşer
   (gövde kelimesi); çekim eki meyve olur, tepeye asılır, kart düşürmez.
-- **Yanlışsa** ek dala tutunamaz, sallanır ve sepete döner; cümlesi görünür. Ceza, puan ve süre
-  yok. Cümlelerde ekler ve hedef görevden gelir:
+- **Yanlışsa** ek dala tutunamaz, sallanır ve sepete döner; cümlesi görünür. Ceza ve süre yok;
+  puan düşmez. Cümlelerde ekler ve hedef görevden gelir:
 
 | Neden | Ne zaman | Cümle |
 |-------|----------|-------|
@@ -415,7 +420,7 @@ vardır (test denetler).
   Nevins 2011); cümle: *İkisi de olur: gıvakım, gıvağım.* Jöle seçilirse kökün taşı erir.
   Kurulan biçim çocuğun seçtiğidir; Sözlük kartı onu saklar.
 - **Yanlışsa** bukalemun düşer, kıyıya döner; denenen biçim üstü çizili, ilgili iki ses vurgulu
-  (ünlü etiketinde, ünsüz çerçevede), altında cümle. Ceza, puan ve süre yok.
+  (ünlü etiketinde, ünsüz çerçevede), altında cümle. Ceza ve süre yok; puan düşmez.
 - **Turlar:** yarım kalan tur kaldığı yerden sürer. Tur bitince akşam olur (*Uydurukçuklarda
   akşam oldu*); bölgeye sonraki girişte bir sonraki tur gelir, 10. turdan sonra 1. tura
   dönülür. Tur kayıttadır: kalınan yer bütün tablodaki yerdir (10: 2. turun başı). Bölge ilk
@@ -543,11 +548,16 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
 - Altında *Bugün kurduğun kelimeler:* ve o bölgede bugün kurulan kelimeler, kurulma sırasıyla,
   ekleri birleşen ek görünümünde. Bugün kurulan, dün kart olup bugün yeniden kurulanı da
   kapsar.
-- **Tek düğme:** *Haritaya dön*. Puan, seri ve süre yok.
+- **Puan ve yıldız:** başlığın altında turun yıldızları (1–3) ve puanı (*Puan: 105*;
+  "Akış ve puan"). Süre ve sıralama yok.
+- **Tek düğme:** *Haritaya dön*.
 
 ## Ayarlar
 
 - **Ses:** *Kapalı* / *Dokununca* / *Sesli mod*; varsayılan Dokununca ("Ses ve resim").
+- **Sıradaki görev:** *Kendiliğinden* / *Düğmeyle*; varsayılan Kendiliğinden, sınıf modunda
+  Düğmeyle (iki modun seçimi ayrı saklanır; ekran açık modunkini gösterir). Düğmeyle'de doğrudan
+  sonra Sıradaki düğmesi çıkar ("Akış ve puan").
 - **Hareket:** *Sistem gibi* (cihazın hareket azaltma ayarına uyar) / *Azalt*
   (`prefers-reduced-motion` ile aynı davranır: hiçbir şey hareket etmez).
 - **Renkler:** *Renkli* / *Renksiz* (galerideki Renksiz mod; açıkken renkler büyüden sonra
@@ -564,7 +574,7 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
   *Ekle Bakalım, ilkokul çocukları için kâr amacı gütmeyen bir Türkçe kelime oyunudur. Reklam,
   satın alma ve hesap yoktur; hiçbir veri cihazdan çıkmaz.* / *Sesler yapay zekâyla üretildi.* /
   *Emojiler: Twemoji, Twitter, Inc. ve katkıcıları (CC BY 4.0). Yazı tipleri: Andika ve Baloo 2
-  (SIL Open Font License).* / *Sürüm: pilot-1.1* / *Yetişkinler için: Pilot sayfası*
+  (SIL Open Font License).* / *Sürüm: pilot-2* / *Yetişkinler için: Pilot sayfası*
   (pilot.html'e bağlantı; oyundan pilot sayfasına tek yol budur). Commit ve tarih yalnız
   pilot.html'de; sesin ayrıntısı (Google Cloud Text-to-Speech, Chirp 3: HD Callirrhoe; kodun MIT
   lisansı ses dosyalarını kapsamaz) yalnız README'de.
@@ -574,7 +584,8 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
 - İlerleme, kartlar ve ayarlar yalnız cihazda, `localStorage`'da, sürüm numaralı tek anahtarda
   durur: `morfemusta.v1`. Hiçbir veri cihazdan çıkmaz; hesap, sunucu, eşitleme yok.
 - Her görev bitince kaydedilir; ayar değişince de. Bölgeye dönen çocuk kaldığı görevden
-  sürdürür.
+  sürdürür. Kayıtta süren turun puanı, her bölgenin en iyi yıldızı ve kapanan ilk dakika elleri
+  de durur ("Akış ve puan"; eski kayıt bozulmadan okunur, eksik alan baştandır).
 - Bozuk kayıttan yalnız geçerli parçalar alınır; gerisi baştan başlar. Depo yoksa ya da
   erişilemiyorsa oyun bellekte sürer; hata ve konsol iletisi çıkmaz.
 - Aynı cihazda açık pencereler (tarayıcıdaki sekme, ana ekrandaki uygulama) aynı kaydı paylaşır.
@@ -619,6 +630,91 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
   gönderilmez. Sayfa modülsüz ve ES5'tir: en eski cihazda da açılır. Derlemenin hedefi en eski
   cihazdaki sonuca göre seçilecek.
 
+## Akış ve puan
+
+Oyun testinden önce (Oturum 13, *pilot-2*; kullanıcının stüdyo denetimindeki kararları). Amaç:
+oyun akar, çocuk düğme aramaz; doğru ödüllendirilir, yanlış cezalandırılmaz.
+
+### Kendiliğinden geçiş
+
+- **Doğrudan sonra:** büyü oynar; görevin son doğru yerleştirmesinden 1,4 saniye sonra sıradaki
+  görev kendiliğinden gelir, 1,5 saniyenin içinde oynanabilir. Sesli modda kurulan kelimenin sesi
+  bitmeden gelmez (ses en çok 8 saniye beklenir).
+- **Dokunan hemen geçer:** bu sürede ekrana dokunan (ya da Enter'a, boşluğa basan) hemen geçer;
+  çalan ses susar, büyü sürüyorsa sonuna atlar. Hoparlör (yeniden dinlemek) ve Harita düğmesi
+  geçiş sayılmaz.
+- **Yanlışta geçiş yok:** neden cümlesi durur, çocuk yeniden dener.
+- **Son görevden sonra** akşam ekranı kendiliğinden açılır.
+- **Düğmeyle** (Ayarlar'da *Sıradaki görev*; sınıf modunun varsayılanı): doğrudan sonra Sıradaki
+  düğmesi çıkar, görev ancak onunla geçer.
+- **Erişilebilirlik:** yeni görev ekran okuyucuya duyurulur (*Sıradaki görev: ev*); klavyeyle
+  oynayanın odağı yeni görevin ilk seçilebilir öğesine (bukalemun, karo, ek) gider.
+
+### Hız
+
+Doğru yerleştirmeden sıradaki görevin oynanabilir olmasına en çok 1,5 saniye (sesli modda sesin
+süresi hariç; Oturum 12'de 3–4 saniyeydi). Hareketler kısa ve birbirine bindirilmiştir: uçuş
+200 ms; yay parlarken bukalemun zıplar (520 ms); ek belirirken anlam etkisi başlar (çoğalma
+320 ms, cebe girme 380 ms); taşın erimesi 700 ms'nin altında; Bahçe'de halka ve düşen kart
+birlikte, meyve asılırken taş erir. Büyünün anlamı kaybolmaz: çoğalma, cebe girme, halka ve
+yıldız görünür kalır. Yanlışta bukalemun ya da karo 0,9 saniyede yeniden seçilebilir.
+
+### Puan
+
+Puan yalnız artar; **eksi puan yok.** Yanlışın komik sonucu ve neden cümlesi olduğu gibi kalır.
+
+| Ne | Puan |
+|----|------|
+| doğru yerleştirme, ilk denemede | +10 |
+| doğru yerleştirme, yanlıştan sonra | +5 |
+| yanlış | 0 (puan düşmez) |
+| üst üste üç ilk denemede doğru (seri) | +5 ve kısa bir şenlik |
+
+- **Yerleştirme:** zincirde ve ağaçta her adım ayrıdır (*toplarım* iki, *gözlükçüler* üç
+  yerleştirme). Uydurukçuklar'ın sınır adımında iki karo da doğrudur: hep ilk deneme sayılır.
+- **Seri:** yanlış seriyi sıfırlar, puanı düşürmez; üçüncü ilk deneme +5 alır, seri yeniden
+  sayılır. Şenlik: puanın çevresinde parıltı ve *seri* efekti ("Efektler"); hareket azaltmada
+  yalnız efekt.
+- **Üst çubukta** o turun puanı: yıldız simgesi ve sayı (ekran okuyucuya *Puan: 40*).
+- Süre, sıralama ve karşılaştırma yok.
+
+### Yıldız
+
+- **Akşam ekranında** turun puanı ve 1–3 yıldız: ilk denemede doğru oranı (ilk denemede doğru
+  yerleştirmeler / bütün yerleştirmeler) en az %90 ise üç, en az %60 ise iki, değilse bir yıldız.
+  Dolu yıldızın içi boyalı (`--yanak`), boşunki boş; adı yazıyla (*3 yıldızdan 2*).
+- **Haritada** her bölgenin en iyi yıldızı tabelanın durum satırında; düğmenin adında da
+  (*Bukalemun Koyu, Tamam, 3 yıldızdan 3*).
+- **Kayıt:** süren turun puanı (biten görevlerinki) ve bölgenin en iyi yıldızı kayıttadır; turdan
+  çıkıp dönen çocuk turun puanından sürer (yarım görev baştan). Tur bitince puan kalkar, sonraki
+  tur 0'dan. Sınıf modunda görünür ama kaydedilmez; pilot.html'deki *Yeni çocuk* sıfırlar.
+
+### İlk dakika
+
+Kuralı öğretmeyiz, hamleyi öğretiriz.
+
+- **El:** her bölgenin ilk görevinde, bölgeye ilk girişte yarı saydam bir el hamleyi bir kez
+  gösterir: Koy, Bahçe ve Uydurukçuklar'da ilk bukalemunu (kıyıda ilk duran), Dükkân'da ilk karoyu
+  (taş) hedefe doğru yolun dörtte üçü kadar sürükler ve bırakmadan kaybolur. Hamleyi gösterir,
+  cevabı vermez (ilk öğe her zaman doğru olan değildir; bırakılmaz).
+- **Ses:** sesli modda el çıkarken bölgenin cümlesi söylenir (Callirrhoe, hız 0.9; bölgenin adı
+  ve kök söylendikten sonra):
+
+| Bölge | Cümle |
+|-------|-------|
+| Bukalemun Koyu | *Bir bukalemunu kelimeye taşı!* |
+| Fıstıkçı Şahap'ın Dükkânı | *Bir taşı ya da jöleyi boşluğa koy!* |
+| Kök Bahçesi | *Bir bukalemunu ağaca taşı!* |
+| Uydurukçuklar | *Bir bukalemunu yaratığa taşı!* |
+
+- **Bir daha:** çocuk o bölgede bir doğru yapınca el bir daha çıkmaz (kayda yazılır; *Yeni
+  çocuk* ve sıfırlama siler). İlk üç görevde 8 saniye hiçbir şeye dokunulmazsa el yeniden çıkar.
+  Dokunuş eli hemen kaldırır.
+- **Görünüm:** süstür (ekran okuyucudan gizli, dokunuşu engellemez); el krem, mürekkep çizgili;
+  kaynağın kopyası yarı saydam. Hareket azaltmada el kaynağın üstünde kıpırdamadan durur
+  (2,5 saniye), sonra kalkar.
+- Eski kayıtta (Oturum 13'ten önce) bölgede biten görev varsa el o bölgede çıkmaz.
+
 ## Ses ve resim
 
 Okumayı henüz sökmemiş 1–2. sınıf çocuğu oyunu yalnız dinleyerek oynayabilmelidir ("Koleksiyon ve
@@ -631,7 +727,7 @@ ne olduğunu okumadan gösterir.
   bölge): her görevin kökü (Bahçe'de hedefi) ve doğru biçimi; her seçeneğin kuracağı aday kelime
   (*atlar*, *atler*; *kitapım*, *kitabım*; *zelüye*, *zelüe*); Bahçe'nin ekleri ve gövde
   kelimeleri; her yanlış adayın neden cümlesi; *İkisi de olur* cümleleri; bölge adları, akşam
-  başlıkları ve haritanın iletileri.
+  başlıkları, haritanın iletileri ve ilk dakika elinin cümleleri ("Akış ve puan").
 - **Okunuş:** tek harf adıyla söylenir (*p* → *pe*, *b* → *be*, *ğ* → *yumuşak ge*; ünlüler
   kendisi): *Ek ünlüyle başlayınca p yumuşar: b olur.* → *Ek ünlüyle başlayınca pe yumuşar: be
   olur.* Ok ve tire okunmaz. Yanlış okunan metnin okunuşu `icerik/ses-okunus.csv`'ye yazılır
@@ -661,8 +757,10 @@ ne olduğunu okumadan gösterir.
     karo seçilince kelime (*gıvakım*, *gıvağım*), oturunca kelime ve *İkisi de olur* cümlesi.
   - Haritada kilitli ya da hazırlanan bölgeye dokununca adı ve iletisi; akşam ekranında başlık ve
     kelimeler; Sözlük'te karta dokununca kelime.
+  - İlk dakika eli çıkarken bölgenin cümlesi (*Bir bukalemunu kelimeye taşı!*). Sıradaki görev
+    kurulan kelimenin sesi bitmeden gelmez.
 - **Aynı anda tek ses çalar;** yenisi eskisini keser.
-- **Düğmeler simgeden tanınır:** *Sıradaki*'de sağa ok, *Haritaya dön*'de harita; yazı yanında
+- **Düğmeler simgeden tanınır:** *Sıradaki*'de (Düğmeyle ayarında) sağa ok, *Haritaya dön*'de harita; yazı yanında
   durur. Bölge ekranındaki Harita düğmesi zaten simgedir.
 - **Hoparlör:** 44 px'lik yuvarlak düğme, mürekkep çizgili. Kelimenin hoparlörü kartın sağ üst
   köşesinde bir rozettir (kartı kaydırmaz); cümlenin hoparlörü cümlenin solundadır.
@@ -684,6 +782,7 @@ hiçbir şey cihazdan çıkmaz.
 | doğru | doğru sonuç (bukalemun kelimeye birleşti, karo yuvaya oturdu, ek ağaca tutundu) | kısa, yükselen iki nota (G5 → C6), 320 ms |
 | yanlış | yanlış sonuç (bukalemun düştü, karo sekti, ek döndü) | yumuşak, alçak bir ses (A3), 260 ms; cezalandırıcı değil |
 | büyü | çoğalma, cebe girme, halka, yıldız | kısa bir parıltı (C6 E6 G6 C7 arpeji), 335 ms |
+| seri | üst üste üç ilk denemede doğru (şenlik; "Akış ve puan") | sevinçli bir üçlü (E6 G6 C7), 380 ms |
 
 - Her efekt 400 ms'den kısadır ve konuşmadan kısıktır (en yüksek 50 ms'si konuşmanın düzeyinin
   yarısının altında).
@@ -750,6 +849,8 @@ ilerlemesi olduğu belli değildir, bu yüzden hiçbir şey kaydedilmez.
 
 - **Açma ve kapama:** Ayarlar'da *Sınıf modu: Kapalı / Açık*. Adreste `?sinif=1` açar,
   `?sinif=0` kapatır (öğretmenin yer imi); seçim ayarlara yazılır, parametre adresten kalkar.
+- **Sıradaki görev Düğmeyle'dir** (varsayılan; Ayarlar'da değişir): tahtada öğretmen sırayı
+  verir. Puan görünür ama kaydedilmez.
 - **Bütün bölgeler açıktır;** kilit yok. İçeriği henüz olmayan bölge yine *hazırlanıyor*
   görünür.
 - **Kayıt yok:** ilerleme, kartlar ve kalınan yer kayda yazılmaz, yalnız o açılış boyunca
@@ -769,8 +870,8 @@ ilerlemesi olduğu belli değildir, bu yüzden hiçbir şey kaydedilmez.
   tek sırada; Koy'un ve Dükkân'ın kelime kartı iri (yazı 3 rem); Bahçe'nin ağacı ekranın
   ortasında ve 1.5 kat büyük, tabela ve kelimenin o anki hâli ağacın sağında, ortasıyla hizalı.
   Sözlük'te bölgeler yan yana, kart sayısıyla orantılı genişlikte; sığmayınca bölge bölge ve
-  sayfalı ("Sözlük"). Ayarlar üç sütun; Hakkında Renkler'in ve İlerleme'nin yanında, iki metin
-  sütununda (sıfırlama sorusu açıkken de sığar). Piksel boylu çizimler (ağaç, karo, harita
+  sayfalı ("Sözlük"). Ayarlar iki satırda üç sütun (Ses, Sıradaki görev, Sınıf modu; Renkler,
+  Hareket, İlerleme); Hakkında altta, üç metin sütununda (sıfırlama sorusu açıkken de sığar). Piksel boylu çizimler (ağaç, karo, harita
   işaretleri) yazıyla aynı oranda büyür. Telefonda ve dikey ekranda sınıf modu oyunun olağan
   görünümündedir.
 
@@ -782,12 +883,12 @@ gönderilmez: deneme günlüğü yalnız cihazdadır, yetişkin elle indirir.
 
 ### Sürüm
 
-- Derlemede sürümün adı (şimdi *pilot-1.1*), derlenen commit'in kısa özeti ve commit'in günü
+- Derlemede sürümün adı (şimdi *pilot-2*), derlenen commit'in kısa özeti ve commit'in günü
   pakete girer (`src/surum.ts`, `vite.config.ts`). Ayarlar'daki Hakkında'da yalnız adı
-  (*Sürüm: pilot-1.1*); pilot.html'de üçü: *pilot-1.1 (a1b2c3d, 2026-10-02)*. Günlüğün her
+  (*Sürüm: pilot-2*); pilot.html'de üçü: *pilot-2 (a1b2c3d, 2026-10-02)*. Günlüğün her
   satırında adı (*surum*).
 - Pilot sürerken main'e yalnız pilot düzeltmeleri girer; her biri adı artırır: *pilot-1.1*,
-  *pilot-1.2* (CLAUDE.md, 17. kural).
+  *pilot-1.2* (CLAUDE.md, 17. kural). Akış ve puan (Oturum 13, oyun testinden önce) *pilot-2*'dir.
 
 ### Deneme günlüğü
 
@@ -855,13 +956,13 @@ aynı dizilir.
   görevler, işaretlenecek kutular (sürükledi, dokundu, sesi dinledi, nedeni okudu ya da dinledi,
   tahmin etti), not; çocuğun sözleri (aynen), arayüz sorunları (sürükleme zor, yazı küçük, ses
   duyulmadı, ne yapacağını anlamadı, sıkıldı), genel izlenim (eğlendi ve anladı, 1–5).
-- **Veli bilgilendirme ve onay formu:** oyun, pilotun amacı, süre (20–30 dakika), ne kaydedildiği
+- **Veli bilgilendirme ve onay formu:** oyun, pilotun amacı, süre (yaklaşık 15 dakika), ne kaydedildiği
   (gözlemci notları ve cihazda kodla tutulan adsız deneme kaydı; ses, fotoğraf ya da görüntü
   kaydı yok), gönüllülük ve istendiği an bırakma, iletişim. Araştırmacının adı, kurumu ve
   iletişim bilgisi boş bırakılır (kurum adı yazılmaz). İmza yerleri: çocuğun adı, velinin adı,
   imza, tarih; çocuğun sözlü onayı için bir kutu.
 - **Gözlemci yönergesi:** oyunun ve pilot.html'in adresi büyük puntoyla; hazırlık, her çocuk
   için adımlar (Yeni çocuk, yansız giriş cümlesi, kuralı öğretmemek, yardım ancak iki başarısız
-  denemeden ya da 30 saniye takılmadan sonra ve forma işlenir, 20–25 dakika ya da çocuk
+  denemeden ya da 30 saniye takılmadan sonra ve forma işlenir, 15 dakika ya da çocuk
   isteyene kadar, sözler aynen, kayıt yok; kod veli formundaki Çocuk kodu alanına da yazılır),
   gün sonunda CSV (telefonda Paylaş).

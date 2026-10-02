@@ -1,18 +1,20 @@
-// Ayarlar: Ses (Kapalı / Dokununca / Sesli mod), Hareket (Sistem gibi / Azalt), Renkler (Renkli /
-// Renksiz), Sınıf modu (Kapalı / Açık), ilerlemeyi sıfırlama ve Hakkında (lisanslar ve atıflar).
+// Ayarlar: Ses (Kapalı / Dokununca / Sesli mod), Sıradaki görev (Kendiliğinden / Düğmeyle),
+// Hareket (Sistem gibi / Azalt), Renkler (Renkli / Renksiz), Sınıf modu (Kapalı / Açık),
+// ilerlemeyi sıfırlama ve Hakkında (lisanslar ve atıflar).
 // Ayarlar cihazda saklanır; App onları belgenin köküne yazar (html[data-hareket],
 // html[data-renkler], html[data-sinif]). Azalt, prefers-reduced-motion gibi davranır. Renksiz,
 // galerideki Renksiz moddur; açıkken renkler büyüden sonra da gri kalır. Ses'in varsayılanı
 // Dokununca'dır; Sesli mod okumayı henüz sökmemiş çocuk içindir (DESIGN.md, "Ses ve resim").
 // Sınıf modu etkileşimli tahta içindir: bütün bölgeler açık, ilerleme kaydedilmez (adreste
-// ?sinif=1 de açar).
+// ?sinif=1 de açar). Sıradaki görev'in varsayılanı Kendiliğinden'dir, sınıf modunda Düğmeyle;
+// iki modun seçimi ayrı saklanır (gecis, sinifGecis), ekran açık modunkini gösterir.
 //
 // Sıfırlama uygulamanın içinde iki adımdır; tarayıcının confirm penceresi kullanılmaz. Silinen:
 // bütün ilerleme ve kartlar (sınıf modunda yalnız o açılışınkiler). Ayarlar kalır.
 
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import UnluEtiketi from '../gorsel/UnluEtiketi.tsx'
-import type { Ayarlar as AyarDegerleri } from '../oyun/ilerleme.ts'
+import { gecerliGecis, type Ayarlar as AyarDegerleri, type Gecis } from '../oyun/ilerleme.ts'
 import { SURUM_ADI } from '../surum.ts'
 import './Ayarlar.css'
 
@@ -25,6 +27,11 @@ const SES: readonly Secenek<AyarDegerleri['ses']>[] = [
   { deger: 'kapali', ad: 'Kapalı' },
   { deger: 'dokununca', ad: 'Dokununca' },
   { deger: 'sesli', ad: 'Sesli mod' },
+]
+
+const GECIS: readonly Secenek<Gecis>[] = [
+  { deger: 'kendiliginden', ad: 'Kendiliğinden' },
+  { deger: 'dugmeyle', ad: 'Düğmeyle' },
 ]
 
 const HAREKET: readonly Secenek<AyarDegerleri['hareket']>[] = [
@@ -84,6 +91,14 @@ export default function Ayarlar({
         secenekler={SES}
         secili={ayarlar.ses}
         onSec={(ses) => onAyar({ ses })}
+      />
+
+      <SecimGrubu
+        ad="gecis"
+        baslik="Sıradaki görev"
+        secenekler={GECIS}
+        secili={gecerliGecis(ayarlar)}
+        onSec={(gecis) => onAyar(sinifta ? { sinifGecis: gecis } : { gecis })}
       />
 
       <SecimGrubu

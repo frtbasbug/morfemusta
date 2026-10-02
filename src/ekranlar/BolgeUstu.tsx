@@ -1,11 +1,12 @@
 // Bölge ekranının üst çubuğu: Harita düğmesi (harita simgesi), bölgenin adı, görev sırası
 // ("3 / 10"). Turlu bölgede (Uydurukçuklar) sıranın önünde tur numarası da yazar ("2. tur · 3 /
-// 10"; dar ekranda tur üstte, sıra altta). Sınıf modunda sıranın yanında "Sınıf" işareti durur.
-// Dört bölge ekranı aynı çubuğu kullanır.
+// 10"; dar ekranda tur üstte, sıra altta). Sıranın altında (geniş ekranda yanında) turun puanı:
+// yıldız simgesi ve sayı ("Puan: 40"). Sınıf modunda sıranın yanında "Sınıf" işareti durur. Dört
+// bölge ekranı aynı çubuğu kullanır.
 
 import type { Ref } from 'react'
 import SinifIsareti, { useSinifModu } from './SinifIsareti.tsx'
-import { HaritaSimgesi } from './simgeler.tsx'
+import { HaritaSimgesi, YildizSimgesi } from './simgeler.tsx'
 import './BolgeUstu.css'
 
 export default function BolgeUstu({
@@ -13,6 +14,7 @@ export default function BolgeUstu({
   gorevYeri,
   gorevSayisi,
   tur,
+  puan,
   onHarita,
   baslikRef,
 }: {
@@ -22,6 +24,8 @@ export default function BolgeUstu({
   readonly gorevSayisi: number
   /** Turlu bölgede oynanan tur (1'den); tursuz bölgede verilmez. */
   readonly tur?: number
+  /** Turun puanı; verilmezse görünmez. */
+  readonly puan?: number
   /** Haritaya dönüş; verilmezse düğmesi çıkmaz. */
   readonly onHarita: (() => void) | undefined
   readonly baslikRef?: Ref<HTMLHeadingElement>
@@ -50,6 +54,13 @@ export default function BolgeUstu({
           <span className="gizli">Görev </span>
           {gorevYeri + 1} / {gorevSayisi}
         </p>
+        {puan !== undefined && (
+          <p className="bolge-ustu__puan">
+            <YildizSimgesi dolu />
+            <span className="gizli">Puan: </span>
+            {puan}
+          </p>
+        )}
       </div>
     </header>
   )

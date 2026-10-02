@@ -1,5 +1,8 @@
 import { expect, test, type Locator, type Page } from '@playwright/test'
-import { ANAHTAR, bukalemun, gezinme, hatalariTopla, kart, sonraki } from './yardimcilar.ts'
+import { ANAHTAR, bukalemun, gezinme, hatalariTopla, kart, sonraki, dugmeyleOyna } from './yardimcilar.ts'
+
+// Bu dosyadaki testler Düğmeyle ayarında koşar (yardimcilar.ts, dugmeyleOyna).
+test.beforeEach(({ page }) => dugmeyleOyna(page))
 
 // Birleşen ekte ünlü etiketi (DESIGN.md, "Birleşen ek"): ekin ünlüsü kök etiketiyle aynı
 // etikettedir; kalında geniş, incede dar. Uyum etiketlerin eninden okunur, bu yüzden Renksiz'de

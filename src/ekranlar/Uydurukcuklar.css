@@ -516,10 +516,10 @@
 }
 
 /* Çok alçak ekranda (320×568) yaratık, neden ve cümle bir kez daha küçülür: yanlış bir
-   denemenin nedeni de kıyıyı kaydırmadan sığsın. */
+   denemenin nedeni de kıyıyı kaydırmadan sığsın (üst çubukta tur, sıra ve puan üç satırdır). */
 @media (max-height: 37rem) {
   .uyduruk__yaratiklar .yaratik {
-    width: 4.75rem;
+    width: 4rem;
   }
 
   .uyduruk__hedef {
@@ -533,7 +533,7 @@
 
   .uyduruk__alt {
     gap: 0.3rem;
-    min-height: 5rem;
+    min-height: 4.75rem;
   }
 
   .uyduruk__cumle {

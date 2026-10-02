@@ -65,6 +65,8 @@ export interface Ses {
   readonly sonuc: (tur: 'dogru' | 'yanlis', metinler?: string | readonly string[]) => void
   /** Büyü (çoğalma, cebe girme, halka, yıldız): Kapalı değilse kısa bir parıltı sesi. */
   readonly buyu: () => void
+  /** Şenlik (üst üste üç ilk denemede doğru): Kapalı değilse kısa, sevinçli bir üçlü. */
+  readonly senlik: () => void
 }
 
 export function useSes(): Ses {
@@ -81,6 +83,9 @@ export function useSes(): Ses {
     },
     buyu: () => {
       if (ayar !== 'kapali') efektCal('buyu')
+    },
+    senlik: () => {
+      if (ayar !== 'kapali') efektCal('seri')
     },
   }
 }

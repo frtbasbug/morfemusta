@@ -27,7 +27,7 @@ describe('BukalemunKoyu', () => {
   const html = renderToStaticMarkup(<BukalemunKoyu bolge={KOY} onHarita={() => {}} />)
 
   it('başlık bölge tablosundan; Harita düğmesi ve görev sırası', () => {
-    expect(html).toMatch(/^<main class="koy">/)
+    expect(html).toMatch(/^<main class="koy" data-evre="secim">/)
     expect(html).toMatch(/<h1 class="bolge-ustu__baslik" tabindex="-1">Bukalemun Koyu<\/h1>/)
     expect(html).toMatch(/<button type="button" class="bolge-ustu__harita" aria-label="Harita">/)
     expect(html).not.toContain('Ana sayfa')
@@ -68,7 +68,7 @@ describe('BukalemunKoyu', () => {
 
   it('renksiz görev (9.) renksiz sınıfıyla açılır', () => {
     const renksiz = renderToStaticMarkup(<BukalemunKoyu bolge={koy(9)} />)
-    expect(renksiz).toMatch(/^<main class="koy renksiz">/)
+    expect(renksiz).toMatch(/^<main class="koy renksiz" data-evre="secim">/)
     expect(renksiz).toContain('aria-label="gül"')
     expect(kiyidakiler(renksiz)).toHaveLength(4)
   })
@@ -101,7 +101,11 @@ describe('BukalemunKoyu', () => {
     expect(aksam).toContain('Haritaya dön')
   })
 
-  it('hiçbir yerde puan ya da süre yok', () => {
-    expect(html).not.toMatch(/puan|süre|skor/i)
+  it('üst çubukta turun puanı sıfırdan başlar; süre ve sıralama yok (puan yalnız artar)', () => {
+    expect(html).toContain('<p class="bolge-ustu__puan">')
+    expect(html).toContain('<span class="gizli">Puan: </span>0</p>')
+    expect(html).not.toMatch(/süre|skor|sıralama/i)
+    // Kendiliğinden geçiş varsayılandır: başta Sıradaki düğmesi yok.
+    expect(html).not.toContain('Sıradaki')
   })
 })

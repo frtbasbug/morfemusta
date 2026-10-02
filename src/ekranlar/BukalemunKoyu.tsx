@@ -5,8 +5,13 @@
 // Doğruysa büyü olur: kökteki ünlü ile bukalemun arasında bir yay parlar, bukalemun sevinçle
 // zıplar, kelime birleşir ve ek bukalemunun renginde kalır. Sonra anlam resimsiz görünür:
 // çoğulda kart üçe çoğalır, iyelikte ekranın altındaki cebe girer. Yanlışsa bukalemun eğilir,
-// düşer, kıyıya döner; nedeni kelimenin altında yazılır, ilgili iki ünlü etiketlenir. Ceza,
-// puan ve süre yok. Ağız hiçbir durumda değişmez (DESIGN.md, "Üç kural").
+// düşer, kıyıya döner; nedeni kelimenin altında yazılır, ilgili iki ünlü etiketlenir. Ceza ve
+// süre yok; puan yalnız artar (akis.tsx). Ağız hiçbir durumda değişmez (DESIGN.md, "Üç kural").
+//
+// Akış (DESIGN.md, "Akış ve puan"): doğrudan sonra sıradaki görev kendiliğinden gelir (ekrana
+// dokunan hemen geçer) ya da Düğmeyle ayarında Sıradaki düğmesiyle. Büyü kısa ve bindirilmiştir:
+// doğru yerleştirmeden sıradaki görevin oynanabilir olmasına en çok 1,5 saniye. Bölgenin ilk
+// görevinde ilk dakika eli hamleyi gösterir.
 //
 // Ses (DESIGN.md, "Ses ve resim"): sesli modda görev başlayınca kök söylenir; bir bukalemun
 // seçilince ya da sürüklenmeye başlayınca kuracağı aday kelime (atlar, atler); doğruda efekt ve
@@ -21,7 +26,8 @@
 //
 // Bölgenin adı ve akşamı bölge tablosundandır (icerik/bolgeler.csv). Çocuk kaldığı görevden
 // sürdürür (baslangic); her görev bitince kabuk ilerlemeyi kaydeder (onGorevBitti). Görevler
-// bitince akşam olur: ortak akşam ekranı, o bölgede bugün kurulan kelimelerle.
+// bitince akşam olur: ortak akşam ekranı, o bölgede bugün kurulan kelimelerle, turun puanı ve
+// yıldızlarıyla.
 
 import {
   useEffect,
@@ -59,7 +65,9 @@ import {
   type Deneme,
   type Secenek,
 } from '../oyun/koy.ts'
+import { yildizSayisi } from '../oyun/puan.ts'
 import AksamEkrani from './AksamEkrani.tsx'
+import { useAkis } from './akis.tsx'
 import BolgeUstu from './BolgeUstu.tsx'
 import { Hoparlor, useSes, useSesliSoyleyis } from '../ses/Ses.tsx'
 import { bekle, hareketAzMi, hareketleriKes, kaydir, oynat, type Nokta } from './hareket.ts'
@@ -119,6 +127,20 @@ export default function BukalemunKoyu({
   const gorulenGorev = useRef(durum.gorevYeri)
   const { soyle, sonuc, buyu: buyuSesi } = useSes()
   const kaydet = useDenemeGunlugu(bolge.kimlik, gorev)
+  const akis = useAkis({
+    bolge: bolge.kimlik,
+    gorev,
+    gorevYeri: durum.gorevYeri,
+    bitti: evre === 'bitti',
+    onSonraki: () => gonder({ tur: 'sonraki' }),
+    gorevMetni: gorev?.kok ?? '',
+    elKaynagi: () => {
+      const ilk = durum.adim?.secenekler[0]
+      return ilk ? bukalemunlar.current.get(ilk.yuzey) : null
+    },
+    elHedefi: () => kartRef.current,
+    secimde: evre === 'secim' && durum.secili === null,
+  })
 
   // Sesli mod: görev başlayınca kök söylenir; bölgeye girişte önce bölgenin adı.
   const [acilisYeri] = useState(durum.gorevYeri)
@@ -137,7 +159,7 @@ export default function BukalemunKoyu({
     }
   }, [])
 
-  // Klavyeyle oynayan için odak: görev bitince Sıradaki'ye, yeni görevde kıyıdaki ilk
+  // Klavyeyle oynayan için odak: görev bitince Sıradaki'ye (Düğmeyle), yeni görevde kıyıdaki ilk
   // bukalemuna. Akşam ekranı odağı kendi başlığına alır.
   useEffect(() => {
     if (evre === 'bitti') sonrakiRef.current?.focus()
@@ -151,7 +173,15 @@ export default function BukalemunKoyu({
   }, [durum.gorevYeri, durum.adim])
 
   if (evre === 'kapanis' || !gorev || !adim) {
-    return <AksamEkrani baslik={bolge.aksam} kartlar={bugunkuKartlar} onHarita={onHarita} />
+    return (
+      <AksamEkrani
+        baslik={bolge.aksam}
+        kartlar={bugunkuKartlar}
+        puan={akis.puan.puan}
+        yildiz={yildizSayisi(akis.puan)}
+        onHarita={onHarita}
+      />
+    )
   }
 
   const secimde = evre === 'secim'
@@ -177,6 +207,7 @@ export default function BukalemunKoyu({
       dogru: dogruMu(deneme),
       neden: nedenKodlari(deneme.nedenler),
     })
+    akis.dene(String(adim.sira), dogruMu(deneme), adim.sira + 1 === gorev.etiketler.length)
     const etki = ANLAM_ETKILERI[adim.etiket]
     flushSync(() => gonder({ tur: 'dene', yuzey }))
     const oge = bukalemunlar.current.get(yuzey)
@@ -207,13 +238,16 @@ export default function BukalemunKoyu({
     const hedef = yapismaNoktasi(oge, kayma)
     oge.style.transform = kaydir(hedef)
     await oynat(oge, [{ transform: kaydir(kayma) }, { transform: kaydir(hedef) }], {
-      duration: 340,
+      duration: 200,
       easing: 'cubic-bezier(.3, .7, .4, 1)',
     })
     return hedef
   }
 
-  /** Doğru taşıma: yay parlar, bukalemun zıplar, kelime birleşir; sonra anlam etkisi. */
+  /**
+   * Doğru taşıma: yay parlar, bukalemun zıplar (ikisi birlikte), kelime birleşir; sonra anlam
+   * etkisi, ekin belirişine bindirilmiş. Bütün büyü 1,3 saniyenin içinde biter.
+   */
   async function buyu(
     oge: HTMLButtonElement | undefined,
     secenek: Secenek,
@@ -222,55 +256,64 @@ export default function BukalemunKoyu({
   ) {
     if (oge && !hareketAzMi()) {
       const hedef = await kelimeyeUc(oge, kayma)
-      await yayiParlat(oge, secenek.parca)
-      // Sevinç zıplamayla anlatılır; ağız değişmez.
+      // Sevinç zıplamayla anlatılır; ağız değişmez. Yay parlarken zıplar, sonra kelimeye karışır.
       const yukarida = (dy: number) => kaydir({ x: hedef.x, y: hedef.y - dy })
-      await oynat(
-        oge,
-        [
-          { transform: yukarida(0) },
-          { transform: yukarida(22), offset: 0.25 },
-          { transform: yukarida(0), offset: 0.5 },
-          { transform: yukarida(12), offset: 0.72 },
-          { transform: yukarida(0) },
-        ],
-        { duration: 560, easing: 'ease-in-out' },
-      )
-      // Kelimeye karışır.
-      oge.style.opacity = '0'
-      await oynat(
-        oge,
-        [
-          { transform: kaydir(hedef), opacity: 1 },
-          { transform: `${kaydir(hedef)} scale(0.4)`, opacity: 0 },
-        ],
-        { duration: 180, easing: 'ease-in' },
-      )
+      await Promise.all([
+        yayiParlat(oge, secenek.parca),
+        (async () => {
+          await oynat(
+            oge,
+            [
+              { transform: yukarida(0) },
+              { transform: yukarida(22), offset: 0.3 },
+              { transform: yukarida(0), offset: 0.6 },
+              { transform: yukarida(10), offset: 0.8 },
+              { transform: yukarida(0) },
+            ],
+            { duration: 400, easing: 'ease-in-out' },
+          )
+          oge.style.opacity = '0'
+          await oynat(
+            oge,
+            [
+              { transform: kaydir(hedef), opacity: 1 },
+              { transform: `${kaydir(hedef)} scale(0.4)`, opacity: 0 },
+            ],
+            { duration: 120, easing: 'ease-in' },
+          )
+        })(),
+      ])
     }
     if (!bagli.current) return
     flushSync(() => gonder({ tur: 'birlesti' }))
     // Doğru: efekt, ardından (sesli modda) kurulan kelime; kelimenin çevresinde parıltı.
     if (adim) sonuc('dogru', adim.bicim)
+    akis.dogruGorundu()
     parlat(kartRef.current?.querySelector('.kelime'))
-    await oynat(
-      kartRef.current?.querySelector('.ek-yazisi'),
-      [
-        { transform: 'scale(0.3)', opacity: 0 },
-        { transform: 'scale(1.15)', opacity: 1, offset: 0.7 },
-        { transform: 'scale(1)', opacity: 1 },
-      ],
-      { duration: 300, easing: 'ease-out' },
-    )
-    await bekle(200)
-    if (!bagli.current) return
-    if (etki) buyuSesi()
-    if (etki === 'cebe girer') {
-      await cebeKoy()
-    } else {
-      flushSync(() => gonder({ tur: 'etki' }))
-      if (etki === 'çoğalır') await cogalt()
-    }
-    await bekle(etki ? 400 : 0)
+    // Ek belirirken anlam etkisi başlar: çoğalma ya da cebe girme.
+    await Promise.all([
+      oynat(
+        kartRef.current?.querySelector('.ek-yazisi'),
+        [
+          { transform: 'scale(0.3)', opacity: 0 },
+          { transform: 'scale(1.15)', opacity: 1, offset: 0.7 },
+          { transform: 'scale(1)', opacity: 1 },
+        ],
+        { duration: 220, easing: 'ease-out' },
+      ),
+      (async () => {
+        await bekle(100)
+        if (!bagli.current) return
+        if (etki) buyuSesi()
+        if (etki === 'cebe girer') {
+          await cebeKoy()
+        } else {
+          flushSync(() => gonder({ tur: 'etki' }))
+          if (etki === 'çoğalır') await cogalt()
+        }
+      })(),
+    ])
+    await bekle(etki ? 80 : 0)
     if (!bagli.current) return
     flushSync(() => gonder({ tur: 'adimBitti' }))
     // Son ekin büyüsü oldu: görev bitti, kabuk kaydeder.
@@ -309,19 +352,19 @@ export default function BukalemunKoyu({
             { strokeDasharray: uzunluk, strokeDashoffset: uzunluk },
             { strokeDasharray: uzunluk, strokeDashoffset: '0' },
           ],
-          { duration: 320, easing: 'ease-out' },
+          { duration: 180, easing: 'ease-out' },
         ),
       ),
     )
-    // Parlama: hale iki kez kalınlaşıp saydamlaşır (bulanıklık yok).
+    // Parlama: hale bir kez kalınlaşıp saydamlaşır (bulanıklık yok).
     const parlak = { strokeWidth: '22', opacity: 0.6 }
     const sonuk = { strokeWidth: '14', opacity: 0.35 }
-    await oynat(yay.querySelector('.koy__yay-hale'), [sonuk, parlak, sonuk, parlak, sonuk], {
-      duration: 520,
+    await oynat(yay.querySelector('.koy__yay-hale'), [sonuk, parlak, sonuk], {
+      duration: 240,
       easing: 'ease-in-out',
     })
     yay.classList.remove('koy__yay--gorunur')
-    await oynat(yay, [{ opacity: 1 }, { opacity: 0 }], { duration: 180 })
+    await oynat(yay, [{ opacity: 1 }, { opacity: 0 }], { duration: 100 })
     for (const yol of yollar) yol.removeAttribute('d')
   }
 
@@ -336,7 +379,7 @@ export default function BukalemunKoyu({
             { transform: 'none', opacity: 0 },
             { transform: getComputedStyle(kopya).transform, opacity: 1 },
           ],
-          { duration: 420, easing: 'cubic-bezier(.3, .7, .4, 1.3)' },
+          { duration: 320, easing: 'cubic-bezier(.3, .7, .4, 1.3)' },
         ),
       ),
     )
@@ -362,7 +405,7 @@ export default function BukalemunKoyu({
         { transform: `translate(${kx}px, ${ky}px) scale(${once.width / sonra.width})` },
         { transform: 'none' },
       ],
-      { duration: 600, easing: 'cubic-bezier(.45, 0, .3, 1)' },
+      { duration: 380, easing: 'cubic-bezier(.45, 0, .3, 1)' },
     )
   }
 
@@ -375,10 +418,10 @@ export default function BukalemunKoyu({
       const egik = `${kaydir(hedef)} rotate(-12deg)`
       oge.style.transform = egik
       await oynat(oge, [{ transform: `${kaydir(hedef)} rotate(0deg)` }, { transform: egik }], {
-        duration: 180,
+        duration: 140,
         easing: 'ease-out',
       })
-      await bekle(280)
+      await bekle(160)
       const dusmus = `${kaydir({ x: hedef.x - 16, y: hedef.y + 150 })} rotate(-34deg)`
       oge.style.transform = dusmus
       oge.style.opacity = '0'
@@ -388,7 +431,7 @@ export default function BukalemunKoyu({
           { transform: egik, opacity: 1 },
           { transform: dusmus, opacity: 0 },
         ],
-        { duration: 460, easing: 'cubic-bezier(.5, 0, .9, .5)' },
+        { duration: 340, easing: 'cubic-bezier(.5, 0, .9, .5)' },
       )
     }
     if (!bagli.current) return
@@ -404,7 +447,7 @@ export default function BukalemunKoyu({
         { transform: 'translateY(2.5rem)', opacity: 0 },
         { transform: 'none', opacity: 1 },
       ],
-      { duration: 320, easing: 'ease-out' },
+      { duration: 260, easing: 'ease-out' },
     )
   }
 
@@ -412,7 +455,7 @@ export default function BukalemunKoyu({
   async function geriDon(oge: HTMLElement, kayma: Nokta) {
     oge.style.transform = ''
     await oynat(oge, [{ transform: kaydir(kayma) }, { transform: 'none' }], {
-      duration: 240,
+      duration: 200,
       easing: 'ease-out',
     })
   }
@@ -537,11 +580,16 @@ export default function BukalemunKoyu({
   )
 
   return (
-    <main className={durum.renksiz ? 'koy renksiz' : 'koy'} onKeyDown={tusaBasildi}>
+    <main
+      className={durum.renksiz ? 'koy renksiz' : 'koy'}
+      data-evre={evre}
+      onKeyDown={tusaBasildi}
+    >
       <BolgeUstu
         ad={bolge.ad}
         gorevYeri={durum.gorevYeri}
         gorevSayisi={gorevler.length}
+        puan={akis.puan.puan}
         onHarita={onHarita}
         baslikRef={baslikRef}
       />
@@ -555,7 +603,7 @@ export default function BukalemunKoyu({
           <div className="neden" role="status">
             {durum.yanlis && <NedenYazisi deneme={durum.yanlis} />}
           </div>
-          {evre === 'bitti' && (
+          {evre === 'bitti' && !akis.kendiliginden && (
             <button
               ref={sonrakiRef}
               type="button"
@@ -567,7 +615,7 @@ export default function BukalemunKoyu({
             </button>
           )}
           <p className="gizli" role="status">
-            {evre === 'bitti' ? kelime : ''}
+            {evre === 'bitti' ? kelime : akis.duyuru}
           </p>
         </div>
       </section>

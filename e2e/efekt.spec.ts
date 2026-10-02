@@ -1,5 +1,8 @@
 import { expect, test, type Page } from '@playwright/test'
-import { ANAHTAR, bolge, bukalemun, hatalariTopla, kart, koyBasligi, sonraki } from './yardimcilar.ts'
+import { ANAHTAR, bolge, bukalemun, hatalariTopla, kart, koyBasligi, sonraki, dugmeyleOyna } from './yardimcilar.ts'
+
+// Bu dosyadaki testler Düğmeyle ayarında koşar (yardimcilar.ts, dugmeyleOyna).
+test.beforeEach(({ page }) => dugmeyleOyna(page))
 
 // Efektler ve parıltı (DESIGN.md, "Ses ve resim"). Web Audio'nun osilatörleri, AudioContext'in
 // kuruluşu ve <audio> öğesinin play ile pause'u sarılır; çalınan nota (Hz) ve metin sırasıyla

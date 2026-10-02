@@ -163,6 +163,11 @@
   grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
 }
 
+/* Sıradaki görev: "Kendiliğinden" uzun; sığmayınca iki seçenek alt alta. */
+.ayar--gecis .ayar__secenekler {
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+}
+
 /* Hakkında: lisanslar ve atıflar, küçük yazıyla. */
 .hakkinda {
   display: grid;

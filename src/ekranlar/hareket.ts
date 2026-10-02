@@ -24,7 +24,7 @@ export async function oynat(
   kareler: Keyframe[],
   secenekler: KeyframeAnimationOptions,
 ): Promise<void> {
-  if (!oge || hareketAzMi()) return
+  if (!oge || hareketAzMi() || hizli) return
   try {
     await oge.animate(kareler, secenekler).finished
   } catch {
@@ -32,10 +32,47 @@ export async function oynat(
   }
 }
 
-/** Hareketler arasındaki kısa durak; hareket azaltmada beklemez. */
+/** Süren duraklar: hızlandırılınca hemen biterler. */
+const duraklar = new Set<() => void>()
+
+/** Hareketler arasındaki kısa durak; hareket azaltmada ve hızlandırılınca beklemez. */
 export function bekle(ms: number): Promise<void> {
-  if (hareketAzMi()) return Promise.resolve()
-  return new Promise((coz) => setTimeout(coz, ms))
+  if (hareketAzMi() || hizli) return Promise.resolve()
+  return new Promise((coz) => {
+    const bitir = () => {
+      clearTimeout(zaman)
+      duraklar.delete(bitir)
+      coz()
+    }
+    const zaman = setTimeout(bitir, ms)
+    duraklar.add(bitir)
+  })
+}
+
+/**
+ * Hızlı geçiş: doğru yerleştirmenin büyüsü sürerken ekrana dokunan sıradaki göreve hemen geçer
+ * (akis.tsx). Süren hareketler sonlarına atlar (kalıcı durum zaten satır içi stildedir), duraklar
+ * biter; hızlıKapat'a kadar yeni hareket oynamaz, durak beklemez.
+ */
+let hizli = false
+
+export function hizlandir(): void {
+  hizli = true
+  if (typeof document !== 'undefined' && typeof document.getAnimations === 'function') {
+    for (const hareket of document.getAnimations()) {
+      try {
+        hareket.finish()
+      } catch {
+        // Sonsuz hareket bitirilemez; yeri yok.
+      }
+    }
+  }
+  for (const bitir of [...duraklar]) bitir()
+}
+
+/** Hızlı geçiş bitti: hareketler yeniden oynar. */
+export function hizliKapat(): void {
+  hizli = false
 }
 
 /** Öğenin süren bütün hareketlerini keser. */

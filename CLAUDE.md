@@ -78,7 +78,9 @@ src/
                      alt gezinme, sınıf modunun işareti ve bağlamı (SinifIsareti);
                      Sinif.css: sınıf modunun görünümü (geniş yatay ekran);
                      hareket.ts: ekranların hareketleri (Web Animations API, hareket azaltmaya
-                     uyar); parilti.ts: doğrunun parıltısı; simgeler.tsx: arayüz simgeleri
+                     uyar; hizlandir); parilti.ts: doğrunun parıltısı; simgeler.tsx: arayüz
+                     simgeleri; akis.tsx: akış (kendiliğinden geçiş, puan, ilk dakika eli;
+                     AkisSaglayici, useAkis); Yildizlar.tsx: 1–3 yıldız
   kabuk/             hash yönlendirici (yonlendirici.ts), cihaz deposu (depo.ts: localStorage,
                      kalıcı depo isteği, useIlerleme), adresteki sınıf modu (sinif.ts), ana
                      ekran ipucu (ipucu.ts), deneme günlüğünün bağlantısı (gunluk.tsx:
@@ -88,7 +90,8 @@ src/
                      seçenekler, Bukalemun Koyu'nun (koy.ts), dükkânın (dukkan.ts), bahçenin
                      (bahce.ts) ve Uydurukçuklar'ın (uyduruk.ts) durumu (indirgeyici),
                      cihazdaki ilerleme (ilerleme.ts:
-                     kayıt, kilitler, Sözlük kartları), pilotun deneme günlüğü (gunluk.ts:
+                     kayıt, kilitler, Sözlük kartları, tur puanı, yıldız, eller), puan ve
+                     yıldız kuralları (puan.ts), pilotun deneme günlüğü (gunluk.ts:
                      satır, yazıcı, Yeni çocuk, özet, CSV); testleri yanında
   pilot/             pilot sayfası (pilot.html'in girişi, PilotSayfasi.tsx, testi)
   belgeler/          belgelerin stili (belge.css: A4, siyah beyaz, gömülü Andika)
@@ -202,7 +205,8 @@ DESIGN.md  NEXT.md  CLAUDE.md
     silinmez, eklenmez. Bir satır yanlış görünürse iş durur ve kullanıcıya sorulur.
 
 17. **Pilot sürerken main'e yalnız pilot düzeltmeleri girer** ve her biri sürüm adını artırır
-    (`src/surum.ts`: pilot-1 → pilot-1.1 → pilot-1.2; şimdi pilot-1.1). Yeni özellik pilot bitene kadar beklemeye
+    (`src/surum.ts`: pilot-1 → pilot-1.1 → pilot-1.2; şimdi pilot-2: Oturum 13'ün akışı ve puanı,
+    oyun testinden önce, kullanıcının kararıyla). Yeni özellik pilot bitene kadar beklemeye
     alınır (NEXT.md'ye yazılır). Pilotun deneme günlüğü yalnız cihazda kalır: hiçbir şey
     kendiliğinden gönderilmez (6. ve 14. kural); günlüğün biçimi değişirse anahtarı da değişir
     (`morfemusta.pilot.v2`).
@@ -291,6 +295,22 @@ DESIGN.md  NEXT.md  CLAUDE.md
   da, de, ta, te). Sınır adımında kart çocuğun seçtiği biçimi
   saklar: ekran `onGorevBitti(gorev, undefined, kelime)`; `kartiCoz` kelimeyi
   `olasiBicimler`'de arar. Sözlük ve akşam ekranı parçaları o biçimden okur (`kurulanEkleme`).
+- **Akış ve puan (`src/ekranlar/akis.tsx`, `src/oyun/puan.ts`; DESIGN.md, "Akış ve puan"):**
+  dört bölge ekranı `useAkis`'i kullanır: taşıma anında `akis.dene(adım, doğru, sonAdım)` (puan;
+  adımda önceki yanlış varsa ilk deneme değil; sınır adımı hep ilk deneme), doğrunun efektinde
+  `akis.dogruGorundu()` (seri şenliği). Kendiliğinden'de görevin son doğru yerleştirmesinden
+  `GECIS_SURESI` (1400 ms) sonra `onSonraki`; sesli modda `sesBitince()` (calar.ts) de beklenir.
+  Son doğrudan sonra belgeye `pointerdown`/`keydown` dinleyicisi takılır: dokunuş sesi susturur;
+  büyü bitmişse hemen geçer, sürüyorsa `hizlandir()` (hareket.ts: süren hareketler sonuna atlar,
+  `bekle` beklemez) ve büyü bitince geçer. Ekranın `main`'inde `data-evre`. Puan görev bitince
+  (`bitti`) kabuğa gider (`onPuan` → `ekrandaPuanYaz`: sıfırlama kimliğiyle; tur sonunda yıldız,
+  tur puanı kalkar). Kabuk bağlamı bölge ekranının çevresinde verir (`AkisSaglayici`: geçiş,
+  başlangıç puanı, el kapalı mı). İlk dakika eli belgenin gövdesine sabit, `aria-hidden` bir kaptır
+  (`.ilk-el`); kaynağın kopyası ve el, Web Animations. Hareket hızları ekranlardadır; ölçüsü
+  `e2e/akis.spec.ts` (sayfanın içinde, click'ten ilk öğenin seçilebilir olmasına). Bölge
+  ayrıntılarını sınayan uçtan uca testler Düğmeyle ayarında koşar (`dugmeyleOyna`,
+  `e2e/yardimcilar.ts`: kayıt okunurken eksik `gecis` ve `eller` eklenir); yeni akışı
+  `akis.spec.ts` ve pilot yolu sınar. Yardımcıların geçişi: `'dugme' | 'bekle' | 'dokun'`.
 - **Ses (`src/ses`):** oyunun söyleyebileceği her metin `sesMetinleri()`'ndedir, bölge bölge
   (arayüz, sonra bölgeler); ekranlar aynı işlevlerle söyler (kök, `adim.parca.govde + yuzey`,
   `adim.bicim`, `deneme.cumle`, `sinirCumlesi`, `simdikiKelime`). Yeni bir söylenecek metin önce

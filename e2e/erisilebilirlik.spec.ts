@@ -4,6 +4,9 @@ import { ANAHTAR, bukalemun, gorevleriOyna, kart, sonraki } from './yardimcilar.
 
 // Erişilebilirlik (axe-core): oyunun ekranları Renkli, Renksiz ve sınıf modunda; geliştirici
 // sayfaları (denetim.html, galeri.html, ses.html, cihaz.html) ve pilot (pilot.html, belgeler). Ciddi ya da kritik bulgu kalmaz.
+// Renkli ve Renksiz'de sıradaki görev kendiliğinden gelir; sınıf modunda Düğmeyle (varsayılan).
+// Haritada yıldızlar, bölgede puan, Uydurukçuklar'da ilk dakika eli, akşam ekranında puan ve
+// yıldızlar taranır.
 
 type Mod = 'renkli' | 'renksiz' | 'sinif'
 
@@ -32,11 +35,18 @@ const kartlar = [
   sonKurulma: '2026-10-01T10:00:00.000Z',
 }))
 
-/** Modun kaydı: bütün bölgeler açık (koy, dükkân, bahçe bitmiş), Sözlük'te kartlar. */
+/**
+ * Modun kaydı: bütün bölgeler açık (koy, dükkân, bahçe bitmiş; dükkânın en iyisi iki yıldız),
+ * Sözlük'te kartlar. Uydurukçuklar'da hiç oynanmamış: ilk dakika eli çıkar.
+ */
 function kurulum(mod: Mod) {
   return JSON.stringify({
     // Koyun son görevi kalınan yer: akşam ekranına bir görevle varılır.
-    bolgeler: { koy: { bitenler: tum(10).bitenler, kaldigi: 9 }, dukkan: tum(10), bahce: tum(10) },
+    bolgeler: {
+      koy: { bitenler: tum(10).bitenler, kaldigi: 9 },
+      dukkan: { ...tum(10), yildiz: 2 },
+      bahce: tum(10),
+    },
     kartlar,
     ayarlar: { renkler: mod === 'renksiz' ? 'renksiz' : 'renkli', sinif: mod === 'sinif' ? 'acik' : 'kapali' },
   })
@@ -79,24 +89,35 @@ for (const mod of ['renkli', 'renksiz', 'sinif'] as const) {
         await expect(page.getByRole('heading', { level: 1, name: ad })).toBeVisible()
         bulgular.push(...(await tara(page, kimlik)))
       }
+      // Uydurukçuklar'ın ilk görevinde ilk dakika eli (süs: ekran okuyucudan gizli).
+      await expect(page.locator('.ilk-el')).toHaveCount(1, { timeout: 3000 })
+      bulgular.push(...(await tara(page, 'uyduruk-el')))
 
-      // Koy: yanlış deneme (neden ve cümlesi), sonra doğru (Sıradaki), sonra akşam ekranı. Sınıf
-      // modunda ilerleme bellektedir: koyun ilk görevi.
+      // Koy: yanlış deneme (neden ve cümlesi), sonra doğru, sonra akşam ekranı. Sınıf modunda
+      // ilerleme bellektedir: koyun ilk görevi; sıradaki görev Düğmeyle (Sıradaki taranır).
       await page.goto('./#/bolge/koy')
       const ilk = mod === 'sinif'
       await bukalemun(page, 'ler').tap()
       await kart(page).tap()
       await expect(page.locator('.neden__cumle')).toBeVisible()
       bulgular.push(...(await tara(page, 'koy-yanlis')))
-      for (const yuzey of ilk ? ['lar'] : ['lar', 'ım']) {
-        await bukalemun(page, yuzey).tap()
+      if (ilk) {
+        await bukalemun(page, 'lar').tap()
+        await kart(page).tap()
+        await expect(sonraki(page)).toBeVisible()
+        bulgular.push(...(await tara(page, 'koy-dogru')))
+        await sonraki(page).tap()
+        // Koyun kalan dokuz görevi de oynanır (ilerleme bellekte, baştan).
+        await gorevleriOyna(page, 1, 9)
+      } else {
+        // Zincirin ilk adımı doğru: puan arttı, ikinci adımın bukalemunları geldi.
+        await bukalemun(page, 'lar').tap()
+        await kart(page).tap()
+        await expect(bukalemun(page, 'ım')).toHaveAttribute('aria-disabled', 'false')
+        bulgular.push(...(await tara(page, 'koy-dogru')))
+        await bukalemun(page, 'ım').tap()
         await kart(page).tap()
       }
-      await expect(sonraki(page)).toBeVisible()
-      bulgular.push(...(await tara(page, 'koy-dogru')))
-      await sonraki(page).tap()
-      // Sınıf modunda koyun kalan dokuz görevi de oynanır (ilerleme bellekte, baştan).
-      if (ilk) await gorevleriOyna(page, 1, 9)
       await expect(page.getByRole('heading', { level: 1, name: 'Koyda akşam oldu' })).toBeVisible()
       bulgular.push(...(await tara(page, 'aksam')))
 

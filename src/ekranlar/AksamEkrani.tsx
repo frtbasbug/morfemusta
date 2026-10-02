@@ -1,28 +1,36 @@
 // Akşam ekranı: bölge turunun sonundaki kapanış kartı; bütün bölgelerin ortak bileşeni. Başlık
 // bölge tablosunun aksam sütunundan gelir ("Koyda akşam oldu"); altında o bölgede bugün kurulan
-// kelimeler, ekleri birleşen ek görünümünde. Tek düğme: Haritaya dön. Puan, seri ve süre yok
-// (DESIGN.md, "Kısa oturum, doğal durak"). Sesli modda başlık ve kelimeler söylenir; Dokununca'da
+// kelimeler, ekleri birleşen ek görünümünde. Başlığın altında turun puanı ve yıldızları (1–3;
+// DESIGN.md, "Akış ve puan"); süre ve sıralama yok. Tek düğme: Haritaya dön. Sesli modda başlık
+// ve kelimeler söylenir; Dokununca'da
 // başlığın hoparlörü aynısını çalar. Haritaya dön düğmesinde yazının yanında harita simgesi var:
 // sesli modda düğme simgesinden tanınır.
 
 import { useEffect, useRef } from 'react'
 import KurulanKelime from '../gorsel/KurulanKelime.tsx'
 import type { SozlukKarti } from '../oyun/ilerleme.ts'
+import type { Yildiz } from '../oyun/puan.ts'
 import { BUGUN_KURULANLAR } from '../ses/metinler.ts'
 import { Hoparlor, useSesliSoyleyis } from '../ses/Ses.tsx'
 import SinifIsareti from './SinifIsareti.tsx'
 import { HaritaSimgesi, HilalSimgesi } from './simgeler.tsx'
+import Yildizlar from './Yildizlar.tsx'
 import './AksamEkrani.css'
 
 export default function AksamEkrani({
   baslik,
   kartlar,
+  puan,
+  yildiz,
   onHarita,
 }: {
   /** Bölge tablosunun aksam sütunu. */
   readonly baslik: string
   /** O bölgede bugün kurulan kelimelerin kartları, kurulma sırasıyla (bugununKartlari). */
   readonly kartlar: readonly SozlukKarti[]
+  /** Turun puanı ve yıldızı; verilmezse görünmez. */
+  readonly puan?: number
+  readonly yildiz?: Yildiz
   /** Haritaya dönüş; verilmezse düğmesi çıkmaz. */
   readonly onHarita?: () => void
 }) {
@@ -48,6 +56,12 @@ export default function AksamEkrani({
           </h1>
           <Hoparlor metin={soylenecek} />
         </div>
+        {puan !== undefined && yildiz !== undefined && (
+          <p className="aksam__puan">
+            <Yildizlar yildiz={yildiz} sinif="aksam__yildizlar" />
+            <span>Puan: {puan}</span>
+          </p>
+        )}
         {kartlar.length > 0 && (
           <>
             <p className="aksam__metin">{BUGUN_KURULANLAR}</p>

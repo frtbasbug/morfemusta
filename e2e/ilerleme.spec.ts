@@ -17,7 +17,12 @@ import {
   koyuAc,
   sira,
   sonraki,
+  dugmeyleOyna,
+  sonrakineGec,
 } from './yardimcilar.ts'
+
+// Bu dosyadaki testler Düğmeyle ayarında koşar (yardimcilar.ts, dugmeyleOyna).
+test.beforeEach(({ page }) => dugmeyleOyna(page))
 
 // Cihazdaki ilerleme (localStorage, tek anahtar: morfemusta.v1), Sözlük kartları, akşam
 // ekranı, ayarlar ve sıfırlama. Hızlı oynamak için hareket azaltma açıktır (büyü beklemez);
@@ -106,14 +111,18 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
     await expect(aksam).toBeVisible()
     await expect(page.getByText('Bugün kurduğun kelimeler:')).toBeVisible()
     await expect(page.locator('.aksam__kelimeler .sonuc-kelime__okunan')).toHaveText([...KELIMELER])
-    // Tek düğme; puan, seri ve süre yok.
-    // Tek düğme (başlığın hoparlörü dışında); yazının yanında harita simgesi.
+    // Tek düğme (başlığın hoparlörü dışında); yazının yanında harita simgesi. Turun puanı ve
+    // yıldızları (on bir yerleştirme, hepsi ilk denemede: 110 ve üç seri, +15); süre yok.
     await expect(page.locator('main button:not(.hoparlor)')).toHaveText(['Haritaya dön'])
-    await expect(page.getByText(/puan|seri|süre|skor/i)).toHaveCount(0)
+    await expect(page.locator('.aksam__puan')).toContainText('Puan: 125')
+    await expect(page.getByRole('img', { name: '3 yıldızdan 3' })).toBeVisible()
+    await expect(page.getByText(/süre|skor/i)).toHaveCount(0)
 
     await page.getByRole('button', { name: 'Haritaya dön' }).click()
     await expect(haritaBasligi(page)).toBeVisible()
-    await expect(bolge(page, 'Bukalemun Koyu')).toHaveAccessibleName('Bukalemun Koyu, Tamam')
+    await expect(bolge(page, 'Bukalemun Koyu')).toHaveAccessibleName(
+      'Bukalemun Koyu, Tamam, 3 yıldızdan 3',
+    )
     await expect(bolge(page, 'Dükkânı')).toHaveAccessibleName("Fıstıkçı Şahap'ın Dükkânı, Açık")
     await expect(bolge(page, 'Kök Bahçesi')).toHaveAccessibleName('Kök Bahçesi, Kilitli')
     await bolge(page, 'Kök Bahçesi').click()
@@ -126,7 +135,9 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
 
     // Tamam bölge yine oynanır: yeni tur baştan; koy tamam kalır.
     await page.reload()
-    await expect(bolge(page, 'Bukalemun Koyu')).toHaveAccessibleName('Bukalemun Koyu, Tamam')
+    await expect(bolge(page, 'Bukalemun Koyu')).toHaveAccessibleName(
+      'Bukalemun Koyu, Tamam, 3 yıldızdan 3',
+    )
     await bolge(page, 'Bukalemun Koyu').click()
     await expect(sira(page)).toHaveText('Görev 1 / 10')
   })
@@ -174,8 +185,17 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
     expect(await kayit(page)).toEqual({
       bolgeler: {},
       kartlar: [],
-      ayarlar: { hareket: 'sistem', renkler: 'renksiz', ses: 'dokununca', sinif: 'kapali' },
+      ayarlar: {
+        hareket: 'sistem',
+        renkler: 'renksiz',
+        ses: 'dokununca',
+        sinif: 'kapali',
+        gecis: 'dugmeyle',
+        sinifGecis: 'dugmeyle',
+      },
       kapananIpuclari: [],
+      // İlk dakika elleri de sıfırlandı (pilot.html'deki Yeni çocuk gibi).
+      eller: [],
       sifirlama: 1,
     })
   })
@@ -192,8 +212,9 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
       Storage.prototype.getItem = engelli
       Storage.prototype.setItem = engelli
     })
+    // Depo okunamıyor: ayar da varsayılandır (Kendiliğinden); ekrana dokunup geçilir.
     await koyuAc(page)
-    await gorevleriOyna(page, 0, 1)
+    await gorevleriOyna(page, 0, 1, 'dokun')
     await expect(sira(page)).toHaveText('Görev 3 / 10')
 
     await haritaDugmesi(page).click()
@@ -223,7 +244,9 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
     await expect(bolge(page, 'Bukalemun Koyu')).toHaveAccessibleName('Bukalemun Koyu, Açık')
     await bolge(page, 'Bukalemun Koyu').click()
     await expect(sira(page)).toHaveText('Görev 1 / 10')
-    await gorevOyna(page, 0)
+    // Bozuk kayıtta ayar da varsayılandır (Kendiliğinden): görev kendisi geçer.
+    await gorevOyna(page, 0, 'bekle')
+    await expect(sira(page)).toHaveText('Görev 2 / 10')
     expect(await kayit(page)).toMatchObject({ bolgeler: { koy: { kaldigi: 1 } } })
 
     // Depo dolu: yazılamaz, oyun yine sürer.
@@ -232,9 +255,8 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
         throw new DOMException('Depo dolu', 'QuotaExceededError')
       }
     })
-    await sonraki(page).tap()
-    await gorevOyna(page, 1)
-    await sonraki(page).tap()
+    await gorevOyna(page, 1, 'dokun')
+    await sonrakineGec(page, 'dokun')
     await expect(sira(page)).toHaveText('Görev 3 / 10')
     expect(hatalar).toEqual([])
   })
@@ -246,6 +268,8 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
     // ekrandaki uygulama).
     const b = await context.newPage()
     const a = await context.newPage()
+    await dugmeyleOyna(b)
+    await dugmeyleOyna(a)
     const hatalar = [hatalariTopla(a), hatalariTopla(b)]
     await b.goto('./')
     await expect(haritaBasligi(b)).toBeVisible()
@@ -285,6 +309,8 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
   }) => {
     const a = await context.newPage()
     const b = await context.newPage()
+    await dugmeyleOyna(a)
+    await dugmeyleOyna(b)
     const hatalar = [hatalariTopla(a), hatalariTopla(b)]
     // A koyda iki görev bitirir, üçüncüde bekler.
     await koyuAc(a)
@@ -316,6 +342,8 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
   }) => {
     const a = await context.newPage()
     const b = await context.newPage()
+    await dugmeyleOyna(a)
+    await dugmeyleOyna(b)
     const hatalar = [hatalariTopla(a), hatalariTopla(b)]
     // A'ya storage olayı ulaşmaz (ör. arka planda donmuş sekme): sıfırlamayı görmeden 5. görevde
     // kalır. Olay ulaşsaydı A'nın ekranı sıfırlanınca hemen baştan açılırdı (yukarıdaki test).
@@ -333,8 +361,16 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
     const bos = {
       bolgeler: {},
       kartlar: [],
-      ayarlar: { hareket: 'sistem', renkler: 'renkli', ses: 'dokununca', sinif: 'kapali' },
+      ayarlar: {
+        hareket: 'sistem',
+        renkler: 'renkli',
+        ses: 'dokununca',
+        sinif: 'kapali',
+        gecis: 'dugmeyle',
+        sinifGecis: 'dugmeyle',
+      },
       kapananIpuclari: [],
+      eller: [],
       sifirlama: 1,
     }
     expect(await kayit(b)).toEqual(bos)
@@ -353,6 +389,8 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
   }) => {
     const b = await context.newPage()
     const a = await context.newPage()
+    await dugmeyleOyna(b)
+    await dugmeyleOyna(a)
     const hatalar = [hatalariTopla(a), hatalariTopla(b)]
     // B'ye storage olayı ulaşmaz: eski anlık görüntüde kalır.
     await b.addInitScript(() => {
@@ -388,6 +426,8 @@ test.describe('cihazda ilerleme (hareket azaltma açık)', () => {
   }) => {
     const a = await context.newPage()
     const b = await context.newPage()
+    await dugmeyleOyna(a)
+    await dugmeyleOyna(b)
     const hatalar = [hatalariTopla(a), hatalariTopla(b)]
     // A'ya storage olayı ulaşmaz (arka planda donmuş sekme gibi).
     await a.addInitScript(() => {

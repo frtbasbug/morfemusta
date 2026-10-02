@@ -12,6 +12,11 @@ import {
   bugununKartlari,
   degisenBolgeler,
   ekrandaGorevBitti,
+  ekrandaPuanYaz,
+  elKapaliMi,
+  eliKapat,
+  enIyiYildiz,
+  gecerliGecis,
   gorevBitti,
   ilerlemeyiCoz,
   ilerlemeyiKaydet,
@@ -22,6 +27,8 @@ import {
   oyunKaydi,
   pencereKaydi,
   sozlukGruplari,
+  turunPuani,
+  turunSonuMu,
   type Depo,
   type Ilerleme,
 } from './ilerleme.ts'
@@ -114,8 +121,16 @@ describe('kaydet ve yükle', () => {
           sonKurulma: BUGUN.toISOString(),
         },
       ],
-      ayarlar: { hareket: 'sistem', renkler: 'renkli', ses: 'dokununca', sinif: 'kapali' },
+      ayarlar: {
+        hareket: 'sistem',
+        renkler: 'renkli',
+        ses: 'dokununca',
+        sinif: 'kapali',
+        gecis: 'kendiliginden',
+        sinifGecis: 'dugmeyle',
+      },
       kapananIpuclari: [],
+      eller: [],
       sifirlama: 0,
     })
   })
@@ -124,8 +139,16 @@ describe('kaydet ve yükle', () => {
     expect(ilerlemeyiYukle(bellekDeposu().depo)).toEqual({
       bolgeler: {},
       kartlar: [],
-      ayarlar: { hareket: 'sistem', renkler: 'renkli', ses: 'dokununca', sinif: 'kapali' },
+      ayarlar: {
+        hareket: 'sistem',
+        renkler: 'renkli',
+        ses: 'dokununca',
+        sinif: 'kapali',
+        gecis: 'kendiliginden',
+        sinifGecis: 'dugmeyle',
+      },
       kapananIpuclari: [],
+      eller: [],
       sifirlama: 0,
     })
   })
@@ -400,9 +423,24 @@ describe('bozuk veri', () => {
 
   it('tanınmayan ayar varsayılana döner, tanınan kalır', () => {
     expect(
-      yukle({ ayarlar: { hareket: 'hızlı', renkler: 'renksiz', ses: 'yüksek', sinif: 'evet' } })
-        .ayarlar,
-    ).toEqual({ hareket: 'sistem', renkler: 'renksiz', ses: 'dokununca', sinif: 'kapali' })
+      yukle({
+        ayarlar: {
+          hareket: 'hızlı',
+          renkler: 'renksiz',
+          ses: 'yüksek',
+          sinif: 'evet',
+          gecis: 'hızlı',
+          sinifGecis: 'kendiliginden',
+        },
+      }).ayarlar,
+    ).toEqual({
+      hareket: 'sistem',
+      renkler: 'renksiz',
+      ses: 'dokununca',
+      sinif: 'kapali',
+      gecis: 'kendiliginden',
+      sinifGecis: 'kendiliginden',
+    })
     expect(yukle({ ayarlar: { ses: 'sesli' } }).ayarlar.ses).toBe('sesli')
     expect(yukle({ ayarlar: { ses: 'kapali' } }).ayarlar.ses).toBe('kapali')
     expect(yukle({ ayarlar: { sinif: 'acik' } }).ayarlar.sinif).toBe('acik')
@@ -865,5 +903,135 @@ describe('ipuçları', () => {
     kayit.degistir((i) => ipucunuKapat(i, 'ana-ekran'))
     expect(ilerlemeyiYukle(depo).kapananIpuclari).toEqual(['ana-ekran'])
     expect(kayit.ilerleme.kapananIpuclari).toEqual(['ana-ekran'])
+  })
+})
+
+describe('puan, yıldız ve ilk dakika eli (Oturum 13)', () => {
+  const UYDURUK = bolgeBul('uyduruk') as Bolge
+  const puan = (p: number, ilk: number, yer: number, seri = 0) => ({ puan: p, ilk, yer, seri })
+  const koyGorevi = (sira: number) => KOY.gorevler[sira - 1] as Gorev
+
+  it('eski kayıt (Oturum 13 öncesi) bozulmadan okunur: tur puanı 0, yıldız yok, el kapalı sayılır', () => {
+    const eski = {
+      bolgeler: { koy: { bitenler: [1, 2, 3], kaldigi: 3 } },
+      kartlar: [],
+      ayarlar: { hareket: 'sistem', renkler: 'renkli', ses: 'dokununca', sinif: 'kapali' },
+      kapananIpuclari: [],
+      sifirlama: 0,
+    }
+    const ilerleme = ilerlemeyiCoz(eski)
+    expect(ilerleme.bolgeler.koy).toEqual({ bitenler: [1, 2, 3], kaldigi: 3 })
+    expect(ilerleme.eller).toEqual([])
+    expect(ilerleme.ayarlar).toMatchObject({ gecis: 'kendiliginden', sinifGecis: 'dugmeyle' })
+    expect(turunPuani(ilerleme, KOY)).toEqual(puan(0, 0, 0))
+    expect(enIyiYildiz(ilerleme, 'koy')).toBeNull()
+    // Bölgede biten görev var: çocuk oynamış, el çıkmaz. Hiç oynanmamış bölgede çıkar.
+    expect(elKapaliMi(ilerleme, 'koy')).toBe(true)
+    expect(elKapaliMi(ilerleme, 'dukkan')).toBe(false)
+  })
+
+  it('görev bitince turun puanı kayda yazılır; dönen çocuk turun puanından sürer', () => {
+    let i = gorevBitti(BOS_ILERLEME, KOY, koyGorevi(1), BUGUN)
+    i = ekrandaPuanYaz(i, KOY, koyGorevi(1), puan(10, 1, 1, 1), 0)
+    i = gorevBitti(i, KOY, koyGorevi(2), BUGUN)
+    i = ekrandaPuanYaz(i, KOY, koyGorevi(2), puan(15, 1, 2, 0), 0)
+    expect(i.bolgeler.koy).toEqual({ bitenler: [1, 2], kaldigi: 2, tur: puan(15, 1, 2, 0) })
+    expect(turunPuani(i, KOY)).toEqual(puan(15, 1, 2, 0))
+    // Kayıttan okunur (JSON).
+    expect(turunPuani(ilerlemeyiCoz(JSON.parse(JSON.stringify(i))), KOY)).toEqual(puan(15, 1, 2, 0))
+    // Sonraki görev bitince tur ve kalınan yer birlikte kalır (gorevBitti tur puanını silmez).
+    i = gorevBitti(i, KOY, koyGorevi(3), BUGUN)
+    expect(i.bolgeler.koy?.tur).toEqual(puan(15, 1, 2, 0))
+  })
+
+  it('tur bitince yıldız en iyisiyle karşılaştırılır; tur puanı kalkar, yeni tur 0dan', () => {
+    let i = oyna(BOS_ILERLEME, KOY, 10)
+    i = ekrandaPuanYaz(i, KOY, koyGorevi(10), puan(80, 7, 11), 0)
+    expect(i.bolgeler.koy).toEqual({ bitenler: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], kaldigi: 10, yildiz: 2 })
+    expect(turunPuani(i, KOY)).toEqual(puan(0, 0, 0))
+    // Daha iyi tur: 3; daha kötüsü en iyiyi düşürmez.
+    i = ekrandaPuanYaz(i, KOY, koyGorevi(10), puan(125, 11, 11), 0)
+    expect(enIyiYildiz(i, 'koy')).toBe(3)
+    i = ekrandaPuanYaz(i, KOY, koyGorevi(10), puan(55, 1, 11), 0)
+    expect(enIyiYildiz(i, 'koy')).toBe(3)
+    // Haritanın durumunda yıldız.
+    expect(bolgeDurumlari(i).find((b) => b.bolge.kimlik === 'koy')?.yildiz).toBe(3)
+    expect(bolgeDurumlari(i).find((b) => b.bolge.kimlik === 'dukkan')?.yildiz).toBeNull()
+  })
+
+  it('turun sonu: tursuz bölgede son görev, Uydurukçuklarda her turun onuncusu', () => {
+    expect(turunSonuMu(KOY, koyGorevi(10))).toBe(true)
+    expect(turunSonuMu(KOY, koyGorevi(9))).toBe(false)
+    const onuncu = UYDURUK.gorevler[9] as Gorev
+    const onbirinci = UYDURUK.gorevler[10] as Gorev
+    expect(turunSonuMu(UYDURUK, onuncu)).toBe(true)
+    expect(turunSonuMu(UYDURUK, onbirinci)).toBe(false)
+    // 2. turun ortasında dönen çocuk turun puanından sürer; tur başında 0.
+    let i = gorevBitti(BOS_ILERLEME, UYDURUK, onbirinci, BUGUN)
+    i = ekrandaPuanYaz(i, UYDURUK, onbirinci, puan(10, 1, 1, 1), 0)
+    expect(turunPuani(i, UYDURUK)).toEqual(puan(10, 1, 1, 1))
+  })
+
+  it('kayıttaki tur puanı tur başındaysa yok sayılır (kalınan yer turun başı)', () => {
+    const i = ilerlemeyiCoz({
+      bolgeler: { koy: { bitenler: [1], kaldigi: 10, tur: puan(40, 4, 4, 1) } },
+    })
+    expect(turunPuani(i, KOY)).toEqual(puan(0, 0, 0))
+  })
+
+  it('bozuk tur puanı ve yıldız atılır; kalanı okunur', () => {
+    const i = ilerlemeyiCoz({
+      bolgeler: { koy: { bitenler: [1], kaldigi: 1, tur: { puan: 'çok' }, yildiz: 5 } },
+      eller: ['koy', 'yok', 7],
+    })
+    expect(i.bolgeler.koy).toEqual({ bitenler: [1], kaldigi: 1 })
+    expect(i.eller).toEqual(['koy'])
+  })
+
+  it('sıfırlamayı görmemiş ekran puanı yazamaz (sıfırlama kimliği)', () => {
+    const i = ilerlemeyiSifirla(oyna(BOS_ILERLEME, KOY, 2))
+    expect(ekrandaPuanYaz(i, KOY, koyGorevi(3), puan(30, 3, 3), 0)).toBe(i)
+  })
+
+  it('el kapanır ve kayda yazılır; sıfırlama (Yeni çocuk) puanı, yıldızı ve eli siler', () => {
+    let i = eliKapat(BOS_ILERLEME, 'koy')
+    expect(i.eller).toEqual(['koy'])
+    expect(eliKapat(i, 'koy')).toBe(i)
+    expect(elKapaliMi(i, 'koy')).toBe(true)
+    i = ekrandaPuanYaz(oyna(i, KOY, 10), KOY, koyGorevi(10), puan(125, 11, 11), 0)
+    i = ekrandaPuanYaz(gorevBitti(i, KOY, koyGorevi(1), BUGUN), KOY, koyGorevi(1), puan(10, 1, 1, 1), 0)
+    const sifir = ilerlemeyiSifirla(i)
+    expect(sifir.bolgeler).toEqual({})
+    expect(sifir.eller).toEqual([])
+    expect(elKapaliMi(sifir, 'koy')).toBe(false)
+    expect(enIyiYildiz(sifir, 'koy')).toBeNull()
+  })
+
+  it('sınıf modunda puan, yıldız ve el görünür ama kayda yazılmaz', () => {
+    const { depo, kayitlar } = bellekDeposu()
+    const kayit = oyunKaydi(depo)
+    kayit.degistir((i) => ayarlariDegistir(i, { sinif: 'acik' }))
+    const once = kayitlar.get(ANAHTAR)
+    kayit.degistir((i) => gorevBitti(i, KOY, koyGorevi(1), BUGUN))
+    kayit.degistir((i) => ekrandaPuanYaz(i, KOY, koyGorevi(1), puan(10, 1, 1, 1), 0))
+    kayit.degistir((i) => eliKapat(i, 'koy'))
+    // Bellekte görünür.
+    expect(turunPuani(kayit.ilerleme, KOY)).toEqual(puan(10, 1, 1, 1))
+    expect(kayit.ilerleme.eller).toEqual(['koy'])
+    // Kayıt değişmedi.
+    expect(kayitlar.get(ANAHTAR)).toBe(once)
+    // Sınıf modu kapanınca cihazın kaydı: puan ve el yok.
+    kayit.degistir((i) => ayarlariDegistir(i, { sinif: 'kapali' }))
+    expect(kayit.ilerleme.bolgeler).toEqual({})
+    expect(kayit.ilerleme.eller).toEqual([])
+  })
+
+  it('geçiş ayarı: olağan modda gecis, sınıf modunda sinifGecis (varsayılanı Düğmeyle)', () => {
+    expect(gecerliGecis(VARSAYILAN_AYARLAR)).toBe('kendiliginden')
+    expect(gecerliGecis({ ...VARSAYILAN_AYARLAR, sinif: 'acik' })).toBe('dugmeyle')
+    expect(gecerliGecis({ ...VARSAYILAN_AYARLAR, gecis: 'dugmeyle' })).toBe('dugmeyle')
+    expect(gecerliGecis({ ...VARSAYILAN_AYARLAR, sinif: 'acik', sinifGecis: 'kendiliginden' })).toBe(
+      'kendiliginden',
+    )
   })
 })
