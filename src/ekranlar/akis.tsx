@@ -170,16 +170,28 @@ export function useAkis({
     [],
   )
 
-  // Görev bitti: puan kayda; Kendiliğinden'de süre dolunca (sesli modda ses de bitince) ya da
-  // dokunuş geldiyse hemen sıradaki görev.
+  // Görev bitti: turun puanı kayda.
+  useEffect(() => {
+    if (bitti && gorev) baglam.onPuan(gorev, puanRef.current)
+    // Yalnız görevin bitişi; puan o anınkidir.
+  }, [bitti])
+
+  // Görev bitti, Kendiliğinden: süre dolunca (sesli modda ses de bitince) ya da dokunuş geldiyse
+  // hemen sıradaki görev. Ayar görev bitmişken değişirse (başka pencereden) yeniden kurulur:
+  // Düğmeyle'ye geçince zamanlayıcı ve dinleyici kalkar, Kendiliğinden'e geçince kurulur.
   useEffect(() => {
     if (!bitti) return
-    if (gorev) baglam.onPuan(gorev, puanRef.current)
-    if (!kendiliginden) return
+    if (!kendiliginden) {
+      dinleyiciKaldir.current?.()
+      atla.current = false
+      hizliKapat()
+      return
+    }
     if (atla.current) {
       gec()
       return
     }
+    dokunusuBekle()
     let iptal = false
     const gecen = sonDogru.current === null ? GECIS_SURESI : performance.now() - sonDogru.current
     const zaman = setTimeout(
@@ -197,9 +209,10 @@ export function useAkis({
     return () => {
       iptal = true
       clearTimeout(zaman)
+      dinleyiciKaldir.current?.()
     }
-    // Yalnız görevin bitişi; öteki değerler o anınkilerdir.
-  }, [bitti])
+    // Görevin bitişi ve geçiş ayarı; öteki değerler o anınkilerdir.
+  }, [bitti, kendiliginden])
 
   /** Son doğru yerleştirmeden sonra dokunuş: hemen geç (ses susar; büyü sürüyorsa sonuna). */
   function dokunusuBekle() {
@@ -342,8 +355,11 @@ function useIlkDakikaEli({
       clearTimeout(bekleme)
       bekleme = setTimeout(goster, EL_BEKLEMESI)
     }
+    // Açılıştaki ilk gösterim bekliyor mu: dokunuş gelince iptal olur (bekleme baştan).
+    let acilisBekliyor = false
     // Dokunuş ya da tuş: el kaybolur, bekleme baştan.
     const dokunuldu = () => {
+      acilisBekliyor = false
       gizle()
       bekle()
     }
@@ -351,13 +367,14 @@ function useIlkDakikaEli({
     document.addEventListener('keydown', dokunuldu, true)
     if (!ilkGosterildi.current && turdakiSira === 1) {
       ilkGosterildi.current = true
+      acilisBekliyor = true
       // Sesli modda bölgenin adı ve kök söylendikten sonra.
       const acilis =
         ayar === 'sesli'
           ? Promise.race([sesBitince(), new Promise((coz) => setTimeout(coz, SES_BEKLEME_SINIRI))])
           : new Promise((coz) => setTimeout(coz, 600))
       void acilis.then(() => {
-        if (!iptal) goster()
+        if (!iptal && acilisBekliyor) goster()
       })
     } else {
       bekle()

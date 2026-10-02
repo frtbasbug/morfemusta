@@ -89,8 +89,18 @@ Sürüm *pilot-2* (kullanıcının kararı; CLAUDE.md, 17. kural).
   Düğmeyle, sınıf modunda Düğmeyle ve kaydedilmeme, sesli modda sesten önce geçmeme, ilk dakika
   eli (dört bölge, doğrudan sonra çıkmaz, 8 saniyede döner, sesli modda cümle, hareket azaltma);
   axe (eli, puanı, yıldızları ve akşamı da tarar). Pilot yolu yeni akışla (Koy bekleyerek, öteki
-  bölgeler dokunarak). 2195 birim testi ve 156 uçtan uca test yeşil (Chromium; WebKit bulut oturumunda kurulu
+  bölgeler dokunarak). 2195 birim testi ve 158 uçtan uca test yeşil (Chromium; WebKit bulut oturumunda kurulu
   değil, CI koşar); tür denetimi temiz. `git grep -n "AI[z]a"` boş.
+
+### PR'dan sonra düzeltilen (Codex'in iki bulgusu, doğrulandı)
+
+- **Görev bitmişken başka sekmede geçiş ayarı değişirse** ekran yeniden kurulmuyordu: Kendiliğinden'e
+  geçince düğme kalkıyor, zamanlayıcı kurulmuyor, görev takılı kalıyordu (ters yönde de düğme
+  görünürken kendiliğinden geçiyordu). Geçişin etkisi artık ayara da bağlı (`akis.tsx`); test:
+  iki sekme, iki yön.
+- **Açılışta el çıkmadan dokunulursa** el yine 600 ms'de (ya da sesli modda açılış sesinden sonra)
+  çıkıyordu. Dokunuş açılışın gösterimini iptal eder, 8 saniye beklenir; test: elin belgeye hiç
+  eklenmediği izlenir.
 
 ### Oturumda seçilen küçük ayrıntılar (kullanıcıya ayrıca sorulmadı)
 
@@ -125,6 +135,8 @@ Oturum 13'te eklenenler (Oturum 14 için):
 - **Elin yeri dar ekranda:** el kaynağın sağ altından çıkar; 320 px'te Dükkân'da hedefe yakındır.
 - **Uzun pilot yolu WebKit'te hâlâ koşmuyor** (Oturum 12'nin maddesi; bu oturumun hedefi
   değildi, yeniden denenmedi).
+- **Büyü sürerken Düğmeyle'ye geçilirse** (başka sekmeden; dokunuş zaten gelmişse) büyü hızlı
+  biter, düğme çıkar; kalan uç durumlar Codex turundan sonra incelenmedi (tek tur).
 - **Oyun testinin gözlemi:** çocuk kendiliğinden geçişi anlıyor mu, dokunarak geçiyor mu, el
   yardım sayılır mı (gözlem formunda alan yok).
 - Oturum 12b'nin ve öncekilerin açık kalanları aşağıda.

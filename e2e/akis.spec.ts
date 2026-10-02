@@ -382,6 +382,31 @@ test.describe('kendiliğinden geçiş ve hız (hareket açık)', () => {
     await expect(sira(page)).toHaveText('Görev 2 / 10')
   })
 
+  test('görev bitmişken başka sekmede ayar değişirse geçiş yeniden kurulur', async ({ context }) => {
+    const a = await context.newPage()
+    const b = await context.newPage()
+    await kayitKur(a, { eller: BUTUN_ELLER, ayarlar: { gecis: 'dugmeyle' } })
+    await a.goto('./')
+    await bolge(a, 'Bukalemun Koyu').tap()
+    await dokun(bukalemun(a, 'lar'))
+    await dokun(kart(a))
+    await expect(sonraki(a)).toBeVisible()
+    // B Kendiliğinden'e geçirir: A'da düğme kalkar, görev kendiliğinden geçer.
+    await b.goto('./#/ayarlar')
+    await b.getByRole('group', { name: 'Sıradaki görev' }).getByText('Kendiliğinden').tap()
+    await expect(sira(a)).toHaveText('Görev 2 / 10')
+    await expect(sonraki(a)).toHaveCount(0)
+    // Ters yön: görev bitmişken Düğmeyle'ye geçilince kendiliğinden geçmez, düğme döner.
+    await dokun(bukalemun(a, 'ler'))
+    await dokun(kart(a))
+    await b.getByRole('group', { name: 'Sıradaki görev' }).getByText('Düğmeyle').tap()
+    await expect(sonraki(a)).toBeVisible()
+    await a.waitForTimeout(2000)
+    await expect(sira(a)).toHaveText('Görev 2 / 10')
+    await dokun(sonraki(a))
+    await expect(sira(a)).toHaveText('Görev 3 / 10')
+  })
+
   test('sınıf modunda varsayılan Düğmeyle; olağan modun seçimi ayrı', async ({ page }) => {
     await page.setViewportSize({ width: 1366, height: 768 })
     await page.goto('./?sinif=1#/ayarlar')
@@ -455,6 +480,29 @@ test.describe('ilk dakika eli', () => {
     // Doğrudan sonra, 8 saniye beklense de el çıkmaz.
     await page.waitForTimeout(9000)
     await expect(el(page)).toHaveCount(0)
+  })
+
+  test('açılışta el çıkmadan dokunulursa el hemen çıkmaz, 8 saniye beklenir', async ({ page }) => {
+    test.setTimeout(60_000)
+    await page.goto('./')
+    // El belgeye eklenirse (kısa sürse de) yakalanır.
+    await page.evaluate(() => {
+      const w = window as unknown as { elGoruldu: boolean }
+      w.elGoruldu = false
+      new MutationObserver(() => {
+        if (document.querySelector('.ilk-el')) w.elGoruldu = true
+      }).observe(document.body, { childList: true })
+    })
+    await bolge(page, 'Bukalemun Koyu').tap()
+    // Elin ilk gösteriminden (600 ms) önce başlığa dokunulur.
+    await page.locator('.bolge-ustu__baslik').tap()
+    const dokunuldu = Date.now()
+    await page.waitForTimeout(3000)
+    expect(
+      await page.evaluate(() => (window as unknown as { elGoruldu: boolean }).elGoruldu),
+    ).toBe(false)
+    await expect(el(page)).toHaveCount(1, { timeout: 10_000 })
+    expect(Date.now() - dokunuldu).toBeGreaterThan(7000)
   })
 
   test('Koy: ilk üç görevde 8 saniye hiçbir şeye dokunulmazsa el yeniden çıkar', async ({ page }) => {
