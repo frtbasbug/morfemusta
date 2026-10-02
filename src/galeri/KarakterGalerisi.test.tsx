@@ -62,7 +62,7 @@ describe('KarakterGalerisi', () => {
       'fıngıl',
       'nöfel',
       'pobul',
-      'pıtak',
+      'gıvak',
       'mömüş',
       'cofar',
       'zolku',
@@ -70,8 +70,8 @@ describe('KarakterGalerisi', () => {
       'kıbı',
       'zitep',
     ])
-    // Yaratık adındaki son ünlünün karakteridir: pıtak kalın ve düz, zelü ince ve yuvarlak.
-    expect(bolum).toContain('aria-label="pıtak: a, kalın, düz, geniş"')
+    // Yaratık adındaki son ünlünün karakteridir: gıvak kalın ve düz, zelü ince ve yuvarlak.
+    expect(bolum).toContain('aria-label="gıvak: a, kalın, düz, geniş"')
     expect(bolum).toContain('aria-label="zelü: ü, ince, yuvarlak, dar"')
     for (const kok of GALERI_YARATIKLARI) expect(KOK_SOZLUGU.has(kok), kok).toBe(false)
     expect(bolum).toContain('aria-label="Büyünün yıldızı"')

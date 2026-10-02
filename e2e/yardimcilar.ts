@@ -34,7 +34,7 @@ export const KELIMELER = [
 export const ANAHTAR = 'morfemusta.v1'
 
 export const haritaBasligi = (sayfa: Page) =>
-  sayfa.getByRole('heading', { level: 1, name: 'Morfemusta Adası' })
+  sayfa.getByRole('heading', { level: 1, name: 'Ekle Bakalım' })
 export const koyBasligi = (sayfa: Page) =>
   sayfa.getByRole('heading', { level: 1, name: 'Bukalemun Koyu' })
 

@@ -62,14 +62,24 @@ const gunlugunSatirlari = (sayfa: Page) =>
     return kayit
   }, GUNLUK)
 
-/** Sesler gerçekten çalmaz: play sarılır, hemen biter (sesli mod sırayla ilerler). */
+/**
+ * Sesler gerçekten çalmaz: play sarılır, hemen biter (sesli mod sırayla ilerler). Çalınan sesin
+ * metni (data-metin) kaydedilir.
+ */
 const sesleriSustur = (sayfa: Page) =>
   sayfa.addInitScript(() => {
+    const kayit: string[] = []
+    ;(window as unknown as { calinanlar: string[] }).calinanlar = kayit
     HTMLMediaElement.prototype.play = function () {
+      const metin = this.dataset.metin
+      if (metin) kayit.push(metin)
       setTimeout(() => this.dispatchEvent(new Event('ended')), 0)
       return Promise.resolve()
     }
   })
+
+const calinanlar = (sayfa: Page) =>
+  sayfa.evaluate(() => [...(window as unknown as { calinanlar: string[] }).calinanlar])
 
 /** Noktalı virgüllü CSV satırı: tırnaklı alanlar, ikilenen tırnaklar. */
 function csvSatiri(satir: string): string[] {
@@ -228,7 +238,16 @@ test.describe('pilot yolu', () => {
     await dokun(yaratik(page))
     await expect(page.locator('.uyduruk__neden')).toBeVisible()
     for (let yer = 0; yer < 10; yer++) {
+      if (yer === 3) {
+        // 4. görev: gıvak (pıtak'ın yerine). Sesli modda kök söylenir; jöle → gıvağım.
+        await expect(yaratik(page)).toContainText('gıvak')
+        await expect.poll(() => calinanlar(page)).toContain('gıvak')
+      }
       await uydurukGorevi(page, yer)
+      if (yer === 3) {
+        await expect(page.locator('.uyduruk__cep .sonuc-kelime__okunan')).toHaveText('gıvağım')
+        await expect.poll(() => calinanlar(page)).toContain('gıvağım')
+      }
       await dokun(sonraki(page))
     }
     await expect(
@@ -260,7 +279,7 @@ test.describe('pilot yolu', () => {
     const indirme = page.waitForEvent('download')
     await dugme(page, 'CSV indir').click()
     const dosya = await indirme
-    expect(dosya.suggestedFilename()).toMatch(/^morfemusta-pilot-\d{4}-\d{2}-\d{2}\.csv$/)
+    expect(dosya.suggestedFilename()).toMatch(/^ekle-bakalim-pilot-\d{4}-\d{2}-\d{2}\.csv$/)
     const baytlar = readFileSync((await dosya.path())!)
     expect([...baytlar.subarray(0, 3)]).toEqual([0xef, 0xbb, 0xbf])
     const metin = new TextDecoder('utf-8').decode(baytlar.subarray(3))
@@ -275,7 +294,7 @@ test.describe('pilot yolu', () => {
     })
     for (const k of kayitlar) {
       expect(k).toMatchObject({ cocuk: 'P07', ses_modu: 'sesli', tur: '1' })
-      expect(k.surum).toMatch(/^pilot-\d+(?:\.\d+)?$/)
+      expect(k.surum).toBe('pilot-1.1')
       expect(k.zaman).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}[+-]\d{2}:\d{2}$/)
       expect(k.sure_ms).toMatch(/^\d+$/)
       expect(['dogru', 'yanlis']).toContain(k.sonuc)
@@ -326,7 +345,7 @@ test.describe('pilot yolu', () => {
     expect(
       kayitlar.filter((k) => k.dogru_bicim.includes('/')).map((k) => [k.kok, k.secilen, k.aday, k.dogru_bicim]),
     ).toEqual([
-      ['pıtak', 'ğ', 'pıtağım', 'pıtakım/pıtağım'],
+      ['gıvak', 'ğ', 'gıvağım', 'gıvakım/gıvağım'],
       ['zitep', 'p', 'zitepim', 'zitepim/zitebim'],
     ])
     expect(kayitlar[45]).toMatchObject({ kok: 'fıngıl', aday: 'fıngıller', neden: 'PL:kalınlık' })
@@ -551,6 +570,87 @@ test.describe('pilot.html', () => {
     expect(satirlar[1]).toContain('\tP05\t')
   })
 
+  test('Paylaş CSV\'yi dosya olarak paylaşır (aynı ad ve içerik); günlük boşken yol tarifi', async ({
+    page,
+  }) => {
+    // Web Share API taklidi: dosyayı paylaşabilen telefon tarayıcısı; paylaşılan dosya saklanır.
+    await page.addInitScript(() => {
+      const paylasilan: { ad: string; tur: string; baytlar: number[]; baslik?: string }[] = []
+      ;(window as unknown as { paylasilan: typeof paylasilan }).paylasilan = paylasilan
+      Object.defineProperty(navigator, 'canShare', {
+        configurable: true,
+        value: (veri?: ShareData) => (veri?.files ?? []).every((f) => f.type === 'text/csv'),
+      })
+      Object.defineProperty(navigator, 'share', {
+        configurable: true,
+        value: async (veri: ShareData) => {
+          for (const dosya of veri.files ?? []) {
+            paylasilan.push({
+              ad: dosya.name,
+              tur: dosya.type,
+              baytlar: [...new Uint8Array(await dosya.arrayBuffer())],
+              baslik: veri.title,
+            })
+          }
+        },
+      })
+    })
+    await page.goto(PILOT)
+    await expect(pilotBasligi(page)).toBeVisible()
+    // Günlük boş: Paylaş öteki düğmeler gibi kapalı; yanında yol tarifi.
+    await expect(dugme(page, 'Paylaş')).toBeDisabled()
+    await expect(page.locator('[data-yol-tarifi]')).toHaveText(
+      "Günlük boş: önce çocuk kodunu yazıp Yeni çocuk'a, sonra Oyunu aç'a dokunun.",
+    )
+
+    await yeniCocuk(page, 'P08')
+    await page.goto('./')
+    await dokun(bolge(page, 'Bukalemun Koyu'))
+    await dokun(bukalemun(page, 'lar'))
+    await dokun(kart(page))
+    await expect(sonraki(page)).toBeVisible()
+    await page.goto(PILOT)
+    await expect(page.locator('[data-yol-tarifi]')).toHaveCount(0)
+    await dugme(page, 'Paylaş').click()
+    await expect(page.locator('.pilot__ileti')).toHaveText('1 deneme CSV olarak paylaşıldı.')
+    const paylasilan = await page.evaluate(
+      () =>
+        (window as unknown as { paylasilan: { ad: string; tur: string; baytlar: number[]; baslik?: string }[] })
+          .paylasilan,
+    )
+    expect(paylasilan).toHaveLength(1)
+    const [dosya] = paylasilan
+    expect(dosya?.ad).toMatch(/^ekle-bakalim-pilot-\d{4}-\d{2}-\d{2}\.csv$/)
+    expect(dosya?.baslik).toBe(dosya?.ad)
+    expect(dosya?.tur).toBe('text/csv')
+    // İndirilen CSV'nin aynısı: UTF-8 imi, noktalı virgül, CRLF.
+    const baytlar = Uint8Array.from(dosya?.baytlar ?? [])
+    expect([...baytlar.subarray(0, 3)]).toEqual([0xef, 0xbb, 0xbf])
+    const indirme = page.waitForEvent('download')
+    await dugme(page, 'CSV indir').click()
+    const indirilen = await indirme
+    expect(indirilen.suggestedFilename()).toBe(dosya?.ad)
+    expect([...readFileSync((await indirilen.path())!)]).toEqual([...baytlar])
+    const satirlar = new TextDecoder('utf-8').decode(baytlar.subarray(3)).split('\r\n')
+    expect(satirlar[0]).toBe(SUTUNLAR.join(';'))
+    expect(csvSatiri(satirlar[1] ?? '')).toHaveLength(SUTUNLAR.length)
+    expect(satirlar[1]).toContain(';P08;pilot-1.1;koy;')
+  })
+
+  test('Paylaş, dosya paylaşamayan tarayıcıda görünmez; CSV indir ve Kopyala kalır', async ({
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, 'share', { configurable: true, value: undefined })
+      Object.defineProperty(navigator, 'canShare', { configurable: true, value: undefined })
+    })
+    await page.goto(PILOT)
+    await expect(pilotBasligi(page)).toBeVisible()
+    await expect(dugme(page, 'CSV indir')).toBeVisible()
+    await expect(dugme(page, 'Kopyala')).toBeVisible()
+    await expect(dugme(page, 'Paylaş')).toHaveCount(0)
+  })
+
   test('depo dolunca oyun sürer, günlük durur; pilot.html söyler, satırlar silinmez', async ({
     page,
   }) => {
@@ -580,16 +680,30 @@ test.describe('pilot.html', () => {
     expect(hatalar).toEqual([])
   })
 
-  test('çevrim dışı da açılır; belgelere bağlanır; oyun pilot sayfasına bağlanmaz', async ({
+  test('oyundan pilot sayfasına tek yol: Ayarlar → Hakkında → Yetişkinler için: Pilot sayfası', async ({
     page,
-    context,
-    browserName,
   }) => {
     await page.goto('./')
     await expect(haritaBasligi(page)).toBeVisible()
     await expect(page.locator('a[href*="pilot"]')).toHaveCount(0)
-    expect(await page.content()).not.toContain('pilot.html')
+    await page.goto('./#/ayarlar')
+    const hakkinda = page.locator('.hakkinda')
+    await expect(hakkinda).toContainText('Yetişkinler için: Pilot sayfası')
+    await expect(hakkinda).toContainText('Sürüm: pilot-1.1')
+    await expect(page.locator('a[href*="pilot"]')).toHaveCount(1)
+    // Görünen her yerde yeni ad: eski ad (Morfemusta) yok.
+    expect(await page.content()).not.toMatch(/Morfemusta/)
+    await dokun(hakkinda.getByRole('link', { name: 'Pilot sayfası' }))
+    await expect(pilotBasligi(page)).toBeVisible()
+    expect(new URL(page.url()).pathname).toBe('/ekle-bakalim/pilot.html')
+    await expect(page).toHaveTitle('Pilot · Ekle Bakalım')
+    expect(await page.content()).not.toMatch(/Morfemusta/)
+    await expect(page.locator('[data-surum]')).toHaveText(
+      /^pilot-1\.1 \((?:[0-9a-f]{7}|bilinmiyor), \d{4}-\d{2}-\d{2}\)$/,
+    )
+  })
 
+  test('çevrim dışı da açılır; belgelere bağlanır', async ({ page, context, browserName }) => {
     await page.goto(PILOT)
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow')
     for (const [ad, yol] of [
@@ -609,7 +723,7 @@ test.describe('pilot.html', () => {
     await expect(pilotBasligi(page)).toBeVisible()
     await page.getByRole('link', { name: 'Gözlemci yönergesi' }).click()
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'Morfemusta pilotu · Gözlemci yönergesi',
+      'Ekle Bakalım pilotu · Gözlemci yönergesi',
     )
   })
 })

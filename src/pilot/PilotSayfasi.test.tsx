@@ -5,12 +5,19 @@ import pilotSayfasi from '../../pilot.html?raw'
 import {
   DURMA_ANAHTARI,
   GUNLUK_ANAHTARI,
+  csvDosyaAdi,
+  csvMetni,
   type DenemeSatiri,
   type PilotDeposu,
 } from '../oyun/gunluk.ts'
 import { ANAHTAR } from '../oyun/ilerleme.ts'
 import { surumYazisi } from '../surum.ts'
-import PilotSayfasi, { BELGELER } from './PilotSayfasi.tsx'
+import PilotSayfasi, {
+  BELGELER,
+  csvDosyasi,
+  dosyaPaylasilabilirMi,
+  type Paylasici,
+} from './PilotSayfasi.tsx'
 
 /** Belgeler: belgeler/*.html (pilot.html'e göre yolları). */
 const belgeler = import.meta.glob<string>('../../belgeler/*.html', {
@@ -58,7 +65,17 @@ const satir = (degisen: Partial<DenemeSatiri>): DenemeSatiri => ({
   ...degisen,
 })
 
-const sayfa = (depo: PilotDeposu | null) => renderToStaticMarkup(<PilotSayfasi depo={depo} />)
+const sayfa = (depo: PilotDeposu | null, paylasici?: Paylasici) =>
+  renderToStaticMarkup(<PilotSayfasi depo={depo} paylasici={paylasici} />)
+
+/** Dosya paylaşabilen tarayıcı (Web Share API Level 2): canShare dosyaları kabul eder. */
+const paylasan: Paylasici = {
+  share: async () => {},
+  canShare: (veri) => (veri?.files ?? []).every((f) => f.type === 'text/csv'),
+}
+
+const birSatirlik = () =>
+  bellekDeposu({ [GUNLUK_ANAHTARI]: JSON.stringify({ cocuk: 'P01', satirlar: [satir({})] }) })
 
 describe('pilot sayfası', () => {
   it('başlık, sürüm (ad, commit, tarih) ve bölümler', () => {
@@ -126,6 +143,61 @@ describe('pilot sayfası', () => {
     expect(sayfa(null)).toContain("Bu tarayıcıda cihazın deposuna erişilemiyor")
   })
 
+  it('günlük boşken düğmelerin yanında yol tarifi; deneme varken yok', () => {
+    const tarif =
+      "<p class=\"pilot__aciklama\" data-yol-tarifi=\"\">Günlük boş: önce çocuk kodunu yazıp Yeni çocuk'a, sonra Oyunu aç'a dokunun.</p>"
+    expect(sayfa(bellekDeposu())).toContain(tarif.replaceAll("'", '&#x27;'))
+    // Kod girilmiş ama henüz deneme yok: yine boş.
+    expect(
+      sayfa(bellekDeposu({ [GUNLUK_ANAHTARI]: JSON.stringify({ cocuk: 'P01', satirlar: [] }) })),
+    ).toContain('data-yol-tarifi')
+    expect(sayfa(birSatirlik())).not.toContain('data-yol-tarifi')
+  })
+
+  it('Paylaş yalnız dosya paylaşabilen tarayıcıda; CSV indir ve Kopyala her zaman', () => {
+    for (const paylasici of [
+      undefined,
+      {},
+      { share: async () => {} },
+      { share: async () => {}, canShare: () => false },
+      {
+        share: async () => {},
+        canShare: () => {
+          throw new TypeError('files desteklenmiyor')
+        },
+      },
+    ] satisfies (Paylasici | undefined)[]) {
+      expect(dosyaPaylasilabilirMi(paylasici)).toBe(false)
+      const html = sayfa(birSatirlik(), paylasici ?? {})
+      expect(html).not.toContain('Paylaş</button>')
+      expect(html).toContain('>CSV indir</button>')
+      expect(html).toContain('>Kopyala</button>')
+    }
+    expect(dosyaPaylasilabilirMi(paylasan)).toBe(true)
+    const html = sayfa(birSatirlik(), paylasan)
+    expect(html).toMatch(
+      /CSV indir<\/button><button type="button" class="pilot__dugme">Paylaş<\/button><button type="button" class="pilot__dugme">Kopyala<\/button>/,
+    )
+    // Günlük boşken öteki düğmeler gibi kapalı.
+    expect(sayfa(bellekDeposu(), paylasan)).toMatch(
+      /<button type="button" class="pilot__dugme" disabled="">Paylaş<\/button>/,
+    )
+  })
+
+  it('paylaşılan dosya indirilen CSV\'nin aynısı: UTF-8 imli, noktalı virgüllü, aynı ad', async () => {
+    const satirlar = [satir({ kok: 'gıvak', aday: 'gıvağım' })]
+    const ad = csvDosyaAdi(new Date(2026, 9, 2, 10))
+    const dosya = csvDosyasi(csvMetni(satirlar), ad)
+    expect(dosya.name).toBe('ekle-bakalim-pilot-2026-10-02.csv')
+    expect(dosya.type).toBe('text/csv')
+    const baytlar = new Uint8Array(await dosya.arrayBuffer())
+    expect([...baytlar.slice(0, 3)]).toEqual([0xef, 0xbb, 0xbf])
+    const metin = new TextDecoder('utf-8', { ignoreBOM: true }).decode(baytlar)
+    expect(metin).toBe(csvMetni(satirlar))
+    expect(metin.split('\r\n')[0]).toContain('zaman;cocuk;surum')
+    expect(metin).toContain('gıvağım')
+  })
+
   it('Günlüğü sil iki adımdır: ilk adım yalnız bir düğme; confirm yok', () => {
     const html = sayfa(bellekDeposu({ [GUNLUK_ANAHTARI]: JSON.stringify({ cocuk: null, satirlar: [satir({})] }) }))
     expect(html).toContain('>Günlüğü sil</button>')
@@ -150,19 +222,20 @@ describe('pilot sayfası', () => {
     expect(Object.keys(belgeler)).toHaveLength(3)
   })
 
-  it('oyuna bağlanır; oyun pilot sayfasına bağlanmaz', () => {
+  it('oyuna bağlanır; oyundan pilot sayfasına tek bağlantı Hakkında\'dadır', () => {
     expect(sayfa(bellekDeposu())).toContain('<a class="pilot__dugme" href="./">Oyunu aç</a>')
     expect(oyunSayfasi).not.toContain('pilot')
     const kaynaklar = Object.entries(oyununKaynaklari)
     expect(kaynaklar.length).toBeGreaterThan(10)
-    // Yorumda anılabilir; bağlantı ya da adres olarak geçmez.
-    for (const [dosya, metin] of kaynaklar) {
-      expect(metin, dosya).not.toMatch(/["'`][^"'`\s]*pilot\.html/)
-    }
+    // Yorumda anılabilir; bağlantı ya da adres olarak yalnız Ayarlar'da (Hakkında) bir kez geçer.
+    const adresler = kaynaklar.flatMap(([dosya, metin]) =>
+      [...metin.matchAll(/["'`][^"'`\s]*pilot\.html/g)].map(() => dosya),
+    )
+    expect(adresler).toEqual(['../ekranlar/Ayarlar.tsx'])
   })
 
   it('pilot.html: ayrı giriş, arama motorlarına kapalı', () => {
-    expect(pilotSayfasi).toContain('<title>Pilot · Morfemusta</title>')
+    expect(pilotSayfasi).toContain('<title>Pilot · Ekle Bakalım</title>')
     expect(pilotSayfasi).toContain('<meta name="robots" content="noindex, nofollow" />')
     expect(pilotSayfasi).toContain('<script type="module" src="/src/pilot/main.tsx"></script>')
   })

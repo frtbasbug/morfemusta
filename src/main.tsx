@@ -13,6 +13,7 @@ import '@fontsource/baloo-2/latin-ext-800.css'
 import './gorsel/tema.css'
 import './genel.css'
 import App from './App.tsx'
+import { tarayicidaEskiAdresiTemizle } from './kabuk/eskiAdres.ts'
 import { sesiAc } from './ses/calar.ts'
 
 // Oyunun modülü çalıştı: index.html'deki eski tarayıcı uyarısı çıkmaz.
@@ -29,3 +30,6 @@ createRoot(kok).render(
     <App />
   </StrictMode>,
 )
+
+// Eski adresin (/morfemusta/) service worker'ı ve önbelleği kalkar; ilerleme yerinde kalır.
+tarayicidaEskiAdresiTemizle()

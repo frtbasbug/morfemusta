@@ -40,7 +40,7 @@ describe('AdaHaritasi', () => {
 
   it('açılış ekranı: adanın adı birinci düzey başlık', () => {
     expect(ilk).toMatch(/^<main class="harita" aria-labelledby="harita-baslik">/)
-    expect(ilk).toMatch(/<h1 id="harita-baslik" class="harita__baslik" tabindex="-1">Morfemusta Adası<\/h1>/)
+    expect(ilk).toMatch(/<h1 id="harita-baslik" class="harita__baslik" tabindex="-1">Ekle Bakalım<\/h1>/)
   })
 
   it('adanın çizimi süstür: ekran okuyucudan gizli', () => {

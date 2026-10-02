@@ -1,4 +1,4 @@
-# Morfemusta — Tasarım
+# Ekle Bakalım — Tasarım
 
 Bu belge oyunun tasarım özetidir. Kod kararları bu belgeye uymalıdır; belgeyle
 çelişen bir karar gerekiyorsa önce belge güncellenir.
@@ -302,7 +302,7 @@ doğru karo görev dosyasına yazılmaz, motordan gelir (`sinirSecenekleri`, `ne
 - **İki tür sınır:**
   - **Gövde sınırı (yumuşama):** kök p, ç, t ya da k ile biter, ek ünlüyle başlar. *kita_ım*:
     p (taş) mı, b (jöle) mi? Sözlükteki kökte sözlük işaretine bağlıdır (*kitabım*, *topum*);
-    uydurma kökte iki karo da doğrudur (*pıtakı*, *pıtağı*).
+    uydurma kökte iki karo da doğrudur (*gıvakı*, *gıvağı*).
   - **Ek başı (benzeşme):** ek D ya da C ile başlar. *kitap_a*: t (taş) mı, d (jöle) mi? Her
     kökte kurala bağlıdır: sert ünsüzden sonra taş.
   - Görev tablosundaki her görevin tam bir sınırı vardır (test denetler).
@@ -394,7 +394,7 @@ Ağaç koddan çizilir (`src/gorsel/agac.ts`, saf; bileşeni `Agac.tsx`). Aşağ
 ## Uydurukçuklar
 
 Dördüncü bölge: uydurma kelime kanıttır (wug). Her görevde adı uydurma bir kök olan bir yaratık
-var (*fıngıl*, *pıtak*, *zelü*); çocuk Bukalemun Koyu'ndaki gibi doğru bukalemunu yaratığa
+var (*fıngıl*, *gıvak*, *zelü*); çocuk Bukalemun Koyu'ndaki gibi doğru bukalemunu yaratığa
 taşır. Görevler `icerik/gorevler/uydurukcuklar.csv`'dedir (tur, sıra, kök, ekler; 10 tur × 10
 görev); doğru biçim görev dosyasına yazılmaz, motordan gelir. Her turda aynı on görev şekli
 vardır (test denetler).
@@ -412,7 +412,7 @@ vardır (test denetler).
   Seçeneklerin sırası sabit tohumla karışıktır (Koy'daki gibi).
 - **Sınır adımı:** kök p, ç, t ya da k ile bitip iyelik alınca doğru bukalemun oturduktan sonra
   Dükkân'ın tezgâhı gelir (taş solda, jöle sağda). İki karo da doğrudur (Becker, Ketrez &
-  Nevins 2011); cümle: *İkisi de olur: pıtakım, pıtağım.* Jöle seçilirse kökün taşı erir.
+  Nevins 2011); cümle: *İkisi de olur: gıvakım, gıvağım.* Jöle seçilirse kökün taşı erir.
   Kurulan biçim çocuğun seçtiğidir; Sözlük kartı onu saklar.
 - **Yanlışsa** bukalemun düşer, kıyıya döner; denenen biçim üstü çizili, ilgili iki ses vurgulu
   (ünlü etiketinde, ünsüz çerçevede), altında cümle. Ceza, puan ve süre yok.
@@ -430,7 +430,7 @@ vardır (test denetler).
 
 ### Yaratık
 
-- **Yaratık adındaki son ünlünün karakteridir** ("Ünlü karakterleri"): *pıtak* kalın, düz,
+- **Yaratık adındaki son ünlünün karakteridir** ("Ünlü karakterleri"): *gıvak* kalın, düz,
   geniş; *zelü* ince, yuvarlak, dar. Büyük boy (1.8 ölçek; alçak ekranda küçülür). Adı altında,
   kök yazısıyla (son ünlüsü etikette).
 - **Süsler kökten gelir:** kök başına sabit tohumlu (FNV-1a) küçük boynuz (yok, iki ya da tek)
@@ -465,7 +465,7 @@ zeyrek'le elenir). Çıktı yalnız bir aday dosyasıdır: oyuna kök kullanıc�
 
 ## Ada haritası
 
-Açılış ekranıdır; başlığı *Morfemusta Adası*. Bölgeler `icerik/bolgeler.csv`'dedir (sıra,
+Açılış ekranıdır; başlığı *Ekle Bakalım*. Bölgeler `icerik/bolgeler.csv`'dedir (sıra,
 kimlik, ad, akşam, görev tablosu); görev tablosu boş olan bölgenin içeriği henüz yoktur.
 
 - **Çizim süstür:** kodla çizilmiş bir SVG, ekran okuyucudan gizli. Deniz, kara, kıyıda krem
@@ -531,8 +531,8 @@ gövdeden düşer: her yapım adımının kelimesi (*çiçekçi*; *çiçekçiler
   bölgenin kartları ekrana sığan sayfalarda, altta *Önceki* / *Sonraki*. Kartta künye yok (bölge
   sekmede, tarih o gün). Tahtada kaydırma yok.
 - Kartta kelime, kök ve ek etiketleri saklıdır; ekler her açılışta motordan gelir. Kelime
-  motorun kabul ettiği biçimlerden biridir: uydurma kökte çocuğun seçtiği (*pıtağım* ya da
-  *pıtakım*; ikisi ayrı karttır).
+  motorun kabul ettiği biçimlerden biridir: uydurma kökte çocuğun seçtiği (*gıvağım* ya da
+  *gıvakım*; ikisi ayrı karttır).
 
 ## Akşam ekranı
 
@@ -560,9 +560,14 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
   kapatılan ipuçları silinmez. Sınıf modunda yalnız o açılışınkiler silinir: *Sınıf modunun
   ilerlemesi ve kartları silinecek.*
 - Seçimler büyük, dokunması kolay radyo düğmeleridir; seçili olan dolu ve halkası kalındır.
-- **Hakkında:** sürüm (*pilot-1 (a1b2c3d, 2026-10-01)*: ad, kısa commit, commit'in günü), kodun (MIT), seslerin (Google Cloud Text-to-Speech, Chirp 3: HD Callirrhoe; MIT
-  ses dosyalarını kapsamaz), emojilerin
-  (Twemoji, CC BY 4.0) ve yazı tiplerinin (OFL-1.1) lisansı ve atfı. Bağlantı yok.
+- **Hakkında:** sade, beş satır (lisans adları lisansa bağlantı, yeni sekmede):
+  *Ekle Bakalım, ilkokul çocukları için kâr amacı gütmeyen bir Türkçe kelime oyunudur. Reklam,
+  satın alma ve hesap yoktur; hiçbir veri cihazdan çıkmaz.* / *Sesler yapay zekâyla üretildi.* /
+  *Emojiler: Twemoji, Twitter, Inc. ve katkıcıları (CC BY 4.0). Yazı tipleri: Andika ve Baloo 2
+  (SIL Open Font License).* / *Sürüm: pilot-1.1* / *Yetişkinler için: Pilot sayfası*
+  (pilot.html'e bağlantı; oyundan pilot sayfasına tek yol budur). Commit ve tarih yalnız
+  pilot.html'de; sesin ayrıntısı (Google Cloud Text-to-Speech, Chirp 3: HD Callirrhoe; kodun MIT
+  lisansı ses dosyalarını kapsamaz) yalnız README'de.
 
 ## Cihazda ilerleme
 
@@ -604,7 +609,7 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
 - **Güncelleme:** yeni sürüm açık sayfayı yenilemez, bozmaz: o açılış eski sürümle sürer; yeni
   sürüm bir sonraki açılışta devreye girer. Oyun güncellemeyi sormaz, haber vermez.
 - **Eski tarayıcı:** oyunu çalıştıramayan tarayıcıda (modül betiği yok ya da betik hata verdi)
-  beyaz ekran yerine kısa bir uyarı görünür: *Bu tarayıcı Morfemusta için çok eski.* Altında
+  beyaz ekran yerine kısa bir uyarı görünür: *Bu tarayıcı Ekle Bakalım için çok eski.* Altında
   Cihaz Denetimi sayfasına bağlantı (*Cihazı denetle*). Uyarı modülsüz, eski sözdizimiyle
   (ES5) yazılır; oyun açılınca hiç görünmez.
 - **Cihaz Denetimi** (`cihaz.html`, oyundan yalnız bu uyarıyla bağlantı alır): tarayıcı ve
@@ -653,7 +658,7 @@ ne olduğunu okumadan gösterir.
   - Bir bukalemun (Dükkân'da karo, Bahçe'de ek) seçilince ya da sürüklenmeye başlayınca kuracağı
     aday kelime söylenir (Bahçe'de ekin kendisi): çocuk seçimini kulağıyla yapar.
   - Doğruda kurulan kelime, yanlışta neden cümlesi söylenir. Uydurukçuklar'ın sınır adımında
-    karo seçilince kelime (*pıtakım*, *pıtağım*), oturunca kelime ve *İkisi de olur* cümlesi.
+    karo seçilince kelime (*gıvakım*, *gıvağım*), oturunca kelime ve *İkisi de olur* cümlesi.
   - Haritada kilitli ya da hazırlanan bölgeye dokununca adı ve iletisi; akşam ekranında başlık ve
     kelimeler; Sözlük'te karta dokununca kelime.
 - **Aynı anda tek ses çalar;** yenisi eskisini keser.
@@ -716,8 +721,8 @@ hiçbir şey cihazdan çıkmaz.
 3. **Kök Bahçesi** — yapım ekleri gövdeyi büyütür
    (*göz → gözlük → gözlükçü → gözlükçülük*); çekim ekleri tepeye meyve gibi asılır;
    meyvenin üstüne gövde çıkmaz (yukarıda).
-4. **Uydurukçuklar** — uydurma yaratıklar (*fıngıl*, *pıtak*, *mömüş*, *zelü*) çoğaltılır,
-   sahiplenilir, bir yere konur, onlara gönderilir: *fıngıllar*, *pıtağım* ya da *pıtakım*,
+4. **Uydurukçuklar** — uydurma yaratıklar (*fıngıl*, *gıvak*, *mömüş*, *zelü*) çoğaltılır,
+   sahiplenilir, bir yere konur, onlara gönderilir: *fıngıllar*, *gıvağım* ya da *gıvakım*,
    *mömüşte*, *zelüye* (yukarıda).
 
 ## Sonraki bölgeler
@@ -777,9 +782,10 @@ gönderilmez: deneme günlüğü yalnız cihazdadır, yetişkin elle indirir.
 
 ### Sürüm
 
-- Derlemede sürümün adı (*pilot-1*), derlenen commit'in kısa özeti ve commit'in günü pakete girer
-  (`src/surum.ts`, `vite.config.ts`). Ayarlar'daki Hakkında'da ve pilot.html'de görünür:
-  *pilot-1 (a1b2c3d, 2026-10-01)*. Günlüğün her satırında adı (*surum*).
+- Derlemede sürümün adı (şimdi *pilot-1.1*), derlenen commit'in kısa özeti ve commit'in günü
+  pakete girer (`src/surum.ts`, `vite.config.ts`). Ayarlar'daki Hakkında'da yalnız adı
+  (*Sürüm: pilot-1.1*); pilot.html'de üçü: *pilot-1.1 (a1b2c3d, 2026-10-02)*. Günlüğün her
+  satırında adı (*surum*).
 - Pilot sürerken main'e yalnız pilot düzeltmeleri girer; her biri adı artırır: *pilot-1.1*,
   *pilot-1.2* (CLAUDE.md, 17. kural).
 
@@ -799,7 +805,7 @@ gönderilmez: deneme günlüğü yalnız cihazdadır, yetişkin elle indirir.
 | `bolge` | bölgenin kimliği: koy, dukkan, bahce, uyduruk |
 | `tur`, `gorev` | görevin turu (tursuz bölgede 1) ve turdaki sırası |
 | `kok`, `ekler` | görevin kökü ve ekleri (*top*, *PL+POSS.1SG*) |
-| `dogru_bicim` | bu seçimin doğru biçimi: zincirde adımın biçimi (*toplar*, sonra *toplarım*), Bahçe'de sıradaki gövde; iki biçim de doğruysa / ile (*pıtakım/pıtağım*) |
+| `dogru_bicim` | bu seçimin doğru biçimi: zincirde adımın biçimi (*toplar*, sonra *toplarım*), Bahçe'de sıradaki gövde; iki biçim de doğruysa / ile (*gıvakım/gıvağım*) |
 | `secilen` | ekin yüzeyi (*ler*) ya da karonun harfi (*b*) |
 | `aday` | seçimin kurduğu kelime (*atler*, *kitapım*, *çiçekler*) |
 | `sonuc` | *dogru* ya da *yanlis* |
@@ -818,8 +824,9 @@ gönderilmez: deneme günlüğü yalnız cihazdadır, yetişkin elle indirir.
 
 ### pilot.html
 
-Yetişkin içindir: oyundan bağlantı almaz, adresle açılır, arama motorlarına kapalıdır; önbellekte
-olduğu için çevrim dışı da açılır.
+Yetişkin içindir: oyundan tek bağlantısı Ayarlar'daki Hakkında'dadır (*Yetişkinler için: Pilot
+sayfası*); adresle de açılır, arama motorlarına kapalıdır; önbellekte olduğu için çevrim dışı da
+açılır.
 
 - **Çocuk:** kod alanı ve *Yeni çocuk*: kodu yazar; oyunun ilerlemesini, kartlarını ve kalınan
   yerini sıfırlar (ayarlar ve günlük kalır). Her çocuk Bukalemun Koyu'ndan başlar. *Kodu sil*
@@ -830,7 +837,10 @@ olduğu için çevrim dışı da açılır.
 - **Günlük:** *CSV indir* (UTF-8 imli, noktalı virgüllü, satır sonu CRLF: Türkçe Excel Türkçe
   harfleriyle doğrudan açar; virgül Türkçe Excel'de ondalık işaretidir), *Kopyala* (sekmeyle
   ayrılmış; tabloya yapıştırılınca her alan bir hücreye), *Günlüğü sil* (iki adım: *Vazgeç* /
-  *Sil*; odak önce *Vazgeç*'te; kod kalır).
+  *Sil*; odak önce *Vazgeç*'te; kod kalır). Dosyanın adı *ekle-bakalim-pilot-2026-10-02.csv*.
+  *Paylaş* (telefonda): aynı CSV'yi dosya olarak paylaşır (Web Share API; e-posta, mesaj);
+  dosya paylaşamayan tarayıcıda görünmez. Günlük boşken düğmelerin yanında yol tarifi: *Günlük
+  boş: önce çocuk kodunu yazıp Yeni çocuk'a, sonra Oyunu aç'a dokunun.*
 - **Uyarılar:** günlük durdu, depo dolu, sınıf modu açık, kayıt okunamıyor.
 - Sürümün adı ve üç belgeye bağlantılar sayfada durur.
 
@@ -853,4 +863,5 @@ aynı dizilir.
 - **Gözlemci yönergesi:** oyunun ve pilot.html'in adresi büyük puntoyla; hazırlık, her çocuk
   için adımlar (Yeni çocuk, yansız giriş cümlesi, kuralı öğretmemek, yardım ancak iki başarısız
   denemeden ya da 30 saniye takılmadan sonra ve forma işlenir, 20–25 dakika ya da çocuk
-  isteyene kadar, sözler aynen, kayıt yok), gün sonunda CSV.
+  isteyene kadar, sözler aynen, kayıt yok; kod veli formundaki Çocuk kodu alanına da yazılır),
+  gün sonunda CSV (telefonda Paylaş).

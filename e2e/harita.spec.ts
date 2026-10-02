@@ -186,7 +186,7 @@ test.describe('gezinme', () => {
     // Harita geçmişte bir adım geri: oyunun ilk açıldığı adres (hash'siz ya da #/).
     await gezinme(page, 'Harita').click()
     await expect(haritaBasligi(page)).toBeVisible()
-    await expect(page).toHaveURL(/\/morfemusta\/(#\/)?$/)
+    await expect(page).toHaveURL(/\/ekle-bakalim\/(#\/)?$/)
   })
 
   test('telefonun geri tuşu: bölgeden, Sözlük\'ten ve Ayarlar\'dan haritaya; haritadan dışarı', async ({

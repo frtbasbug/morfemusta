@@ -79,7 +79,7 @@ describe('eski tarayıcı betikleri ES5', () => {
     const [betik, ...fazla] = betikler(oyun)
     expect(fazla).toEqual([])
     expect(es5Disi(betik ?? '')).toEqual([])
-    expect(oyun).toContain('Bu tarayıcı Morfemusta için çok eski.')
+    expect(oyun).toContain('Bu tarayıcı Ekle Bakalım için çok eski.')
     expect(oyun).toContain('<a href="cihaz.html">')
   })
 

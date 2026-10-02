@@ -27,7 +27,7 @@ Uydurma kök adayları (scripts/uydurma-uret.mjs kullanır): standart girdiden s
 kökleri okur, zeyrek'in çözümleyebildiklerini (gerçek kelime ya da gerçek kelime + ek gibi
 okunanları) standart çıktıya yazar:
 
-    printf 'pıtak\nkalem\n' | python3 scripts/zeyrek-denetimi.py --adaylar
+    printf 'gıvak\nkalem\n' | python3 scripts/zeyrek-denetimi.py --adaylar
 """
 
 import csv

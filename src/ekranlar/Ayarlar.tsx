@@ -13,7 +13,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import UnluEtiketi from '../gorsel/UnluEtiketi.tsx'
 import type { Ayarlar as AyarDegerleri } from '../oyun/ilerleme.ts'
-import { surumYazisi } from '../surum.ts'
+import { SURUM_ADI } from '../surum.ts'
 import './Ayarlar.css'
 
 interface Secenek<T extends string> {
@@ -231,9 +231,22 @@ function SecimGrubu<T extends string>({
   )
 }
 
+/** Lisansların adresleri: Hakkında'da lisans adı lisansa bağlantıdır. */
+export const LISANSLAR = {
+  ccBy: 'https://creativecommons.org/licenses/by/4.0/',
+  ofl: 'https://openfontlicense.org/',
+} as const
+
 /**
- * Hakkında: sürüm (ad, kısa commit, tarih) ve oyunun, seslerin, emojilerin ve yazı tiplerinin
- * lisansları. Bağlantı yok: çocuk oyundan dışarı çıkmaz; adresler yazı olarak durur.
+ * Pilot sayfası (yetişkin için): oyundan ona tek bağlantı Hakkında'dadır. Göreli adres: oyun
+ * tabanın kökündedir (yönlendirme hash'le), pilot.html de oradadır.
+ */
+export const PILOT_ADRESI = 'pilot.html'
+
+/**
+ * Hakkında: oyun, sesler, emojiler ve yazı tipleri, sürümün adı ve yetişkinler için pilot
+ * sayfası. Lisans adları lisansa bağlanır (yeni sekmede). Commit ve tarih yalnız pilot.html'de;
+ * sesin ayrıntısı (Cloud Text-to-Speech, Chirp 3: HD Callirrhoe) README'de.
  */
 function Hakkinda() {
   return (
@@ -243,33 +256,25 @@ function Hakkinda() {
       </h2>
       <div className="hakkinda__metin">
         <p>
-          Morfemusta, ilkokul çocukları için kâr amacı gütmeyen bir Türkçe biçimbilim oyunudur.
-          Kodu MIT lisanslıdır. Hiçbir veri cihazdan çıkmaz.
+          Ekle Bakalım, ilkokul çocukları için kâr amacı gütmeyen bir Türkçe kelime oyunudur.
+          Reklam, satın alma ve hesap yoktur; hiçbir veri cihazdan çıkmaz.
         </p>
-        <dl className="hakkinda__liste">
-          <div className="hakkinda__oge">
-            <dt>Sürüm</dt>
-            <dd className="hakkinda__surum">{surumYazisi()}</dd>
-          </div>
-          <div className="hakkinda__oge">
-            <dt>Sesler</dt>
-            <dd>
-              Sesler yapay zekâyla, Google Cloud Text-to-Speech'in Chirp 3: HD Callirrhoe sesiyle
-              önceden üretildi. Kodun MIT lisansı ses dosyalarını kapsamaz.
-            </dd>
-          </div>
-          <div className="hakkinda__oge">
-            <dt>Emojiler</dt>
-            <dd>
-              Twemoji (Twitter, Inc. ve katkıcıları; github.com/jdecked/twemoji, sürüm 16.0.1).
-              Grafikler CC BY 4.0 lisanslıdır.
-            </dd>
-          </div>
-          <div className="hakkinda__oge">
-            <dt>Yazı tipleri</dt>
-            <dd>Andika (SIL International) ve Baloo 2 (Ek Type): SIL Open Font License 1.1.</dd>
-          </div>
-        </dl>
+        <p>Sesler yapay zekâyla üretildi.</p>
+        <p>
+          Emojiler: Twemoji, Twitter, Inc. ve katkıcıları (
+          <a href={LISANSLAR.ccBy} target="_blank" rel="noopener noreferrer">
+            CC BY 4.0
+          </a>
+          ). Yazı tipleri: Andika ve Baloo 2 (
+          <a href={LISANSLAR.ofl} target="_blank" rel="noopener noreferrer">
+            SIL Open Font License
+          </a>
+          ).
+        </p>
+        <p className="hakkinda__surum">Sürüm: {SURUM_ADI}</p>
+        <p>
+          Yetişkinler için: <a href={PILOT_ADRESI}>Pilot sayfası</a>
+        </p>
       </div>
     </section>
   )

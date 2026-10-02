@@ -8,7 +8,7 @@
 //            yanlış adayların neden cümleleri
 //   dukkan   kök, iki karonun adayı (kitapım, kitabım), doğru biçim, neden cümleleri
 //   bahce    hedef, kelimenin her hâli (kök, gövde kelimeleri), ekler, neden cümleleri
-//   uyduruk  kök, her bukalemunun adayı (zelüye, zelüe), doğru biçimler (pıtakım, pıtağım),
+//   uyduruk  kök, her bukalemunun adayı (zelüye, zelüe), doğru biçimler (gıvakım, gıvağım),
 //            İkisi de olur cümleleri, neden cümleleri
 //
 // Her bölgenin grubunda akşam ekranının başlığı da vardır. Saf TypeScript'tir.

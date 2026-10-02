@@ -132,7 +132,9 @@ async function olc(sayfa: Page): Promise<Olcu> {
 
     let hedef = { px: Infinity, ad: '' }
     for (const el of document.querySelectorAll('button, a[href], label, [role="button"]')) {
-      if (gorunmez(el)) continue
+      // Hakkında'nın metin içi bağlantıları (lisanslar, pilot sayfası) yetişkin içindir ve
+      // cümlenin içindedir (WCAG 2.5.8'in satır içi ayrığı): ölçüye girmez.
+      if (gorunmez(el) || el.matches('.hakkinda p a')) continue
       const kutu = el.getBoundingClientRect()
       if (kutu.width === 0 || kutu.height === 0) continue
       const px = Math.min(kutu.width, kutu.height)

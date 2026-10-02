@@ -80,19 +80,19 @@ describe('denetim verisi', () => {
 
   it('verilen sözlükle çalışır', () => {
     const sozluk = kokSozlugunuOku(
-      'kok,kategori,yumusama,unlu_dusmesi,istisna\npıtak,uydurma,evet,,\n',
+      'kok,kategori,yumusama,unlu_dusmesi,istisna\ngıvak,uydurma,evet,,\n',
     )
-    const [pitak] = denetimSatirlari(sozluk)
-    expect(pitak?.isaretler).toEqual(['yumuşar'])
-    expect(pitak?.bicimler.map((b) => b.bicim)).toEqual([
-      'pıtaklar',
-      'pıtağı',
-      'pıtağa',
-      'pıtakta',
-      'pıtağım',
-      'pıtağı',
-      'pıtağın',
-      'pıtaklı',
+    const [givak] = denetimSatirlari(sozluk)
+    expect(givak?.isaretler).toEqual(['yumuşar'])
+    expect(givak?.bicimler.map((b) => b.bicim)).toEqual([
+      'gıvaklar',
+      'gıvağı',
+      'gıvağa',
+      'gıvakta',
+      'gıvağım',
+      'gıvağı',
+      'gıvağın',
+      'gıvaklı',
     ])
   })
 })

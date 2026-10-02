@@ -6,7 +6,7 @@
 // Doğruysa bukalemun yaratığın adına yapışır ve büyü olur (resimsiz): çoğulda yaratık üçe
 // çoğalır, iyelikte cebe girer, bulunmada küçük bir yıldız üstünde durur, yönelmede yıldız ona
 // doğru uçar. Kök p, ç, t ya da k ile bitip iyelik alınca önce Dükkân'ın tezgâhı gelir: taş da
-// jöle de doğrudur (İkisi de olur: pıtakım, pıtağım.); kurulan biçim çocuğun seçtiğidir.
+// jöle de doğrudur (İkisi de olur: gıvakım, gıvağım.); kurulan biçim çocuğun seçtiğidir.
 // Yanlışsa bukalemun eğilir, düşer, kıyıya döner; nedeni yazılır, ilgili iki ses vurgulanır.
 // Ceza, puan ve süre yok. Yaratığın ağzı hiçbir durumda değişmez (DESIGN.md, "Üç kural").
 //
@@ -99,7 +99,7 @@ export default function Uydurukcuklar({
   readonly bugunkuKartlar?: readonly SozlukKarti[]
   /**
    * Bir görev bitti (büyü oldu): kabuk ilerlemeyi ve kartı kaydeder. Kelime çocuğun kurduğu
-   * biçimdir (pıtağım ya da pıtakım).
+   * biçimdir (gıvağım ya da gıvakım).
    */
   readonly onGorevBitti?: (gorev: Gorev, kartEkleri: undefined, kelime: string) => void
   /** Haritaya dönüş; verilmezse düğmesi çıkmaz. */
@@ -195,7 +195,7 @@ export default function Uydurukcuklar({
   }
 
   /**
-   * Sesli mod: seçilen bukalemunun (zelüye, zelüe) ya da karonun (pıtakım, pıtağım) kuracağı
+   * Sesli mod: seçilen bukalemunun (zelüye, zelüe) ya da karonun (gıvakım, gıvağım) kuracağı
    * kelime.
    */
   function adayiSoyle(tasinan: Tasinan) {
@@ -372,7 +372,7 @@ export default function Uydurukcuklar({
   /** Karo yuvaya taşındı: iki karo da doğrudur. Jöle seçildiyse kökün taşı erir. */
   async function karoyuTasi(karo: KaroTuru, kayma: Nokta = DURAGAN) {
     if (!gorev || !sinir || evre !== 'sinir') return
-    // Pilotun günlüğü: iki karo da doğrudur; doğru biçim ikisi (pıtakım/pıtağım).
+    // Pilotun günlüğü: iki karo da doğrudur; doğru biçim ikisi (gıvakım/gıvağım).
     kaydet('sinir', {
       dogruBicim: gorevinSonBicimi(bolge.kimlik, gorev.kok, gorev.etiketler),
       secilen: karoHarfi(sinir, karo),

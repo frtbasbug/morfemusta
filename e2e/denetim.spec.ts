@@ -31,7 +31,7 @@ test.describe('Biçim Denetim Sayfası', () => {
     await page.goto(DENETIM)
 
     await expect(baslik(page)).toBeVisible()
-    await expect(page).toHaveTitle('Biçim Denetimi · Morfemusta')
+    await expect(page).toHaveTitle('Biçim Denetimi · Ekle Bakalım')
     // Zemin sayfanın kendi açık rengi: oyunla paylaşılan genel.css sonra yüklense de.
     expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe(
       'rgb(244, 249, 251)',
@@ -91,7 +91,7 @@ test.describe('Biçim Denetim Sayfası', () => {
 
   test('oyun denetim sayfasına bağlantı vermez', async ({ page }) => {
     await page.goto('./')
-    await expect(page.getByRole('heading', { level: 1, name: 'Morfemusta Adası' })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'Ekle Bakalım' })).toBeVisible()
     await expect(page.locator('a[href*="denetim"]')).toHaveCount(0)
     expect(await page.content()).not.toContain('denetim')
   })

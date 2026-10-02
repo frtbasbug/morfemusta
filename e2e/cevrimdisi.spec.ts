@@ -149,3 +149,47 @@ test.describe('güncelleme', () => {
     )
   })
 })
+
+test.describe('eski adres (/morfemusta/)', () => {
+  // Service worker kaydının kaldırılması birim testinde (src/kabuk/eskiAdres.test.ts): eski taban
+  // artık sunulmadığı için burada eski adreste service worker kurulamaz (betiği 404). Önbellekler
+  // ve depo origin'e bağlıdır; burada kurulur.
+  test('yeni adres açılınca eski adresin önbellekleri kalkar; günlük kalır', async ({ page }) => {
+    await page.goto('./')
+    await expect(haritaBasligi(page)).toBeVisible()
+    await denetlenene(page)
+    await page.evaluate(async () => {
+      const eski = await caches.open(`workbox-precache-v2-${location.origin}/morfemusta/`)
+      await eski.put('/morfemusta/index.html', new Response('eski'))
+      const sesler = await caches.open('morfemusta-ses')
+      await sesler.put('/morfemusta/ses/eski.mp3?v=1', new Response('eski'))
+      await sesler.put('/ekle-bakalim/ses/yeni.mp3?v=1', new Response('yeni'))
+      // Origin ve anahtarlar aynı (morfemusta.*): eski adresin pilot günlüğü yeni adreste okunur.
+      localStorage.setItem('morfemusta.pilot.v1', JSON.stringify({ cocuk: 'P09', satirlar: [] }))
+    })
+
+    await page.reload()
+    await expect(haritaBasligi(page)).toBeVisible()
+    await expect
+      .poll(() => page.evaluate(async () => (await caches.keys()).filter((ad) => ad.includes('/morfemusta/'))))
+      .toEqual([])
+    // Yeni adresin ön belleği kalır.
+    expect(
+      await page.evaluate(async () => (await caches.keys()).some((ad) => ad.includes('/ekle-bakalim/'))),
+    ).toBe(true)
+    await expect
+      .poll(() =>
+        page.evaluate(async () =>
+          (await (await caches.open('morfemusta-ses')).keys()).map((i) => new URL(i.url).pathname),
+        ),
+      )
+      .toEqual(['/ekle-bakalim/ses/yeni.mp3'])
+    expect(
+      await page.evaluate(async () =>
+        (await navigator.serviceWorker.getRegistrations()).map((k) => new URL(k.scope).pathname),
+      ),
+    ).toEqual(['/ekle-bakalim/'])
+    await page.goto('pilot.html')
+    await expect(page.locator('strong[data-cocuk]')).toHaveText('P09')
+  })
+})

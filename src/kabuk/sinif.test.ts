@@ -16,7 +16,7 @@ describe('adresteki sınıf modu (tahtadaki yer imi)', () => {
   })
 
   it('değiştirgen adresten kalkar; öteki değiştirgenler ve hash kalır', () => {
-    const kok = 'https://frtbasbug.github.io/morfemusta/'
+    const kok = 'https://frtbasbug.github.io/ekle-bakalim/'
     expect(sinifsizAdres(`${kok}?sinif=1`)).toBe(kok)
     expect(sinifsizAdres(`${kok}?sinif=0#/bolge/koy`)).toBe(`${kok}#/bolge/koy`)
     expect(sinifsizAdres(`${kok}?a=b&sinif=1`)).toBe(`${kok}?a=b`)

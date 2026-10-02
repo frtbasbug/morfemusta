@@ -2,14 +2,14 @@
 // Ekran (src/ekranlar/Uydurukcuklar.tsx) durumu bu indirgeyiciyle değiştirir, hareketleri
 // kendisi canlandırır.
 //
-// Her görevde adı uydurma bir kök olan bir yaratık var (fıngıl, pıtak, zelü). Çocuk Bukalemun
+// Her görevde adı uydurma bir kök olan bir yaratık var (fıngıl, gıvak, zelü). Çocuk Bukalemun
 // Koyu'ndaki gibi doğru bukalemunu yaratığa taşır: çoğalt (PL), sahiplen (POSS.1SG), bir yere
 // koy (LOC), ona gönder (DAT). Kıyıya ekin bütün kılıkları gelir; -(y)A'da kaynaştırmalı ve
 // kaynaştırmasız olanlar birlikte (ya, ye, a, e). Yalnız kategorik kurallar puanlanır: ünlü
 // uyumu, benzeşme, kaynaştırma. Doğruluk motordan gelir (koy.ts'teki deneme: neden).
 //
-// Kök p, ç, t ya da k ile bitip ek ünlüyle başlarsa (pıtak + ım) doğru bukalemun oturunca
-// Dükkân'daki gibi bir sınır adımı gelir: taş da jöle de doğrudur (pıtakım, pıtağım). Kurulan
+// Kök p, ç, t ya da k ile bitip ek ünlüyle başlarsa (gıvak + ım) doğru bukalemun oturunca
+// Dükkân'daki gibi bir sınır adımı gelir: taş da jöle de doğrudur (gıvakım, gıvağım). Kurulan
 // biçim çocuğun seçtiğidir; Sözlük kartı onu saklar.
 
 import {
@@ -53,21 +53,21 @@ export function uydurukAdimi(gorev: Gorev): Adim {
 
 /**
  * Görevin sınır adımı: gövde sınırında iki karo da doğruysa (uydurma kök p, ç, t ya da k ile
- * biter, ek ünlüyle başlar: pıta_ım) o sınır; yoksa null.
+ * biter, ek ünlüyle başlar: gıva_ım) o sınır; yoksa null.
  */
 export function uydurukSiniri(gorev: Gorev): Sinir | null {
   const sinir = sinirSecenekleri(gorev.kok, gorev.etiketler).find((s) => s.yer === 'gövde')
   return sinir && sinir.dogrular.length === 2 ? sinir : null
 }
 
-/** Sınır adımının cümlesi: İkisi de olur: pıtakım, pıtağım. */
+/** Sınır adımının cümlesi: İkisi de olur: gıvakım, gıvağım. */
 export function sinirCumlesi(gorev: Gorev): string {
   return `İkisi de olur: ${olasiBicimler(gorev.kok, gorev.etiketler).join(', ')}.`
 }
 
 /**
- * Kurulan biçim ve parçaları: sınır adımında çocuğun seçtiği karoyla (taş: pıtakım, jöle:
- * pıtağım), yoksa motorun biçimi.
+ * Kurulan biçim ve parçaları: sınır adımında çocuğun seçtiği karoyla (taş: gıvakım, jöle:
+ * gıvağım), yoksa motorun biçimi.
  */
 export function kurulanBicim(gorev: Gorev, sinir: Sinir | null, karo: Karo | null): EklemeSonucu {
   const eklemeler = olasiEklemeler(gorev.kok, gorev.etiketler)

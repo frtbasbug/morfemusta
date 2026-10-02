@@ -19,7 +19,7 @@ export default function KurulanKelime({
   readonly kok: string
   readonly etiketler: readonly string[]
   /**
-   * Kurulan biçim, motorun kabul ettiklerinden biriyse (uydurma kökte çocuğun seçtiği pıtağım);
+   * Kurulan biçim, motorun kabul ettiklerinden biriyse (uydurma kökte çocuğun seçtiği gıvağım);
    * verilmezse ya da tutmazsa ekle'ninki.
    */
   readonly kelime?: string
@@ -34,8 +34,8 @@ export default function KurulanKelime({
 }
 
 /**
- * Kelimenin eklenişi: motorun kabul ettiği biçimlerden kelimeyle aynı olanı (pıtağım: gövde
- * pıtağ); yoksa ekle'ninki. Sözlük kartı da kullanır.
+ * Kelimenin eklenişi: motorun kabul ettiği biçimlerden kelimeyle aynı olanı (gıvağım: gövde
+ * gıvağ); yoksa ekle'ninki. Sözlük kartı da kullanır.
  */
 export function kurulanEkleme(kok: string, etiketler: readonly string[], kelime?: string) {
   if (kelime === undefined) return ekle(kok, etiketler)

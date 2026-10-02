@@ -252,15 +252,6 @@
     margin-bottom: 0.5rem;
   }
 
-  /* Sütunlar dengeli dolsun diye açıklama bölünebilir; başlığı açıklamasından ayrılmaz. */
-  :root[data-sinif='acik'] .hakkinda__liste dt {
-    break-after: avoid;
-  }
-
-  :root[data-sinif='acik'] .hakkinda__liste dd {
-    margin-bottom: 0.3rem;
-  }
-
   /* Akşam ekranı: kart geniş. */
   :root[data-sinif='acik'] .aksam__kart {
     max-width: 52rem;

@@ -7,7 +7,7 @@ import { disIstekleriTopla } from './yardimcilar.ts'
 const BELGELER = [
   {
     yol: 'belgeler/gozlem-formu.html',
-    baslik: 'Morfemusta pilotu · Gözlem formu',
+    baslik: 'Ekle Bakalım pilotu · Gözlem formu',
     icerik: [
       'Çocuk kodu',
       'Gözlemci',
@@ -34,7 +34,7 @@ const BELGELER = [
   },
   {
     yol: 'belgeler/veli-onay-formu.html',
-    baslik: 'Morfemusta pilotu · Veli bilgilendirme ve onay formu',
+    baslik: 'Ekle Bakalım pilotu · Veli bilgilendirme ve onay formu',
     icerik: [
       'kâr amacı gütmeyen bir Türkçe',
       'Çocuk doğru eki kelimenin köküne taşır; kurduğu kelime ekrandaki dünyayı değiştirir',
@@ -56,20 +56,22 @@ const BELGELER = [
   },
   {
     yol: 'belgeler/gozlemci-yonergesi.html',
-    baslik: 'Morfemusta pilotu · Gözlemci yönergesi',
+    baslik: 'Ekle Bakalım pilotu · Gözlemci yönergesi',
     icerik: [
-      'frtbasbug.github.io/morfemusta/',
-      'frtbasbug.github.io/morfemusta/pilot.html',
+      'frtbasbug.github.io/ekle-bakalim/',
+      'frtbasbug.github.io/ekle-bakalim/pilot.html',
       'Sesli mod',
       'Yeni çocuk',
       'Kuralı öğretmeyin.',
       'Pilot sayfasını yer imlerine ekleyin.',
+      'Kodu veli formundaki Çocuk kodu alanına da yazın.',
       "iPhone ve iPad'de oyunu ana ekrandaki simgeden açmayın; pilot sayfasındaki Oyunu aç'la Safari'de açın.",
       'Bu yeni bir kelime oyunu. Sen oynarken ben not alacağım. Yanlış yapmak sorun değil; oyunu deniyoruz, seni değil. İstediğin an bırakabilirsin.',
       '30 saniye',
       '20–25 dakika',
       'aynen',
       'CSV indir',
+      'Paylaş',
       'Fotoğraf, ses ya da görüntü kaydı yapmayın.',
     ],
   },
@@ -89,6 +91,8 @@ test.describe('pilotun belgeleri', () => {
       await expect(page.locator('html')).toHaveAttribute('lang', 'tr')
       await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow')
       for (const metin of belge.icerik) await expect(page.locator('main')).toContainText(metin)
+      // Yeni ad ve adres: eski ad (Morfemusta) ve eski adres hiçbir yerde yok.
+      expect(await page.content()).not.toMatch(/morfemusta/i)
       // Gömülü yazı tipi: her cihazda aynı ölçüler.
       await page.evaluate(() => document.fonts.ready)
       // (document.fonts.check kullanılmaz: CLAUDE.md, "Yazı tipi testi".)

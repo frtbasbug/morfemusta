@@ -7,8 +7,9 @@ girer, her biri sürüm adını artırır (CLAUDE.md, 17. kural). Açık kalanla
 ## Pilot günü yapılacakları
 
 1. **Bir gün önce:** PR birleşip yayınlandıktan sonra her cihazda
-   <https://frtbasbug.github.io/morfemusta/pilot.html>'i açın; sürüm *pilot-1* görünmeli.
-   Oyunu da bir kez açın. Okulda internet yoksa oyunun Ayarlar'ında Sınıf modu'nu açıp dört
+   <https://frtbasbug.github.io/ekle-bakalim/pilot.html>'i açın (oyunda Ayarlar → Hakkında →
+   *Yetişkinler için: Pilot sayfası*); sürüm *pilot-1.1* görünmeli. Oyunu da bir kez açın. Eski
+   adresin (`/morfemusta/`) yer imini ve ana ekran simgesini silin: eski adres artık açılmaz. Okulda internet yoksa oyunun Ayarlar'ında Sınıf modu'nu açıp dört
    bölgeye birer kez girin (sesler iner), sonra Sınıf modu'nu kapatın.
 2. **Yazdırın:** çocuk sayısınca gözlem formu, veli onay formu (araştırmacının adı, kurumu ve
    iletişim bilgisi elle), her gözlemciye yönerge. Tarayıcıdan A4, ölçek %100.
@@ -18,19 +19,124 @@ girer, her biri sürüm adını artırır (CLAUDE.md, 17. kural). Açık kalanla
    formundaki "Çocuk kodu" alanına da). **iPhone ve iPad'de oyunu ana ekrandaki simgeden
    açmayın; pilot sayfasındaki Oyunu aç'la Safari'de açın.** Ana ekrandaki uygulamanın deposu
    Safari'ninkinden ayrıdır: denemeler pilot.html'e düşmez. Pilot sayfasını yer imlerine ekleyin.
-5. **Gün sonu:** pilot.html → CSV indir (dosya adı günü taşır), dosyayı yedekleyin; formları
+5. **Gün sonu:** pilot.html → CSV indir (telefonda Paylaş da olur; dosya adı
+   *ekle-bakalim-pilot-YYYY-AA-GG.csv*), dosyayı yedekleyin; formları
    toplayın. Günlüğü sil yalnız CSV alındıktan sonra. Uyarı varsa (günlük durdu, sınıf modu açık)
    önce CSV.
 6. **Gözlenecek ek noktalar** (önceki oturumların listelerinden): iOS'ta sesli mod ve efektler
    ilk dokunuştan sonra, sessiz anahtar; etkileşimli tahtada sınıf modu (sayfalı Sözlük);
    parmakla sürükleme; en eski cihazda cihaz.html'in sonucu.
 
-## Son oturum: Oturum 12 — pilot sürümü (2026-10-01)
+## Son oturum: Oturum 12b — pilot öncesi düzeltme: Ekle Bakalım (2026-10-02)
+
+Sürüm *pilot-1.1* (CLAUDE.md, 17. kural: pilot düzeltmesi).
+
+### Kullanıcının kararları
+
+- **Oyunun yeni adı Ekle Bakalım** (eski ad çocuğa uygun değildi); görünen her yerde. Özel ad ek
+  alırken kesmeyle: *Ekle Bakalım'ı, Ekle Bakalım'da*. Eski ad yalnız README'de bir satır.
+- **Yeni adres:** <https://frtbasbug.github.io/ekle-bakalim/> (depo `frtbasbug/ekle-bakalim`).
+  Eski adres çalışmaz; yönlendirme yok.
+- **İç adlar değişmez:** localStorage anahtarları (`morfemusta.*`), seslerin önbelleği
+  (`morfemusta-ses`), koddaki adlar, ses dosyalarının adları. Origin aynı: ilerleme ve günlük
+  yerinde kalır.
+- **Uydurukçuklar'da pıtak yerine gıvak** (1. tur, 4. görev, POSS.1SG: *gıvakım* / *gıvağım*):
+  görev tablosundaki tek onaylı değişiklik. Motor testlerinde ve altın tabloda pıtak soyut örnek
+  olarak kalır.
+- **Hakkında sadeleşti:** ses için tek cümle; metin aşağıda.
+
+### Bitenler
+
+- **Önce denetlendi:** [frtbasbug/ekle-bakalim#16](https://github.com/frtbasbug/ekle-bakalim/pull/16)
+  main'de (`9161313`: pilot.html, üç belge, pilot-1); uzak depo `frtbasbug/ekle-bakalim`;
+  `GOOGLE_TTS_KEY` ortamda, *gıvak* deneme isteği HTTP 200 (LINEAR16).
+- **Ad ve adres:** Vite tabanı `/ekle-bakalim/` (Playwright, testler, service worker'ın ses
+  kalıbı ve PWA bildirimi: `name` ve `short_name` *Ekle Bakalım*, `id`/`start_url`/`scope`
+  `/ekle-bakalim/`). Sayfa başlıkları (oyun: *Ekle Bakalım*; *Biçim Denetimi · Ekle Bakalım*
+  ...), harita başlığı *Ekle Bakalım*, ana ekran adı, eski tarayıcı uyarısı (*Bu tarayıcı Ekle
+  Bakalım için çok eski.*), noscript, galerinin logosu, cihaz.html (kopyalanan özet de),
+  pilot.html, üç belge, README, CLAUDE.md, DESIGN.md, NEXT.md (eski oturumlardaki adresler ve
+  PR bağlantıları da; GitHub eski depo adını yönlendirir). `package.json`'un adı `ekle-bakalim`.
+  CSV'nin adı `ekle-bakalim-pilot-YYYY-AA-GG.csv`.
+- **Eski adresin temizliği** (`src/kabuk/eskiAdres.ts`; oyun ve pilot.html açılınca): kapsamı
+  `/morfemusta/` olan service worker kaydı kalkar; adı eski kapsamı taşıyan önbellekler
+  (`workbox-precache-v2-…/morfemusta/`) silinir; `morfemusta-ses`'ten eski adresin sesleri
+  silinir, yenileri kalır (önbellek yoksa açılmaz). Hata yutulur. Seslerin önbelleğinin adı
+  `src/ses/onbellek.ts`'e taşındı (pilot.html çaları yüklemesin).
+- **gıvak:** görev tablosunda pıtak → gıvak. Yeni 7 ses (*gıvak*, dört bukalemunun adayı
+  *gıvakım, gıvakim, gıvakum, gıvaküm*, *gıvağım*, *İkisi de olur: gıvakım, gıvağım.*); pıtak'ın
+  7 sesi silindi. Google'a 72 karakter gitti. 690 ses, 3.09 MB (ön bellekte 574 KB; değişmedi:
+  Uydurukçuklar'ın sesleri ön bellekte değil). Galeri ve denetim sayfası tablodan okur;
+  içeriğe bağlı testler (galeri, Sözlük, Uydurukçuklar, günlük, ilerleme, ses metinleri,
+  yaratık) ve DESIGN.md'nin örnekleri gıvak'a geçti.
+- **Hakkında** (Ayarlar), tam olarak: *Ekle Bakalım, ilkokul çocukları için kâr amacı gütmeyen
+  bir Türkçe kelime oyunudur. Reklam, satın alma ve hesap yoktur; hiçbir veri cihazdan çıkmaz.* /
+  *Sesler yapay zekâyla üretildi.* / *Emojiler: Twemoji, Twitter, Inc. ve katkıcıları (CC BY
+  4.0). Yazı tipleri: Andika ve Baloo 2 (SIL Open Font License).* / *Sürüm: pilot-1.1* /
+  *Yetişkinler için: Pilot sayfası*. Lisans adları lisansa bağlanır (creativecommons.org/licenses/by/4.0/,
+  openfontlicense.org; yeni sekmede); *Pilot sayfası* göreli `pilot.html`. Commit ve tarih
+  yalnız pilot.html'de; sesin ayrıntısı yalnız README'de.
+- **Pilot sayfası:** oyundan tek bağlantı Hakkında'dakidir (DESIGN.md ve test buna göre: oyunun
+  kaynaklarında pilot.html adresi yalnız `Ayarlar.tsx`'te bir kez). Günlük boşken düğmelerin
+  altında *Günlük boş: önce çocuk kodunu yazıp Yeni çocuk'a, sonra Oyunu aç'a dokunun.* *Paylaş*:
+  aynı CSV dosya olarak (Web Share API, `text/csv`, UTF-8 imli, noktalı virgüllü, aynı ad);
+  `share` ve dosyayı kabul eden `canShare` yoksa görünmez; günlük boşken kapalı. Paylaşım
+  kapatılırsa *Paylaşım kapatıldı.*
+- **Gözlemci yönergesi:** *Kodu veli formundaki Çocuk kodu alanına da yazın.*; gün sonunda
+  *CSV indir'e (telefonda Paylaş'a)*. Belgelerdeki adres yeni adres; üçü de tek A4.
+- **Testler:** birim (Hakkında'nın beş satırı ve bağlantıları, pilot bağlantısı; Paylaş'ın desteğe
+  göre görünmesi ve dosyanın baytları; boş günlükte yol tarifi; eski service worker ve
+  önbelleklerin temizliği; tek pilot bağlantısı) ve uçtan uca (yeni tabanla hepsi; Hakkında'dan
+  pilot.html'e gidiş, sayfada eski ad yok; Paylaş: `navigator.share` taklidiyle dosya adı,
+  türü ve indirilenle bayt bayt aynı içerik; Paylaş desteklenmeyince yok; pilot yolunda gıvak
+  görevi: yaratık, sesli modda *gıvak* ve *gıvağım* çalınır, CSV'de *gıvakım/gıvağım*, sürüm
+  pilot-1.1; eski adresin önbellekleri silinir, günlük kalır; belgelerde eski ad yok, tek A4).
+  2155 birim testi ve 135 uçtan uca test yeşil (Chromium; WebKit bulut oturumunda kurulu
+  değil, CI koşar); tür denetimi temiz. `git grep -n "AI[z]a"` boş.
+
+### Oturumda seçilen küçük ayrıntılar (kullanıcıya ayrıca sorulmadı)
+
+- **Harita başlığı ve oyunun sayfa başlığı** *Ekle Bakalım* (*Adası* yok); PWA'nın `short_name`'i
+  de *Ekle Bakalım* (12 harf, ana ekrana sığar). Bildirimin açıklaması değişmedi.
+- **Lisans bağlantıları yeni sekmede** (`target="_blank"`, `rel="noopener noreferrer"`);
+  OFL'nin adresi openfontlicense.org (SIL'in resmî sayfası).
+- **Yol tarifi** Günlük bölümünün düğmelerinin altında (CSV indir, Paylaş, Kopyala, Günlüğü sil);
+  kod girilmiş ama deneme yokken de görünür.
+- **Paylaş'ın başlığı** dosyanın adı; metin eklenmedi.
+- **Sınıf modunun dokunma hedefi ölçüsü** (`e2e/sinif.spec.ts`, en az 64 px) Hakkında'nın metin
+  içi bağlantılarını saymaz: yetişkin içindir ve cümlenin içindedir (WCAG 2.5.8'in satır içi
+  ayrığı); 1920×1080'de 45 px'tir.
+- **Eski service worker kaydının kaldırılması** uçtan uca sınanamadı: eski taban artık sunulmuyor,
+  Playwright de service worker betiğinin isteğini yakalamıyor (404). Kayıt birim testinde,
+  önbellekler uçtan uca testte.
+- **pilot-1.1** günlüğün `surum` sütununa da girer; günlüğün biçimi değişmedi (anahtar
+  `morfemusta.pilot.v1` kalır).
+
+### Açık kalanlar
+
+Oturum 12b'de eklenenler (Oturum 13 için):
+
+- **Ana ekrandaki eski uygulama:** iPhone ve iPad'de ana ekrana eklenmiş eski adres kendi
+  deposunu ve service worker'ını taşır (Safari'ninkinden ayrı); yeni adres Safari'de açılsa da
+  onu temizlemez. Eski simge açılırsa önbellekteki eski sürüm (eski adla, pilot-1) çevrim dışı
+  açılabilir. Pilot günü listesine yazıldı: eski simgeyi silin. Android'de Chrome aynı depoyu
+  paylaşır; yeni adres açılınca temizlenir.
+- **Paylaş gerçek telefonda denenmeli:** iOS Safari ve Android Chrome `text/csv` dosyasını
+  paylaşır; Firefox (Android) dosya paylaşmaz, düğme görünmez. Paylaşım hedefinin (Gmail, Drive,
+  WhatsApp) dosyanın adını ve UTF-8 imini koruduğu elle bakılmalı.
+- **Hakkında'nın lisans bağlantıları oyundan dışarı çıkar** (yeni sekmede; ana ekrandaki
+  uygulamada tarayıcıda açılır). Çocuk dokunabilir; gerekirse yalnız yazı olarak kalır.
+- **Eski adresin temizliği her açılışta çalışır** (kayıtları ve önbellek adlarını okur; ucuz).
+  Bir süre sonra (bütün cihazlar yeni adresi açtıktan sonra) kaldırılabilir.
+- Oturum 12'nin açık kalanları aşağıda.
+
+## Önceki oturum: Oturum 12 — pilot sürümü (2026-10-01)
+
 
 ### Kullanıcının kararları
 
 - **Derleme hedefi bugünkü gibi kalır** (Vite'ın varsayılanı: Safari 16.4+, Chrome 111+, Firefox
-  114+). Çok eski tarayıcıda Oturum 11'in uyarısı çıkar (*Bu tarayıcı Morfemusta için çok eski.*
+  114+). Çok eski tarayıcıda Oturum 11'in uyarısı çıkar (*Bu tarayıcı Ekle Bakalım için çok eski.*
   ve *Cihazı denetle*). Oturum 11'in "Derleme hedefi" maddesi kapandı.
 - **Pilotta denemeler yalnız cihazda, çocuk koduyla tutulur;** hiçbir şey kendiliğinden
   gönderilmez.
@@ -39,7 +145,7 @@ girer, her biri sürüm adını artırır (CLAUDE.md, 17. kural). Açık kalanla
 ### Bitenler
 
 - **Önce denetlendi:** Oturum 11'in işi main'de
-  ([frtbasbug/morfemusta#15](https://github.com/frtbasbug/morfemusta/pull/15), `109ad17`):
+  ([frtbasbug/ekle-bakalim#15](https://github.com/frtbasbug/ekle-bakalim/pull/15), `109ad17`):
   sınıf modu, cihaz.html, efektler.
 - **Sürüm** (`src/surum.ts`): *pilot-1*, kısa commit ve commit'in günü derlemede pakete girer;
   Hakkında'da ve pilot.html'de: *pilot-1 (a1b2c3d, 2026-10-01)*. CLAUDE.md'ye 17. kural: pilot
@@ -138,7 +244,7 @@ Oturum 12'de eklenenler (Oturum 13 için):
 - **Özet yalnız pilot.html'de;** gözlem formuyla eşleme (yardım sayısı) elle.
 - Önceki açık kalanlar aşağıda (Oturum 11'in bölümünde; "Derleme hedefi" kapandı).
 
-## Önceki oturum: Oturum 11 — cila (2026-10-01)
+## Daha önceki oturum: Oturum 11 — cila (2026-10-01)
 
 ### Kullanıcının kararları
 
@@ -157,7 +263,7 @@ Oturum 12'de eklenenler (Oturum 13 için):
 ### Bitenler
 
 - **Önce denetlendi:** Oturum 10b'nin işi main'de
-  ([frtbasbug/morfemusta#14](https://github.com/frtbasbug/morfemusta/pull/14), `d8c15e1`):
+  ([frtbasbug/ekle-bakalim#14](https://github.com/frtbasbug/ekle-bakalim/pull/14), `d8c15e1`):
   Callirrhoe sesleri ve `icerik/ses-sozcuk.csv`.
 - **Sınıf modu:**
   - Kayıt `oyunKaydi`'ndan (`src/oyun/ilerleme.ts`): sınıf modunda ilerleme, kartlar ve kalınan
@@ -211,7 +317,7 @@ Oturum 12'de eklenenler (Oturum 13 için):
     özeti panoya koyar (olmazsa `execCommand`, o da olmazsa metni seçtirir). Modülsüz, ES5,
     satır içi; çevrim dışı da açılır.
   - Eski tarayıcı uyarısı (`index.html`): `noModule` yoksa hemen, varsa `load`'da oyun
-    açılmamışsa *Bu tarayıcı Morfemusta için çok eski.* ve *Cihazı denetle* (cihaz.html). Beyaz
+    açılmamışsa *Bu tarayıcı Ekle Bakalım için çok eski.* ve *Cihazı denetle* (cihaz.html). Beyaz
     ekran yok. Uyarının ve cihaz.html'in ES5 olduğunu `src/kabuk/es5.test.ts` denetler.
   - Paket: Andika yalnız latin ve latin-ext alt kümeleriyle; oyunun paketine ses listesinin
     yalnız gereken alanları girer (`ses-listesi.json?oyun`: özet, sürüm, bölgeler).
@@ -461,7 +567,7 @@ Oturum 10b'de eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak):
 
 ### Bitenler
 
-- **Önce:** Oturum 9'un PR'ı ([frtbasbug/morfemusta#10](https://github.com/frtbasbug/morfemusta/pull/10))
+- **Önce:** Oturum 9'un PR'ı ([frtbasbug/ekle-bakalim#10](https://github.com/frtbasbug/ekle-bakalim/pull/10))
   kullanıcının isteğiyle birleştirildi; çalışma dalı güncel main'den kuruldu.
 - **Veri, verildiği gibi:** `icerik/emoji.csv` (22 kök) hiç değiştirilmeden kaydedildi;
   `icerik/ses-okunus.csv` başlığı kurulu, boş (`metin,okunus`). İkisi de yalnız kullanıcının
@@ -635,7 +741,7 @@ Oturum 9'da eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak):
 - **Kökte yalnız 29 küçük harf kabul ediliyor:** *kâr*, *hâlâ* gibi düzeltme işaretli
   kökler ve büyük harf şimdilik hata veriyor (motorda da sözlükte de).
 - **Gerçek telefonda doğrulama (PR birleşince):**
-  - Adres: <https://frtbasbug.github.io/morfemusta/>.
+  - Adres: <https://frtbasbug.github.io/ekle-bakalim/>.
   - Kurulum: Android Chrome'da "Uygulamayı yükle / Ana ekrana ekle"; iOS Safari'de Paylaş →
     "Ana Ekrana Ekle". Ardından uçak modunda açılış.
   - Geri tuşu: ana ekrana eklenmiş uygulamada (tam ekran) koydan ve Sözlük'ten haritaya,
@@ -656,9 +762,9 @@ Oturum 9'da eklenenler (Oturum 11 için; kullanıcıya ayrıca sorulacak):
   - Ses: iPhone Safari'de ilk dokunuştan sonra sesli mod çalıyor mu (ana ekrandaki uygulamada
     da); sessiz anahtar açıkken ne oluyor; uçak modunda Koy'un sesleri, bir kez girilmiş
     bölgenin sesleri.
-  - Denetim sayfası: <https://frtbasbug.github.io/morfemusta/denetim.html>. Karakter
-    Galerisi: <https://frtbasbug.github.io/morfemusta/galeri.html>. Ses Denetim Sayfası:
-    <https://frtbasbug.github.io/morfemusta/ses.html>.
+  - Denetim sayfası: <https://frtbasbug.github.io/ekle-bakalim/denetim.html>. Karakter
+    Galerisi: <https://frtbasbug.github.io/ekle-bakalim/galeri.html>. Ses Denetim Sayfası:
+    <https://frtbasbug.github.io/ekle-bakalim/ses.html>.
 - **Yön kilidi yok:** manifest'te `orientation` yazılı değil. Telefonda dikey kilit mi, karar
   bekliyor (sınıf modu Oturum 11'de geldi; tahtada tarayıcıda açılır, manifest'e bağlı değil).
   Yatay telefonda harita 32rem'lik çerçeveyle kaydırılarak görünür.

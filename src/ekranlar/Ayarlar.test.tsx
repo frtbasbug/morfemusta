@@ -2,7 +2,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { VARSAYILAN_AYARLAR, type Ayarlar as AyarDegerleri } from '../oyun/ilerleme.ts'
 import { SURUM_ADI, surumYazisi } from '../surum.ts'
-import Ayarlar from './Ayarlar.tsx'
+import Ayarlar, { LISANSLAR, PILOT_ADRESI } from './Ayarlar.tsx'
 import kaynak from './Ayarlar.tsx?raw'
 
 const eslesmeler = (html: string, desen: RegExp) => [...html.matchAll(desen)].map((m) => m[1])
@@ -74,24 +74,37 @@ describe('Ayarlar', () => {
     expect(kaynak).not.toMatch(/\b(?:window\.)?confirm\(/)
   })
 
-  it('Hakkında: kodun, seslerin ve emojilerin lisansı', () => {
+  it('Hakkında: sade metin; lisans adları lisansa bağlanır; sürümün yalnız adı', () => {
     const html = ayarlar()
     expect(html).toContain('>Hakkında</h2>')
-    expect(html).toContain('MIT')
-    expect(html).toContain('Chirp 3: HD')
-    expect(html).toContain('Callirrhoe')
-    expect(html).toContain('Kodun MIT lisansı ses dosyalarını kapsamaz.')
-    expect(html).not.toMatch(/dfki|Piper|BY-NC-SA/)
-    expect(html).toContain('Twemoji')
-    expect(html).toContain('CC BY 4.0')
+    const bolum = html.slice(html.indexOf('<section class="hakkinda"'))
+    const metin = bolum
+      .replace(/<\/p>/g, '\n')
+      .replace(/<[^>]+>/g, '')
+      .replace(/^Hakkında/, '')
+      .trim()
+    expect(metin.split('\n')).toEqual([
+      'Ekle Bakalım, ilkokul çocukları için kâr amacı gütmeyen bir Türkçe kelime oyunudur. Reklam, satın alma ve hesap yoktur; hiçbir veri cihazdan çıkmaz.',
+      'Sesler yapay zekâyla üretildi.',
+      'Emojiler: Twemoji, Twitter, Inc. ve katkıcıları (CC BY 4.0). Yazı tipleri: Andika ve Baloo 2 (SIL Open Font License).',
+      `Sürüm: ${SURUM_ADI}`,
+      'Yetişkinler için: Pilot sayfası',
+    ])
+    expect(SURUM_ADI).toBe('pilot-1.1')
+    expect(bolum).toContain(
+      `<a href="${LISANSLAR.ccBy}" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>`,
+    )
+    expect(bolum).toContain(
+      `<a href="${LISANSLAR.ofl}" target="_blank" rel="noopener noreferrer">SIL Open Font License</a>`,
+    )
+    expect(LISANSLAR.ccBy).toBe('https://creativecommons.org/licenses/by/4.0/')
+    // Commit ve tarih yalnız pilot.html'de; sesin ayrıntısı yalnız README'de.
+    expect(bolum).not.toContain(surumYazisi())
+    expect(bolum).not.toMatch(/Chirp|Callirrhoe|Google|MIT|Morfemusta/)
   })
 
-  it('Hakkında: sürümün adı, kısa commit ve tarih', () => {
-    const html = ayarlar()
-    expect(html).toContain('<dt>Sürüm</dt>')
-    expect(html).toContain(`<dd class="hakkinda__surum">${surumYazisi()}</dd>`)
-    expect(surumYazisi()).toMatch(
-      new RegExp(`^${SURUM_ADI} \\((?:[0-9a-f]{7}|bilinmiyor), \\d{4}-\\d{2}-\\d{2}\\)$`),
-    )
+  it('Hakkında: yetişkinler için pilot sayfasına bağlanır (göreli adres, oyunun tabanında)', () => {
+    expect(PILOT_ADRESI).toBe('pilot.html')
+    expect(ayarlar()).toContain(`<p>Yetişkinler için: <a href="${PILOT_ADRESI}">Pilot sayfası</a></p>`)
   })
 })

@@ -1,11 +1,11 @@
 // Oyunun sürümü: adı burada yazılıdır; kısa commit ve commit'in tarihi derlemede pakete girer
-// (vite.config.ts, define: __SURUM_COMMIT__, __SURUM_TARIHI__). Ayarlar'daki Hakkında'da,
-// pilot.html'de ve deneme günlüğünün her satırında (surum sütunu: yalnız ad) görünür.
+// (vite.config.ts, define: __SURUM_COMMIT__, __SURUM_TARIHI__). Adı Ayarlar'daki Hakkında'da;
+// adı, commit'i ve tarihi pilot.html'de; adı deneme günlüğünün her satırında (surum sütunu) görünür.
 //
 // Pilot sürerken main'e yalnız pilot düzeltmeleri girer; her biri sürüm adını artırır: pilot-1,
 // pilot-1.1, pilot-1.2 (CLAUDE.md, 17. kural).
 
-export const SURUM_ADI = 'pilot-1'
+export const SURUM_ADI = 'pilot-1.1'
 
 export interface Surum {
   /** Sürümün adı: pilot-1. */

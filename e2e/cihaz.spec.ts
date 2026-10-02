@@ -40,7 +40,7 @@ test.describe('Cihaz Denetimi (cihaz.html)', () => {
     await expect(page.getByRole('status')).toHaveText('Panoya kopyalandı.')
     const pano = await page.evaluate(() => navigator.clipboard.readText())
     expect(pano.split('\n').slice(0, 4)).toEqual([
-      'Morfemusta · cihaz denetimi',
+      'Ekle Bakalım · cihaz denetimi',
       expect.stringMatching(/^Tarayıcı: Chrome \d+/),
       expect.stringMatching(/^İşletim sistemi: Android \d+/),
       expect.stringMatching(/^Ekran: \d+×\d+/),
@@ -79,7 +79,7 @@ test.describe('eski tarayıcı', () => {
   test.use({ serviceWorkers: 'block' })
 
   const uyari = (sayfa: import('@playwright/test').Page) =>
-    sayfa.getByRole('alert').filter({ hasText: 'Bu tarayıcı Morfemusta için çok eski.' })
+    sayfa.getByRole('alert').filter({ hasText: 'Bu tarayıcı Ekle Bakalım için çok eski.' })
 
   test('oyun açılınca uyarı yok', async ({ page }) => {
     await page.goto('./')
