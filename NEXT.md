@@ -115,6 +115,14 @@ girer, her biri sürüm adını artırır (CLAUDE.md, 17. kural). Açık kalanla
 
 Oturum 12'de eklenenler (Oturum 13 için):
 
+- **Uzun pilot yolu WebKit'te koşmuyor** (`playwright.config.ts`, webkit projesinin
+  `grepInvert`'i; pilot.html'in testleri WebKit'te kalır). Playwright'ın WebKit'teki (iPhone 13)
+  `tap()`'i de `click()`'i de, ekranın altından taşan öğeye (Bahçe'nin 15 kartlı akşam ekranında
+  Haritaya dön) kendi kaydırmasında ara sıra takılıyor; sayfa elle olağan kayıyor. `ac58bd9`'un
+  iki CI koşusundan biri yeşil, öteki bu yüzden kırmızıydı (kullanıcının kararı: iki denemede
+  kararlı yeşil olmazsa yalnız Chromium). Oturum 13'te yeniden denenecek: Playwright sürümü ya da
+  dokunuştan önce elle kaydırma, kaydırmasız dokunuş.
+
 - **Sınıf modunda Kök Bahçesi'nde ağaç ortada ama küçük** (1920×1080'de ekran yüksekliğinin
   üçte biri kadar): büyütülsün.
 

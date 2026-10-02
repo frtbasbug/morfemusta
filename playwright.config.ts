@@ -35,6 +35,11 @@ export default defineConfig({
             name: 'webkit',
             use: { ...devices['iPhone 13'] },
             testMatch: /pilot\.spec\.ts$/,
+            // Uzun pilot yolu (dört bölge) yalnız Chromium'da: Playwright'ın WebKit'teki dokunuşu ve
+            // tıklaması, ekranın altından taşan öğeye kendi kaydırmasında ara sıra takılıyor (CI'da
+            // Bahçe'nin akşam ekranında Haritaya dön). Aynı commit bir koşuda yeşil, ötekinde
+            // kırmızıydı. pilot.html'in testleri WebKit'te kalır. NEXT.md, Oturum 13.
+            grepInvert: /pilot yolu/,
           },
         ]
       : []),

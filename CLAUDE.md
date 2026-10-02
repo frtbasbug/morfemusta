@@ -19,7 +19,8 @@ Tasarım için `DESIGN.md`, güncel durum ve sıradaki hedef için `NEXT.md` oku
   (CC BY 4.0), `public/emoji/`'dedir. İkisi de pakete gömülüdür (`DESIGN.md`, "Ses ve resim").
   Efektler (doğru, yanlış, büyü) dosya değildir: tarayıcıda Web Audio ile üretilir.
 - **Test:** Vitest 5 (birim, `node` ortamı) ve Playwright 1.56.1 (uçtan uca, Pixel 7
-  telefon profili, Chromium; `e2e/pilot.spec.ts` ayrıca iPhone 13 profiliyle WebKit'te);
+  telefon profili, Chromium; `e2e/pilot.spec.ts`'in pilot.html testleri ayrıca iPhone 13
+  profiliyle WebKit'te);
   erişilebilirlik taraması @axe-core/playwright ile.
 - **Yayın:** GitHub Actions → GitHub Pages, <https://frtbasbug.github.io/morfemusta/>.
   Vite `base` ayarı `/morfemusta/`.
@@ -495,8 +496,10 @@ DESIGN.md  NEXT.md  CLAUDE.md
 - **WebKit:** bulut oturumunda Playwright'ın indirme sunucusu kapalı olabilir; o zaman WebKit
   projesi yerelde atlanır (`playwright.config.ts` uyarı yazar), CI koşar. Sunucu açıksa
   `npx playwright install webkit && npx playwright install-deps webkit` yerelde de kurar.
-  Playwright'ın WebKit'teki `tap()`'i (iPhone profili) eyleme hazırlıkta ara sıra takılır (CI'da
-  Haritaya dön ve bukalemunlar): dokunuş `dokun()` ile yazılır (`e2e/yardimcilar.ts`; WebKit'te
+  Playwright'ın WebKit'teki `tap()`'i ve `click()`'i (iPhone profili) eyleme hazırlıkta ara sıra
+  takılır (ekranın altından taşan öğeye kendi kaydırmasında; CI'da Haritaya dön ve bukalemunlar):
+  uzun pilot yolu bu yüzden yalnız Chromium'da koşar (webkit projesinin `grepInvert`'i; Oturum
+  13'te yeniden denenecek). Dokunuş `dokun()` ile yazılır (`e2e/yardimcilar.ts`; WebKit'te
   `click()`, Chromium'da `tap()`). `actionTimeout` 15 sn: takılan eylem testin bütün süresini
   beklemez. Arka planda inen ses gezinmeyle kesilirse WebKit konsola hata yazar: pilot yolu
   `pilot.html`'e geçmeden önce seslerin inmesini ve isteklerin bitmesini bekler.
