@@ -423,8 +423,9 @@ DESIGN.md  NEXT.md  CLAUDE.md
   taşmayı, en küçük yazıyı (28 px) ve dokunma hedefini (64 px) ölçer.
 - **Ana ekran ipucu (`src/kabuk/ipucu.ts`):** iOS Safari (iPhone, iPad; Mac gibi görünen iPad
   dokunma noktasıyla ayrılır; Chrome, Firefox ve uygulama içi tarayıcılar hariç), ana ekrandan
-  açılmamışsa (`navigator.standalone`, `display-mode: standalone`), ipucu kapatılmamışsa ve
-  sınıf modu kapalıysa haritanın altında. Kapatılan ipucu kayıtta `kapananIpuclari`'dadır
+  açılmamışsa (`navigator.standalone`, `display-mode: standalone`), ipucu kapatılmamışsa, sınıf
+  modu kapalıysa ve pilotun deneme günlüğü kapalıysa (`gunlukAcikMi`: ana ekrandaki uygulamanın
+  deposu Safari'ninkinden ayrıdır) haritanın altında. Kapatılan ipucu kayıtta `kapananIpuclari`'dadır
   (sıfırlamada kalır). Uçtan uca testte iPhone kullanıcı ajanıyla sınanır.
 - **Saf görsel hesaplar:** `src/gorsel/cizim.ts`, `karo.ts`, `kilik.ts` ve `yaratik.ts` motor gibi DOM'suz derlenir
   (`tsconfig.motor.json`) ve yalnız motorun genel kapısını içe aktarır

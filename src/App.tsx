@@ -21,7 +21,7 @@ import SinifIsareti, { SinifSaglayici } from './ekranlar/SinifIsareti.tsx'
 import Uydurukcuklar from './ekranlar/Uydurukcuklar.tsx'
 import './ekranlar/Sinif.css'
 import { useIlerleme } from './kabuk/depo.ts'
-import { GunlukSaglayici } from './kabuk/gunluk.tsx'
+import { cihazdaGunlukAcik, GunlukSaglayici } from './kabuk/gunluk.tsx'
 import { ANA_EKRAN_IPUCU, anaEkranIpucuGorunsunMu, buCihaz } from './kabuk/ipucu.ts'
 import { bolgeSesleriniIndir, sus } from './ses/calar.ts'
 import { SesSaglayici } from './ses/Ses.tsx'
@@ -137,7 +137,11 @@ export default function App() {
           <AdaHaritasi
             bolgeler={haritaBolgeleri}
             onBolge={(bolge) => git({ ekran: 'bolge', kimlik: bolge.kimlik })}
-            ipucu={anaEkranIpucuGorunsunMu(buCihaz(), ilerleme) ? ANA_EKRAN_IPUCU : undefined}
+            ipucu={
+              anaEkranIpucuGorunsunMu(buCihaz(), ilerleme, cihazdaGunlukAcik())
+                ? ANA_EKRAN_IPUCU
+                : undefined
+            }
             onIpucuKapat={() => degistir((i) => ipucunuKapat(i, 'ana-ekran'))}
           />
         )}

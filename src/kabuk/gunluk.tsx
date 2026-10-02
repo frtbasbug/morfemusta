@@ -6,7 +6,13 @@
 
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
 import type { Gorev } from '../oyun/gorevler.ts'
-import { denemeSayaci, gunlukYazici, type GunlukYazici, type Secim } from '../oyun/gunluk.ts'
+import {
+  denemeSayaci,
+  gunlukAcikMi,
+  gunlukYazici,
+  type GunlukYazici,
+  type Secim,
+} from '../oyun/gunluk.ts'
 import type { Ayarlar } from '../oyun/ilerleme.ts'
 import { SURUM_ADI } from '../surum.ts'
 import { cihazDeposu } from './depo.ts'
@@ -21,6 +27,11 @@ let pencereninYazicisi: GunlukYazici | null = null
 function yazici(): GunlukYazici {
   pencereninYazicisi ??= gunlukYazici(cihazDeposu(), SURUM_ADI)
   return pencereninYazicisi
+}
+
+/** Bu cihazda pilotun deneme günlüğü açık mı (çocuk kodu var mı); ana ekran ipucu buna bakar. */
+export function cihazdaGunlukAcik(): boolean {
+  return gunlukAcikMi(cihazDeposu())
 }
 
 /** Seçimleri günlüğe yazar: ses modu ve sınıf modu ayarlardan. */

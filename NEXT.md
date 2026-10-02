@@ -14,7 +14,10 @@ girer, her biri sürüm adını artırır (CLAUDE.md, 17. kural). Açık kalanla
    iletişim bilgisi elle), her gözlemciye yönerge. Tarayıcıdan A4, ölçek %100.
 3. **Her cihazda:** şarj, ses açık, sessiz anahtar kapalı. Ayarlar'da Ses: 1–2. sınıfa Sesli mod,
    3–4. sınıfa Dokununca; Sınıf modu Kapalı. pilot.html'deki "Oyunun ayarları" satırına bakın.
-4. **Her çocuk:** pilot.html → kod (P01 ...) → Yeni çocuk → Oyunu aç. Kodu forma yazın.
+4. **Her çocuk:** pilot.html → kod (P01 ...) → Yeni çocuk → Oyunu aç. Kodu forma yazın (veli
+   formundaki "Çocuk kodu" alanına da). **iPhone ve iPad'de oyunu ana ekrandaki simgeden
+   açmayın; pilot sayfasındaki Oyunu aç'la Safari'de açın.** Ana ekrandaki uygulamanın deposu
+   Safari'ninkinden ayrıdır: denemeler pilot.html'e düşmez. Pilot sayfasını yer imlerine ekleyin.
 5. **Gün sonu:** pilot.html → CSV indir (dosya adı günü taşır), dosyayı yedekleyin; formları
    toplayın. Günlüğü sil yalnız CSV alındıktan sonra. Uyarı varsa (günlük durdu, sınıf modu açık)
    önce CSV.
@@ -96,9 +99,24 @@ girer, her biri sürüm adını artırır (CLAUDE.md, 17. kural). Açık kalanla
 - **Bulut oturumunda WebKit yok** (Playwright'ın indirme sunucusu ağ kuralında kapalı): WebKit
   testleri yalnız CI'da koştu.
 
+### Birleşmeden önce eklenenler (kullanıcının isteği; sürüm pilot-1 kaldı)
+
+- **Ana ekran ipucu günlük açıkken çıkmaz** (`anaEkranIpucuGorunsunMu`'nun üçüncü koşulu,
+  `gunlukAcikMi`): iPhone ve iPad'de ana ekrana eklenen uygulamanın deposu Safari'ninkinden
+  ayrıdır; oyun simgeden açılırsa denemeler pilot.html'e düşmezdi. Yönergeye ve yukarıdaki
+  listeye: oyunu simgeden değil, Oyunu aç'la Safari'de açın; pilot sayfasını yer imlerine ekleyin.
+- **Yönergenin giriş cümlesi:** *Bu yeni bir kelime oyunu. Sen oynarken ben not alacağım. Yanlış
+  yapmak sorun değil; oyunu deniyoruz, seni değil. İstediğin an bırakabilirsin.*
+- **Veli formu:** *Çocuk doğru eki kelimenin köküne taşır* (iki anlamlı "köküne doğru" kalktı);
+  onay geri alınırsa notlar ve deneme kaydı silinir; onay kutusunda *Çocuk kodu (gözlemci
+  doldurur)*: onay geri alınınca kayıt bu kodla bulunur.
+
 ### Açık kalanlar
 
 Oturum 12'de eklenenler (Oturum 13 için):
+
+- **Sınıf modunda Kök Bahçesi'nde ağaç ortada ama küçük** (1920×1080'de ekran yüksekliğinin
+  üçte biri kadar): büyütülsün.
 
 - **İki sekme aynı anda yazarsa** (iki oyun sekmesi) günlükte satır kaybolabilir: her yazış son
   kaydı okur, ama tarayıcılar arası localStorage eşzamanlı değil. Pilotta tek sekme.

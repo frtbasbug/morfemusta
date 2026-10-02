@@ -466,6 +466,25 @@ test.describe("iOS Safari'de ana ekran ipucu", () => {
     await expect(haritaBasligi(page)).toBeVisible()
     await expect(ipucu(page)).toHaveCount(0)
   })
+
+  test('pilotun deneme günlüğü açıkken (çocuk kodu varken) görünmez; kod silinince görünür', async ({
+    page,
+  }) => {
+    // Ana ekrandaki uygulamanın deposu Safari'ninkinden ayrıdır: denemeler pilot.html'e düşmezdi.
+    await page.goto('pilot.html')
+    await page.getByLabel('Çocuk kodu').fill('P01')
+    await page.getByRole('button', { name: 'Yeni çocuk' }).click()
+    await expect(page.locator('strong[data-cocuk]')).toHaveText('P01')
+    await page.goto('./')
+    await expect(haritaBasligi(page)).toBeVisible()
+    await expect(ipucu(page)).toHaveCount(0)
+
+    await page.goto('pilot.html')
+    await page.getByRole('button', { name: 'Kodu sil' }).click()
+    await expect(page.locator('strong[data-cocuk]')).toHaveCount(0)
+    await page.goto('./')
+    await expect(ipucu(page)).toBeVisible()
+  })
 })
 
 test('Renksiz ve Azalt yeniden yüklemeden sonra yerinde; renkler büyüden sonra da gri, hiçbir şey kıpırdamaz', async ({

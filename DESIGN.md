@@ -590,7 +590,9 @@ olması doğal duraktır ("İlkeler": kısa oturum, doğal durak).
   iPad Safari'de, oyun ana ekrandan açılmamışsa haritanın altında bir kez küçük bir ipucu
   görünür: *İlerlemen silinmesin: Paylaş → Ana Ekrana Ekle.* Yanında kapatma düğmesi (×,
   *İpucunu kapat*). Kapatılınca kayda yazılır, bir daha çıkmaz; sıfırlamada da kalır. Başka
-  tarayıcıda, ana ekrandan açılınca ve sınıf modunda görünmez.
+  tarayıcıda, ana ekrandan açılınca, sınıf modunda ve pilotun deneme günlüğü açıkken (çocuk kodu
+  varken) görünmez: ana ekrana eklenen uygulamanın deposu Safari'ninkinden ayrıdır, oyun simgeden
+  açılırsa denemeler pilot.html'e düşmez ("Pilot").
 - Sıfırlama geri alınmaz. Kayıtta bir sıfırlama kimliği var; her sıfırlamada artar. Bölge
   ekranı açılırken kimliği alır, görev bitince yazmadan önce karşılaştırır. Farklıysa ekran
   açıkken ilerleme sıfırlanmıştır: hiçbir şey yazılmaz, ekran baştan açılır.

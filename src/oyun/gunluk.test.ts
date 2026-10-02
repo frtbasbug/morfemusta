@@ -16,6 +16,7 @@ import {
   gorevBitirdiMi,
   gorevinSonBicimi,
   gunluguOku,
+  gunlukAcikMi,
   gunluguSil,
   gunlukYazici,
   koduSil,
@@ -201,7 +202,10 @@ describe('günlüğün yazılması', () => {
     const yazici = gunlukYazici(d.depo, 'pilot-1')
     expect(koduYaz(d.depo, 'P01')).toBe(true)
     expect(yazici.yaz(SECIM, baglam())).toBe('yazildi')
+    expect(gunlukAcikMi(d.depo)).toBe(true)
     expect(koduSil(d.depo)).toBe(true)
+    expect(gunlukAcikMi(d.depo)).toBe(false)
+    expect(gunlukAcikMi(null)).toBe(false)
     expect(yazici.yaz(SECIM, baglam())).toBe('kod-yok')
     const gunluk = gunluguOku(d.depo)
     expect(gunluk.cocuk).toBeNull()

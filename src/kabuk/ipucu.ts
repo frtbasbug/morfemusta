@@ -3,7 +3,9 @@
 // web uygulaması bundan muaftır. Bu yüzden iPhone ve iPad Safari'de, uygulama ana ekrandan
 // açılmamışsa haritada bir kez küçük bir ipucu görünür: "İlerlemen silinmesin: Paylaş → Ana
 // Ekrana Ekle." Kapatılınca kayda yazılır (kapananIpuclari), bir daha çıkmaz. Sınıf modunda
-// görünmez: orada ilerleme zaten kaydedilmez.
+// görünmez: orada ilerleme zaten kaydedilmez. Pilotun deneme günlüğü açıkken (çocuk kodu varken)
+// da görünmez: ana ekrana eklenen uygulamanın deposu Safari'ninkinden ayrıdır; oyun simgeden
+// açılırsa denemeler pilot.html'e düşmez (DESIGN.md, "Pilot").
 
 import { sinifModundaMi, type Ilerleme } from '../oyun/ilerleme.ts'
 
@@ -28,10 +30,15 @@ export function iosSafariMi({ kullaniciAjani: ua, dokunmaNoktasi }: Cihaz): bool
 
 /**
  * Ana ekran ipucu görünsün mü: iOS Safari'de, ana ekrandan açılmamışsa, ipucu kapatılmamışsa,
- * sınıf modu kapalıysa.
+ * sınıf modu kapalıysa ve pilotun deneme günlüğü kapalıysa.
  */
-export function anaEkranIpucuGorunsunMu(cihaz: Cihaz, ilerleme: Ilerleme): boolean {
+export function anaEkranIpucuGorunsunMu(
+  cihaz: Cihaz,
+  ilerleme: Ilerleme,
+  gunlukAcik: boolean,
+): boolean {
   return (
+    !gunlukAcik &&
     iosSafariMi(cihaz) &&
     !cihaz.anaEkranda &&
     !ilerleme.kapananIpuclari.includes('ana-ekran') &&

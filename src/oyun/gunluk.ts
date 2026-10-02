@@ -232,6 +232,11 @@ export function gunluguOku(depo: Depo | null): Gunluk {
   }
 }
 
+/** Günlük açık mı (çocuk kodu var mı). Hata atmaz; depo yoksa kapalıdır. */
+export function gunlukAcikMi(depo: Depo | null): boolean {
+  return gunluguOku(depo).cocuk !== null
+}
+
 const SES_MODLARI: readonly SesModu[] = ['kapali', 'dokununca', 'sesli']
 const METIN_ALANLARI = [
   'zaman',
