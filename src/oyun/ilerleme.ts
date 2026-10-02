@@ -22,7 +22,7 @@
 // gösterilen ve kapatılan ipuçları (eksikse hiçbiri); bilinmeyen ipucu atılır.
 // kaldigi bütün tablodaki yerdir (0'dan); turlu bölgede (Uydurukçuklar) turu da o verir: 10,
 // 2. turun başıdır. Kartın kelimesi motorun kabul ettiği biçimlerden biridir (olasiBicimler):
-// uydurma kökte çocuğun seçtiği biçim (pıtakım ya da pıtağım).
+// uydurma kökte çocuğun seçtiği biçim (gıvakım ya da gıvağım).
 // Biçim değişirse anahtar da değişir (morfemusta.v2); eski kayıt yenisine taşınır.
 
 import { ekle, olasiBicimler } from '../motor/index.ts'
@@ -394,7 +394,7 @@ const ayniKart = (a: SozlukKarti, b: SozlukKarti): boolean =>
  * Kartların ekleri verilirse kartlar onlardır, sırayla: Kök Bahçesi'nde kart yalnız gövdeden
  * düşer (çiçekçi; çiçekçiler değil). Verilmezse tek kart görevin kelimesidir.
  *
- * Kelime verilirse (Uydurukçuklar: çocuğun seçtiği pıtağım) görevin ekleriyle kurulan kart
+ * Kelime verilirse (Uydurukçuklar: çocuğun seçtiği gıvağım) görevin ekleriyle kurulan kart
  * onu saklar; motorun kabul ettiği biçimlerden biri değilse ekle'ninki yazılır.
  */
 export function gorevBitti(

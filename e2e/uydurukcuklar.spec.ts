@@ -15,13 +15,13 @@ import {
 
 // Uydurukçuklar: uydurma yaratıklarla wug görevleri. Oyun doğru biçimi motordan alır; burada
 // yalnız testlerin beklediği sonuçlar yazılıdır (1. turun on görevi, sırayla). Sınır adımı
-// olan görevlerde (pıtak, zitep) karo da seçilir: iki karo da doğrudur.
+// olan görevlerde (gıvak, zitep) karo da seçilir: iki karo da doğrudur.
 
 const GOREVLER = [
   { kok: 'fıngıl', yuzey: 'lar', kelime: 'fıngıllar' },
   { kok: 'nöfel', yuzey: 'ler', kelime: 'nöfeller' },
   { kok: 'pobul', yuzey: 'um', kelime: 'pobulum' },
-  { kok: 'pıtak', yuzey: 'ım', karo: 'jöle', kelime: 'pıtağım' },
+  { kok: 'gıvak', yuzey: 'ım', karo: 'jöle', kelime: 'gıvağım' },
   { kok: 'mömüş', yuzey: 'te', kelime: 'mömüşte' },
   { kok: 'cofar', yuzey: 'da', kelime: 'cofarda' },
   { kok: 'zolku', yuzey: 'da', kelime: 'zolkuda' },
@@ -196,20 +196,20 @@ test.describe('Uydurukçuklar', () => {
   })
 
   for (const secilen of ['jöle', 'taş'] as const) {
-    const kelime = secilen === 'jöle' ? 'pıtağım' : 'pıtakım'
-    test(`4. görevde (pıtak) ${secilen} seçilince Sözlük'te ${kelime} kartı`, async ({ page }) => {
+    const kelime = secilen === 'jöle' ? 'gıvağım' : 'gıvakım'
+    test(`4. görevde (gıvak) ${secilen} seçilince Sözlük'te ${kelime} kartı`, async ({ page }) => {
       await uydurugaGir(page, 3)
       await bukalemun(page, 'ım').tap()
       await hedef(page).tap()
       // Doğru bukalemundan sonra tezgâh: taş solda, jöle sağda.
       await secilebilir(karo(page, secilen))
-      await expect(hedef(page)).toHaveAccessibleName('pıta … ım')
+      await expect(hedef(page)).toHaveAccessibleName('gıva … ım')
       const [t, j] = [(await karo(page, 'taş').boundingBox())!, (await karo(page, 'jöle').boundingBox())!]
       expect(t.x).toBeLessThan(j.x)
       await karo(page, secilen).tap()
       await hedef(page).tap()
       await expect(sonraki(page)).toBeVisible()
-      await expect(neden(page)).toHaveText('İkisi de olur: pıtakım, pıtağım.')
+      await expect(neden(page)).toHaveText('İkisi de olur: gıvakım, gıvağım.')
       await expect(page.locator('.uyduruk__cep .sonuc-kelime__okunan')).toHaveText(kelime)
 
       await page.getByRole('button', { name: 'Harita', exact: true }).click()
@@ -278,7 +278,7 @@ test.describe('Uydurukçuklar', () => {
     await page.mouse.move(h.x + h.width / 2, h.y + h.height / 2, { steps: 12 })
     await page.mouse.up()
     await expect(sonraki(page)).toBeVisible()
-    await expect(page.locator('.uyduruk__cep .sonuc-kelime__okunan')).toHaveText('pıtağım')
+    await expect(page.locator('.uyduruk__cep .sonuc-kelime__okunan')).toHaveText('gıvağım')
   })
 
   test.describe('hareket azaltma açıkken', () => {
@@ -300,7 +300,7 @@ test.describe('Uydurukçuklar', () => {
     for (const boyut of [null, { width: 360, height: 640 }, { width: 320, height: 568 }]) {
       if (boyut) await page.setViewportSize(boyut)
       const etiket = `${boyut?.width ?? 'Pixel 7'}`
-      // pıtak: dört bukalemun ve cep; yanlış seçimin cümlesi de görünür.
+      // gıvak: dört bukalemun ve cep; yanlış seçimin cümlesi de görünür.
       await uydurugaGir(page, 3)
       const denetle = async () => {
         expect(await yatayTasma(page), etiket).toBe(0)

@@ -16,6 +16,7 @@
 //     bölgelerin sesleri bölgeye ilk girişte arka planda iner (bolgeSesleriniIndir).
 
 import { efektleriAc } from './efekt.ts'
+import { SES_ONBELLEGI } from './onbellek.ts'
 import metinler from './ses-listesi.json?oyun'
 
 export interface SesKaydi {
@@ -33,8 +34,7 @@ export const SESLER: Readonly<Record<string, SesKaydi>> = Object.fromEntries(
   ]),
 )
 
-/** Bölgeye ilk girişte inen seslerin önbelleği; service worker de oradan verir. */
-export const SES_ONBELLEGI = 'morfemusta-ses'
+export { SES_ONBELLEGI }
 
 export const sesVarMi = (metin: string): boolean => Object.hasOwn(SESLER, metin.normalize('NFC'))
 

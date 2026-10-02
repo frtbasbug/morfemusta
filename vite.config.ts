@@ -6,8 +6,8 @@ import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-// GitHub Pages'te site https://<kullanıcı>.github.io/morfemusta/ altında yayımlanır.
-const TABAN = '/morfemusta/'
+// GitHub Pages'te site https://<kullanıcı>.github.io/ekle-bakalim/ altında yayımlanır.
+const TABAN = '/ekle-bakalim/'
 
 /**
  * Sürümün commit'i ve tarihi (src/surum.ts; adı orada yazılı): derlenen commit'in kısa özeti ve
@@ -40,7 +40,7 @@ const sesListesi = JSON.parse(
 const ONCEDEN_INEN_SESLER = Object.values(sesListesi.metinler)
   .filter(({ bolgeler }) => bolgeler.includes('arayuz') || bolgeler.includes('koy'))
   .map(({ dosya, surum }) => ({ url: `ses/${dosya}`, revision: surum ?? null }))
-/** src/ses/calar.ts'teki SES_ONBELLEGI. */
+/** src/ses/onbellek.ts'teki SES_ONBELLEGI. */
 const SES_ONBELLEGI = 'morfemusta-ses'
 
 /**
@@ -112,8 +112,8 @@ export default defineConfig({
       injectRegister: 'script-defer',
       manifest: {
         id: TABAN,
-        name: 'Morfemusta Adası',
-        short_name: 'Morfemusta',
+        name: 'Ekle Bakalım',
+        short_name: 'Ekle Bakalım',
         description:
           'Kök ve ek yaratıklarıyla kelime büyüsü: ilkokul çocukları için Türkçe biçimbilim oyunu.',
         lang: 'tr',
@@ -148,7 +148,7 @@ export default defineConfig({
           {
             // İşlev değil düzenli ifade: kalıp service worker'a metin olarak kopyalanır.
             // Önceden inmeyen seslerin adresinde sürüm var (?v=…, src/ses/calar.ts).
-            urlPattern: /\/morfemusta\/ses\/.+\.mp3(\?.*)?$/,
+            urlPattern: /\/ekle-bakalim\/ses\/.+\.mp3(\?.*)?$/,
             handler: 'CacheFirst',
             options: { cacheName: SES_ONBELLEGI },
           },

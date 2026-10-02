@@ -171,12 +171,12 @@ describe('Uydurukçuklar: nedenler ve sınır', () => {
     expect(ilgiliSesler(deneme.nedenler[0])).toEqual([3, 5])
   })
 
-  it('pıtak + ım: sınır adımı, iki karo da doğru; cümle ve kurulan biçim', () => {
-    const pitak = gorev('pıtak')
-    expect(uydurukSiniri(pitak)).toMatchObject({ yer: 'gövde', tas: 'k', jole: 'ğ' })
-    expect(sinirCumlesi(pitak)).toBe('İkisi de olur: pıtakım, pıtağım.')
-    expect(kurulanBicim(pitak, uydurukSiniri(pitak), 'jöle').bicim).toBe('pıtağım')
-    expect(kurulanBicim(pitak, uydurukSiniri(pitak), 'taş').bicim).toBe('pıtakım')
+  it('gıvak + ım: sınır adımı, iki karo da doğru; cümle ve kurulan biçim', () => {
+    const givak = gorev('gıvak')
+    expect(uydurukSiniri(givak)).toMatchObject({ yer: 'gövde', tas: 'k', jole: 'ğ' })
+    expect(sinirCumlesi(givak)).toBe('İkisi de olur: gıvakım, gıvağım.')
+    expect(kurulanBicim(givak, uydurukSiniri(givak), 'jöle').bicim).toBe('gıvağım')
+    expect(kurulanBicim(givak, uydurukSiniri(givak), 'taş').bicim).toBe('gıvakım')
     // Sınır adımı yalnız p, ç, t, k ile biten kökte: pobul, mömüş ve kenek (LOC) yok.
     expect(uydurukSiniri(gorev('pobul'))).toBeNull()
     expect(uydurukSiniri(gorev('mömüş'))).toBeNull()
@@ -221,12 +221,12 @@ describe('uydurukIndirgeyici', () => {
     expect(uygula(sinirda, { tur: 'karoSec', karo: 'jöle' }).seciliKaro).toBe('jöle')
     const oturdu = uygula(sinirda, { tur: 'karoDene', karo: 'jöle' })
     expect(oturdu).toMatchObject({ evre: 'oturdu', karo: 'jöle' })
-    expect(oturdu.kurulan?.bicim).toBe('pıtağım')
+    expect(oturdu.kurulan?.bicim).toBe('gıvağım')
     const bitti = uygula(oturdu, { tur: 'buyuye' }, { tur: 'etki' }, { tur: 'bitti' })
     expect(bitti).toMatchObject({ evre: 'bitti', buyu: 'cebe girer' })
     expect(
       uygula(sinirda, { tur: 'karoDene', karo: 'taş' }).kurulan?.bicim,
-    ).toBe('pıtakım')
+    ).toBe('gıvakım')
     // Sınır adımı olmayan görevde karo eylemi durumu değiştirmez.
     const pobul = uygula(uydurukBaslangici(ilkTur, 2), { tur: 'dene', yuzey: 'um' }, { tur: 'birlesti' })
     expect(pobul.evre).toBe('buyu')

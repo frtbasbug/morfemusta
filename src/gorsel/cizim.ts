@@ -1,4 +1,4 @@
-// Morfemusta görsel dili, B · Canlı: başvuru geometrisi. Sayılar tuvaldeki çizimlerin
+// Ekle Bakalım görsel dili, B · Canlı: başvuru geometrisi. Sayılar tuvaldeki çizimlerin
 // aynısıdır; başvuru kodu TypeScript'e taşınırken hiçbir sayı ve yol değişmedi
 // (cizim.test.ts başvuru koduyla karşılaştırır).
 //

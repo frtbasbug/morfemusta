@@ -447,7 +447,7 @@ describe('görevin son seçimi', () => {
     expect(gorevinSonBicimi('dukkan', 'kitap', ['POSS.1SG'])).toBe('kitabım')
     expect(gorevinSonBicimi('bahce', 'göz', ['LIK', 'AGT', 'PL'])).toBe('gözlükçüler')
     expect(gorevinSonBicimi('uyduruk', 'fıngıl', ['PL'])).toBe('fıngıllar')
-    expect(gorevinSonBicimi('uyduruk', 'pıtak', ['POSS.1SG'])).toBe('pıtakım/pıtağım')
+    expect(gorevinSonBicimi('uyduruk', 'gıvak', ['POSS.1SG'])).toBe('gıvakım/gıvağım')
   })
 
   it('görevi yalnız son adımın doğru seçimi bitirir', () => {
@@ -460,10 +460,10 @@ describe('görevin son seçimi', () => {
       ),
     ).toBe(false)
     // Sınır adımı olan görevde bukalemunun doğrusu görevi bitirmez, karo bitirir.
-    const pitak = { bolge: 'uyduruk', kok: 'pıtak', ekler: 'POSS.1SG', gorev: 4 }
-    expect(gorevBitirdiMi(satir({ ...pitak, dogru_bicim: 'pıtakım', aday: 'pıtakım' }))).toBe(false)
+    const givak = { bolge: 'uyduruk', kok: 'gıvak', ekler: 'POSS.1SG', gorev: 4 }
+    expect(gorevBitirdiMi(satir({ ...givak, dogru_bicim: 'gıvakım', aday: 'gıvakım' }))).toBe(false)
     expect(
-      gorevBitirdiMi(satir({ ...pitak, dogru_bicim: 'pıtakım/pıtağım', secilen: 'ğ', aday: 'pıtağım' })),
+      gorevBitirdiMi(satir({ ...givak, dogru_bicim: 'gıvakım/gıvağım', secilen: 'ğ', aday: 'gıvağım' })),
     ).toBe(true)
     // Motorun kuramadığı satır sayılmaz.
     expect(gorevBitirdiMi(satir({ kok: 'X', ekler: 'YOK' }))).toBe(false)
@@ -471,13 +471,13 @@ describe('görevin son seçimi', () => {
 
   it('iki biçim de doğruysa seçim puanlanmaz', () => {
     expect(puanlanirMi(satir({}))).toBe(true)
-    expect(puanlanirMi(satir({ dogru_bicim: 'pıtakım/pıtağım' }))).toBe(false)
+    expect(puanlanirMi(satir({ dogru_bicim: 'gıvakım/gıvağım' }))).toBe(false)
   })
 })
 
 describe('çocuk başına özet', () => {
   // P01: Koy'un 1. görevinde önce yanlış (ler), sonra doğru; 10. görevin iki adımı;
-  // Uydurukçuklar'da fıngıl'da yanlış (ler) ve pıtak'ın sınır adımı (puanlanmaz);
+  // Uydurukçuklar'da fıngıl'da yanlış (ler) ve gıvak'ın sınır adımı (puanlanmaz);
   // Dükkân'da taş (GÖVDE:yumuşama), Bahçe'de meyve; Koy'un 1. görevi yeniden (bir kez sayılır).
   const SATIRLAR: DenemeSatiri[] = [
     satir({ secilen: 'ler', aday: 'atler', sonuc: 'yanlis', neden: 'PL:kalınlık' }),
@@ -491,8 +491,8 @@ describe('çocuk başına özet', () => {
     satir({ bolge: 'bahce', kok: 'çiçek', ekler: 'AGT+PL', dogru_bicim: 'çiçekçiler', secilen: 'ler', aday: 'çiçekçiler' }),
     satir({ bolge: 'uyduruk', kok: 'fıngıl', dogru_bicim: 'fıngıllar', secilen: 'ler', aday: 'fıngıller', sonuc: 'yanlis', neden: 'PL:kalınlık' }),
     satir({ bolge: 'uyduruk', kok: 'fıngıl', dogru_bicim: 'fıngıllar', aday: 'fıngıllar', deneme_no: 2 }),
-    satir({ bolge: 'uyduruk', gorev: 4, kok: 'pıtak', ekler: 'POSS.1SG', dogru_bicim: 'pıtakım', secilen: 'ım', aday: 'pıtakım' }),
-    satir({ bolge: 'uyduruk', gorev: 4, kok: 'pıtak', ekler: 'POSS.1SG', dogru_bicim: 'pıtakım/pıtağım', secilen: 'ğ', aday: 'pıtağım' }),
+    satir({ bolge: 'uyduruk', gorev: 4, kok: 'gıvak', ekler: 'POSS.1SG', dogru_bicim: 'gıvakım', secilen: 'ım', aday: 'gıvakım' }),
+    satir({ bolge: 'uyduruk', gorev: 4, kok: 'gıvak', ekler: 'POSS.1SG', dogru_bicim: 'gıvakım/gıvağım', secilen: 'ğ', aday: 'gıvağım' }),
     satir({ zaman: yerelZaman(new Date(AN.getTime() + 60_000)) }),
     // Başka bir çocuk.
     satir({ cocuk: 'P02', secilen: 'ler', aday: 'atler', sonuc: 'yanlis', neden: 'PL:kalınlık' }),
@@ -586,7 +586,7 @@ describe('CSV ve kopya', () => {
   })
 
   it('dosya adı yerel günle', () => {
-    expect(csvDosyaAdi(AN)).toBe('morfemusta-pilot-2026-10-01.csv')
+    expect(csvDosyaAdi(AN)).toBe('ekle-bakalim-pilot-2026-10-01.csv')
   })
 })
 

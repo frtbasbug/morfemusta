@@ -115,7 +115,7 @@ test.describe('Karakter Galerisi', () => {
     await page.goto(GALERI)
 
     await expect(baslik(page)).toBeVisible()
-    await expect(page).toHaveTitle('Karakter Galerisi · Morfemusta')
+    await expect(page).toHaveTitle('Karakter Galerisi · Ekle Bakalım')
     await expect(unluler(page)).toHaveCount(8)
     await expect(bukalemunlar(page)).toHaveCount(8)
     for (const karakter of [...(await unluler(page).all()), ...(await bukalemunlar(page).all())]) {
@@ -219,7 +219,7 @@ test.describe('Karakter Galerisi', () => {
 
   test('oyun galeriye bağlantı vermez', async ({ page }) => {
     await page.goto('./')
-    await expect(page.getByRole('heading', { level: 1, name: 'Morfemusta Adası' })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'Ekle Bakalım' })).toBeVisible()
     await expect(page.locator('a[href*="galeri"]')).toHaveCount(0)
     expect(await page.content()).not.toContain('galeri')
   })

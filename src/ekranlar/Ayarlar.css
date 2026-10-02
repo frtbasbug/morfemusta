@@ -176,24 +176,16 @@
   margin: 0;
 }
 
-/* Tanıtım ve liste; sınıf modunda üç sütuna akar (Sinif.css). */
+/* Metin; sınıf modunda iki sütuna akar (Sinif.css). */
 .hakkinda__metin {
   display: grid;
   gap: 0.6rem;
 }
 
-.hakkinda__liste {
-  display: grid;
-  gap: 0.3rem;
-  margin: 0;
-}
-
-.hakkinda__liste dt {
+.hakkinda a {
   color: var(--murekkep);
   font-weight: 700;
-}
-
-.hakkinda__liste dd {
-  margin: 0 0 0.4rem;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
   overflow-wrap: anywhere;
 }

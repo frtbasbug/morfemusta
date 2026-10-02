@@ -144,7 +144,7 @@ test.describe('ekran değişince', () => {
     // Bölgenin adı çalıyor (bitmiyor); kök sırada bekliyor.
     await expect.poll(() => calinanlar(page)).toEqual(['Bukalemun Koyu'])
     await page.getByRole('button', { name: 'Harita', exact: true }).tap()
-    await expect(page.getByRole('heading', { level: 1, name: 'Morfemusta Adası' })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'Ekle Bakalım' })).toBeVisible()
     await expect.poll(() => calinanlar(page)).toEqual(['Bukalemun Koyu', '⏹'])
     await page.waitForTimeout(300)
     expect(await calinanlar(page)).toEqual(['Bukalemun Koyu', '⏹'])
@@ -203,7 +203,7 @@ test.describe('Kapalı ve Dokununca', () => {
     await page.reload()
     await expect(page.getByRole('group', { name: 'Ses' }).getByRole('radio', { name: 'Sesli mod' })).toBeChecked()
     await expect(page.getByRole('heading', { name: 'Hakkında' })).toBeVisible()
-    await expect(page.locator('.hakkinda')).toContainText('Chirp 3: HD Callirrhoe')
+    await expect(page.locator('.hakkinda')).toContainText('Sesler yapay zekâyla üretildi.')
     await expect(page.locator('.hakkinda')).toContainText('Twemoji')
   })
 })

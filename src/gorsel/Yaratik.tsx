@@ -25,7 +25,7 @@ export default function Yaratik({
   boyut = 1,
   adsiz = false,
 }: {
-  /** Yaratığın adı: uydurma kök (pıtak). Ünlüsü adındaki son ünlüdür. */
+  /** Yaratığın adı: uydurma kök (gıvak). Ünlüsü adındaki son ünlüdür. */
   readonly kok: string
   /** Ölçek: 1'de 72×76 px. */
   readonly boyut?: number

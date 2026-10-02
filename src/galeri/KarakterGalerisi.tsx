@@ -48,7 +48,7 @@ export default function KarakterGalerisi() {
   return (
     <main className={renksiz ? 'galeri renksiz' : 'galeri'}>
       <header className="galeri__ust">
-        <p className="galeri__logo">Morfemusta</p>
+        <p className="galeri__logo">Ekle Bakalım</p>
         <h1 className="galeri__baslik">Karakter Galerisi</h1>
         <p className="galeri__aciklama">
           Görsel dil, B · Canlı. Her özellik tek bir çizim boyutuna bağlı: kalınlık gövdenin

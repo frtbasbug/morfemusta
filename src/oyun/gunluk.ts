@@ -79,7 +79,7 @@ export interface DenemeSatiri {
   readonly ekler: string
   /**
    * Bu seçimin doğru biçimi: zincirde adımın biçimi (toplar, sonra toplarım), Kök Bahçesi'nde
-   * sıradaki gövde. İki biçim de doğruysa (Uydurukçuklar'ın sınır adımı) / ile: pıtakım/pıtağım.
+   * sıradaki gövde. İki biçim de doğruysa (Uydurukçuklar'ın sınır adımı) / ile: gıvakım/gıvağım.
    */
   readonly dogru_bicim: string
   /** Seçilen: ekin yüzeyi (ler), ya da karonun harfi (b). */
@@ -112,7 +112,7 @@ export interface Secim {
   readonly sureMs: number
 }
 
-/** İki biçim de doğru olan seçimde doğru biçimlerin ayracı: pıtakım/pıtağım. */
+/** İki biçim de doğru olan seçimde doğru biçimlerin ayracı: gıvakım/gıvağım. */
 export const IKI_BICIM_AYRACI = '/'
 
 /** Seçimin doğru biçimleri dogru_bicim sütununda: tek biçim ya da / ile hepsi. */
@@ -428,7 +428,7 @@ export function depoDoluMu(depo: PilotDeposu | null): boolean {
 
 /**
  * Görevin son seçiminin doğru biçimi: bu biçimle biten doğru seçim görevi bitirir. Uydurukçuklar'da
- * sınır adımı varsa (pıtak + ım) son seçim karodur, iki biçim de doğrudur; değilse motorun biçimi.
+ * sınır adımı varsa (gıvak + ım) son seçim karodur, iki biçim de doğrudur; değilse motorun biçimi.
  */
 export function gorevinSonBicimi(bolge: string, kok: string, etiketler: readonly string[]): string {
   if (bolge === 'uyduruk') {
@@ -574,9 +574,9 @@ export function kopyaMetni(satirlar: readonly DenemeSatiri[]): string {
     .join('')
 }
 
-/** İndirilen dosyanın adı: morfemusta-pilot-2026-10-01.csv (yerel gün). */
+/** İndirilen dosyanın adı: ekle-bakalim-pilot-2026-10-01.csv (yerel gün). */
 export function csvDosyaAdi(an: Date): string {
-  return `morfemusta-pilot-${yerelZaman(an).slice(0, 10)}.csv`
+  return `ekle-bakalim-pilot-${yerelZaman(an).slice(0, 10)}.csv`
 }
 
 // --- Sayaç (bölge ekranları) ------------------------------------------------------------------

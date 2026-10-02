@@ -2325,6 +2325,66 @@
    "boyut": 3744,
    "surum": "f5f28438df65"
   },
+  "gıvak": {
+   "dosya": "66cb9c4f1622.mp3",
+   "okunus": "gıvak",
+   "hiz": 0.9,
+   "bolgeler": [
+    "uyduruk"
+   ],
+   "boyut": 2688,
+   "surum": "448555cd28f1"
+  },
+  "gıvakim": {
+   "dosya": "bd05d88d19e9.mp3",
+   "okunus": "gıvakim",
+   "hiz": 0.9,
+   "bolgeler": [
+    "uyduruk"
+   ],
+   "boyut": 3264,
+   "surum": "a55babda9916"
+  },
+  "gıvakum": {
+   "dosya": "7ef593e16b4f.mp3",
+   "okunus": "gıvakum",
+   "hiz": 0.9,
+   "bolgeler": [
+    "uyduruk"
+   ],
+   "boyut": 3360,
+   "surum": "f1a5bcacc455"
+  },
+  "gıvaküm": {
+   "dosya": "9fab908b7e73.mp3",
+   "okunus": "gıvaküm",
+   "hiz": 0.9,
+   "bolgeler": [
+    "uyduruk"
+   ],
+   "boyut": 3552,
+   "surum": "4a1fab182953"
+  },
+  "gıvakım": {
+   "dosya": "23497ca14848.mp3",
+   "okunus": "gıvakım",
+   "hiz": 0.9,
+   "bolgeler": [
+    "uyduruk"
+   ],
+   "boyut": 3456,
+   "surum": "a099909bb2b9"
+  },
+  "gıvağım": {
+   "dosya": "cbab302ffcca.mp3",
+   "okunus": "gıvağım",
+   "hiz": 0.9,
+   "bolgeler": [
+    "uyduruk"
+   ],
+   "boyut": 2976,
+   "surum": "c880adb9a97e"
+  },
   "i düz, ü yuvarlak. Yuvarlaklıkları uyuşmuyor.": {
    "dosya": "f9f8934daf10.mp3",
    "okunus": "i düz, ü yuvarlak. Yuvarlaklıkları uyuşmuyor.",
@@ -4285,66 +4345,6 @@
    ],
    "boyut": 3552,
    "surum": "3aa80e18153c"
-  },
-  "pıtak": {
-   "dosya": "eed19735b5d6.mp3",
-   "okunus": "pıtak",
-   "hiz": 0.9,
-   "bolgeler": [
-    "uyduruk"
-   ],
-   "boyut": 2784,
-   "surum": "aecd4ce4e017"
-  },
-  "pıtakim": {
-   "dosya": "adda486953e9.mp3",
-   "okunus": "pıtakim",
-   "hiz": 0.9,
-   "bolgeler": [
-    "uyduruk"
-   ],
-   "boyut": 3552,
-   "surum": "e4bd9fe8c800"
-  },
-  "pıtakum": {
-   "dosya": "5595d53dff5a.mp3",
-   "okunus": "pıtakum",
-   "hiz": 0.9,
-   "bolgeler": [
-    "uyduruk"
-   ],
-   "boyut": 3552,
-   "surum": "acb6c1a88bee"
-  },
-  "pıtaküm": {
-   "dosya": "7bbb29acb5a9.mp3",
-   "okunus": "pıtaküm",
-   "hiz": 0.9,
-   "bolgeler": [
-    "uyduruk"
-   ],
-   "boyut": 3168,
-   "surum": "169295a73aa5"
-  },
-  "pıtakım": {
-   "dosya": "1ff15d2a2126.mp3",
-   "okunus": "pıtakım",
-   "hiz": 0.9,
-   "bolgeler": [
-    "uyduruk"
-   ],
-   "boyut": 3360,
-   "surum": "e13c07b3a3c7"
-  },
-  "pıtağım": {
-   "dosya": "95619219d59e.mp3",
-   "okunus": "pıtağım",
-   "hiz": 0.9,
-   "bolgeler": [
-    "uyduruk"
-   ],
-   "boyut": 2880,
-   "surum": "91971605d1c0"
   },
   "r yumuşak, ekin başı da yumuşak kalır: d.": {
    "dosya": "769ddb41f4ac.mp3",
@@ -6658,6 +6658,16 @@
    "boyut": 10272,
    "surum": "17f181716764"
   },
+  "İkisi de olur: gıvakım, gıvağım.": {
+   "dosya": "54feba9139d3.mp3",
+   "okunus": "İkisi de olur: gıvakım, gıvağım.",
+   "hiz": 0.9,
+   "bolgeler": [
+    "uyduruk"
+   ],
+   "boyut": 9696,
+   "surum": "5cb32b472aca"
+  },
   "İkisi de olur: mödütüm, mödüdüm.": {
    "dosya": "e918edc015df.mp3",
    "okunus": "İkisi de olur: mödütüm, mödüdüm.",
@@ -6707,16 +6717,6 @@
    ],
    "boyut": 11136,
    "surum": "1a2a5a6f2c3a"
-  },
-  "İkisi de olur: pıtakım, pıtağım.": {
-   "dosya": "2f467897afea.mp3",
-   "okunus": "İkisi de olur: pıtakım, pıtağım.",
-   "hiz": 0.9,
-   "bolgeler": [
-    "uyduruk"
-   ],
-   "boyut": 9984,
-   "surum": "c86408579e1d"
   },
   "İkisi de olur: siletim, siledim.": {
    "dosya": "14dd1bd509fb.mp3",

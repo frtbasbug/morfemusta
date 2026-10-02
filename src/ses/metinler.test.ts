@@ -114,9 +114,9 @@ describe('sesMetinleri: oyunun söyleyebileceği her metin, bölge bölge', () =
   it('Uydurukçuklar: kaynaştırmalı ve kaynaştırmasız aday, İkisi de olur cümlesi', () => {
     const uyduruk = BOLGELER.find((b) => b.kimlik === 'uyduruk')?.gorevler ?? []
     expect(grup('uyduruk')).toEqual(
-      expect.arrayContaining(['zelü', 'zelüye', 'zelüe', 'pıtak', 'pıtakım', 'pıtağım']),
+      expect.arrayContaining(['zelü', 'zelüye', 'zelüe', 'gıvak', 'gıvakım', 'gıvağım']),
     )
-    expect(grup('uyduruk')).toContain('İkisi de olur: pıtakım, pıtağım.')
+    expect(grup('uyduruk')).toContain('İkisi de olur: gıvakım, gıvağım.')
     for (const gorev of uyduruk) {
       expect(grup('uyduruk')).toContain(gorev.kok)
       if (uydurukSiniri(gorev)) expect(grup('uyduruk')).toContain(sinirCumlesi(gorev))

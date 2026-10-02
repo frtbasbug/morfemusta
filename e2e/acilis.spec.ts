@@ -31,7 +31,7 @@ test.describe('açılış ekranı', () => {
 
     await expect(haritaBasligi(page)).toBeVisible()
     await expect(page.locator('html')).toHaveAttribute('lang', 'tr')
-    await expect(page).toHaveTitle('Morfemusta Adası')
+    await expect(page).toHaveTitle('Ekle Bakalım')
     expect(await yaziTipleriYuklendi(page)).toBe(true)
     expect(await yatayTasma(page)).toBeLessThanOrEqual(0)
 
@@ -67,18 +67,18 @@ test.describe('ana ekrana eklenebilir uygulama (PWA)', () => {
     await page.goto('./')
     await expect(page.locator('link[rel="manifest"]')).toHaveAttribute(
       'href',
-      '/morfemusta/manifest.webmanifest',
+      '/ekle-bakalim/manifest.webmanifest',
     )
 
     const yanit = await request.get('manifest.webmanifest')
     expect(yanit.ok()).toBe(true)
     const manifest = await yanit.json()
     expect(manifest).toMatchObject({
-      name: 'Morfemusta Adası',
-      short_name: 'Morfemusta',
+      name: 'Ekle Bakalım',
+      short_name: 'Ekle Bakalım',
       lang: 'tr',
-      start_url: '/morfemusta/',
-      scope: '/morfemusta/',
+      start_url: '/ekle-bakalim/',
+      scope: '/ekle-bakalim/',
       display: 'standalone',
     })
 
@@ -109,7 +109,7 @@ test.describe('ana ekrana eklenebilir uygulama (PWA)', () => {
       const kayit = await navigator.serviceWorker.ready
       return kayit.scope
     })
-    expect(new URL(kapsam).pathname).toBe('/morfemusta/')
+    expect(new URL(kapsam).pathname).toBe('/ekle-bakalim/')
     await page.waitForFunction(() => navigator.serviceWorker.controller !== null)
 
     await context.setOffline(true)

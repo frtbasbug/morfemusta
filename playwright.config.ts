@@ -4,7 +4,7 @@ import { defineConfig, devices, webkit } from '@playwright/test'
 // Uçtan uca testler derlenmiş siteyi (vite preview) GitHub Pages'teki alt yolda sınar;
 // service worker yalnız derlemede üretildiği için geliştirme sunucusu kullanılmaz.
 const PORT = 4173
-const ADRES = `http://localhost:${PORT}/morfemusta/`
+const ADRES = `http://localhost:${PORT}/ekle-bakalim/`
 
 // WebKit (iPhone ve iPad Safari'ye yakınlık): pilot yolu ve pilot.html (e2e/pilot.spec.ts). CI'da
 // her zaman koşar; yerelde tarayıcı kurulu değilse (bulut oturumunda indirilemeyebilir) atlanır.

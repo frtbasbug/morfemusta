@@ -43,7 +43,7 @@ import {
  * eklenir; ekranı olmayan bölgeye girilmez. Bölge ekranları aynı kabuğu alır: bölge, kalınan
  * görev, bugünün kartları, görev bitti ve haritaya dönüş. Görev bitince ekran kartların
  * eklerini de verebilir (Kök Bahçesi: yalnız gövde kelimeleri); vermezse kart görevin
- * kelimesidir. Kurulan kelimeyi de verebilir (Uydurukçuklar: çocuğun seçtiği pıtağım).
+ * kelimesidir. Kurulan kelimeyi de verebilir (Uydurukçuklar: çocuğun seçtiği gıvağım).
  */
 const BOLGE_EKRANLARI = {
   koy: BukalemunKoyu,

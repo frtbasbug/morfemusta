@@ -185,7 +185,7 @@ export default function AdaHaritasi({
   return (
     <main className="harita" aria-labelledby="harita-baslik">
       <h1 id="harita-baslik" className="harita__baslik" ref={baslikRef} tabIndex={-1}>
-        Morfemusta Adası
+        Ekle Bakalım
       </h1>
       <p className="harita__ileti" role="status">
         {ileti && IletiSimgesi && (

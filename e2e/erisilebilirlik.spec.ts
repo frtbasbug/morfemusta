@@ -64,7 +64,7 @@ for (const mod of ['renkli', 'renksiz', 'sinif'] as const) {
       const bulgular = []
       await page.goto('./')
       await expect(page.locator('html')).toHaveAttribute('data-sinif', mod === 'sinif' ? 'acik' : 'kapali')
-      await expect(page.getByRole('heading', { level: 1, name: 'Morfemusta Adası' })).toBeVisible()
+      await expect(page.getByRole('heading', { level: 1, name: 'Ekle Bakalım' })).toBeVisible()
       bulgular.push(...(await tara(page, 'harita')))
       // Kilitli ya da hazırlanan bölge yoksa ileti de yok; ileti olan harita için Uydurukçuklar'a
       // bakılır (Renkli ve Renksiz'de açık).
@@ -134,9 +134,9 @@ test.describe('geliştirici sayfaları', () => {
       ['ses.html', 'Ses Denetimi'],
       ['cihaz.html', 'Cihaz Denetimi'],
       ['pilot.html', 'Pilot'],
-      ['belgeler/gozlem-formu.html', 'Morfemusta pilotu · Gözlem formu'],
-      ['belgeler/veli-onay-formu.html', 'Morfemusta pilotu · Veli bilgilendirme ve onay formu'],
-      ['belgeler/gozlemci-yonergesi.html', 'Morfemusta pilotu · Gözlemci yönergesi'],
+      ['belgeler/gozlem-formu.html', 'Ekle Bakalım pilotu · Gözlem formu'],
+      ['belgeler/veli-onay-formu.html', 'Ekle Bakalım pilotu · Veli bilgilendirme ve onay formu'],
+      ['belgeler/gozlemci-yonergesi.html', 'Ekle Bakalım pilotu · Gözlemci yönergesi'],
     ] as const) {
       await page.goto(adres)
       await expect(page.getByRole('heading', { level: 1, name: baslik })).toBeVisible()

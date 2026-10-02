@@ -3,7 +3,7 @@
 // ekler (Bukalemun Koyu'ndaki birleşen ek görünümüyle: kökün son ünlüsü ve ekin ünlüsü
 // etikette, uyum etiketlerin eninden okunur), bölge ve tarih. Ekler ve biçim motordan gelir
 // (ekle); kartta kelime, kök ve ek etiketleri saklıdır. Uydurma kökte kelime çocuğun seçtiği
-// biçimdir (pıtağım ya da pıtakım); parçaları o biçimden okunur. Kökün resmi (emoji) kelimenin
+// biçimdir (gıvağım ya da gıvakım); parçaları o biçimden okunur. Kökün resmi (emoji) kelimenin
 // yanında; uydurma kökte resim yok, köşede yaratık var. Sesli modda karta dokununca kelime
 // söylenir; Dokununca'da kartın hoparlörü çalar.
 //

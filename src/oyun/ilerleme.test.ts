@@ -505,15 +505,15 @@ describe('kilit açma', () => {
 
   it('kartın kelimesi uydurma kökte çocuğun seçtiği biçimdir; kayıttan da okunur', () => {
     const uyduruk = bolgeBul('uyduruk') as Bolge
-    const pitak = uyduruk.gorevler[3] as Gorev
-    expect(pitak.kok).toBe('pıtak')
-    const jole = gorevBitti(BOS_ILERLEME, uyduruk, pitak, BUGUN, undefined, 'pıtağım')
-    const tas = gorevBitti(jole, uyduruk, pitak, BUGUN, undefined, 'pıtakım')
-    expect(tas.kartlar.map((k) => k.kelime)).toEqual(['pıtağım', 'pıtakım'])
+    const givak = uyduruk.gorevler[3] as Gorev
+    expect(givak.kok).toBe('gıvak')
+    const jole = gorevBitti(BOS_ILERLEME, uyduruk, givak, BUGUN, undefined, 'gıvağım')
+    const tas = gorevBitti(jole, uyduruk, givak, BUGUN, undefined, 'gıvakım')
+    expect(tas.kartlar.map((k) => k.kelime)).toEqual(['gıvağım', 'gıvakım'])
     expect(ilerlemeyiCoz(JSON.parse(JSON.stringify(tas))).kartlar).toEqual(tas.kartlar)
     // Motorun kabul etmediği kelime verilirse ekle'ninki yazılır; kayıttaki de atılır.
-    const yanlis = gorevBitti(BOS_ILERLEME, uyduruk, pitak, BUGUN, undefined, 'pıtabım')
-    expect(yanlis.kartlar.map((k) => k.kelime)).toEqual(['pıtakım'])
+    const yanlis = gorevBitti(BOS_ILERLEME, uyduruk, givak, BUGUN, undefined, 'pıtabım')
+    expect(yanlis.kartlar.map((k) => k.kelime)).toEqual(['gıvakım'])
     expect(
       ilerlemeyiCoz({ kartlar: [{ ...tas.kartlar[0], kelime: 'pıtabım' }] }).kartlar,
     ).toEqual([])

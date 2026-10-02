@@ -41,7 +41,7 @@ export function kokTohumu(kok: string): number {
   return h
 }
 
-/** Yaratığın ünlüsü: adındaki son ünlü (pıtak → a, zelü → ü). */
+/** Yaratığın ünlüsü: adındaki son ünlü (gıvak → a, zelü → ü). */
 export function yaratikUnlusu(kok: string): Unlu {
   const unlu = sonUnlu(kok.normalize('NFC'))
   if (unlu === undefined) throw new Error(`"${kok}" kökünde ünlü yok`)

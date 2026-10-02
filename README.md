@@ -1,17 +1,20 @@
-# Morfemusta
+# Ekle Bakalım
 
-İlkokul çocukları için kâr amacı gütmeyen bir Türkçe biçimbilim oyunu. Çocuk kök ve ek
+İlkokul çocukları için kâr amacı gütmeyen bir Türkçe kelime oyunu. Çocuk kök ve ek
 yaratıklarını birleştirir; kurduğu kelime adadaki dünyayı değiştirir.
 
-- Oyun: <https://frtbasbug.github.io/morfemusta/> (telefonda ana ekrana eklenebilir,
+Eski adı: Morfemusta.
+
+- Oyun: <https://frtbasbug.github.io/ekle-bakalim/> (telefonda ana ekrana eklenebilir,
   çevrim dışı çalışır)
-- Sınıf modu (etkileşimli tahta): <https://frtbasbug.github.io/morfemusta/?sinif=1>. Bütün
+- Sınıf modu (etkileşimli tahta): <https://frtbasbug.github.io/ekle-bakalim/?sinif=1>. Bütün
   bölgeler açıktır, ilerleme kaydedilmez; Ayarlar'dan ya da `?sinif=0` ile kapanır.
-- Cihaz Denetimi: <https://frtbasbug.github.io/morfemusta/cihaz.html> (tarayıcının sürümü ve
+- Cihaz Denetimi: <https://frtbasbug.github.io/ekle-bakalim/cihaz.html> (tarayıcının sürümü ve
   oyunun dayandığı özellikler; eski cihazda oyun açılmazsa)
-- Pilot sayfası (yetişkin için): <https://frtbasbug.github.io/morfemusta/pilot.html>. Çocuk
-  kodu, deneme günlüğünün özeti ve CSV'si, yazdırılacak üç belge (gözlem formu, veli
-  bilgilendirme ve onay formu, gözlemci yönergesi).
+- Pilot sayfası (yetişkin için): <https://frtbasbug.github.io/ekle-bakalim/pilot.html>; oyunda
+  Ayarlar → Hakkında → *Yetişkinler için: Pilot sayfası*. Çocuk kodu, deneme günlüğünün özeti
+  ve CSV'si, yazdırılacak üç belge (gözlem formu, veli bilgilendirme ve onay formu, gözlemci
+  yönergesi).
 - Tasarım: [DESIGN.md](DESIGN.md)
 - Geliştirme: [CLAUDE.md](CLAUDE.md) (yığın, komutlar, kurallar)
 - Durum: [NEXT.md](NEXT.md)
@@ -26,7 +29,7 @@ sınıf modunda hiçbir şey kaydedilmez.
 
 ```sh
 npm install
-npm run dev        # http://localhost:5173/morfemusta/
+npm run dev        # http://localhost:5173/ekle-bakalim/
 npm test           # birim testleri
 npm run test:e2e   # telefon boyutunda uçtan uca testler
 ```

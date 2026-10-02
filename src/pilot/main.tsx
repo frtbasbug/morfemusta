@@ -1,4 +1,4 @@
-// Pilot sayfasının giriş noktası (pilot.html). Oyundan bağlantı almaz; adresle açılır.
+// Pilot sayfasının giriş noktası (pilot.html). Oyundan tek bağlantısı Hakkında'dadır.
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import '@fontsource/andika/latin-400.css'
@@ -10,6 +10,7 @@ import '@fontsource/baloo-2/latin-ext-800.css'
 import '../gorsel/tema.css'
 import '../genel.css'
 import './pilot.css'
+import { tarayicidaEskiAdresiTemizle } from '../kabuk/eskiAdres.ts'
 import PilotSayfasi from './PilotSayfasi.tsx'
 
 const kok = document.getElementById('kok')
@@ -20,3 +21,6 @@ createRoot(kok).render(
     <PilotSayfasi />
   </StrictMode>,
 )
+
+// Eski adresin (/morfemusta/) service worker'ı ve önbelleği kalkar; günlük yerinde kalır.
+tarayicidaEskiAdresiTemizle()

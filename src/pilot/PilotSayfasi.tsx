@@ -1,12 +1,13 @@
-// Pilot sayfası (pilot.html; DESIGN.md, "Pilot"): yetişkin içindir, oyundan bağlantı almaz,
-// adresle açılır, arama motorlarına kapalıdır. Deneme günlüğü (src/oyun/gunluk.ts) yalnız bu
+// Pilot sayfası (pilot.html; DESIGN.md, "Pilot"): yetişkin içindir; oyundan tek bağlantısı
+// Ayarlar'daki Hakkında'dadır (Yetişkinler için: Pilot sayfası), arama motorlarına kapalıdır. Deneme günlüğü (src/oyun/gunluk.ts) yalnız bu
 // cihazdadır; hiçbir şey kendiliğinden gönderilmez: yetişkin CSV'yi elle indirir ya da kopyalar.
 //
 //   Çocuk     kod alanı ve Yeni çocuk (kodu yazar, günlük açılır; oyunun ilerlemesi, kartları
 //             ve kalınan yeri sıfırlanır, ayarlar ve günlük kalır); Kodu sil (günlük kapanır)
 //   Özet      çocuk başına: bölge başına biten görev, ilk denemede doğru oranı, en sık üç neden
-//   Günlük    CSV indir (UTF-8 imli, noktalı virgüllü: Türkçe Excel), Kopyala (sekmeli),
-//             Günlüğü sil (iki adım: Vazgeç / Sil; odak önce Vazgeç'te)
+//   Günlük    CSV indir (UTF-8 imli, noktalı virgüllü: Türkçe Excel), Paylaş (aynı CSV, dosya
+//             olarak; Web Share API, desteklemeyen tarayıcıda görünmez), Kopyala (sekmeli),
+//             Günlüğü sil (iki adım: Vazgeç / Sil; odak önce Vazgeç'te); günlük boşken yol tarifi
 //   Belgeler  gözlem formu, veli bilgilendirme ve onay formu, gözlemci yönergesi (A4, yazdırılır)
 //
 // Depo dolup günlük durduysa, sınıf modu açıksa ya da kayıt okunamıyorsa sayfanın başında söylenir.
@@ -98,6 +99,33 @@ async function panoyaYaz(metin: string): Promise<boolean> {
   }
 }
 
+/** Paylaşılacak CSV dosyası: indirilenle aynı metin (UTF-8 imli, noktalı virgüllü) ve ad. */
+export const csvDosyasi = (metin: string, ad: string): File =>
+  new File([metin], ad, { type: 'text/csv' })
+
+/** Web Share API'nin dosya paylaşan kısmı (navigator'ın bu sayfanın kullandığı alanları). */
+export interface Paylasici {
+  readonly share?: (veri: ShareData) => Promise<void>
+  readonly canShare?: (veri?: ShareData) => boolean
+}
+
+/**
+ * Tarayıcı CSV dosyasını paylaşabilir mi (telefonda Paylaş: e-posta, mesaj, Drive)? share ve
+ * canShare olmalı, canShare bir CSV dosyasını kabul etmeli. Desteklemeyen tarayıcıda Paylaş
+ * görünmez; CSV indir ve Kopyala kalır.
+ */
+export function dosyaPaylasilabilirMi(paylasici: Paylasici | undefined): boolean {
+  if (typeof paylasici?.share !== 'function' || typeof paylasici.canShare !== 'function') return false
+  try {
+    return paylasici.canShare({ files: [csvDosyasi('', 'deneme.csv')] })
+  } catch {
+    return false
+  }
+}
+
+const tarayicininPaylasicisi = (): Paylasici | undefined =>
+  typeof navigator === 'undefined' ? undefined : navigator
+
 /** CSV'yi indirir: UTF-8 imli metin, dosya adında yerel gün. */
 function indir(metin: string, ad: string) {
   const adres = URL.createObjectURL(new Blob([metin], { type: 'text/csv;charset=utf-8' }))
@@ -111,8 +139,17 @@ function indir(metin: string, ad: string) {
   setTimeout(() => URL.revokeObjectURL(adres), 10_000)
 }
 
-export default function PilotSayfasi({ depo: verilenDepo }: { readonly depo?: PilotDeposu | null }) {
+export default function PilotSayfasi({
+  depo: verilenDepo,
+  paylasici: verilenPaylasici,
+}: {
+  readonly depo?: PilotDeposu | null
+  /** Web Share API; verilmezse tarayıcınınki (navigator). */
+  readonly paylasici?: Paylasici
+}) {
   const [depo] = useState(() => (verilenDepo === undefined ? tarayicininDeposu() : verilenDepo))
+  const [paylasici] = useState(() => verilenPaylasici ?? tarayicininPaylasicisi())
+  const [paylasilabilir] = useState(() => dosyaPaylasilabilirMi(paylasici))
   const [durum, setDurum] = useState(() => durumuOku(depo))
   const [kod, setKod] = useState('')
   const [kodHatasi, setKodHatasi] = useState('')
@@ -208,6 +245,21 @@ export default function PilotSayfasi({ depo: verilenDepo }: { readonly depo?: Pi
   function csvIndir() {
     indir(csvMetni(satirlar), csvDosyaAdi(new Date()))
     setIleti(`${satirlar.length} deneme CSV olarak indirildi.`)
+  }
+
+  async function paylas() {
+    const dosya = csvDosyasi(csvMetni(satirlar), csvDosyaAdi(new Date()))
+    try {
+      await paylasici?.share?.({ files: [dosya], title: dosya.name })
+      setIleti(`${satirlar.length} deneme CSV olarak paylaşıldı.`)
+    } catch (hata) {
+      // Paylaşım penceresi kapatıldıysa (AbortError) bir şey olmadı.
+      setIleti(
+        hata instanceof Error && hata.name === 'AbortError'
+          ? 'Paylaşım kapatıldı.'
+          : "Paylaşılamadı: CSV indir'i ya da Kopyala'yı deneyin.",
+      )
+    }
   }
 
   async function kopyala() {
@@ -382,6 +434,16 @@ export default function PilotSayfasi({ depo: verilenDepo }: { readonly depo?: Pi
           >
             CSV indir
           </button>
+          {paylasilabilir && (
+            <button
+              type="button"
+              className="pilot__dugme"
+              onClick={() => void paylas()}
+              disabled={satirlar.length === 0}
+            >
+              Paylaş
+            </button>
+          )}
           <button
             type="button"
             className="pilot__dugme"
@@ -402,6 +464,11 @@ export default function PilotSayfasi({ depo: verilenDepo }: { readonly depo?: Pi
             </button>
           )}
         </div>
+        {satirlar.length === 0 && (
+          <p className="pilot__aciklama" data-yol-tarifi="">
+            Günlük boş: önce çocuk kodunu yazıp Yeni çocuk'a, sonra Oyunu aç'a dokunun.
+          </p>
+        )}
         {soruluyor && (
           <div className="pilot__soru" role="group" aria-labelledby="pilot-sil-uyari">
             <p id="pilot-sil-uyari">
@@ -435,7 +502,8 @@ export default function PilotSayfasi({ depo: verilenDepo }: { readonly depo?: Pi
           />
         )}
         <p className="pilot__aciklama">
-          CSV: UTF-8, noktalı virgülle ayrılmış (Türkçe Excel doğrudan açar). Kopyala: sekmeyle
+          CSV: UTF-8, noktalı virgülle ayrılmış (Türkçe Excel doğrudan açar). Paylaş: aynı CSV,
+          dosya olarak (telefonda e-posta ya da mesajla gönderilir). Kopyala: sekmeyle
           ayrılmış; tabloya yapıştırılınca her alan bir hücreye düşer.
         </p>
       </section>

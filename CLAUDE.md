@@ -1,4 +1,4 @@
-# Morfemusta — çalışma kılavuzu
+# Ekle Bakalım — çalışma kılavuzu
 
 İlkokul çocukları (1–4. sınıf) için kâr amacı gütmeyen bir Türkçe biçimbilim oyunu.
 Tasarım için `DESIGN.md`, güncel durum ve sıradaki hedef için `NEXT.md` okunur.
@@ -22,16 +22,19 @@ Tasarım için `DESIGN.md`, güncel durum ve sıradaki hedef için `NEXT.md` oku
   telefon profili, Chromium; `e2e/pilot.spec.ts`'in pilot.html testleri ayrıca iPhone 13
   profiliyle WebKit'te);
   erişilebilirlik taraması @axe-core/playwright ile.
-- **Yayın:** GitHub Actions → GitHub Pages, <https://frtbasbug.github.io/morfemusta/>.
-  Vite `base` ayarı `/morfemusta/`.
+- **Yayın:** GitHub Actions → GitHub Pages, <https://frtbasbug.github.io/ekle-bakalim/>.
+  Vite `base` ayarı `/ekle-bakalim/`. Eski adres `/morfemusta/` (pilot-1.1'de ad ve adres
+  değişti; eski adres çalışmaz, yönlendirme yok; eski ad yalnız README'de anılır). İç adlar eski adı taşır ve
+  değişmez: localStorage anahtarları (`morfemusta.*`), seslerin önbelleği (`morfemusta-ses`),
+  koddaki adlar.
 
 ## Komutlar
 
 | Komut | İş |
 |-------|----|
-| `npm run dev` | Geliştirme sunucusu: <http://localhost:5173/morfemusta/> (service worker yok) |
+| `npm run dev` | Geliştirme sunucusu: <http://localhost:5173/ekle-bakalim/> (service worker yok) |
 | `npm run build` | `dist/` altına derler; service worker ve manifest burada üretilir |
-| `npm run preview` | Derlenmiş siteyi sunar: <http://localhost:4173/morfemusta/> |
+| `npm run preview` | Derlenmiş siteyi sunar: <http://localhost:4173/ekle-bakalim/> |
 | `npm run typecheck` | Uygulama, araç kodu ve motorun tür denetimi (motor DOM'suz derlenir) |
 | `npm test` | Vitest birim testleri |
 | `npm run test:e2e` | Playwright: siteyi derler, önizler, telefon boyutunda sınar (pilot testleri WebKit'te de; WebKit kurulu değilse yerelde atlanır, CI koşar) |
@@ -43,13 +46,14 @@ Tasarım için `DESIGN.md`, güncel durum ve sıradaki hedef için `NEXT.md` oku
 | `NODE_USE_ENV_PROXY=1 node scripts/emoji-indir.mjs` | `icerik/emoji.csv`'deki emojilerin Twemoji SVG'lerini `public/emoji/`'ye indirir |
 | `node scripts/uydurma-uret.mjs --tohum 7 --sayi 30` | Uydurma kök adayları: `uydurma-adaylari.tsv` (zeyrek gerekir; `--zeyreksiz` ile onsuz) |
 
-Biçim Denetim Sayfası: <http://localhost:5173/morfemusta/denetim.html> (yayında
-`/morfemusta/denetim.html`). Karakter Galerisi: <http://localhost:5173/morfemusta/galeri.html>
-(yayında `/morfemusta/galeri.html`). Ses Denetim Sayfası: <http://localhost:5173/morfemusta/ses.html>
-(yayında `/morfemusta/ses.html`). Cihaz Denetimi: <http://localhost:5173/morfemusta/cihaz.html>
-(yayında `/morfemusta/cihaz.html`). Pilot sayfası: <http://localhost:5173/morfemusta/pilot.html>
-(yayında `/morfemusta/pilot.html`); üç belgesi `belgeler/*.html`. Oyun ilk üçüne ve pilot
-sayfasına bağlantı vermez; Cihaz Denetimi'ne yalnız eski tarayıcı uyarısından bağlanır. Sınıf modu adresle de açılır: `?sinif=1` (kapatır: `?sinif=0`).
+Biçim Denetim Sayfası: <http://localhost:5173/ekle-bakalim/denetim.html> (yayında
+`/ekle-bakalim/denetim.html`). Karakter Galerisi: <http://localhost:5173/ekle-bakalim/galeri.html>
+(yayında `/ekle-bakalim/galeri.html`). Ses Denetim Sayfası: <http://localhost:5173/ekle-bakalim/ses.html>
+(yayında `/ekle-bakalim/ses.html`). Cihaz Denetimi: <http://localhost:5173/ekle-bakalim/cihaz.html>
+(yayında `/ekle-bakalim/cihaz.html`). Pilot sayfası: <http://localhost:5173/ekle-bakalim/pilot.html>
+(yayında `/ekle-bakalim/pilot.html`); üç belgesi `belgeler/*.html`. Oyun ilk üçüne bağlantı
+vermez; pilot sayfasına yalnız Ayarlar'daki Hakkında'dan (*Yetişkinler için: Pilot sayfası*),
+Cihaz Denetimi'ne yalnız eski tarayıcı uyarısından bağlanır. Sınıf modu adresle de açılır: `?sinif=1` (kapatır: `?sinif=0`).
 
 Oturumu kapatmadan önce: `npm run typecheck && npm test && npm run test:e2e`.
 
@@ -119,7 +123,7 @@ denetim.html         Biçim Denetim Sayfası (ayrı giriş sayfası)
 galeri.html          Karakter Galerisi (ayrı giriş sayfası)
 ses.html             Ses Denetim Sayfası (ayrı giriş sayfası)
 cihaz.html           Cihaz Denetimi (ayrı giriş sayfası; modülsüz, ES5, satır içi)
-pilot.html           pilot sayfası (ayrı giriş sayfası; yetişkin için, adresle açılır)
+pilot.html           pilot sayfası (ayrı giriş sayfası; yetişkin için; oyunda yalnız Hakkında'dan)
 belgeler/            pilotun üç yazdırılabilir belgesi (gozlem-formu.html, veli-onay-formu.html,
                      gozlemci-yonergesi.html; ayrı giriş sayfaları)
 DESIGN.md  NEXT.md  CLAUDE.md
@@ -198,7 +202,7 @@ DESIGN.md  NEXT.md  CLAUDE.md
     silinmez, eklenmez. Bir satır yanlış görünürse iş durur ve kullanıcıya sorulur.
 
 17. **Pilot sürerken main'e yalnız pilot düzeltmeleri girer** ve her biri sürüm adını artırır
-    (`src/surum.ts`: pilot-1 → pilot-1.1 → pilot-1.2). Yeni özellik pilot bitene kadar beklemeye
+    (`src/surum.ts`: pilot-1 → pilot-1.1 → pilot-1.2; şimdi pilot-1.1). Yeni özellik pilot bitene kadar beklemeye
     alınır (NEXT.md'ye yazılır). Pilotun deneme günlüğü yalnız cihazda kalır: hiçbir şey
     kendiliğinden gönderilmez (6. ve 14. kural); günlüğün biçimi değişirse anahtarı da değişir
     (`morfemusta.pilot.v2`).
@@ -212,7 +216,7 @@ DESIGN.md  NEXT.md  CLAUDE.md
 
 ## Teknik notlar ve tuzaklar
 
-- **Alt yol:** Site `/morfemusta/` altında çalışır. `public/` dosyalarına kodda
+- **Alt yol:** Site `/ekle-bakalim/` altında çalışır. `public/` dosyalarına kodda
   `import.meta.env.BASE_URL` ile başvurulur; `/` ile başlayan mutlak yol yazılmaz
   (`index.html`'dekileri Vite kendisi dönüştürür).
 - **Service worker yalnız derlemede vardır.** PWA davranışını `npm run test:e2e` ya da
@@ -421,7 +425,8 @@ DESIGN.md  NEXT.md  CLAUDE.md
   `max(16px, min(1.4584vw, 2.5926vh))` (1920×1080'de 28 px); piksel boylu çizimler
   (karakterler.css'teki ağaç, karo, harita işaretleri) `calc(N * var(--birim))` ile yazılır:
   `--birim` olağanda 1px, sınıf modunda 0.0625rem. `e2e/sinif.spec.ts` 1920×1080 ve 1366×768'de
-  taşmayı, en küçük yazıyı (28 px) ve dokunma hedefini (64 px) ölçer.
+  taşmayı, en küçük yazıyı (28 px) ve dokunma hedefini (64 px) ölçer (Hakkında'nın metin içi
+  bağlantıları hariç: yetişkin içindir, WCAG 2.5.8'in satır içi ayrığı).
 - **Ana ekran ipucu (`src/kabuk/ipucu.ts`):** iOS Safari (iPhone, iPad; Mac gibi görünen iPad
   dokunma noktasıyla ayrılır; Chrome, Firefox ve uygulama içi tarayıcılar hariç), ana ekrandan
   açılmamışsa (`navigator.standalone`, `display-mode: standalone`), ipucu kapatılmamışsa, sınıf
@@ -484,8 +489,19 @@ DESIGN.md  NEXT.md  CLAUDE.md
   adımında `dogru_bicim` iki biçimdir (`gorevinSonBicimi`, / ile); özette o seçim orana girmez.
 - **pilot.html (`src/pilot/`):** yetişkin aracı; oyunun belirteçlerini kullanır. Yeni çocuk
   `yeniCocuk` (kod, sonra `pencereKaydi(depo).degistir(ilerlemeyiSifirla)`). CSV noktalı
-  virgüllü ve UTF-8 imli (Türkçe Excel), kopya sekmeli. Oyunun kaynakları pilot.html'e adres
-  olarak başvuramaz (`PilotSayfasi.test.tsx` tarar).
+  virgüllü ve UTF-8 imli (Türkçe Excel), kopya sekmeli; dosya adı
+  `ekle-bakalim-pilot-YYYY-AA-GG.csv`. Paylaş aynı CSV'yi dosya olarak Web Share API'yle
+  paylaşır (`dosyaPaylasilabilirMi`: `share` ve dosyayı kabul eden `canShare`; yoksa düğme
+  görünmez). Günlük boşken düğmelerin yanında yol tarifi. Oyunun kaynakları pilot.html'e adres
+  olarak yalnız bir kez başvurur: Hakkında'daki göreli `pilot.html` (`PILOT_ADRESI`,
+  `PilotSayfasi.test.tsx` tarar).
+- **Eski adresin temizliği (`src/kabuk/eskiAdres.ts`):** oyun ve pilot.html açılınca kapsamı
+  `/morfemusta/` olan service worker kaydı kalkar, adı eski kapsamı taşıyan önbellekler
+  (Workbox'ın ön belleği) silinir, `morfemusta-ses`'ten eski adresin sesleri silinir (önbellek
+  yoksa açılmaz). Origin aynı: ilerleme ve günlük yerinde kalır. Seslerin önbelleğinin adı
+  `src/ses/onbellek.ts`'te (çaları yüklemeden). Uçtan uca testte eski adreste service worker
+  kurulamaz (betiği 404; Playwright service worker betiğinin isteğini yakalamaz): kayıt birim
+  testinde, önbellekler `e2e/cevrimdisi.spec.ts`'te.
 - **Belgeler (`belgeler/*.html`, `src/belgeler/belge.css`):** betiksiz HTML girişleri; çizgiler
   kenarlıktır (arka plan değil: tarayıcı arka planı yazdırmasa da çıkar). Tek sayfa olduğunu
   `e2e/belgeler.spec.ts` `page.pdf` ile ölçer (yalnız Chromium).

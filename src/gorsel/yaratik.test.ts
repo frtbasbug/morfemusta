@@ -8,7 +8,7 @@ import {
   yaratikUnlusu,
 } from './yaratik.ts'
 
-const KOKLER = ['fıngıl', 'nöfel', 'pobul', 'pıtak', 'mömüş', 'cofar', 'zolku', 'zelü', 'kıbı', 'zitep']
+const KOKLER = ['fıngıl', 'nöfel', 'pobul', 'gıvak', 'mömüş', 'cofar', 'zolku', 'zelü', 'kıbı', 'zitep']
 const UNLU_LISTESI = Object.keys(UNLULER) as Unlu[]
 
 /** Nokta ünlü gövdesinin içinde mi (düzde köşeler için elipsten daha geniş kutu). */
@@ -23,14 +23,14 @@ function govdeninIcinde(unlu: Unlu, x: number, y: number, r: number): boolean {
 
 describe('yaratığın süsleri', () => {
   it('yaratığın ünlüsü adındaki son ünlüdür', () => {
-    expect(yaratikUnlusu('pıtak')).toBe('a')
+    expect(yaratikUnlusu('gıvak')).toBe('a')
     expect(yaratikUnlusu('zelü')).toBe('ü')
     expect(() => yaratikUnlusu('prr')).toThrow()
   })
 
   it('aynı kök hep aynı süsleri alır; farklı kökler farklı süsler alabilir', () => {
-    expect(kokTohumu('pıtak')).toBe(kokTohumu('pıtak'))
-    expect(yaratikSusleri('pıtak', UNLULER.a)).toEqual(yaratikSusleri('pıtak', UNLULER.a))
+    expect(kokTohumu('gıvak')).toBe(kokTohumu('gıvak'))
+    expect(yaratikSusleri('gıvak', UNLULER.a)).toEqual(yaratikSusleri('gıvak', UNLULER.a))
     const turler = new Set(KOKLER.map((k) => yaratikSusleri(k, UNLULER.a).boynuz))
     expect(turler.size).toBeGreaterThan(1)
   })
