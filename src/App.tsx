@@ -18,6 +18,7 @@ import FistikciSahap from './ekranlar/FistikciSahap.tsx'
 import KokBahcesi from './ekranlar/KokBahcesi.tsx'
 import Sozluk from './ekranlar/Sozluk.tsx'
 import SinifIsareti, { SinifSaglayici } from './ekranlar/SinifIsareti.tsx'
+import { AkisSaglayici } from './ekranlar/akis.tsx'
 import Uydurukcuklar from './ekranlar/Uydurukcuklar.tsx'
 import './ekranlar/Sinif.css'
 import { useIlerleme } from './kabuk/depo.ts'
@@ -31,12 +32,19 @@ import {
   bolgeDurumlari,
   bugununKartlari,
   ekrandaGorevBitti,
+  ekrandaPuanYaz,
+  elKapaliMi,
+  eliKapat,
+  gecerliGecis,
   ilerlemeyiSifirla,
   ipucunuKapat,
   kaldigiGorev,
   sozlukGruplari,
+  turunPuani,
   type Ayarlar as AyarDegerleri,
 } from './oyun/ilerleme.ts'
+import type { Gorev } from './oyun/gorevler.ts'
+import type { TurPuani } from './oyun/puan.ts'
 
 /**
  * Ekranı yazılmış bölgeler, kimlikleriyle. Yeni bölgenin ekranı kendi oturumunda buraya
@@ -109,9 +117,22 @@ export default function App() {
     //     kaydın kimliği anahtara girer ve ekran baştan açılır. Sıfırlama geri alınmaz.
     // Bu pencerenin kendi görevi ve ayar değişikliği ekranı kesmez. Sınıf modu açılıp kapanınca
     // (başka pencereden) ilerlemenin kaynağı değişir: mod da anahtardadır.
+    // Akış (src/ekranlar/akis.tsx): geçiş ayarı, süren turun puanı ve ilk dakika eli. Puan ve
+    // kapanan el, görev gibi, ekranın sıfırlama kimliğiyle yazılır.
     const { sifirlama } = ilerleme
+    const kimlik = girilen.kimlik
+    const akis = {
+      gecis: gecerliGecis(ilerleme.ayarlar),
+      baslangicPuani: turunPuani(ilerleme, girilen),
+      elKapali: elKapaliMi(ilerleme, kimlik),
+      onPuan: (gorev: Gorev, puan: TurPuani) =>
+        degistir((i) => ekrandaPuanYaz(i, girilen, gorev, puan, sifirlama)),
+      onElKapandi: () =>
+        degistir((i) => (i.sifirlama === sifirlama ? eliKapat(i, kimlik) : i)),
+    }
     return (
       <Baglam ayarlar={ilerleme.ayarlar}>
+        <AkisSaglayici deger={akis}>
         <BolgeEkrani
           key={`${sinif}:${girilen.kimlik}:${sifirlama}:${disSurumler[girilen.kimlik] ?? 0}`}
           bolge={girilen}
@@ -124,6 +145,7 @@ export default function App() {
           }
           onHarita={() => git(HARITA)}
         />
+        </AkisSaglayici>
       </Baglam>
     )
   }

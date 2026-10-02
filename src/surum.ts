@@ -3,9 +3,10 @@
 // adı, commit'i ve tarihi pilot.html'de; adı deneme günlüğünün her satırında (surum sütunu) görünür.
 //
 // Pilot sürerken main'e yalnız pilot düzeltmeleri girer; her biri sürüm adını artırır: pilot-1,
-// pilot-1.1, pilot-1.2 (CLAUDE.md, 17. kural).
+// pilot-1.1, pilot-1.2 (CLAUDE.md, 17. kural). Oturum 13'ün akışı ve puanı (oyun testinden önce,
+// kullanıcının kararı) pilot-2'dir.
 
-export const SURUM_ADI = 'pilot-1.1'
+export const SURUM_ADI = 'pilot-2'
 
 export interface Surum {
   /** Sürümün adı: pilot-1. */

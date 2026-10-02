@@ -34,6 +34,8 @@ import {
 } from './gunluk.ts'
 import {
   ANAHTAR,
+  ekrandaPuanYaz,
+  eliKapat,
   gorevBitti,
   ilerlemeyiYukle,
   ipucunuKapat,
@@ -360,7 +362,17 @@ describe('Yeni çocuk', () => {
     kayit1.degistir((i) =>
       ipucunuKapat(
         ayarlariDegistir(
-          KOY.gorevler.slice(0, 3).reduce((x, g) => gorevBitti(x, KOY, g, AN), i),
+          // Üç görev, turun puanı, ilk dakika eli kapalı.
+          eliKapat(
+            ekrandaPuanYaz(
+              KOY.gorevler.slice(0, 3).reduce((x, g) => gorevBitti(x, KOY, g, AN), i),
+              KOY,
+              KOY.gorevler[2]!,
+              { puan: 35, ilk: 3, yer: 3, seri: 0 },
+              0,
+            ),
+            'koy',
+          ),
           { ses: 'sesli', renkler: 'renksiz' },
         ),
         'ana-ekran',
@@ -370,10 +382,14 @@ describe('Yeni çocuk', () => {
     gunlukYazici(d.depo, 'pilot-1').yaz(SECIM, baglam())
     const once = ilerlemeyiYukle(d.depo)
     expect(once.kartlar).toHaveLength(3)
+    expect(once.bolgeler.koy?.tur?.puan).toBe(35)
+    expect(once.eller).toEqual(['koy'])
 
     expect(yeniCocuk(d.depo, 'P02')).toEqual({ kod: true, ilerleme: true })
     const sonra = ilerlemeyiYukle(d.depo)
+    // Puan ve yıldızlar (bölgelerin ilerlemesinde) ve ilk dakika elleri de sıfırlanır.
     expect(sonra.bolgeler).toEqual({})
+    expect(sonra.eller).toEqual([])
     expect(sonra.kartlar).toEqual([])
     expect(sonra.sifirlama).toBe(once.sifirlama + 1)
     expect(sonra.ayarlar).toEqual(once.ayarlar)

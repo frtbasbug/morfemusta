@@ -14,6 +14,46 @@
    "boyut": 6144,
    "surum": "b98ca4deb664"
   },
+  "Bir bukalemunu ağaca taşı!": {
+   "dosya": "69defd89d5a7.mp3",
+   "okunus": "Bir bukalemunu ağaca taşı!",
+   "hiz": 0.9,
+   "bolgeler": [
+    "bahce"
+   ],
+   "boyut": 8064,
+   "surum": "224b4599adde"
+  },
+  "Bir bukalemunu kelimeye taşı!": {
+   "dosya": "5cc32a95b8ac.mp3",
+   "okunus": "Bir bukalemunu kelimeye taşı!",
+   "hiz": 0.9,
+   "bolgeler": [
+    "koy"
+   ],
+   "boyut": 8544,
+   "surum": "51f517be370c"
+  },
+  "Bir bukalemunu yaratığa taşı!": {
+   "dosya": "261bdfb30293.mp3",
+   "okunus": "Bir bukalemunu yaratığa taşı!",
+   "hiz": 0.9,
+   "bolgeler": [
+    "uyduruk"
+   ],
+   "boyut": 7872,
+   "surum": "1440fbf59f24"
+  },
+  "Bir taşı ya da jöleyi boşluğa koy!": {
+   "dosya": "c06bc34761b5.mp3",
+   "okunus": "Bir taşı ya da jöleyi boşluğa koy!",
+   "hiz": 0.9,
+   "bolgeler": [
+    "dukkan"
+   ],
+   "boyut": 9792,
+   "surum": "841bdb248b5b"
+  },
   "Bugün kurduğun kelimeler:": {
    "dosya": "70f7b2d4680d.mp3",
    "okunus": "Bugün kurduğun kelimeler:",

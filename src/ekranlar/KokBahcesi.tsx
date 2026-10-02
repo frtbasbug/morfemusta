@@ -9,7 +9,9 @@
 // -lI önceki gövdenin küçük kartını yeni kartın üstüne koyar, -sIz onu siler (yerinde kesikli
 // boş çerçeve kalır); -lAr meyveyi üçe çoğaltır, -(I)m meyveyi cebe koyar. Meyve gövdenin
 // sonundaki taşı jöleye eritir (kalemlik → kalemliğim). Yanlışsa ek dala tutunamaz, sallanıp
-// sepete döner; cümlesi görünür. Ceza, puan ve süre yok.
+// sepete döner; cümlesi görünür. Ceza ve süre yok; puan yalnız artar (her ek ayrı bir
+// yerleştirme). Ağaç tamam olunca sıradaki ağaç kendiliğinden gelir ya da Düğmeyle ayarında
+// Sıradaki düğmesiyle; ilk ağaçta ilk dakika eli (akis.tsx).
 //
 // Oyunun durumu src/oyun/bahce.ts'teki indirgeyicidedir; bu dosya görünümü ve hareketleri
 // yazar. Hareketler Web Animations API iledir (hareket.ts); hareket azaltma açıksa hiçbiri
@@ -58,7 +60,9 @@ import type { Bolge } from '../oyun/bolgeler.ts'
 import type { Gorev } from '../oyun/gorevler.ts'
 import type { SozlukKarti } from '../oyun/ilerleme.ts'
 import { Hoparlor, useSes, useSesliSoyleyis } from '../ses/Ses.tsx'
+import { yildizSayisi } from '../oyun/puan.ts'
 import AksamEkrani from './AksamEkrani.tsx'
+import { useAkis } from './akis.tsx'
 import BolgeUstu from './BolgeUstu.tsx'
 import { bekle, hareketAzMi, hareketleriKes, kaydir, oynat, type Nokta } from './hareket.ts'
 import { parlat } from './parilti.ts'
@@ -125,6 +129,27 @@ export default function KokBahcesi({
   const { soyle, sonuc, buyu: buyuSesi } = useSes()
   const kaydet = useDenemeGunlugu(bolge.kimlik, gorev)
 
+  function sonrakiAgac() {
+    setEriyor(false)
+    setSilinen(null)
+    gonder({ tur: 'sonraki' })
+  }
+
+  const akis = useAkis({
+    bolge: bolge.kimlik,
+    gorev,
+    gorevYeri: durum.gorevYeri,
+    bitti: evre === 'bitti',
+    onSonraki: sonrakiAgac,
+    gorevMetni: durum.bahce?.hedef ?? '',
+    elKaynagi: () => {
+      const ilk = durum.bahce?.sepet[0]
+      return ilk === undefined ? null : bukalemunlar.current.get(ilk)
+    },
+    elHedefi: () => agacRef.current,
+    secimde: evre === 'secim' && durum.secili === null,
+  })
+
   // Sesli mod: ağaç başlayınca hedef söylenir; bölgeye girişte önce bölgenin adı.
   const [acilisYeri] = useState(durum.gorevYeri)
   useSesliSoyleyis(
@@ -142,7 +167,7 @@ export default function KokBahcesi({
     }
   }, [])
 
-  // Klavyeyle oynayan için odak: ağaç bitince Sıradaki'ye, yeni ağaçta sepetteki ilk eke.
+  // Klavyeyle oynayan için odak: ağaç bitince Sıradaki'ye (Düğmeyle), yeni ağaçta sepetteki ilk eke.
   // Akşam ekranı odağı kendi başlığına alır.
   useEffect(() => {
     if (evre === 'bitti') sonrakiRef.current?.focus()
@@ -156,7 +181,15 @@ export default function KokBahcesi({
   }, [durum.gorevYeri, durum.bahce])
 
   if (evre === 'kapanis' || !gorev || !bahce) {
-    return <AksamEkrani baslik={bolge.aksam} kartlar={bugunkuKartlar} onHarita={onHarita} />
+    return (
+      <AksamEkrani
+        baslik={bolge.aksam}
+        kartlar={bugunkuKartlar}
+        puan={akis.puan.puan}
+        yildiz={yildizSayisi(akis.puan)}
+        onHarita={onHarita}
+      />
+    )
   }
 
   const secimde = evre === 'secim'
@@ -184,6 +217,7 @@ export default function KokBahcesi({
       dogru: dogruMu(deneme),
       neden: nedenKodu(deneme.neden),
     })
+    akis.dene(String(kurulan), dogruMu(deneme), kurulan + 1 === bahce.parcalar.length)
     flushSync(() => gonder({ tur: 'dene', sira }))
     const oge = bukalemunlar.current.get(sira)
     if (dogruMu(deneme)) await tutun(oge, parca, kayma)
@@ -213,7 +247,7 @@ export default function KokBahcesi({
     const hedef = dalNoktasi(oge, kayma)
     oge.style.transform = kaydir(hedef)
     await oynat(oge, [{ transform: kaydir(kayma) }, { transform: kaydir(hedef) }], {
-      duration: 340,
+      duration: 200,
       easing: 'cubic-bezier(.3, .7, .4, 1)',
     })
     return hedef
@@ -232,7 +266,7 @@ export default function KokBahcesi({
           { transform: kaydir(hedef), opacity: 1 },
           { transform: `${kaydir(hedef)} scale(0.4)`, opacity: 0 },
         ],
-        { duration: 180, easing: 'ease-in' },
+        { duration: 120, easing: 'ease-in' },
       )
     }
     if (!bagli.current) return
@@ -245,6 +279,7 @@ export default function KokBahcesi({
     })
     // Doğru: efekt, ardından (sesli modda) yeni kelime; kelimenin çevresinde parıltı.
     sonuc('dogru', simdikiKelime(bahce, kurulan + 1))
+    akis.dogruGorundu()
     parlat(kelimeRef.current)
     if (oge) {
       oge.style.transform = ''
@@ -253,11 +288,11 @@ export default function KokBahcesi({
 
     // Büyü: halka, meyvenin çoğalması ya da cebe girmesi.
     if (parca.tur === 'yapım' || buyu === 'çoğaltır' || buyu === 'cebe koyar') buyuSesi()
+    // Meyve asılırken gövdenin sonundaki taş da erir (bindirilmiş).
     if (parca.tur === 'yapım') await halkaBuyut(buyu)
-    else await meyveAs(buyu)
-    if (eriyecek) await erit()
+    else await Promise.all([meyveAs(buyu), eriyecek ? erit() : undefined])
 
-    await bekle(350)
+    await bekle(100)
     if (!bagli.current) return
     const bitti = kurulan + 1 === bahce.parcalar.length
     flushSync(() => gonder({ tur: 'buyuBitti' }))
@@ -265,27 +300,30 @@ export default function KokBahcesi({
     if (bitti) onGorevBitti?.(gorev, kartEtiketleri(bahce))
   }
 
-  /** Yeni halka gövdenin tepesinde büyür, gövde kelimesi kart olarak düşer. */
+  /** Yeni halka gövdenin tepesinde büyür; gövde kelimesi kart olarak düşer (halkaya bindirilmiş). */
   async function halkaBuyut(buyu: string) {
     const agac = agacRef.current
-    await oynat(
-      agac?.querySelector('.agac__halka'),
-      [
-        { transform: 'scaleY(0)', transformOrigin: '50% 100%' },
-        { transform: 'scaleY(1.1)', transformOrigin: '50% 100%', offset: 0.7 },
-        { transform: 'scaleY(1)', transformOrigin: '50% 100%' },
-      ],
-      { duration: 380, easing: 'ease-out' },
-    )
     const kart = kartlarRef.current?.lastElementChild
-    await oynat(
-      kart?.querySelector('.bahce-karti'),
-      [
-        { transform: 'translateY(-3rem) rotate(-8deg)', opacity: 0 },
-        { transform: 'none', opacity: 1 },
-      ],
-      { duration: 420, easing: 'cubic-bezier(.3, .7, .4, 1.3)' },
-    )
+    await Promise.all([
+      oynat(
+        agac?.querySelector('.agac__halka'),
+        [
+          { transform: 'scaleY(0)', transformOrigin: '50% 100%' },
+          { transform: 'scaleY(1.1)', transformOrigin: '50% 100%', offset: 0.7 },
+          { transform: 'scaleY(1)', transformOrigin: '50% 100%' },
+        ],
+        { duration: 260, easing: 'ease-out' },
+      ),
+      oynat(
+        kart?.querySelector('.bahce-karti'),
+        [
+          { transform: 'translateY(-3rem) rotate(-8deg)', opacity: 0 },
+          { transform: 'translateY(-3rem) rotate(-8deg)', opacity: 0, offset: 0.3 },
+          { transform: 'none', opacity: 1 },
+        ],
+        { duration: 420, easing: 'cubic-bezier(.3, .7, .4, 1.3)' },
+      ),
+    ])
     const kucuk = kart?.querySelector('.bahce-karti__onceki')
     if (buyu === 'katar') {
       // -lI katar: önceki gövdenin küçük kartı yeni kartın üstüne konur.
@@ -295,18 +333,18 @@ export default function KokBahcesi({
           { transform: 'translateY(-2rem)', opacity: 0 },
           { transform: 'none', opacity: 1 },
         ],
-        { duration: 360, easing: 'ease-out' },
+        { duration: 260, easing: 'ease-out' },
       )
     } else if (buyu === 'eksiltir') {
       // -sIz eksiltir: küçük kart silinir, yerinde kesikli boş çerçeve kalır.
-      await bekle(450)
+      await bekle(200)
       await oynat(
         kucuk?.firstElementChild,
         [
           { transform: 'none', opacity: 1 },
           { transform: 'scale(0.3)', opacity: 0 },
         ],
-        { duration: 360, easing: 'ease-in' },
+        { duration: 260, easing: 'ease-in' },
       )
       if (!bagli.current) return
       flushSync(() => setSilinen(null))
@@ -323,7 +361,7 @@ export default function KokBahcesi({
           { transform: 'translateY(-6rem)', opacity: 1, offset: 0.25 },
           { transform: 'none', opacity: 1 },
         ],
-        { duration: 700, easing: 'cubic-bezier(.45, 0, .3, 1)' },
+        { duration: 460, easing: 'cubic-bezier(.45, 0, .3, 1)' },
       )
       return
     }
@@ -335,11 +373,11 @@ export default function KokBahcesi({
         { transform: 'scale(1.15)', opacity: 1, offset: 0.7 },
         { transform: 'scale(1)', opacity: 1 },
       ],
-      { duration: 360, easing: 'ease-out' },
+      { duration: 260, easing: 'ease-out' },
     )
     const kopyalar = [...(meyveler?.querySelectorAll('.meyve--kopya') ?? [])]
     if (buyu !== 'çoğaltır' || kopyalar.length === 0) return
-    await bekle(150)
+    await bekle(40)
     const orta = meyveler?.querySelector('.meyve:not(.meyve--kopya)')?.getBoundingClientRect()
     await Promise.all(
       kopyalar.map((kopya) => {
@@ -351,7 +389,7 @@ export default function KokBahcesi({
             { transform: `translateX(${dx}px)`, opacity: 0 },
             { transform: 'none', opacity: 1 },
           ],
-          { duration: 420, easing: 'cubic-bezier(.3, .7, .4, 1.3)' },
+          { duration: 300, easing: 'cubic-bezier(.3, .7, .4, 1.3)' },
         )
       }),
     )
@@ -360,7 +398,7 @@ export default function KokBahcesi({
   /** Gövdenin sonundaki taş jöleye erir (Dükkân'daki gibi): kalemlik → kalemliğim. */
   async function erit() {
     const yuva = agacRef.current?.querySelector('.bahce__yuva')
-    await bekle(300)
+    await bekle(120)
     await oynat(
       yuva,
       [
@@ -368,7 +406,7 @@ export default function KokBahcesi({
         { transform: 'scale(1.18, 0.7)', offset: 0.7 },
         { transform: 'scale(1.25, 0.5)' },
       ],
-      { duration: 420, easing: 'ease-in' },
+      { duration: 260, easing: 'ease-in' },
     )
     if (!bagli.current) return
     flushSync(() => setEriyor(false))
@@ -379,7 +417,7 @@ export default function KokBahcesi({
         { transform: 'scale(0.92, 1.1)', offset: 0.6 },
         { transform: 'scale(1, 1)' },
       ],
-      { duration: 360, easing: 'ease-out' },
+      { duration: 220, easing: 'ease-out' },
     )
   }
 
@@ -399,12 +437,12 @@ export default function KokBahcesi({
           { transform: egik(-7), offset: 0.7 },
           { transform: egik(0, 6) },
         ],
-        { duration: 520, easing: 'ease-in-out' },
+        { duration: 400, easing: 'ease-in-out' },
       )
       oge.style.transform = ''
       oge.style.transformOrigin = ''
       await oynat(oge, [{ transform: egik(0, 6) }, { transform: 'none' }], {
-        duration: 380,
+        duration: 280,
         easing: 'cubic-bezier(.5, 0, .5, 1)',
       })
     }
@@ -418,15 +456,9 @@ export default function KokBahcesi({
   async function geriDon(oge: HTMLElement, kayma: Nokta) {
     oge.style.transform = ''
     await oynat(oge, [{ transform: kaydir(kayma) }, { transform: 'none' }], {
-      duration: 240,
+      duration: 200,
       easing: 'ease-out',
     })
-  }
-
-  function sonrakiAgac() {
-    setEriyor(false)
-    setSilinen(null)
-    gonder({ tur: 'sonraki' })
   }
 
   // --- Sürükle-bırak (Pointer Events) -----------------------------------------------------
@@ -545,11 +577,12 @@ export default function KokBahcesi({
   const dusenler = bahce.govdeler.filter((g) => g.sira < kurulan)
 
   return (
-    <main className="bahce" onKeyDown={tusaBasildi}>
+    <main className="bahce" data-evre={evre} onKeyDown={tusaBasildi}>
       <BolgeUstu
         ad={bolge.ad}
         gorevYeri={durum.gorevYeri}
         gorevSayisi={gorevler.length}
+        puan={akis.puan.puan}
         onHarita={onHarita}
         baslikRef={baslikRef}
       />
@@ -619,14 +652,14 @@ export default function KokBahcesi({
             </p>
           )}
         </div>
-        {evre === 'bitti' && (
+        {evre === 'bitti' && !akis.kendiliginden && (
           <button ref={sonrakiRef} type="button" className="bahce__dugme" onClick={sonrakiAgac}>
             <SiradakiSimgesi />
             Sıradaki
           </button>
         )}
         <p className="gizli" role="status">
-          {evre === 'bitti' ? bahce.hedef : ''}
+          {evre === 'bitti' ? bahce.hedef : akis.duyuru}
         </p>
       </div>
 

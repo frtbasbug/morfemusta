@@ -7,8 +7,9 @@
 // Doğruysa karo yuvaya oturur ve kelime dükkânın rafına dizilir. Ses değişiyorsa değişim
 // görünür: yumuşamada kökün taşı jöleye erir (kitap → kitabım), benzeşmede ekin jölesi taşa
 // döner (-da → kitapta); değişmiyorsa (topum, evde) karo yalnız yerine oturur. Yanlışsa karo
-// seker ve tezgâha döner; nedeni kelimenin altında yazılır, ilgili iki ses vurgulanır. Ceza,
-// puan ve süre yok.
+// seker ve tezgâha döner; nedeni kelimenin altında yazılır, ilgili iki ses vurgulanır. Ceza ve
+// süre yok; puan yalnız artar. Doğrudan sonra sıradaki görev kendiliğinden gelir ya da
+// Düğmeyle ayarında Sıradaki düğmesiyle; ilk görevde ilk dakika eli (akis.tsx).
 //
 // Oyunun durumu src/oyun/dukkan.ts'teki indirgeyicidedir; bu dosya görünümü ve hareketleri
 // yazar. Hareketler Web Animations API iledir (hareket.ts); hareket azaltma açıksa hiçbiri
@@ -59,7 +60,9 @@ import {
   type Deneme,
 } from '../oyun/dukkan.ts'
 import { Hoparlor, useSes, useSesliSoyleyis } from '../ses/Ses.tsx'
+import { yildizSayisi } from '../oyun/puan.ts'
 import AksamEkrani from './AksamEkrani.tsx'
+import { useAkis } from './akis.tsx'
 import BolgeUstu from './BolgeUstu.tsx'
 import { bekle, hareketAzMi, hareketleriKes, kaydir, oynat, type Nokta } from './hareket.ts'
 import { parlat } from './parilti.ts'
@@ -119,7 +122,23 @@ export default function FistikciSahap({
   const bagli = useRef(false)
   const gorulenGorev = useRef(durum.gorevYeri)
   const { soyle, sonuc } = useSes()
+
+  function sonrakiGorev() {
+    setYuvadaki(null)
+    gonder({ tur: 'sonraki' })
+  }
   const kaydet = useDenemeGunlugu(bolge.kimlik, gorev)
+  const akis = useAkis({
+    bolge: bolge.kimlik,
+    gorev,
+    gorevYeri: durum.gorevYeri,
+    bitti: evre === 'bitti',
+    onSonraki: sonrakiGorev,
+    gorevMetni: gorev?.kok ?? '',
+    elKaynagi: () => karolar.current.get(TEZGAH[0] ?? 'taş'),
+    elHedefi: () => yuvaRef.current,
+    secimde: evre === 'secim' && durum.secili === null,
+  })
 
   // Sesli mod: görev başlayınca kök söylenir; bölgeye girişte önce bölgenin adı.
   const [acilisYeri] = useState(durum.gorevYeri)
@@ -138,7 +157,7 @@ export default function FistikciSahap({
     }
   }, [])
 
-  // Klavyeyle oynayan için odak: görev bitince Sıradaki'ye, yeni görevde tezgâhtaki taşa.
+  // Klavyeyle oynayan için odak: görev bitince Sıradaki'ye (Düğmeyle), yeni görevde tezgâhtaki taşa.
   // Akşam ekranı odağı kendi başlığına alır.
   useEffect(() => {
     if (evre === 'bitti') sonrakiRef.current?.focus()
@@ -151,7 +170,15 @@ export default function FistikciSahap({
   }, [durum.gorevYeri])
 
   if (evre === 'kapanis' || !gorev || !sinir) {
-    return <AksamEkrani baslik={bolge.aksam} kartlar={bugunkuKartlar} onHarita={onHarita} />
+    return (
+      <AksamEkrani
+        baslik={bolge.aksam}
+        kartlar={bugunkuKartlar}
+        puan={akis.puan.puan}
+        yildiz={yildizSayisi(akis.puan)}
+        onHarita={onHarita}
+      />
+    )
   }
 
   const secimde = evre === 'secim'
@@ -173,6 +200,7 @@ export default function FistikciSahap({
       dogru: dogruMu(deneme),
       neden: nedenKodlari(deneme.nedenler),
     })
+    akis.dene('sinir', dogruMu(deneme), true)
     flushSync(() => gonder({ tur: 'dene', karo }))
     const oge = karolar.current.get(karo)
     if (dogruMu(deneme)) await otur(oge, karo, kayma)
@@ -199,7 +227,7 @@ export default function FistikciSahap({
     const hedef = yuvaNoktasi(oge, kayma)
     oge.style.transform = kaydir(hedef)
     await oynat(oge, [{ transform: kaydir(kayma) }, { transform: kaydir(hedef) }], {
-      duration: 320,
+      duration: 200,
       easing: 'cubic-bezier(.3, .7, .4, 1)',
     })
     return hedef
@@ -220,11 +248,12 @@ export default function FistikciSahap({
     })
     // Doğru: efekt, ardından (sesli modda) kurulan kelime; kelimenin çevresinde parıltı.
     sonuc('dogru', denemeyiDegerlendir(gorev, sinir, karo).aday)
+    akis.dogruGorundu()
     parlat(kartRef.current?.querySelector('.dukkan__kelime'))
     if (oge) oge.style.transform = ''
     const yuva = yuvaRef.current
     if (degisir) {
-      await bekle(380)
+      await bekle(160)
       // Taş erir: yayvanlaşıp çöker; jöle taşa döner: sıkışıp sertleşir.
       await oynat(
         yuva,
@@ -239,7 +268,7 @@ export default function FistikciSahap({
               { transform: 'scale(0.86) rotate(-5deg)', offset: 0.5 },
               { transform: 'scale(0.8) rotate(4deg)' },
             ],
-        { duration: 420, easing: 'ease-in' },
+        { duration: 260, easing: 'ease-in' },
       )
       if (!bagli.current) return
       flushSync(() => setYuvadaki(karo))
@@ -256,15 +285,15 @@ export default function FistikciSahap({
               { transform: 'scale(1.08)', offset: 0.6 },
               { transform: 'scale(1)' },
             ],
-        { duration: 360, easing: 'ease-out' },
+        { duration: 220, easing: 'ease-out' },
       )
     } else {
       await oynat(yuva, [{ transform: 'scale(1.1)' }, { transform: 'scale(1)' }], {
-        duration: 220,
+        duration: 180,
         easing: 'ease-out',
       })
     }
-    await bekle(450)
+    await bekle(120)
     if (!bagli.current) return
     flushSync(() => gonder({ tur: 'rafa' }))
     // Görev bitti: kabuk hemen kaydeder. Sıradaki ve Harita artık tıklanabilir; raf hareketi
@@ -276,7 +305,7 @@ export default function FistikciSahap({
         { transform: 'translateY(-2.5rem) scale(0.6)', opacity: 0 },
         { transform: 'none', opacity: 1 },
       ],
-      { duration: 380, easing: 'cubic-bezier(.3, .7, .4, 1.3)' },
+      { duration: 300, easing: 'cubic-bezier(.3, .7, .4, 1.3)' },
     )
   }
 
@@ -294,11 +323,11 @@ export default function FistikciSahap({
           { transform: yan(-6, -2), offset: 0.7 },
           { transform: yan(0) },
         ],
-        { duration: 420, easing: 'ease-in-out' },
+        { duration: 340, easing: 'ease-in-out' },
       )
       oge.style.transform = ''
       await oynat(oge, [{ transform: yan(0) }, { transform: 'none' }], {
-        duration: 360,
+        duration: 260,
         easing: 'cubic-bezier(.3, .7, .4, 1)',
       })
     }
@@ -312,15 +341,11 @@ export default function FistikciSahap({
   async function geriDon(oge: HTMLElement, kayma: Nokta) {
     oge.style.transform = ''
     await oynat(oge, [{ transform: kaydir(kayma) }, { transform: 'none' }], {
-      duration: 240,
+      duration: 200,
       easing: 'ease-out',
     })
   }
 
-  function sonrakiGorev() {
-    setYuvadaki(null)
-    gonder({ tur: 'sonraki' })
-  }
 
   // --- Sürükle-bırak (Pointer Events) -----------------------------------------------------
 
@@ -415,11 +440,12 @@ export default function FistikciSahap({
   const degisim = evre === 'bitti' && oturan && sesDegisti(sinir, oturan.karo)
 
   return (
-    <main className="dukkan" onKeyDown={tusaBasildi}>
+    <main className="dukkan" data-evre={evre} onKeyDown={tusaBasildi}>
       <BolgeUstu
         ad={bolge.ad}
         gorevYeri={durum.gorevYeri}
         gorevSayisi={gorevler.length}
+        puan={akis.puan.puan}
         onHarita={onHarita}
         baslikRef={baslikRef}
       />
@@ -467,14 +493,14 @@ export default function FistikciSahap({
               </p>
             )}
           </div>
-          {evre === 'bitti' && (
+          {evre === 'bitti' && !akis.kendiliginden && (
             <button ref={sonrakiRef} type="button" className="dukkan__dugme" onClick={sonrakiGorev}>
               <SiradakiSimgesi />
               Sıradaki
             </button>
           )}
           <p className="gizli" role="status">
-            {evre === 'bitti' ? kelime : ''}
+            {evre === 'bitti' ? kelime : akis.duyuru}
           </p>
         </div>
       </section>

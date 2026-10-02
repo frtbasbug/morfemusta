@@ -10,7 +10,11 @@ import {
   sira,
   sonraki,
   yatayTasma,
+  dugmeyleOyna,
 } from './yardimcilar.ts'
+
+// Bu dosyadaki testler Düğmeyle ayarında koşar (yardimcilar.ts, dugmeyleOyna).
+test.beforeEach(({ page }) => dugmeyleOyna(page))
 
 // Fıstıkçı Şahap'ın Dükkânı: çocuk sınırdaki ünsüzü seçer, taş (sert) ya da jöle (yumuşak).
 // Oyun doğru karoyu motordan alır; burada yalnız testlerin beklediği sonuçlar yazılıdır.
@@ -74,9 +78,12 @@ test.describe("Fıstıkçı Şahap'ın Dükkânı", () => {
     await expect(page.locator('.aksam__kelimeler .sonuc-kelime__okunan')).toHaveText(
       GOREVLER.map((g) => g.kelime),
     )
-    await expect(page.getByText(/puan|seri|süre|skor/i)).toHaveCount(0)
+    // Turun puanı ve yıldızları: on yerleştirme ilk denemede, üç seri.
+    await expect(page.locator('.aksam__puan')).toContainText('Puan: 115')
+    await expect(page.getByRole('img', { name: '3 yıldızdan 3' })).toBeVisible()
+    await expect(page.getByText(/süre|skor/i)).toHaveCount(0)
     await page.getByRole('button', { name: 'Haritaya dön' }).click()
-    await expect(bolge(page, 'Dükkânı')).toHaveAccessibleName(`${BASLIK}, Tamam`)
+    await expect(bolge(page, 'Dükkânı')).toHaveAccessibleName(`${BASLIK}, Tamam, 3 yıldızdan 3`)
     // Dükkân bitince bahçe açılır ve girilir.
     await expect(bolge(page, 'Kök Bahçesi')).toHaveAccessibleName('Kök Bahçesi, Açık')
     await bolge(page, 'Kök Bahçesi').click()
@@ -117,7 +124,9 @@ test.describe("Fıstıkçı Şahap'ın Dükkânı", () => {
     await expect(tas).toHaveAttribute('aria-disabled', 'false')
     await expect.poll(() => tas.evaluate((el) => el.getBoundingClientRect().top)).toBeCloseTo(t.y, 0)
     await expect(sira(page)).toHaveText('Görev 1 / 10')
-    await expect(page.getByText(/puan|skor|süre/i)).toHaveCount(0)
+    // Yanlış puan düşürmez; süre yok.
+    await expect(page.locator('.bolge-ustu__puan')).toHaveText('Puan: 0')
+    await expect(page.getByText(/skor|süre/i)).toHaveCount(0)
 
     // Doğru karo oturur; yumuşama görünür: kitap → kitabım.
     await jole.tap()

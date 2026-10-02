@@ -4,6 +4,7 @@
 //   dogru   kısa, yükselen iki nota
 //   yanlis  yumuşak, alçak bir ses; cezalandırıcı değil
 //   buyu    kısa bir parıltı: çoğalma, cebe girme, halka, yıldız
+//   seri    üst üste üç ilk denemede doğru: kısa, sevinçli bir üçlü (şenlik)
 //
 // Her biri 400 ms'den kısadır ve konuşmadan kısıktır (sesler -20 dBFS'ye getirilir; efektlerin en
 // yüksek 50 ms'si onun yarısının altında). Efekt konuşmayı kesmez: <audio> öğesine dokunmaz, Web
@@ -12,7 +13,7 @@
 // Notalar saf veridir: tarayıcı onları osilatörle çalar (efektCal), birim testleri aynı tabloyu
 // örnekleyip süresini ve yüksekliğini ölçer (ornekle).
 
-export type EfektTuru = 'dogru' | 'yanlis' | 'buyu'
+export type EfektTuru = 'dogru' | 'yanlis' | 'buyu' | 'seri'
 
 export interface Nota {
   /** Hz. */
@@ -44,6 +45,12 @@ export const EFEKTLER: Readonly<Record<EfektTuru, readonly Nota[]>> = {
     { frekans: 1318.51, baslangic: 0.045, sure: 0.16, kazanc: 0.04, yukselis: 0.004, dalga: 'sine' },
     { frekans: 1567.98, baslangic: 0.09, sure: 0.16, kazanc: 0.04, yukselis: 0.004, dalga: 'sine' },
     { frekans: 2093, baslangic: 0.135, sure: 0.2, kazanc: 0.04, yukselis: 0.004, dalga: 'sine' },
+  ],
+  // Şenlik: yükselen bir üçlü (E6 G6 C7), son nota biraz uzun.
+  seri: [
+    { frekans: 1318.51, baslangic: 0, sure: 0.12, kazanc: 0.06, yukselis: 0.006, dalga: 'triangle' },
+    { frekans: 1567.98, baslangic: 0.08, sure: 0.12, kazanc: 0.06, yukselis: 0.006, dalga: 'triangle' },
+    { frekans: 2093, baslangic: 0.16, sure: 0.22, kazanc: 0.06, yukselis: 0.006, dalga: 'triangle' },
   ],
 }
 

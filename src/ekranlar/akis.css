@@ -1,0 +1,34 @@
+/* İlk dakika eli (akis.tsx): belgenin gövdesinde sabit bir kap; kaynağın yarı saydam kopyası ve
+   el. Süstür: dokunuşu engellemez, ekranın düzenine karışmaz. Renkler yalnız tema.css'teki
+   belirteçlerden; gölge ve degrade yok. */
+
+.ilk-el {
+  position: fixed;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.ilk-el__hayalet {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: 0.55;
+}
+
+.ilk-el__el {
+  position: absolute;
+  left: 45%;
+  top: 40%;
+  width: 3.25rem;
+  height: 3.25rem;
+  opacity: 0.8;
+  overflow: visible;
+}
+
+.ilk-el__el path {
+  fill: var(--zemin);
+  stroke: var(--murekkep);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}

@@ -33,6 +33,37 @@ export const KELIMELER = [
 /** Cihazdaki kaydın anahtarı (src/oyun/ilerleme.ts). */
 export const ANAHTAR = 'morfemusta.v1'
 
+/**
+ * Bölgelerin ayrıntılarını sınayan testler (büyüler, nedenler, kayıt) Düğmeyle ayarında koşar:
+ * görev Sıradaki düğmesiyle geçer, ilk dakika eli çıkmaz. Kayıt okunurken eksik alanlar
+ * eklenir (gecis: dugmeyle, eller: dört bölge); testin kendi kurduğu kayıt da olduğu gibi kalır.
+ * Kendiliğinden geçişi ve eli e2e/akis.spec.ts, yeni akışın bütününü pilot yolu sınar.
+ */
+export function dugmeyleOyna(sayfa: Page) {
+  return sayfa.addInitScript((anahtar) => {
+    const oku = Storage.prototype.getItem
+    Storage.prototype.getItem = function (ad: string) {
+      const metin = oku.call(this, ad)
+      if (ad !== anahtar || this !== window.localStorage) return metin
+      let kayit: Record<string, unknown> = {}
+      try {
+        const okunan: unknown = metin === null ? {} : JSON.parse(metin)
+        if (typeof okunan !== 'object' || okunan === null || Array.isArray(okunan)) return metin
+        kayit = okunan as Record<string, unknown>
+      } catch {
+        return metin
+      }
+      const ayarlar = (kayit.ayarlar ?? {}) as Record<string, unknown>
+      if (ayarlar.gecis !== undefined && kayit.eller !== undefined) return metin
+      return JSON.stringify({
+        ...kayit,
+        ayarlar: { ...ayarlar, gecis: ayarlar.gecis ?? 'dugmeyle' },
+        eller: kayit.eller ?? ['koy', 'dukkan', 'bahce', 'uyduruk'],
+      })
+    }
+  }, ANAHTAR)
+}
+
 export const haritaBasligi = (sayfa: Page) =>
   sayfa.getByRole('heading', { level: 1, name: 'Ekle Bakalım' })
 export const koyBasligi = (sayfa: Page) =>
@@ -59,21 +90,40 @@ export async function koyuAc(sayfa: Page) {
   await expect(koyBasligi(sayfa)).toBeVisible()
 }
 
-/** Görevi (0'dan) dokun-dokun doğru oynar; Sıradaki görünene kadar bekler. */
-export async function gorevOyna(sayfa: Page, yer: number) {
+/**
+ * Görevden sıradakine geçiş: dugme, Sıradaki düğmesi (Düğmeyle ayarı); bekle, sıradaki görev
+ * kendisi gelir (Kendiliğinden, 1,4 saniye; sesli modda ses de bitince); dokun, ekrana (bölgenin
+ * başlığına) dokunulur, hemen geçer (Kendiliğinden).
+ */
+export type Gecis = 'dugme' | 'bekle' | 'dokun'
+
+/** Görev bitti: Düğmeyle'de Sıradaki görünene kadar bekler; Kendiliğinden'de beklenecek düğme yok. */
+async function gorevBitti(sayfa: Page, gecis: Gecis) {
+  if (gecis === 'dugme') await expect(sonraki(sayfa)).toBeVisible()
+}
+
+/** Sıradaki göreve (ya da akşam ekranına) geçer: düğmeyle, bekleyerek ya da dokunarak. */
+export async function sonrakineGec(sayfa: Page, gecis: Gecis = 'dugme') {
+  if (gecis === 'dugme') await dokun(sonraki(sayfa))
+  else if (gecis === 'dokun') await dokun(sayfa.locator('.bolge-ustu__baslik'))
+}
+
+/** Görevi (0'dan) dokun-dokun doğru oynar; Düğmeyle'de Sıradaki görünene kadar bekler. */
+export async function gorevOyna(sayfa: Page, yer: number, gecis: Gecis = 'dugme') {
   for (const yuzey of DOGRU_YUZEYLER[yer] ?? []) {
+    await secilebilir(bukalemun(sayfa, yuzey))
     await dokun(bukalemun(sayfa, yuzey))
     await dokun(kart(sayfa))
   }
-  await expect(sonraki(sayfa)).toBeVisible()
+  await gorevBitti(sayfa, gecis)
 }
 
-/** Görevleri sırayla oynar: her birinin sonunda Sıradaki'ye basar. */
-export async function gorevleriOyna(sayfa: Page, ilk: number, son: number) {
+/** Görevleri sırayla oynar: her birinin sonunda sıradakine geçer (varsayılan Sıradaki'yle). */
+export async function gorevleriOyna(sayfa: Page, ilk: number, son: number, gecis: Gecis = 'dugme') {
   for (let yer = ilk; yer <= son; yer++) {
     await expect(sira(sayfa)).toHaveText(`Görev ${yer + 1} / 10`)
-    await gorevOyna(sayfa, yer)
-    await dokun(sonraki(sayfa))
+    await gorevOyna(sayfa, yer, gecis)
+    await sonrakineGec(sayfa, gecis)
   }
 }
 
@@ -165,28 +215,31 @@ export const secilebilir = (oge: ReturnType<Page['locator']>) =>
   expect(oge).toHaveAttribute('aria-disabled', 'false')
 
 /** Dükkân'ın görevini (0'dan) dokun-dokun doğru oynar. */
-export async function dukkanGorevi(sayfa: Page, yer: number) {
+export async function dukkanGorevi(sayfa: Page, yer: number, gecis: Gecis = 'dugme') {
   const tur = DUKKAN_KAROLARI[yer] ?? 'taş'
+  await expect(sira(sayfa)).toHaveText(`Görev ${yer + 1} / 10`)
   await secilebilir(karo(sayfa, tur))
   await dokun(karo(sayfa, tur))
   await dokun(dukkanKarti(sayfa))
-  await expect(sonraki(sayfa)).toBeVisible()
+  await gorevBitti(sayfa, gecis)
 }
 
 /** Bahçe'nin ağacını (0'dan) dokun-dokun doğru büyütür. */
-export async function bahceGorevi(sayfa: Page, yer: number) {
+export async function bahceGorevi(sayfa: Page, yer: number, gecis: Gecis = 'dugme') {
+  await expect(sira(sayfa)).toHaveText(`Görev ${yer + 1} / 10`)
   for (const yuzey of BAHCE_EKLERI[yer] ?? []) {
     await secilebilir(bukalemun(sayfa, yuzey))
     await dokun(bukalemun(sayfa, yuzey))
     await dokun(agac(sayfa))
   }
-  await expect(sonraki(sayfa)).toBeVisible()
+  await gorevBitti(sayfa, gecis)
 }
 
 /** Uydurukçuklar'ın 1. turundaki görevi (0'dan) dokun-dokun doğru oynar. */
-export async function uydurukGorevi(sayfa: Page, yer: number) {
+export async function uydurukGorevi(sayfa: Page, yer: number, gecis: Gecis = 'dugme') {
   const secim = UYDURUK_SECIMLERI[yer]
   if (!secim) return
+  await expect(sira(sayfa)).toHaveText(`1. tur · Görev ${yer + 1} / 10`)
   await secilebilir(bukalemun(sayfa, secim.yuzey))
   await dokun(bukalemun(sayfa, secim.yuzey))
   await dokun(yaratik(sayfa))
@@ -195,7 +248,7 @@ export async function uydurukGorevi(sayfa: Page, yer: number) {
     await dokun(karo(sayfa, secim.karo))
     await dokun(yaratik(sayfa))
   }
-  await expect(sonraki(sayfa)).toBeVisible()
+  await gorevBitti(sayfa, gecis)
 }
 
 /**

@@ -49,16 +49,32 @@
   flex-direction: column;
   align-items: flex-end;
   justify-self: end;
-  gap: 0.25rem;
+  gap: 0.1rem;
 }
 
 .bolge-ustu__sira {
   margin: 0;
   color: var(--soluk);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.1;
   white-space: nowrap;
   text-align: end;
+}
+
+/* Turun puanı: yıldız ve sayı, sıranın altında. */
+.bolge-ustu__puan {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.bolge-ustu__puan .simge {
+  width: 1.1em;
+  height: 1.1em;
 }
 
 /* Tur: dar ekranda sıranın üstünde, geniş ekranda aynı satırda ("2. tur · 3 / 10"). */

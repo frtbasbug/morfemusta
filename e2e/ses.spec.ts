@@ -12,7 +12,11 @@ import {
   koyBasligi,
   sira,
   sonraki,
+  dugmeyleOyna,
 } from './yardimcilar.ts'
+
+// Bu dosyadaki testler Düğmeyle ayarında koşar (yardimcilar.ts, dugmeyleOyna).
+test.beforeEach(({ page }) => dugmeyleOyna(page))
 
 // Ses ve resim (DESIGN.md, "Ses ve resim"). Çalma çağrıları yakalanır: HTMLMediaElement'in
 // play'i sarılır; çalınan metin <audio> öğesinin data-metin'indedir. Sarılmış play sesi

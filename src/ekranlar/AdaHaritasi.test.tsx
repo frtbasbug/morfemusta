@@ -1,7 +1,13 @@
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { BOLGELER, bolgeBul, type Bolge } from '../oyun/bolgeler.ts'
-import { BOS_ILERLEME, bolgeDurumlari, gorevBitti, type Ilerleme } from '../oyun/ilerleme.ts'
+import {
+  BOS_ILERLEME,
+  bolgeDurumlari,
+  ekrandaPuanYaz,
+  gorevBitti,
+  type Ilerleme,
+} from '../oyun/ilerleme.ts'
 import AdaHaritasi, { BOLGE_YERLERI, HARITA_KUTUSU, yumusakYol } from './AdaHaritasi.tsx'
 
 const KOY = bolgeBul('koy') as Bolge
@@ -45,6 +51,18 @@ describe('AdaHaritasi', () => {
 
   it('adanın çizimi süstür: ekran okuyucudan gizli', () => {
     expect(ilk).toMatch(/<svg class="harita__cizim" viewBox="0 0 320 440" aria-hidden="true"/)
+  })
+
+  it('her bölgenin en iyi yıldızı tabelada ve düğmenin adında; turu bitmemiş bölgede yok', () => {
+    const son = KOY.gorevler.at(-1)!
+    const yildizli = ekrandaPuanYaz(KOY_BITTI, KOY, son, { puan: 80, ilk: 7, yer: 11, seri: 0 }, 0)
+    const html = harita(yildizli)
+    const [koy, dukkan] = dugmeler(html)
+    expect(koy?.adi).toBe('Bukalemun Koyu, Tamam, 3 yıldızdan 2')
+    expect(dukkan?.adi).toBe("Fıstıkçı Şahap'ın Dükkânı, Açık")
+    expect(html.match(/simge--yildiz simge--dolu/g)).toHaveLength(2)
+    expect(html.match(/simge--yildiz/g)).toHaveLength(3)
+    expect(harita(KOY_BITTI)).not.toContain('simge--yildiz')
   })
 
   it('bölgeler gerçek düğmeler, tablodaki sırayla, sıralı bir listede', () => {
@@ -91,7 +109,7 @@ describe('AdaHaritasi', () => {
   it('içeriği olmayan açık bölge hazırlanıyor', () => {
     const bos: Bolge = { ...KOY, kimlik: 'ova', ad: 'Ova', gorevler: [] }
     const html = renderToStaticMarkup(
-      <AdaHaritasi bolgeler={[{ bolge: bos, durum: 'hazirlaniyor', onceki: null }]} onBolge={() => {}} />,
+      <AdaHaritasi bolgeler={[{ bolge: bos, durum: 'hazirlaniyor', onceki: null, yildiz: null }]} onBolge={() => {}} />,
     )
     expect(dugmeler(html).map(({ durum, yazi }) => [durum, yazi])).toEqual([
       ['hazirlaniyor', 'Hazırlanıyor'],
@@ -106,7 +124,7 @@ describe('AdaHaritasi', () => {
     const bos: Bolge = { ...KOY, kimlik: 'ova', ad: 'Ova', gorevler: [] }
     const [hazirlaniyor] = simgeler(
       renderToStaticMarkup(
-        <AdaHaritasi bolgeler={[{ bolge: bos, durum: 'hazirlaniyor', onceki: null }]} onBolge={() => {}} />,
+        <AdaHaritasi bolgeler={[{ bolge: bos, durum: 'hazirlaniyor', onceki: null, yildiz: null }]} onBolge={() => {}} />,
       ),
     )
     expect(new Set([acik, kilitli, tamam, hazirlaniyor]).size).toBe(4)

@@ -1,5 +1,8 @@
 import { expect, test, type Page } from '@playwright/test'
-import { ANAHTAR, bolge, bukalemun, haritaBasligi, kart, koyBasligi, sonraki } from './yardimcilar.ts'
+import { ANAHTAR, bolge, bukalemun, haritaBasligi, kart, koyBasligi, sonraki, dugmeyleOyna } from './yardimcilar.ts'
+
+// Bu dosyadaki testler Düğmeyle ayarında koşar (yardimcilar.ts, dugmeyleOyna).
+test.beforeEach(({ page }) => dugmeyleOyna(page))
 
 // Çevrim dışı ve güncelleme (DESIGN.md, "Cihazda ilerleme"): bir kez açılan oyun uçak modunda da
 // açılır ve oynanır; bir kez girilmiş bölgenin sesleri de çalar. Yeni sürüm açık sayfayı

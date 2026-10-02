@@ -10,7 +10,11 @@ import {
   koyuAc,
   sira,
   sonraki,
+  dugmeyleOyna,
 } from './yardimcilar.ts'
+
+// Bu dosyadaki testler Düğmeyle ayarında koşar (yardimcilar.ts, dugmeyleOyna).
+test.beforeEach(({ page }) => dugmeyleOyna(page))
 
 // Bukalemun Koyu: oyunun ilk bölgesi. Açılış ekranı ada haritasıdır; koya haritadan girilir
 // (koyuAc). Oyun doğru biçimi motordan alır; beklenen sonuçlar yardimcilar.ts'te yazılıdır.
@@ -147,7 +151,9 @@ test.describe('Bukalemun Koyu', () => {
     await expect(bukalemun(page, 'ler')).toBeVisible()
     await expect(bukalemun(page, 'ler')).toHaveAttribute('aria-disabled', 'false')
     await expect(bukalemun(page, 'ler')).toHaveAttribute('aria-pressed', 'false')
-    await expect(page.getByText(/puan|süre|skor/i)).toHaveCount(0)
+    // Yanlış puan düşürmez; süre yok.
+    await expect(page.locator('.bolge-ustu__puan')).toHaveText('Puan: 0')
+    await expect(page.getByText(/süre|skor/i)).toHaveCount(0)
     expect(await agizlar(page)).toEqual(agizlarBasta)
 
     // Doğru bukalemunla görev biter; neden silinir, ağızlar yine aynı.

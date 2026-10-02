@@ -9,7 +9,7 @@ import {
   type SesBaglami,
 } from './efekt.ts'
 
-const TURLER: readonly EfektTuru[] = ['dogru', 'yanlis', 'buyu']
+const TURLER: readonly EfektTuru[] = ['dogru', 'yanlis', 'buyu', 'seri']
 
 /** Sesler -20 dBFS'ye getirilir (scripts/ses-uret.py, HEDEF_RMS): genliğin RMS'i 0.1. */
 const KONUSMA_RMS = 0.1

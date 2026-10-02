@@ -14,9 +14,15 @@
 //   { "bolgeler": { "koy": { "bitenler": [1, 2, 3], "kaldigi": 3 } },
 //     "kartlar": [{ "kelime": "atlar", "kok": "at", "etiketler": ["PL"], "bolge": "koy",
 //                   "tarih": "2026-09-28T09:15:00.000Z", "sonKurulma": "2026-09-28T09:15:00.000Z" }],
-//     "ayarlar": { "hareket": "sistem", "renkler": "renkli", "ses": "dokununca", "sinif": "kapali" },
+//     "ayarlar": { "hareket": "sistem", "renkler": "renkli", "ses": "dokununca", "sinif": "kapali",
+//                  "gecis": "kendiliginden", "sinifGecis": "dugmeyle" },
 //     "kapananIpuclari": ["ana-ekran"],
+//     "eller": ["koy"],
 //     "sifirlama": 0 }
+// Oturum 13'te gelenler (hepsi isteğe bağlı; eski kayıt bozulmadan okunur): bölgede "tur" (süren
+// turun biten görevlerindeki puan: { "puan": 40, "ilk": 4, "yer": 5, "seri": 1 }) ve "yildiz"
+// (bölgenin en iyi yıldızı, 1–3); "eller" (ilk dakika eli kapanan bölgeler); ayarlarda "gecis"
+// ve "sinifGecis" (sıradaki görev: kendiliginden ya da dugmeyle; sınıf modunda ikincisi).
 // sifirlama: sıfırlama kimliği, her sıfırlamada bir artar; eksikse 0 sayılır. Ayarların eksik
 // alanı varsayılandır (ses Oturum 10'da, sinif Oturum 11'de geldi). kapananIpuclari: bir kez
 // gösterilen ve kapatılan ipuçları (eksikse hiçbiri); bilinmeyen ipucu atılır.
@@ -28,6 +34,14 @@
 import { ekle, olasiBicimler } from '../motor/index.ts'
 import { BOLGELER, type Bolge } from './bolgeler.ts'
 import { turlar, type Gorev } from './gorevler.ts'
+import {
+  BOS_TUR_PUANI,
+  turPuaniniCoz,
+  yildiziCoz,
+  yildizSayisi,
+  type TurPuani,
+  type Yildiz,
+} from './puan.ts'
 
 /** Kaydın anahtarı: sürüm numaralı, tek. */
 export const ANAHTAR = 'morfemusta.v1'
@@ -54,7 +68,20 @@ export interface Ayarlar {
    * ekran içindir.
    */
   readonly sinif: 'kapali' | 'acik'
+  /**
+   * Sıradaki görev: kendiliginden (doğrudan 1,5 saniye sonra kendisi gelir; dokunan hemen geçer)
+   * ya da dugmeyle (Sıradaki düğmesi). Sınıf modunda sinifGecis geçerlidir (varsayılanı
+   * dugmeyle: tahtada öğretmen sırayı verir).
+   */
+  readonly gecis: Gecis
+  readonly sinifGecis: Gecis
 }
+
+export type Gecis = 'kendiliginden' | 'dugmeyle'
+
+/** Geçerli geçiş: sınıf modunda sinifGecis, değilse gecis. */
+export const gecerliGecis = (ayarlar: Ayarlar): Gecis =>
+  ayarlar.sinif === 'acik' ? ayarlar.sinifGecis : ayarlar.gecis
 
 /** Bir kez gösterilen ipuçları: ana-ekran (iOS Safari'de Paylaş → Ana Ekrana Ekle). */
 export const IPUCLARI = ['ana-ekran'] as const
@@ -68,6 +95,10 @@ export interface BolgeIlerlemesi {
    * sonraki giriş baştan başlar (kaldigiGorev).
    */
   readonly kaldigi: number
+  /** Süren turun puanı: turun biten görevleri (tur bitince kalkar). Yoksa tur 0'dan. */
+  readonly tur?: TurPuani
+  /** Bölgenin en iyi yıldızı (biten turların en iyisi). Yoksa henüz tur bitmedi. */
+  readonly yildiz?: Yildiz
 }
 
 /** Sözlük kartı: doğru kurulan bir kelime. Aynı kelime aynı bölgeden ikinci kez kart olmaz. */
@@ -93,6 +124,11 @@ export interface Ilerleme {
   /** Kapatılan ipuçları: bir daha gösterilmez. Sıfırlamada da kalır (ayarlar gibi). */
   readonly kapananIpuclari: readonly Ipucu[]
   /**
+   * İlk dakika eli kapanan bölgeler (kimlikleriyle): çocuk o bölgede bir doğru yaptı, el bir daha
+   * çıkmaz. İlerlemenin parçasıdır: sıfırlamada (pilot.html'deki Yeni çocuk) silinir.
+   */
+  readonly eller: readonly string[]
+  /**
    * Sıfırlama kimliği: ilerleme her sıfırlandığında bir artar. Bölge ekranı açılırken alır,
    * görev bitince yazmadan önce karşılaştırır (ekrandaGorevBitti): sıfırlamayı görmemiş bir
    * pencere onu geri alamaz.
@@ -105,6 +141,8 @@ export const VARSAYILAN_AYARLAR: Ayarlar = {
   renkler: 'renkli',
   ses: 'dokununca',
   sinif: 'kapali',
+  gecis: 'kendiliginden',
+  sinifGecis: 'dugmeyle',
 }
 
 export const BOS_ILERLEME: Ilerleme = {
@@ -112,6 +150,7 @@ export const BOS_ILERLEME: Ilerleme = {
   kartlar: [],
   ayarlar: VARSAYILAN_AYARLAR,
   kapananIpuclari: [],
+  eller: [],
   sifirlama: 0,
 }
 
@@ -209,9 +248,9 @@ export function pencereKaydi(depo: Depo | null, bolgeler: readonly Bolge[] = BOL
 export const sinifModundaMi = (ilerleme: Ilerleme): boolean => ilerleme.ayarlar.sinif === 'acik'
 
 /** Sınıf modunda bir açılışın ilerlemesi: yalnız bellekte durur, kayda yazılmaz. */
-type SinifIlerlemesi = Pick<Ilerleme, 'bolgeler' | 'kartlar' | 'sifirlama'>
+type SinifIlerlemesi = Pick<Ilerleme, 'bolgeler' | 'kartlar' | 'eller' | 'sifirlama'>
 
-const BOS_SINIF: SinifIlerlemesi = { bolgeler: {}, kartlar: [], sifirlama: 0 }
+const BOS_SINIF: SinifIlerlemesi = { bolgeler: {}, kartlar: [], eller: [], sifirlama: 0 }
 
 /** İki ayar arasında değişen alanlar. */
 function degisenAyarlar(once: Ayarlar, sonra: Ayarlar): Partial<Ayarlar> {
@@ -262,7 +301,12 @@ export function oyunKaydi(depo: Depo | null, bolgeler: readonly Bolge[] = BOLGEL
       const once = gorunen()
       const yeni = degisiklik(once)
       if (yeni === once) return false
-      sinif = { bolgeler: yeni.bolgeler, kartlar: yeni.kartlar, sifirlama: yeni.sifirlama }
+      sinif = {
+        bolgeler: yeni.bolgeler,
+        kartlar: yeni.kartlar,
+        eller: yeni.eller,
+        sifirlama: yeni.sifirlama,
+      }
       // Cihaza ait alanlar kayda yazılır: değişen ayarlar ve yeni kapatılan ipuçları.
       const ayarlar = degisenAyarlar(once.ayarlar, yeni.ayarlar)
       const ipuclari = yeni.kapananIpuclari.filter((i) => !once.kapananIpuclari.includes(i))
@@ -318,6 +362,9 @@ export function ilerlemeyiCoz(ham: unknown, bolgeler: readonly Bolge[] = BOLGELE
   const ayarlar = nesneMi(ham.ayarlar) ? ham.ayarlar : {}
   const { sifirlama } = ham
   const ipuclari = Array.isArray(ham.kapananIpuclari) ? ham.kapananIpuclari : []
+  const eller = Array.isArray(ham.eller) ? ham.eller : []
+  const gecisOku = (x: unknown, varsayilan: Gecis): Gecis =>
+    x === 'kendiliginden' || x === 'dugmeyle' ? x : varsayilan
   return {
     bolgeler: Object.fromEntries(bolgeIlerlemeleri),
     kartlar,
@@ -326,8 +373,11 @@ export function ilerlemeyiCoz(ham: unknown, bolgeler: readonly Bolge[] = BOLGELE
       renkler: ayarlar.renkler === 'renksiz' ? 'renksiz' : 'renkli',
       ses: ayarlar.ses === 'kapali' || ayarlar.ses === 'sesli' ? ayarlar.ses : 'dokununca',
       sinif: ayarlar.sinif === 'acik' ? 'acik' : 'kapali',
+      gecis: gecisOku(ayarlar.gecis, VARSAYILAN_AYARLAR.gecis),
+      sinifGecis: gecisOku(ayarlar.sinifGecis, VARSAYILAN_AYARLAR.sinifGecis),
     },
     kapananIpuclari: IPUCLARI.filter((ipucu) => ipuclari.includes(ipucu)),
+    eller: bolgeler.map((b) => b.kimlik).filter((kimlik) => eller.includes(kimlik)),
     sifirlama:
       typeof sifirlama === 'number' && Number.isSafeInteger(sifirlama) && sifirlama >= 0
         ? sifirlama
@@ -347,9 +397,13 @@ function bolgeIlerlemesiniCoz(ham: unknown, bolge: Bolge): BolgeIlerlemesi | nul
     Number.isInteger(kaldigi) &&
     kaldigi >= 0 &&
     kaldigi <= bolge.gorevler.length
+  const tur = turPuaniniCoz(ham.tur)
+  const yildiz = yildiziCoz(ham.yildiz)
   return {
     bitenler: [...new Set(bitenler)].sort((a, b) => a - b),
     kaldigi: gecerli ? kaldigi : 0,
+    ...(tur ? { tur } : {}),
+    ...(yildiz ? { yildiz } : {}),
   }
 }
 
@@ -432,7 +486,10 @@ export function gorevBitti(
   return {
     ...ilerleme,
     // Sıra 1'den başlar ve birer artar (gorevleriOku): sıradaki görevin yeri bitenin sırasıdır.
-    bolgeler: { ...ilerleme.bolgeler, [bolge.kimlik]: { bitenler, kaldigi: gorev.sira } },
+    bolgeler: {
+      ...ilerleme.bolgeler,
+      [bolge.kimlik]: { ...eski, bitenler, kaldigi: gorev.sira },
+    },
     kartlar,
   }
 }
@@ -466,6 +523,66 @@ export function kaldigiGorev(ilerleme: Ilerleme, bolge: Bolge): number {
   return kaldigi < bolge.gorevler.length ? kaldigi : 0
 }
 
+// --- Puan, yıldız ve ilk dakika eli --------------------------------------------------------
+
+/** Bölgeye girilince süren turun puanı (biten görevlerinki); yeni turda 0. */
+export function turunPuani(ilerleme: Ilerleme, bolge: Bolge): TurPuani {
+  const bolgeninki = ilerleme.bolgeler[bolge.kimlik]
+  if (!bolgeninki?.tur) return BOS_TUR_PUANI
+  // Tur bittiyse (kalınan yer turun başı) puan yeni turda 0'dan; kayıtta kalmış olsa da.
+  const kaldigi = kaldigiGorev(ilerleme, bolge)
+  const gorev = bolge.gorevler[kaldigi]
+  return gorev && gorev.turdakiSira > 1 ? bolgeninki.tur : BOS_TUR_PUANI
+}
+
+/** Görev turun son görevi mi (tursuz bölgede tablonun son görevi). */
+export function turunSonuMu(bolge: Bolge, gorev: Gorev): boolean {
+  const tur = turlar(bolge.gorevler).find((t) => t.some((g) => g.sira === gorev.sira))
+  return tur?.at(-1)?.sira === gorev.sira
+}
+
+/**
+ * Görev bitince turun puanı yazılır (puan: o ana kadarki tur puanı). Tur bittiyse turun yıldızı
+ * bölgenin en iyisiyle karşılaştırılır, puan kalkar (sonraki tur 0'dan). Ekran açılırken aldığı
+ * sıfırlama kimliği son kayıttakinden farklıysa hiçbir şey yazılmaz (ekrandaGorevBitti gibi).
+ */
+export function ekrandaPuanYaz(
+  ilerleme: Ilerleme,
+  bolge: Bolge,
+  gorev: Gorev,
+  puan: TurPuani,
+  sifirlama: number,
+): Ilerleme {
+  if (ilerleme.sifirlama !== sifirlama) return ilerleme
+  const eski = ilerleme.bolgeler[bolge.kimlik] ?? { bitenler: [], kaldigi: 0 }
+  const { tur: _tur, ...turSuz } = eski
+  let yeni: BolgeIlerlemesi
+  if (turunSonuMu(bolge, gorev)) {
+    const yildiz = Math.max(eski.yildiz ?? 0, yildizSayisi(puan)) as Yildiz
+    yeni = { ...turSuz, yildiz }
+  } else {
+    yeni = { ...eski, tur: puan }
+  }
+  return { ...ilerleme, bolgeler: { ...ilerleme.bolgeler, [bolge.kimlik]: yeni } }
+}
+
+/** Bölgenin en iyi yıldızı; henüz tur bitmediyse null. */
+export const enIyiYildiz = (ilerleme: Ilerleme, kimlik: string): Yildiz | null =>
+  ilerleme.bolgeler[kimlik]?.yildiz ?? null
+
+/**
+ * İlk dakika eli kapandı mı: çocuk o bölgede bir doğru yaptı. Eski kayıtta (Oturum 13'ten önce)
+ * bölgede biten görev varsa da kapalıdır: çocuk bölgeyi zaten oynamış.
+ */
+export const elKapaliMi = (ilerleme: Ilerleme, kimlik: string): boolean =>
+  ilerleme.eller.includes(kimlik) || (ilerleme.bolgeler[kimlik]?.bitenler.length ?? 0) > 0
+
+/** İlk dakika eli kapandı: o bölgede bir daha çıkmaz. */
+export function eliKapat(ilerleme: Ilerleme, kimlik: string): Ilerleme {
+  if (ilerleme.eller.includes(kimlik)) return ilerleme
+  return { ...ilerleme, eller: [...ilerleme.eller, kimlik] }
+}
+
 /**
  * Bölge bitti mi: turlarından birinin bütün görevleri en az bir kez bitti. Tursuz bölgenin tek
  * turu bütün görevleridir; turlu bölge (Uydurukçuklar) ilk tur bitince tamam sayılır. İçeriği
@@ -492,6 +609,8 @@ export interface HaritaBolgesi {
   readonly durum: BolgeDurumu
   /** Önceki bölge: kilitliyse önce onun bitmesi gerekir. İlk bölgede null. */
   readonly onceki: Bolge | null
+  /** Bölgenin en iyi yıldızı (1–3); henüz tur bitmediyse null. */
+  readonly yildiz: Yildiz | null
 }
 
 /**
@@ -513,7 +632,7 @@ export function bolgeDurumlari(
           : bolgeBittiMi(ilerleme, bolge)
             ? 'tamam'
             : 'acik'
-    return { bolge, durum, onceki }
+    return { bolge, durum, onceki, yildiz: enIyiYildiz(ilerleme, bolge.kimlik) }
   })
 }
 

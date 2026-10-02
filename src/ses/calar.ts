@@ -118,7 +118,24 @@ export function cal(metinler: string | readonly string[], gecikme = 0): Promise<
     const kayit = SESLER[metin.normalize('NFC')]
     if (kayit) sesler.push({ adres: kayitAdresi(kayit), metin: metin.normalize('NFC') })
   }
-  return sirayla(sesler, gecikme)
+  const calma = sirayla(sesler, gecikme)
+  suren = calma
+  return calma
+}
+
+/** Son çalma (cal): bitince ya da kesilince çözülür. */
+let suren: Promise<void> = Promise.resolve()
+
+/**
+ * Çalan ses bitince (ya da susulunca) çözülür; çalan yoksa hemen. Beklerken yeni bir çalma
+ * başlarsa onu da bekler: sesli modda sıradaki görev kurulan kelimenin sesi bitmeden gelmez.
+ */
+export async function sesBitince(): Promise<void> {
+  let beklenen: Promise<void>
+  do {
+    beklenen = suren
+    await beklenen
+  } while (beklenen !== suren)
 }
 
 async function sirayla(

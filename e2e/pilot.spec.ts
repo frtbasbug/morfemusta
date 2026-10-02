@@ -12,6 +12,7 @@ import {
   dukkanKarti,
   gezinme,
   gorevleriOyna,
+  sonrakineGec,
   haritaBasligi,
   hatalariTopla,
   kart,
@@ -201,8 +202,13 @@ test.describe('pilot yolu', () => {
     await dokun(bukalemun(page, 'ler'))
     await dokun(kart(page))
     await expect(page.locator('.neden__cumle')).toBeVisible()
-    await gorevleriOyna(page, 0, 9)
+    // Yeni akış: Sıradaki düğmesi yok. Koyda görevler kendiliğinden geçer (sesli modda kelimenin
+    // sesi bitince); öteki bölgelerde ekrana dokunulup hemen geçilir. Son görevden sonra akşam
+    // ekranı kendiliğinden açılır.
+    await expect(sonraki(page)).toHaveCount(0)
+    await gorevleriOyna(page, 0, 9, 'bekle')
     await expect(page.getByRole('heading', { level: 1, name: 'Koyda akşam oldu' })).toBeVisible()
+    await expect(page.locator('.aksam__puan')).toContainText('Puan: ')
     await haritayaDon(page)
 
     // Fıstıkçı Şahap'ın Dükkânı: 1. görevde taş (yanlış: kitapım).
@@ -212,8 +218,8 @@ test.describe('pilot yolu', () => {
     await dokun(dukkanKarti(page))
     await expect(page.locator('.dukkan__cumle')).toHaveText('Ek ünlüyle başlayınca p yumuşar: b olur.')
     for (let yer = 0; yer < 10; yer++) {
-      await dukkanGorevi(page, yer)
-      await dokun(sonraki(page))
+      await dukkanGorevi(page, yer, 'dokun')
+      await sonrakineGec(page, 'dokun')
     }
     await expect(page.getByRole('heading', { level: 1, name: 'Dükkânda akşam oldu' })).toBeVisible()
     await haritayaDon(page)
@@ -225,8 +231,8 @@ test.describe('pilot yolu', () => {
     await dokun(agac(page))
     await expect(page.locator('.bahce__neden')).toContainText('Meyvenin üstüne gövde çıkmaz: önce çi.')
     for (let yer = 0; yer < 10; yer++) {
-      await bahceGorevi(page, yer)
-      await dokun(sonraki(page))
+      await bahceGorevi(page, yer, 'dokun')
+      await sonrakineGec(page, 'dokun')
     }
     await expect(page.getByRole('heading', { level: 1, name: 'Bahçede akşam oldu' })).toBeVisible()
     await haritayaDon(page)
@@ -243,12 +249,14 @@ test.describe('pilot yolu', () => {
         await expect(yaratik(page)).toContainText('gıvak')
         await expect.poll(() => calinanlar(page)).toContain('gıvak')
       }
-      await uydurukGorevi(page, yer)
+      // gıvak'ta görev kendiliğinden geçer: kurulan kelime sesli modda söylenir.
+      const gecis = yer === 3 ? 'bekle' : 'dokun'
+      await uydurukGorevi(page, yer, gecis)
       if (yer === 3) {
         await expect(page.locator('.uyduruk__cep .sonuc-kelime__okunan')).toHaveText('gıvağım')
         await expect.poll(() => calinanlar(page)).toContain('gıvağım')
       }
-      await dokun(sonraki(page))
+      await sonrakineGec(page, gecis)
     }
     await expect(
       page.getByRole('heading', { level: 1, name: 'Uydurukçuklarda akşam oldu' }),
@@ -294,7 +302,7 @@ test.describe('pilot yolu', () => {
     })
     for (const k of kayitlar) {
       expect(k).toMatchObject({ cocuk: 'P07', ses_modu: 'sesli', tur: '1' })
-      expect(k.surum).toBe('pilot-1.1')
+      expect(k.surum).toBe('pilot-2')
       expect(k.zaman).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}[+-]\d{2}:\d{2}$/)
       expect(k.sure_ms).toMatch(/^\d+$/)
       expect(['dogru', 'yanlis']).toContain(k.sonuc)
@@ -459,7 +467,8 @@ test.describe('pilot.html', () => {
     await dokun(bolge(page, 'Bukalemun Koyu'))
     await dokun(bukalemun(page, 'lar'))
     await dokun(kart(page))
-    await expect(sonraki(page)).toBeVisible()
+    // Görev bitti, kaydedildi: sıradaki görev kendiliğinden gelir.
+    await expect(page.locator('.bolge-ustu__sira')).toHaveText('Görev 2 / 10')
     expect(await gunlugunSatirlari(page)).toBeNull()
 
     // Kod var, sınıf modu açık: yine yazılmaz; pilot.html uyarır.
@@ -479,7 +488,8 @@ test.describe('pilot.html', () => {
     await dokun(bolge(page, 'Bukalemun Koyu'))
     await dokun(bukalemun(page, 'lar'))
     await dokun(kart(page))
-    await expect(sonraki(page)).toBeVisible()
+    // Görev bitti, kaydedildi: sıradaki görev kendiliğinden gelir.
+    await expect(page.locator('.bolge-ustu__sira')).toHaveText('Görev 2 / 10')
     expect((await gunlugunSatirlari(page))?.satirlar).toHaveLength(1)
     await page.goto(PILOT)
     await dugme(page, 'Kodu sil').click()
@@ -559,7 +569,8 @@ test.describe('pilot.html', () => {
     await dokun(bolge(page, 'Bukalemun Koyu'))
     await dokun(bukalemun(page, 'lar'))
     await dokun(kart(page))
-    await expect(sonraki(page)).toBeVisible()
+    // Görev bitti, kaydedildi: sıradaki görev kendiliğinden gelir.
+    await expect(page.locator('.bolge-ustu__sira')).toHaveText('Görev 2 / 10')
     await page.goto(PILOT)
     await dugme(page, 'Kopyala').click()
     await expect(page.locator('.pilot__ileti')).toHaveText('1 deneme panoya kopyalandı.')
@@ -608,7 +619,8 @@ test.describe('pilot.html', () => {
     await dokun(bolge(page, 'Bukalemun Koyu'))
     await dokun(bukalemun(page, 'lar'))
     await dokun(kart(page))
-    await expect(sonraki(page)).toBeVisible()
+    // Görev bitti, kaydedildi: sıradaki görev kendiliğinden gelir.
+    await expect(page.locator('.bolge-ustu__sira')).toHaveText('Görev 2 / 10')
     await page.goto(PILOT)
     await expect(page.locator('[data-yol-tarifi]')).toHaveCount(0)
     await dugme(page, 'Paylaş').click()
@@ -634,7 +646,7 @@ test.describe('pilot.html', () => {
     const satirlar = new TextDecoder('utf-8').decode(baytlar.subarray(3)).split('\r\n')
     expect(satirlar[0]).toBe(SUTUNLAR.join(';'))
     expect(csvSatiri(satirlar[1] ?? '')).toHaveLength(SUTUNLAR.length)
-    expect(satirlar[1]).toContain(';P08;pilot-1.1;koy;')
+    expect(satirlar[1]).toContain(';P08;pilot-2;koy;')
   })
 
   test('Paylaş, dosya paylaşamayan tarayıcıda görünmez; CSV indir ve Kopyala kalır', async ({
@@ -668,8 +680,7 @@ test.describe('pilot.html', () => {
     await dokun(bolge(page, 'Bukalemun Koyu'))
     await dokun(bukalemun(page, 'lar'))
     await dokun(kart(page))
-    await expect(sonraki(page)).toBeVisible()
-    await dokun(sonraki(page))
+    // Sıradaki görev kendiliğinden gelir.
     await expect(page.locator('.bolge-ustu__sira')).toHaveText('Görev 2 / 10')
     expect(await page.evaluate((a) => localStorage.getItem(a), DURMA)).not.toBeNull()
     expect(await gunlugunSatirlari(page)).toEqual({ cocuk: 'P06', satirlar: [] })
@@ -689,7 +700,7 @@ test.describe('pilot.html', () => {
     await page.goto('./#/ayarlar')
     const hakkinda = page.locator('.hakkinda')
     await expect(hakkinda).toContainText('Yetişkinler için: Pilot sayfası')
-    await expect(hakkinda).toContainText('Sürüm: pilot-1.1')
+    await expect(hakkinda).toContainText('Sürüm: pilot-2')
     await expect(page.locator('a[href*="pilot"]')).toHaveCount(1)
     // Görünen her yerde yeni ad: eski ad (Morfemusta) yok.
     expect(await page.content()).not.toMatch(/Morfemusta/)
@@ -699,7 +710,7 @@ test.describe('pilot.html', () => {
     await expect(page).toHaveTitle('Pilot · Ekle Bakalım')
     expect(await page.content()).not.toMatch(/Morfemusta/)
     await expect(page.locator('[data-surum]')).toHaveText(
-      /^pilot-1\.1 \((?:[0-9a-f]{7}|bilinmiyor), \d{4}-\d{2}-\d{2}\)$/,
+      /^pilot-2 \((?:[0-9a-f]{7}|bilinmiyor), \d{4}-\d{2}-\d{2}\)$/,
     )
   })
 

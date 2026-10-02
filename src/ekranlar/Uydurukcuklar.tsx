@@ -8,7 +8,10 @@
 // doğru uçar. Kök p, ç, t ya da k ile bitip iyelik alınca önce Dükkân'ın tezgâhı gelir: taş da
 // jöle de doğrudur (İkisi de olur: gıvakım, gıvağım.); kurulan biçim çocuğun seçtiğidir.
 // Yanlışsa bukalemun eğilir, düşer, kıyıya döner; nedeni yazılır, ilgili iki ses vurgulanır.
-// Ceza, puan ve süre yok. Yaratığın ağzı hiçbir durumda değişmez (DESIGN.md, "Üç kural").
+// Ceza ve süre yok; puan yalnız artar (sınır adımında iki karo da ilk deneme sayılır). Görev
+// bitince sıradaki görev kendiliğinden gelir ya da Düğmeyle ayarında Sıradaki düğmesiyle; ilk
+// görevde ilk dakika eli (akis.tsx). Yaratığın ağzı hiçbir durumda değişmez (DESIGN.md, "Üç
+// kural").
 //
 // Oyunun durumu src/oyun/uyduruk.ts'teki indirgeyicidedir; bu dosya görünümü ve hareketleri
 // yazar (hareket.ts; hareket azaltmada hiçbiri oynamaz, yalnız durum değişir). Kabuk öteki
@@ -59,7 +62,9 @@ import {
   type UydurukBuyusu,
 } from '../oyun/uyduruk.ts'
 import { Hoparlor, useSes, useSesliSoyleyis } from '../ses/Ses.tsx'
+import { yildizSayisi } from '../oyun/puan.ts'
 import AksamEkrani from './AksamEkrani.tsx'
+import { useAkis } from './akis.tsx'
 import BolgeUstu from './BolgeUstu.tsx'
 import { bekle, hareketAzMi, hareketleriKes, kaydir, oynat, type Nokta } from './hareket.ts'
 import { parlat } from './parilti.ts'
@@ -129,6 +134,26 @@ export default function Uydurukcuklar({
   const { soyle, sonuc, buyu: buyuSesi } = useSes()
   const kaydet = useDenemeGunlugu(bolge.kimlik, gorev)
 
+  function sonrakiGorev() {
+    setYuvadaki(null)
+    gonder({ tur: 'sonraki' })
+  }
+
+  const akis = useAkis({
+    bolge: bolge.kimlik,
+    gorev,
+    gorevYeri: durum.gorevYeri,
+    bitti: evre === 'bitti',
+    onSonraki: sonrakiGorev,
+    gorevMetni: gorev?.kok ?? '',
+    elKaynagi: () => {
+      const ilk = durum.adim?.secenekler[0]
+      return ilk ? bukalemunlar.current.get(ilk.yuzey) : null
+    },
+    elHedefi: () => hedefRef.current,
+    secimde: evre === 'secim' && durum.secili === null,
+  })
+
   // Sesli mod: görev başlayınca yaratığın adı (kök) söylenir; bölgeye girişte önce bölgenin
   // adı.
   const [acilisYeri] = useState(durum.gorevYeri)
@@ -147,7 +172,7 @@ export default function Uydurukcuklar({
     }
   }, [])
 
-  // Klavyeyle oynayan için odak: görev bitince Sıradaki'ye, yeni görevde kıyıdaki ilk
+  // Klavyeyle oynayan için odak: görev bitince Sıradaki'ye (Düğmeyle), yeni görevde kıyıdaki ilk
   // bukalemuna, sınır adımında tezgâhtaki taşa. Akşam ekranı odağı kendi başlığına alır.
   useEffect(() => {
     if (evre === 'bitti') sonrakiRef.current?.focus()
@@ -162,7 +187,15 @@ export default function Uydurukcuklar({
   }, [durum.gorevYeri, durum.adim])
 
   if (evre === 'kapanis' || !gorev || !adim) {
-    return <AksamEkrani baslik={bolge.aksam} kartlar={bugunkuKartlar} onHarita={onHarita} />
+    return (
+      <AksamEkrani
+        baslik={bolge.aksam}
+        kartlar={bugunkuKartlar}
+        puan={akis.puan.puan}
+        yildiz={yildizSayisi(akis.puan)}
+        onHarita={onHarita}
+      />
+    )
   }
 
   const secimde = evre === 'secim'
@@ -188,6 +221,8 @@ export default function Uydurukcuklar({
       dogru: dogruMu(deneme),
       neden: nedenKodlari(deneme.nedenler),
     })
+    // Sınır adımı varsa görevin son yerleştirmesi karodur.
+    akis.dene('ek', dogruMu(deneme), !sinir)
     flushSync(() => gonder({ tur: 'dene', yuzey }))
     const oge = bukalemunlar.current.get(yuzey)
     if (dogruMu(deneme)) await otur(oge, secenek.parca, kayma)
@@ -222,56 +257,70 @@ export default function Uydurukcuklar({
       const hedef = yapismaNoktasi(oge, kayma)
       oge.style.transform = kaydir(hedef)
       await oynat(oge, [{ transform: kaydir(kayma) }, { transform: kaydir(hedef) }], {
-        duration: 340,
+        duration: 200,
         easing: 'cubic-bezier(.3, .7, .4, 1)',
       })
-      await yayiParlat(oge, parca)
-      // Sevinç zıplamayla anlatılır; ağız değişmez.
+      // Sevinç zıplamayla anlatılır; ağız değişmez. Yay parlarken zıplar, sonra eke karışır.
       const yukarida = (dy: number) => kaydir({ x: hedef.x, y: hedef.y - dy })
-      await oynat(
-        oge,
-        [
-          { transform: yukarida(0) },
-          { transform: yukarida(22), offset: 0.25 },
-          { transform: yukarida(0), offset: 0.5 },
-          { transform: yukarida(12), offset: 0.72 },
-          { transform: yukarida(0) },
-        ],
-        { duration: 560, easing: 'ease-in-out' },
-      )
-      oge.style.opacity = '0'
-      await oynat(
-        oge,
-        [
-          { transform: kaydir(hedef), opacity: 1 },
-          { transform: `${kaydir(hedef)} scale(0.4)`, opacity: 0 },
-        ],
-        { duration: 180, easing: 'ease-in' },
-      )
+      await Promise.all([
+        yayiParlat(oge, parca),
+        (async () => {
+          await oynat(
+            oge,
+            [
+              { transform: yukarida(0) },
+              { transform: yukarida(22), offset: 0.3 },
+              { transform: yukarida(0), offset: 0.6 },
+              { transform: yukarida(10), offset: 0.8 },
+              { transform: yukarida(0) },
+            ],
+            { duration: 400, easing: 'ease-in-out' },
+          )
+          oge.style.opacity = '0'
+          await oynat(
+            oge,
+            [
+              { transform: kaydir(hedef), opacity: 1 },
+              { transform: `${kaydir(hedef)} scale(0.4)`, opacity: 0 },
+            ],
+            { duration: 120, easing: 'ease-in' },
+          )
+        })(),
+      ])
     }
     if (!bagli.current || !gorev) return
     flushSync(() => gonder({ tur: 'birlesti' }))
     // Doğru: efekt ve parıltı. Sınır adımı yoksa kelime kuruldu, ardından söylenir; varsa
     // kelimeyi çocuğun seçeceği karo kurar.
     sonuc('dogru', !sinir && adim ? adim.bicim : [])
+    akis.dogruGorundu()
     parlat(hedefRef.current?.querySelector('.uyduruk__ad'))
     if (oge) {
       oge.style.transform = ''
       oge.style.opacity = ''
     }
-    await oynat(
+    const ekBelirir = oynat(
       hedefRef.current?.querySelector('.ek-yazisi'),
       [
         { transform: 'scale(0.3)', opacity: 0 },
         { transform: 'scale(1.15)', opacity: 1, offset: 0.7 },
         { transform: 'scale(1)', opacity: 1 },
       ],
-      { duration: 300, easing: 'ease-out' },
+      { duration: 220, easing: 'ease-out' },
     )
-    // Sınır adımı varsa tezgâh gelir; çocuk karoyu seçince büyü olur.
-    if (sinir) return
-    await bekle(200)
-    await buyuyuOynat(null)
+    // Sınır adımı varsa tezgâh gelir; çocuk karoyu seçince büyü olur. Yoksa büyü ekin
+    // belirişine bindirilir.
+    if (sinir) {
+      await ekBelirir
+      return
+    }
+    await Promise.all([
+      ekBelirir,
+      (async () => {
+        await bekle(100)
+        await buyuyuOynat(null)
+      })(),
+    ])
   }
 
   /** Kökteki ünlünün etiketi ile bukalemunun gözü arasında bir yay parlar. */
@@ -306,18 +355,18 @@ export default function Uydurukcuklar({
             { strokeDasharray: uzunluk, strokeDashoffset: uzunluk },
             { strokeDasharray: uzunluk, strokeDashoffset: '0' },
           ],
-          { duration: 320, easing: 'ease-out' },
+          { duration: 180, easing: 'ease-out' },
         ),
       ),
     )
     const parlak = { strokeWidth: '22', opacity: 0.6 }
     const sonuk = { strokeWidth: '14', opacity: 0.35 }
-    await oynat(yay.querySelector('.uyduruk__yay-hale'), [sonuk, parlak, sonuk, parlak, sonuk], {
-      duration: 520,
+    await oynat(yay.querySelector('.uyduruk__yay-hale'), [sonuk, parlak, sonuk], {
+      duration: 240,
       easing: 'ease-in-out',
     })
     yay.classList.remove('uyduruk__yay--gorunur')
-    await oynat(yay, [{ opacity: 1 }, { opacity: 0 }], { duration: 180 })
+    await oynat(yay, [{ opacity: 1 }, { opacity: 0 }], { duration: 100 })
     for (const yol of yollar) yol.removeAttribute('d')
   }
 
@@ -327,17 +376,17 @@ export default function Uydurukcuklar({
       const hedef = yapismaNoktasi(oge, kayma)
       oge.style.transform = kaydir(hedef)
       await oynat(oge, [{ transform: kaydir(kayma) }, { transform: kaydir(hedef) }], {
-        duration: 340,
+        duration: 200,
         easing: 'cubic-bezier(.3, .7, .4, 1)',
       })
       oge.style.transformOrigin = '45% 85%'
       const egik = `${kaydir(hedef)} rotate(-12deg)`
       oge.style.transform = egik
       await oynat(oge, [{ transform: `${kaydir(hedef)} rotate(0deg)` }, { transform: egik }], {
-        duration: 180,
+        duration: 140,
         easing: 'ease-out',
       })
-      await bekle(280)
+      await bekle(160)
       const dusmus = `${kaydir({ x: hedef.x - 16, y: hedef.y + 150 })} rotate(-34deg)`
       oge.style.transform = dusmus
       oge.style.opacity = '0'
@@ -347,7 +396,7 @@ export default function Uydurukcuklar({
           { transform: egik, opacity: 1 },
           { transform: dusmus, opacity: 0 },
         ],
-        { duration: 460, easing: 'cubic-bezier(.5, 0, .9, .5)' },
+        { duration: 340, easing: 'cubic-bezier(.5, 0, .9, .5)' },
       )
     }
     if (!bagli.current) return
@@ -363,7 +412,7 @@ export default function Uydurukcuklar({
         { transform: 'translateY(2.5rem)', opacity: 0 },
         { transform: 'none', opacity: 1 },
       ],
-      { duration: 320, easing: 'ease-out' },
+      { duration: 260, easing: 'ease-out' },
     )
   }
 
@@ -380,6 +429,8 @@ export default function Uydurukcuklar({
       dogru: true,
       neden: '',
     })
+    // İki karo da doğru: sınır adımı hep ilk denemedir.
+    akis.dene('sinir', true, true)
     flushSync(() => gonder({ tur: 'karoDene', karo }))
     const oge = karolar.current.get(karo)
     if (oge && !hareketAzMi()) {
@@ -393,7 +444,7 @@ export default function Uydurukcuklar({
         : kayma
       oge.style.transform = kaydir(hedef)
       await oynat(oge, [{ transform: kaydir(kayma) }, { transform: kaydir(hedef) }], {
-        duration: 320,
+        duration: 200,
         easing: 'cubic-bezier(.3, .7, .4, 1)',
       })
     }
@@ -402,11 +453,12 @@ export default function Uydurukcuklar({
     flushSync(() => setYuvadaki(eriyecek ? sinir.asil : karo))
     // İki karo da doğru: efekt ve parıltı, ardından (sesli modda) kelime ve İkisi de olur.
     sonuc('dogru', [kurulanBicim(gorev, sinir, karo).bicim, sinirCumlesi(gorev)])
+    akis.dogruGorundu()
     parlat(hedefRef.current?.querySelector('.uyduruk__ad'))
     if (oge) oge.style.transform = ''
     const yuva = yuvaRef.current
     if (eriyecek) {
-      await bekle(380)
+      await bekle(120)
       await oynat(
         yuva,
         [
@@ -414,7 +466,7 @@ export default function Uydurukcuklar({
           { transform: 'scale(1.18, 0.7)', offset: 0.7 },
           { transform: 'scale(1.25, 0.5)' },
         ],
-        { duration: 420, easing: 'ease-in' },
+        { duration: 260, easing: 'ease-in' },
       )
       if (!bagli.current) return
       flushSync(() => setYuvadaki(karo))
@@ -425,15 +477,15 @@ export default function Uydurukcuklar({
           { transform: 'scale(0.92, 1.1)', offset: 0.6 },
           { transform: 'scale(1, 1)' },
         ],
-        { duration: 360, easing: 'ease-out' },
+        { duration: 220, easing: 'ease-out' },
       )
     } else {
       await oynat(yuva, [{ transform: 'scale(1.1)' }, { transform: 'scale(1)' }], {
-        duration: 220,
+        duration: 180,
         easing: 'ease-out',
       })
     }
-    await bekle(450)
+    await bekle(60)
     if (!bagli.current) return
     flushSync(() => gonder({ tur: 'buyuye' }))
     await buyuyuOynat(karo)
@@ -451,7 +503,7 @@ export default function Uydurukcuklar({
       flushSync(() => gonder({ tur: 'etki' }))
       if (tur) await buyuHareketi(tur)
     }
-    await bekle(tur ? 400 : 0)
+    await bekle(tur ? 80 : 0)
     if (!bagli.current) return
     flushSync(() => gonder({ tur: 'bitti' }))
     // Görev bitti: kabuk hemen kaydeder; kart çocuğun kurduğu biçimdir.
@@ -470,7 +522,7 @@ export default function Uydurukcuklar({
               { transform: 'none', opacity: 0 },
               { transform: getComputedStyle(kopya).transform, opacity: 1 },
             ],
-            { duration: 420, easing: 'cubic-bezier(.3, .7, .4, 1.3)' },
+            { duration: 320, easing: 'cubic-bezier(.3, .7, .4, 1.3)' },
           ),
         ),
       )
@@ -487,7 +539,7 @@ export default function Uydurukcuklar({
           { transform: 'translate(-50%, 0.3rem)', opacity: 1, offset: 0.75 },
           { transform: 'translate(-50%, 0)', opacity: 1 },
         ],
-        { duration: 520, easing: 'ease-out' },
+        { duration: 380, easing: 'ease-out' },
       )
       return
     }
@@ -501,7 +553,7 @@ export default function Uydurukcuklar({
         { transform: `translate(${uzak * 0.5}px, -2.5rem) rotate(45deg)`, opacity: 1, offset: 0.4 },
         { transform: 'none', opacity: 1 },
       ],
-      { duration: 700, easing: 'cubic-bezier(.4, 0, .3, 1)' },
+      { duration: 420, easing: 'cubic-bezier(.4, 0, .3, 1)' },
     )
   }
 
@@ -521,7 +573,7 @@ export default function Uydurukcuklar({
         { transform: `translate(${kx}px, ${ky}px) scale(${once.width / sonra.width})` },
         { transform: 'none' },
       ],
-      { duration: 600, easing: 'cubic-bezier(.45, 0, .3, 1)' },
+      { duration: 380, easing: 'cubic-bezier(.45, 0, .3, 1)' },
     )
   }
 
@@ -529,14 +581,9 @@ export default function Uydurukcuklar({
   async function geriDon(oge: HTMLElement, kayma: Nokta) {
     oge.style.transform = ''
     await oynat(oge, [{ transform: kaydir(kayma) }, { transform: 'none' }], {
-      duration: 240,
+      duration: 200,
       easing: 'ease-out',
     })
-  }
-
-  function sonrakiGorev() {
-    setYuvadaki(null)
-    gonder({ tur: 'sonraki' })
   }
 
   // --- Sürükle-bırak (Pointer Events) -----------------------------------------------------
@@ -715,12 +762,13 @@ export default function Uydurukcuklar({
   )
 
   return (
-    <main className="uyduruk" onKeyDown={tusaBasildi}>
+    <main className="uyduruk" data-evre={evre} onKeyDown={tusaBasildi}>
       <BolgeUstu
         ad={bolge.ad}
         gorevYeri={durum.gorevYeri}
         gorevSayisi={durum.gorevler.length}
         tur={gorev.tur}
+        puan={akis.puan.puan}
         onHarita={onHarita}
         baslikRef={baslikRef}
       />
@@ -760,14 +808,14 @@ export default function Uydurukcuklar({
               </p>
             )}
           </div>
-          {evre === 'bitti' && (
+          {evre === 'bitti' && !akis.kendiliginden && (
             <button ref={sonrakiRef} type="button" className="uyduruk__dugme" onClick={sonrakiGorev}>
               <SiradakiSimgesi />
               Sıradaki
             </button>
           )}
           <p className="gizli" role="status">
-            {evre === 'bitti' ? (kurulan?.bicim ?? '') : ''}
+            {evre === 'bitti' ? (kurulan?.bicim ?? '') : akis.duyuru}
           </p>
         </div>
       </section>
